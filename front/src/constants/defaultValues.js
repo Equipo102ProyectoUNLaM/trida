@@ -6,20 +6,19 @@ export const defaultMenuType = "menu-default";
 
 export const subHiddenBreakpoint = 1440;
 export const menuHiddenBreakpoint = 768;
-export const defaultLocale = "en";
+export const defaultLocale = "es";
 export const localeOptions = [
-  { id: "en", name: "English - LTR", direction: "ltr" },
   { id: "es", name: "Español", direction: "ltr" },
-  { id: "enrtl", name: "English - RTL", direction: "rtl" }
 ];
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyBBksq-Asxq2M4Ot-75X19IyrEYJqNBPcg",
-  authDomain: "gogo-react-login.firebaseapp.com",
-  databaseURL: "https://gogo-react-login.firebaseio.com",
-  projectId: "gogo-react-login",
-  storageBucket: "gogo-react-login.appspot.com",
-  messagingSenderId: "216495999563"
+  apiKey: "AIzaSyC0cPnqYevh5oa0C7mB0WHsEeESsRM7_GU",
+  authDomain: "trida-7f28f.firebaseapp.com",
+  databaseURL: "https://trida-7f28f.firebaseio.com",
+  projectId: "trida-7f28f",
+  storageBucket: "trida-7f28f.appspot.com",
+  messagingSenderId: "595212951382",
+  appId: "1:595212951382:web:8107d16087df261f9000f7"
 };
 
 export const searchPath = "/app/pages/search";

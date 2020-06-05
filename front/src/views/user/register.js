@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Row, Card, CardTitle, Form, Label, Input, Button } from "reactstrap";
+import { Row, Card, CardTitle, Label, Input, Button, FormGroup } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { registerUser } from "../../redux/actions";
+import { Formik, Form, Field } from "formik";
+import { NotificationManager } from "../../components/common/react-notifications";
 
 import IntlMessages from "../../helpers/IntlMessages";
 import { Colxx } from "../../components/common/CustomBootstrap";
@@ -11,29 +13,57 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "demo@gogo.com",
-      password: "gogo123",
-      name: "Sarah Kortney"
+      email: "",
+      password: "",
+      name: ""
     };
   }
-  onUserRegister() {
-    if (this.state.email !== "" && this.state.password !== "") {
-      this.props.history.push("/");
+  onUserRegister = (values) => {
+    if (!this.props.loading) {
+      if (values.email !== "" && values.password !== "" && values.name !== "") {
+        this.props.registerUser(values, this.props.history);
+      }
+      else {
+        NotificationManager.error(
+          "Complete todos los campos",
+          "Error",
+          4000,
+          null,
+          null,
+          ''
+        );
+      }
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.error) {
+      NotificationManager.error(
+        this.props.error,
+        "Error en el registro",
+        4000,
+        null,
+        null,
+        ''
+      );
     }
   }
 
   render() {
+    const { password, email, name } = this.state;
+    const initialValues = {email, password, name};
+
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
             <div className="position-relative image-side ">
-              <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
+              <p className="text-white h2">třída</p>
               <p className="white mb-0">
-                Please use this form to register. <br />
-                If you are a member, please{" "}
-                <NavLink to={`/user/login`} className="white">
-                  login
+                Use este formulario para registrarse. <br />
+                Si ya está registrado, por favor{" "}
+                <NavLink to={`/user/login`} className="btn-link">
+                  ingrese
                 </NavLink>
                 .
               </p>
@@ -45,33 +75,66 @@ class Register extends Component {
               <CardTitle className="mb-4">
                 <IntlMessages id="user.register" />
               </CardTitle>
-              <Form>
-                <Label className="form-group has-float-label mb-4">
-                  <Input type="name" defaultValue={this.state.name} />
-                  <IntlMessages id="user.fullname" />
-                </Label>
-                <Label className="form-group has-float-label mb-4">
-                  <Input type="email" defaultValue={this.state.email} />
-                  <IntlMessages id="user.email" />
-                </Label>
-                <Label className="form-group has-float-label mb-4">
-                  <Input type="password" />
-                  <IntlMessages
-                    id="user.password"
-                    defaultValue={this.state.password}
-                  />
-                </Label>
-                <div className="d-flex justify-content-end align-items-center">
-                  <Button
-                    color="primary"
-                    className="btn-shadow"
-                    size="lg"
-                    onClick={() => this.onUserRegister()}
-                  >
-                    <IntlMessages id="user.register-button" />
-                  </Button>
-                </div>
-              </Form>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={this.onUserRegister}>
+                {({ errors, touched }) => (
+                  <Form className="av-tooltip tooltip-label-bottom">
+                    <FormGroup className="form-group has-float-label">
+                      <Label>
+                        <IntlMessages id="user.fullname" />
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="name"
+                      />
+                    </FormGroup>
+                    <FormGroup className="form-group has-float-label">
+                      <Label>
+                        <IntlMessages id="user.email" />
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="email"
+                        validate={this.validateEmail}
+                      />
+                      {errors.email && touched.email && (
+                        <div className="invalid-feedback d-block">
+                          {errors.email}
+                        </div>
+                      )}
+                    </FormGroup>
+                    <FormGroup className="form-group has-float-label">
+                      <Label>
+                        <IntlMessages id="user.password" />
+                      </Label>
+                      <Field
+                        className="form-control"
+                        type="password"
+                        name="password"
+                        validate={this.validatePassword}
+                      />
+                      {errors.password && touched.password && (
+                        <div className="invalid-feedback d-block">
+                          {errors.password}
+                        </div>
+                      )}
+                    </FormGroup>
+                      <Button
+                        color="primary"
+                        className={`btn-shadow btn-multiple-state ${this.props.loading ? "show-spinner" : ""}`}
+                        size="lg"
+                      >
+                        <span className="spinner d-inline-block">
+                          <span className="bounce1" />
+                          <span className="bounce2" />
+                          <span className="bounce3" />
+                        </span>
+                        <span className="label"><IntlMessages id="user.register-button" /></span>
+                      </Button>
+                  </Form>
+                )}
+              </Formik>
             </div>
           </Card>
         </Colxx>
@@ -80,8 +143,8 @@ class Register extends Component {
   }
 }
 const mapStateToProps = ({ authUser }) => {
-  const { user, loading } = authUser;
-  return { user, loading };
+  const { user, loading, error } = authUser;
+  return { user, loading, error };
 };
 
 export default connect(

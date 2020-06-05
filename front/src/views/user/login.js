@@ -9,12 +9,13 @@ import { Formik, Form, Field } from "formik";
 import { loginUser } from "../../redux/actions";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
+
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "demo@gogo.com",
-      password: "gogo123"
+      email: "",
+      password: ""
     };
   }
 
@@ -68,13 +69,13 @@ class Login extends Component {
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
             <div className="position-relative image-side ">
-              <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
+              <p className="text-white h2">třída</p>
               <p className="white mb-0">
-                Please use your credentials to login.
+                Ingrese sus datos para acceder.
                 <br />
-                If you are not a member, please{" "}
-                <NavLink to={`/register`} className="white">
-                  register
+                Si todavía no es miembro, por favor{" "}
+                <NavLink to={`/user/register`} className="btn-link">
+                  regístrese
                 </NavLink>
                 .
               </p>
@@ -140,8 +141,6 @@ class Login extends Component {
                         <span className="label"><IntlMessages id="user.login-button" /></span>
                       </Button>
                     </div>
-
-
                   </Form>
                 )}
               </Formik>
