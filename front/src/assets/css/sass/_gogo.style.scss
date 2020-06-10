@@ -56,7 +56,7 @@ Table of Contents
 $main-menu-item-height: 110px;
 $main-menu-width: 120px;
 $main-menu-width-lg: 110px;
-$main-menu-width-md: 100px;
+$main-menu-width-md: 110px;
 $main-menu-width-xs: 90px;
 
 $sub-menu-width: 230px;
@@ -152,7 +152,7 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/balloon.jpg") no-repeat center center fixed;
+  background: url("/assets/img/background-2.jpg") no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -313,7 +313,7 @@ hr {
 }
 
 .logo-single {
-  width: 110px;
+  width: 140px;
   height: 35px;
   background: url($logoPath) no-repeat;
   background-position: center center;
@@ -5898,7 +5898,7 @@ input:-webkit-autofill {
 
   .image-side {
     width: 40%;
-    background: url("/assets/img/login-balloon.jpg") no-repeat center top;
+    background: url("/assets/img/login-background-2.png") no-repeat center top;
     background-size: cover;
     padding: 80px 40px;
 

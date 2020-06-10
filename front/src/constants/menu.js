@@ -1,21 +1,26 @@
 const data = [
   {
-    id: "gogo",
-    icon: "iconsminds-air-balloon-1",
-    label: "menu.gogo",
+    id: "comunicaciones",
+    icon: "iconsminds-mail",
+    label: "menu.comunicaciones",
     to: "/app/gogo",
     subs: [
       {
-        icon: "simple-icon-paper-plane",
-        label: "menu.start",
+        icon: "iconsminds-speach-bubble-comic-2",
+        label: "menu.foro",
         to: "/app/gogo/start"
-      }     
+      },
+      {
+        icon: "simple-icon-paper-plane",
+        label: "menu.mensajeria",
+        to: "/app/gogo/start"
+      }    
     ]
   },
   {
-    id: "secondmenu",
-    icon: "iconsminds-three-arrow-fork",
-    label: "menu.second-menu",
+    id: "contenidos",
+    icon: "simple-icon-cloud-upload",
+    label: "menu.contenidos",
     to: "/app/second-menu",
     subs: [
       {
@@ -26,17 +31,28 @@ const data = [
     ]
   },
   {
-    id: "blankpage",
-    icon: "iconsminds-bucket",
-    label: "menu.blank-page",
+    id: "correcciones",
+    icon: "simple-icon-check",
+    label: "menu.correcciones",
     to: "/app/blank-page"
   },
   {
     id: "docs",
+    icon: "iconsminds-blackboard",
+    label: "menu.clases",
+    to: "/app",
+  },
+  {
+    id: "practicas",
     icon: "iconsminds-library",
-    label: "menu.docs",
-    to: "https://gogo-react-docs.coloredstrategies.com/",
-    newWindow:true
+    label: "menu.practicas",
+    to: "/app",
+  },
+  {
+    id: "evaluaciones",
+    icon: "simple-icon-note",
+    label: "menu.evaluaciones",
+    to: "/app",
   }
 ];
 export default data;

@@ -68,7 +68,7 @@ function* registerWithEmailPassword({ payload }) {
         if (!registerUser.message) {
             localStorage.setItem('user_id', registerUser.user.uid);
             yield put(registerUserSuccess(registerUser));
-            history.push('/')
+            history.push('/');
         } else {
             yield put(registerUserError(registerUser.message));
 
