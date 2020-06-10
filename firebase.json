@@ -11,12 +11,17 @@
   "hosting": {
     "public": "public",
     "headers": [
-      {"source": "/front/src/serviceWorker.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}]}
+      {"source": "/service-worker.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}]}
     ],
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [ {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   },
   "storage": {
