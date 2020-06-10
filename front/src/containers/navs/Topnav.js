@@ -198,7 +198,7 @@ class TopNav extends Component {
   };
 
   render() {
-    const { containerClassnames, menuClickCount, locale } = this.props;
+    const { containerClassnames, menuClickCount, user } = this.props;
     const { messages } = this.props.intl;
     return (
       <nav className="navbar fixed-top">
@@ -219,7 +219,7 @@ class TopNav extends Component {
           >
             <MobileMenuIcon />
           </NavLink>
-
+{/*
           <div className="search" data-search-path="/app/pages/search">
             <Input
               name="searchKeyword"
@@ -261,7 +261,7 @@ class TopNav extends Component {
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
-          <div className="position-relative d-none d-none d-lg-inline-block">
+           <div className="position-relative d-none d-none d-lg-inline-block">
             <a
               className="btn btn-outline-primary btn-sm ml-2"
               target="_top"
@@ -269,7 +269,7 @@ class TopNav extends Component {
             >
               <IntlMessages id="user.buy" />
             </a>
-          </div>
+          </div> */}
         </div>
         <a className="navbar-logo" href="/">
           <span className="logo d-none d-xs-block" />
@@ -280,8 +280,8 @@ class TopNav extends Component {
 
           <div className="header-icons d-inline-block align-middle">
 
-            <TopnavEasyAccess />
-            <TopnavNotifications />
+            {/* <TopnavEasyAccess /> */}
+            {/* <TopnavNotifications /> */}
             <button
               className="header-icon btn btn-empty d-none d-sm-inline-block"
               type="button"
@@ -298,19 +298,16 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">Sarah Kortney</span>
+              <span className="name mr-1">{user}</span>
                 <span>
-                  <img alt="Profile" src="/assets/img/profile-pic-l.jpg" />
+                  <img alt="Profile" src="/assets/img/user.png" />
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
-                <DropdownItem>Account</DropdownItem>
-                <DropdownItem>Features</DropdownItem>
-                <DropdownItem>History</DropdownItem>
-                <DropdownItem>Support</DropdownItem>
+                <DropdownItem>Cuenta</DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem onClick={() => this.handleLogout()}>
-                  Sign out
+                  Log out
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -321,16 +318,19 @@ class TopNav extends Component {
   }
 }
 
-const mapStateToProps = ({ menu, settings }) => {
+const mapStateToProps = ({ menu, settings, authUser }) => {
   const { containerClassnames, menuClickCount, selectedMenuHasSubItems } = menu;
   const { locale } = settings;
+  const { user } = authUser;
   return {
     containerClassnames,
     menuClickCount,
     selectedMenuHasSubItems,
-    locale
+    locale,
+    user,
   };
 };
+
 export default injectIntl(
   connect(
     mapStateToProps,

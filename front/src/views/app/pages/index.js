@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Start = React.lazy(() =>
   import(/* webpackChunkName: "start" */ './start')
 );
-const Gogo = ({ match }) => (
+const Inicio = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Redirect exact from={`${match.url}/`} to={`${match.url}/start`} />
@@ -16,4 +16,4 @@ const Gogo = ({ match }) => (
     </Switch>
   </Suspense>
 );
-export default Gogo;
+export default Inicio;
