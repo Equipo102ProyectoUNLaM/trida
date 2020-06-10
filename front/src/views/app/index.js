@@ -3,6 +3,7 @@ import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AppLayout from '../../layout/AppLayout';
+import ClassList from './classes';
 
 const Gogo = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './gogo')
@@ -33,8 +34,8 @@ class App extends Component {
                 render={props => <SecondMenu {...props} />}
               />
               <Route
-                path={`${match.url}/blank-page`}
-                render={props => <BlankPage {...props} />}
+                path={`${match.url}/classes`}
+                render={props => <ClassList {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

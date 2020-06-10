@@ -37,10 +37,10 @@ const data = [
     to: "/app/blank-page"
   },
   {
-    id: "docs",
+    id: "clases",
     icon: "iconsminds-blackboard",
-    label: "menu.clases",
-    to: "/app",
+    label: "menu.classes",
+    to: "/app/classes",
   },
   {
     id: "practicas",

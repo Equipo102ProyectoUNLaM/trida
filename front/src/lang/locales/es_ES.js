@@ -6,6 +6,7 @@ Table of Contents
 02.User Login, Logout, Register
 03.Menu
 04.Error Page
+05.Esquemas
 */
 
 module.exports = {
@@ -44,13 +45,29 @@ module.exports = {
   "menu.comunicaciones": "Comunicaciones",
   "menu.contenidos": "Contenidos",
   "menu.correcciones": "Correcciones",
-  "menu.clases": "Clases Virtuales",
+  "menu.classes": "Clases Virtuales",
   "menu.practicas": "Practicas",
   "menu.evaluaciones": "Evaluaciones",
   "menu.foro": "Foro",
   "menu.mensajeria": "Mensajería",
+
   /* 04.Error  */
   "pages.error-title": "Vaya, parece que ha ocurrido un error!",
   "pages.error-code": "Código de error",
-  "pages.go-back-home": "REGRESAR A INICIO"
+  "pages.go-back-home": "REGRESAR A INICIO",
+
+  /* 05.Esquemas */
+  "pages.add-new": "AGREGAR NUEVO",
+  "pages.add-new-modal-title": "Agregar ítem nuevo",
+  "pages.display-options": "Opciones de Pantalla",
+  "pages.orderby": "Ordenar por : ",
+  "pages.product-name": "Nombre del Producto",
+  "pages.category": "Categoría",
+  "pages.description": "Descripción",
+  "pages.status": "Estado",
+  "pages.cancel": "Cancelar",
+  "pages.submit": "Enviar",
+  "pages.delete": "Borrar",
+  "pages.another-action": "Otra accion",
+  "pages.actions": "ACCIONES",
 };
