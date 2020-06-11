@@ -3,17 +3,17 @@ const data = [
     id: "comunicaciones",
     icon: "iconsminds-mail",
     label: "menu.comunicaciones",
-    to: "/app/gogo",
+    to: "/app",
     subs: [
       {
         icon: "iconsminds-speach-bubble-comic-2",
         label: "menu.foro",
-        to: "/app/gogo/start"
+        to: "/app/inicio/start"
       },
       {
         icon: "simple-icon-paper-plane",
         label: "menu.mensajeria",
-        to: "/app/gogo/start"
+        to: "/app/inicio/start"
       }    
     ]
   },
