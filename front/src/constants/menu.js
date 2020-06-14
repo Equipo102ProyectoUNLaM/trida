@@ -3,30 +3,35 @@ const data = [
     id: "comunicaciones",
     icon: "iconsminds-mail",
     label: "menu.comunicaciones",
-    to: "/app",
+    to: "/app/comunicaciones",
     subs: [
       {
         icon: "iconsminds-speach-bubble-comic-2",
         label: "menu.foro",
-        to: "/app/inicio/start"
+        to: "/app/foro"
       },
       {
         icon: "simple-icon-paper-plane",
         label: "menu.mensajeria",
-        to: "/app/inicio/start"
-      }    
+        to: "/app/mensajeria"
+      },
+      {
+        icon: "iconsminds-receipt-4",
+        label: "menu.formales",
+        to: "/app/formales"
+      }      
     ]
   },
   {
     id: "contenidos",
     icon: "simple-icon-cloud-upload",
     label: "menu.contenidos",
-    to: "/app/second-menu",
+    to: "/app/contenidos",
     subs: [
       {
-        icon: "simple-icon-paper-plane",
-        label: "menu.second",
-        to: "/app/second-menu/second"
+        icon: "simple-icon-cloud-upload",
+        label: "menu.mis-contenidos",
+        to: "/app/contenidos"
       }
     ]
   },
@@ -34,25 +39,53 @@ const data = [
     id: "correcciones",
     icon: "simple-icon-check",
     label: "menu.correcciones",
-    to: "/app/blank-page"
+    to: "/app/correcciones",
+    subs: [
+      {
+        icon: "simple-icon-check",
+        label: "menu.mis-correcciones",
+        to: "/app/correcciones"
+      }
+    ]
   },
   {
-    id: "docs",
+    id: "clase-virtual",
     icon: "iconsminds-blackboard",
     label: "menu.clases",
-    to: "/app",
+    to: "/app/clases",
+    subs: [
+      {
+        icon: "iconsminds-blackboard",
+        label: "menu.mis-clases",
+        to: "/app/clases"
+      }
+    ]
   },
   {
     id: "practicas",
     icon: "iconsminds-library",
     label: "menu.practicas",
-    to: "/app",
+    to: "/app/practicas",
+    subs: [
+      {
+        icon: "iconsminds-library",
+        label: "menu.mis-practicas",
+        to: "/app/practicas"
+      }
+    ]
   },
   {
     id: "evaluaciones",
     icon: "simple-icon-note",
     label: "menu.evaluaciones",
-    to: "/app",
+    to: "/app/evaluaciones",
+    subs: [
+      {
+        icon: "simple-icon-note",
+        label: "menu.mis-evaluaciones",
+        to: "/app/evaluaciones"
+      }
+    ]
   }
 ];
 export default data;

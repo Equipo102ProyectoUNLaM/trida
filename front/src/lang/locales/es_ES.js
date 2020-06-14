@@ -30,7 +30,7 @@ module.exports = {
   "menu.app": "Inicio",
   "menu.dashboards": "Tableros",
   "menu.inicio": "Inicio",
-  "menu.start": "Comienzo",
+  "menu.start": "¡Hola!",
   "menu.second-menu": "Segundo menú",
   "menu.second": "Segundo",
   "menu.ui": "IU",
@@ -49,6 +49,13 @@ module.exports = {
   "menu.evaluaciones": "Evaluaciones",
   "menu.foro": "Foro",
   "menu.mensajeria": "Mensajería",
+  "menu.formales": "Comunicaciones Formales",
+  "menu.mis-contenidos": "Mis Contenidos",
+  "menu.mis-correcciones": "Mis Correcciones",
+  "menu.mis-clases": "Mis Clases",
+  "menu.mis-practicas": "Mis Prácticas",
+  "menu.mis-evaluaciones": "Mis Evaluaciones",
+
   /* 04.Error  */
   "pages.error-title": "Vaya, parece que ha ocurrido un error!",
   "pages.error-code": "Código de error",
