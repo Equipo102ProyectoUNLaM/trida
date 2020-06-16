@@ -14,7 +14,7 @@ module.exports = {
   /* 02.Inicio de sesión de usuario, cierre de sesión, registro */
   "user.login-title": "Iniciar sesión",
   "user.register": "Registro",
-  "user.forgot-password": "Se te olvidó tu contraseña",
+  "user.forgot-password": "Reinicie su contraseña",
   "user.email": "Email",
   "user.password": "Contraseña",
   "user.forgot-password-question": "¿Contraseña olvidada?",
