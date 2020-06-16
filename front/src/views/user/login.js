@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { NotificationManager } from "../../components/common/react-notifications";
 import { Formik, Form, Field } from "formik";
 
-import { loginUser } from "../../redux/actions";
+import { loginUser, menuSetClassNames } from "redux/actions";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 
@@ -23,6 +23,7 @@ class Login extends Component {
     if (!this.props.loading) {
       if (values.email !== "" && values.password !== "") {
         this.props.loginUser(values, this.props.history);
+        this.props.menuSetClassNames('menu-sub-hidden')
       }
     }
   }
@@ -159,6 +160,7 @@ const mapStateToProps = ({ authUser }) => {
 export default connect(
   mapStateToProps,
   {
-    loginUser
+    loginUser,
+    menuSetClassNames
   }
 )(Login);

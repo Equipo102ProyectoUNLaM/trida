@@ -7,9 +7,8 @@ const Practicas = React.lazy(() =>
 const PracticasMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/practicas`} />
       <Route
-        path={`${match.url}/practicas`}
+        path={`${match.url}/`}
         render={props => <Practicas {...props} />}
       />
       <Redirect to="/error" />

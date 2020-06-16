@@ -15,7 +15,7 @@ export default class Contenidos extends Component {
               </Colxx>
             </Row>
             <Row>
-              <Contents></Contents>
+              <Contents/>
             </Row>
           </Fragment>
         )

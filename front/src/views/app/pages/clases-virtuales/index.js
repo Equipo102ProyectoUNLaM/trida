@@ -7,9 +7,8 @@ const ClasesVirtuales = React.lazy(() =>
 const ClasesVirtualesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/clases`} />
       <Route
-        path={`${match.url}/clases`}
+        path={`${match.url}/`}
         render={props => <ClasesVirtuales {...props} />}
       />
       <Redirect to="/error" />

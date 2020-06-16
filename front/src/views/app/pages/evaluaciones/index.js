@@ -7,9 +7,8 @@ const Evaluaciones = React.lazy(() =>
 const EvaluacionesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/evaluaciones`} />
       <Route
-        path={`${match.url}/evaluaciones`}
+        path={`${match.url}/`}
         render={props => <Evaluaciones {...props} />}
       />
       <Redirect to="/error" />

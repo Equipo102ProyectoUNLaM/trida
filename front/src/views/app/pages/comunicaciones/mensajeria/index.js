@@ -7,9 +7,8 @@ const Mensajeria = React.lazy(() =>
 const MensajeriaMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/mensajeria`} />
       <Route
-        path={`${match.url}/mensajeria`}
+        path={`${match.url}/`}
         render={props => <Mensajeria {...props} />}
       />
       <Redirect to="/error" />

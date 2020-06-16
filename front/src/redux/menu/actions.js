@@ -6,6 +6,13 @@ import {
     MENU_CHANGE_HAS_SUB_ITEM_STATUS
 } from '../actions';
 
+export const menuSetClassNames = classNames => {
+    return {
+        type: MENU_SET_CLASSNAMES,
+        payload: { containerClassnames: classNames }
+    }
+}
+
 export const changeSelectedMenuHasSubItems = (payload) => {
     return (
         {
@@ -50,7 +57,7 @@ export const clickOnMobileMenu = (strCurrentClasses) => {
     )
 }
 
-export const setContainerClassnames = (clickIndex, strCurrentClasses,selectedMenuHasSubItems) => {
+export const setContainerClassnames = (clickIndex, strCurrentClasses, selectedMenuHasSubItems) => {
     const currentClasses = strCurrentClasses ? strCurrentClasses.split(' ').filter(x => x !== '') : '';
     let nextClasses = '';
     if (!selectedMenuHasSubItems) {

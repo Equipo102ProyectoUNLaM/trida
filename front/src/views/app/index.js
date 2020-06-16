@@ -5,45 +5,45 @@ import { connect } from 'react-redux';
 import AppLayout from '../../layout/AppLayout';
 
 const Inicio = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-gogo" */ './pages/start/start')
+  import('./pages/start/start')
 );
 const SecondMenu = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-second-menu" */ './pages/second-menu')
+  import('./pages/second-menu')
 );
 const BlankPage = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/blank-page')
+  import('./pages/blank-page')
 );
 
 const Correcciones = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/correcciones')
+  import('./pages/correcciones')
 );
 
 const Foro = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/comunicaciones/foro')
+  import('./pages/comunicaciones/foro')
 );
 
 const Mensajeria = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/comunicaciones/mensajeria')
+  import('./pages/comunicaciones/mensajeria')
 );
 
 const Formales = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/comunicaciones/formales')
+  import('./pages/comunicaciones/formales')
 );
 
 const ClasesVirtuales = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/clases-virtuales')
+  import('./pages/clases-virtuales')
 );
 
 const Practicas = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/practicas')
+  import('./pages/practicas')
 );
 
 const Evaluaciones = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/evaluaciones')
+  import('./pages/evaluaciones')
 );
 
 const Contenidos = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './pages/contenidos')
+  import('./pages/contenidos')
 );
 
 

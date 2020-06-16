@@ -7,9 +7,8 @@ const Foro = React.lazy(() =>
 const ForoMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/foro`} />
       <Route
-        path={`${match.url}/foro`}
+        path={`${match.url}/`}
         render={props => <Foro {...props} />}
       />
       <Redirect to="/error" />

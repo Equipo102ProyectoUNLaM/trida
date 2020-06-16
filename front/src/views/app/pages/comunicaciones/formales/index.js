@@ -7,9 +7,8 @@ const Formales = React.lazy(() =>
 const FormalesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/formales`} />
       <Route
-        path={`${match.url}/formales`}
+        path={`${match.url}/`}
         render={props => <Formales {...props} />}
       />
       <Redirect to="/error" />

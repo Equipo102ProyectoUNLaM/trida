@@ -12,7 +12,7 @@ class ForgotPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "demo@gogo.com"
+      email: "demo@trida.com.ar"
     };
   }
 
@@ -27,9 +27,9 @@ class ForgotPassword extends Component {
   validateEmail = (value) => {
     let error;
     if (!value) {
-      error = "Please enter your email address";
+      error = "Por favor, ingrese su dirección de mail";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-      error = "Invalid email address";
+      error = "Dirección de email inválida";
     }
     return error;
   }
@@ -38,7 +38,7 @@ class ForgotPassword extends Component {
     if (this.props.error) {
       NotificationManager.warning(
         this.props.error,
-        "Forgot Password Error",
+        "Olvidó su password?",
         3000,
         null,
         null,
@@ -47,8 +47,8 @@ class ForgotPassword extends Component {
     } else {
       if (!this.props.loading && this.props.forgotUserMail === "success")
         NotificationManager.success(
-          "Please check your email.",
-          "Forgot Password Success",
+          "Por favor, verifique su mail",
+          "Recuperación de password exitosa",
           3000,
           null,
           null,

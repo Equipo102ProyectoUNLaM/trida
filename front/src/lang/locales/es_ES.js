@@ -1,4 +1,4 @@
-/* Gogo Language Texts
+/* Language Texts
 
 Table of Contents
 
@@ -10,7 +10,6 @@ Table of Contents
 
 module.exports = {
   /* 01.General */
-  "general.copyright": "Gogo React © Todos los derechos reservados.",
 
   /* 02.Inicio de sesión de usuario, cierre de sesión, registro */
   "user.login-title": "Iniciar sesión",
@@ -45,7 +44,7 @@ module.exports = {
   "menu.contenidos": "Contenidos",
   "menu.correcciones": "Correcciones",
   "menu.clases": "Clases Virtuales",
-  "menu.practicas": "Practicas",
+  "menu.practicas": "Prácticas",
   "menu.evaluaciones": "Evaluaciones",
   "menu.foro": "Foro",
   "menu.mensajeria": "Mensajería",
@@ -59,5 +58,5 @@ module.exports = {
   /* 04.Error  */
   "pages.error-title": "Vaya, parece que ha ocurrido un error!",
   "pages.error-code": "Código de error",
-  "pages.go-back-home": "REGRESAR A INICIO"
+  "pages.go-back-home": "Regresar a Inicio"
 };
