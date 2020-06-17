@@ -39,8 +39,20 @@ const data = [
   {
     id: "clases",
     icon: "iconsminds-blackboard",
-    label: "menu.classes",
-    to: "/app/classes",
+    label: "menu.virtual-classes",
+    to: "/app/virtual-classes",
+    subs: [
+      {
+        icon: "iconsminds-book",
+        label: "menu.myclasses",
+        to: "/app/virtual-classes/classes"
+      },
+      {
+        icon: "iconsminds-blackboard",
+        label: "menu.board",
+        to: "/app/virtual-classes/board"
+      }
+    ]
   },
   {
     id: "practicas",

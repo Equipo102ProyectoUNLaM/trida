@@ -14,7 +14,7 @@ import classnames from "classnames";
 import { ContextMenuTrigger } from "react-contextmenu";
 import { Colxx } from "../../components/common/CustomBootstrap";
 
-const ImageListView = ({ product, isSelect, collect, onCheckItem }) => {
+const ImageListView = ({ product, isSelect, collect, onCheckItem, navTo }) => {
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={product.id}>
       <ContextMenuTrigger id="menu_id" data={product.id} collect={collect}>
@@ -25,7 +25,7 @@ const ImageListView = ({ product, isSelect, collect, onCheckItem }) => {
           })}
         >
           <div className="position-relative">
-            <NavLink to={`?p=${product.id}`} className="w-40 w-sm-100">
+            <NavLink to={`${navTo}`} className="w-40 w-sm-100">
               <CardImg top alt={product.title} src={product.img} />
             </NavLink>
             <Badge

@@ -1,66 +1,21 @@
 import React, { Component, Fragment } from "react";
-import { Row } from "reactstrap";
-
+import { Row, Pagination, PaginationItem, PaginationLink } from "reactstrap";
+import { classData } from "../../../data/class";
+import { injectIntl } from "react-intl";
 import axios from "axios";
 
-import { servicePath } from "../../constants/defaultValues";
-
-import DataListView from "../../containers/pages/DataListView";
-import Pagination from "../../containers/pages/Pagination";
-import ContextMenuContainer from "../../containers/pages/ContextMenuContainer";
-import ListPageHeading from "../../containers/pages/ListPageHeading";
-import ImageListView from "../../containers/pages/ImageListView";
-import ThumbListView from "../../containers/pages/ThumbListView";
-import AddNewModal from "../../containers/pages/AddNewModal";
+import { servicePath } from "../../../constants/defaultValues";
+import { NavLink } from "react-router-dom";
+import ContextMenuContainer from "../../../containers/pages/ContextMenuContainer";
+import ListPageHeading from "../../../containers/pages/ListPageHeading";
+import ImageListView from "../../../containers/pages/ImageListView";
+import AddNewModal from "../../../containers/pages/AddNewModal";
 
 function collect(props) {
     return { data: props.data };
 }
-const apiUrl = servicePath + "/cakes/paging";
-const classes = [
-  {
-    "category":"Criptografia",
-    "date":"17.06.2020",
-    "description":"Historia de la criptografía",
-    "img": "https://image.freepik.com/free-vector/online-education-illustration-tablet-notes-pencil-education-icon-concept-white-isolated_138676-631.jpg",
-    "id":1,
-    "status":"SECUNDARIA",
-    "levelColor":"secondary",
-    "title":"Clase 1 - Introducción"
-  },
-  {
-    "category":"Criptografia",
-    "date":"22.06.2020",
-    "description":"Criptografía Clásica",
-    "id":2,
-    "img": "https://image.freepik.com/free-vector/online-education-illustration-tablet-notes-pencil-education-icon-concept-white-isolated_138676-631.jpg",
-    "status":"SECUNDARIA",
-    "levelColor":"secondary",
-    "title":"Clase 2 - Conceptos"
-  },
-  {
-    "category":"Criptografia",
-    "date":"22.06.2020",
-    "description":"Criptografía Moderna",
-    "id":3,
-    "img": "https://image.freepik.com/free-vector/online-education-illustration-tablet-notes-pencil-education-icon-concept-white-isolated_138676-631.jpg",
-    "status":"SECUNDARIA",
-    "levelColor":"secondary",
-    "title":"Clase 3 - Conceptos"
-  },
-  {
-    "category":"Criptografia",
-    "date":"22.06.2020",
-    "description":"Cifrado en bloques",
-    "id":4,
-    "img": "https://image.freepik.com/free-vector/online-education-illustration-tablet-notes-pencil-education-icon-concept-white-isolated_138676-631.jpg",
-    "status":"SECUNDARIA",
-    "levelColor":"secondary",
-    "title":"Clase 4 - Tipos de cifrado"
-  }
-];
 
-class ClassList extends Component {
+class Classes extends Component {
     constructor(props) {
         super(props);
         this.mouseTrap = require("mousetrap");
@@ -234,7 +189,7 @@ class ClassList extends Component {
 
         this.setState({
           totalPage: 1,
-          items: classes,
+          items: classData,
           selectedItems: [],
           totalItemCount: 5,
           isLoading: true
@@ -303,7 +258,7 @@ class ClassList extends Component {
           <Fragment>
             <div className="disable-text-selection">
               <ListPageHeading
-                heading="menu.classes"
+                heading="menu.virtual-classes"
                 displayMode={displayMode}
                 changeDisplayMode={this.changeDisplayMode}
                 handleChangeSelectAll={this.handleChangeSelectAll}
@@ -329,7 +284,6 @@ class ClassList extends Component {
               />
               <Row>
                 {this.state.items.map(product => {
-                  if (this.state.displayMode === "imagelist") {
                     return (
                       <ImageListView
                         key={product.id}
@@ -337,29 +291,9 @@ class ClassList extends Component {
                         isSelect={this.state.selectedItems.includes(product.id)}
                         collect={collect}
                         onCheckItem={this.onCheckItem}
+                        navTo = "class-detail"
                       />
-                    );
-                  } else if (this.state.displayMode === "thumblist") {
-                    return (
-                      <ThumbListView
-                        key={product.id}
-                        product={product}
-                        isSelect={this.state.selectedItems.includes(product.id)}
-                        collect={collect}
-                        onCheckItem={this.onCheckItem}
-                      />
-                    );
-                  } else {
-                    return (
-                      <DataListView
-                        key={product.id}
-                        product={product}
-                        isSelect={this.state.selectedItems.includes(product.id)}
-                        onCheckItem={this.onCheckItem}
-                        collect={collect}
-                      />
-                    );
-                  }
+                    );                
                 })}{" "}
                 <Pagination
                   currentPage={this.state.currentPage}
@@ -376,5 +310,4 @@ class ClassList extends Component {
         );
       }
 }
-
-export default ClassList;
+export default injectIntl(Classes);

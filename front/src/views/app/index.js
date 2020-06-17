@@ -3,7 +3,6 @@ import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AppLayout from '../../layout/AppLayout';
-import ClassList from './classes';
 
 const Gogo = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './gogo')
@@ -13,6 +12,10 @@ const SecondMenu = React.lazy(() =>
 );
 const BlankPage = React.lazy(() =>
   import(/* webpackChunkName: "viwes-blank-page" */ './blank-page')
+);
+
+const VirtualClasses = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-blank-page" */ './virtual-classes')
 );
 
 class App extends Component {
@@ -34,8 +37,8 @@ class App extends Component {
                 render={props => <SecondMenu {...props} />}
               />
               <Route
-                path={`${match.url}/classes`}
-                render={props => <ClassList {...props} />}
+                path={`${match.url}/virtual-classes`}
+                render={props => <VirtualClasses {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

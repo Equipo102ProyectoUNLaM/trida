@@ -47,6 +47,7 @@ Table of Contents
 42.Details Page
 43.Rounded
 44.Rtl
+45.Board
 
 */
 
@@ -8822,4 +8823,18 @@ footer.page-footer {
       }
     }
   }
+}
+
+// 45 Board
+
+.excalidraw{
+  height: 100% !important;
+  width: 100% !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.App{
+  text-align: center;
 }
