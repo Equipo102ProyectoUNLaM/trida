@@ -54,7 +54,7 @@ class TabClassesMenu extends Component {
               <Card className="mb-4">
                 <CardHeader className="pl-0 pr-0"> 
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
-                    <NavItem className="w-20 text-center">
+                    <NavItem className="w-25 text-center">
                       <NavLink
                         to="#" location={{}}
                         className={classnames({
@@ -68,7 +68,7 @@ class TabClassesMenu extends Component {
                         Aula Virtual
                       </NavLink>
                     </NavItem>                 
-                    <NavItem className="w-20 text-center">
+                    <NavItem className="w-25 text-center">
                       <NavLink
                         to="#" location={{}}
                         className={classnames({
@@ -82,7 +82,7 @@ class TabClassesMenu extends Component {
                         Preguntas
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-20 text-center">
+                    <NavItem className="w-25 text-center">
                       <NavLink
                         to="#" location={{}}
                         className={classnames({
@@ -96,7 +96,7 @@ class TabClassesMenu extends Component {
                         Respuestas
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-20 text-center">
+                    <NavItem className="w-25 text-center">
                       <NavLink
                         to="#" location={{}}
                         className={classnames({
