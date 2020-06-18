@@ -219,57 +219,6 @@ class TopNav extends Component {
           >
             <MobileMenuIcon />
           </NavLink>
-{/*
-          <div className="search" data-search-path="/app/pages/search">
-            <Input
-              name="searchKeyword"
-              id="searchKeyword"
-              placeholder={messages["menu.search"]}
-              value={this.state.searchKeyword}
-              onChange={e => this.handleSearchInputChange(e)}
-              onKeyPress={e => this.handleSearchInputKeyPress(e)}
-            />
-            <span
-              className="search-icon"
-              onClick={e => this.handleSearchIconClick(e)}
-            >
-              <i className="simple-icon-magnifier" />
-            </span>
-          </div>
-
-          <div className="d-inline-block">
-            <UncontrolledDropdown className="ml-2">
-              <DropdownToggle
-                caret
-                color="light"
-                size="sm"
-                className="language-button"
-              >
-                <span className="name">{locale.toUpperCase()}</span>
-              </DropdownToggle>
-              <DropdownMenu className="mt-3" right>
-                {localeOptions.map(l => {
-                  return (
-                    <DropdownItem
-                      onClick={() => this.handleChangeLocale(l.id, l.direction)}
-                      key={l.id}
-                    >
-                      {l.name}
-                    </DropdownItem>
-                  );
-                })}
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </div>
-           <div className="position-relative d-none d-none d-lg-inline-block">
-            <a
-              className="btn btn-outline-primary btn-sm ml-2"
-              target="_top"
-              href="https://themeforest.net/cart/configure_before_adding/22544383?license=regular&ref=ColoredStrategies&size=source"
-            >
-              <IntlMessages id="user.buy" />
-            </a>
-          </div> */}
         </div>
         <a className="navbar-logo" href="/">
           <span className="logo d-none d-xs-block" />

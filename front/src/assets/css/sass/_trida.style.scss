@@ -1,4 +1,4 @@
-/* Gogo Main Style 
+/* Main Style 
 
 Table of Contents
 
@@ -2774,6 +2774,7 @@ main {
 .card {
   border: initial;
   background: $foreground-color;
+  width: 80%;
 
   .card-header .card-icon {
     right: 5px;

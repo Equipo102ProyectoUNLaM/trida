@@ -1,4 +1,4 @@
-/* Gogo Language Texts
+/* Language Texts
 
 Table of Contents
 
@@ -10,12 +10,11 @@ Table of Contents
 
 module.exports = {
   /* 01.General */
-  "general.copyright": "Gogo React © Todos los derechos reservados.",
 
   /* 02.Inicio de sesión de usuario, cierre de sesión, registro */
   "user.login-title": "Iniciar sesión",
   "user.register": "Registro",
-  "user.forgot-password": "Se te olvidó tu contraseña",
+  "user.forgot-password": "Reinicie su contraseña",
   "user.email": "Email",
   "user.password": "Contraseña",
   "user.forgot-password-question": "¿Contraseña olvidada?",
@@ -30,7 +29,7 @@ module.exports = {
   "menu.app": "Inicio",
   "menu.dashboards": "Tableros",
   "menu.inicio": "Inicio",
-  "menu.start": "Comienzo",
+  "menu.start": "¡Hola!",
   "menu.second-menu": "Segundo menú",
   "menu.second": "Segundo",
   "menu.ui": "IU",
@@ -45,12 +44,19 @@ module.exports = {
   "menu.contenidos": "Contenidos",
   "menu.correcciones": "Correcciones",
   "menu.clases": "Clases Virtuales",
-  "menu.practicas": "Practicas",
+  "menu.practicas": "Prácticas",
   "menu.evaluaciones": "Evaluaciones",
   "menu.foro": "Foro",
   "menu.mensajeria": "Mensajería",
+  "menu.formales": "Comunicaciones Formales",
+  "menu.mis-contenidos": "Mis Contenidos",
+  "menu.mis-correcciones": "Mis Correcciones",
+  "menu.mis-clases": "Mis Clases",
+  "menu.mis-practicas": "Mis Prácticas",
+  "menu.mis-evaluaciones": "Mis Evaluaciones",
+
   /* 04.Error  */
   "pages.error-title": "Vaya, parece que ha ocurrido un error!",
   "pages.error-code": "Código de error",
-  "pages.go-back-home": "REGRESAR A INICIO"
+  "pages.go-back-home": "Regresar a Inicio"
 };

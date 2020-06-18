@@ -1,7 +1,7 @@
 {
-  "name": "gogo-react",
-  "version": "4.2.8",
-  "description": "Gogo - React Bootstrap 4 Admin Dashboard Template",
+  "name": "trida",
+  "version": "1.0.0",
+  "description": "Trida",
   "private": true,
   "dependencies": {
     "@glidejs/glide": "^3.3.0",
