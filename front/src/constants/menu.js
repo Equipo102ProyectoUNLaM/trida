@@ -8,17 +8,17 @@ const data = [
       {
         icon: "iconsminds-speach-bubble-comic-2",
         label: "menu.foro",
-        to: "/app/foro"
+        to: "/app/comunicaciones/foro"
       },
       {
         icon: "simple-icon-paper-plane",
         label: "menu.mensajeria",
-        to: "/app/mensajeria"
+        to: "/app/comunicaciones/mensajeria"
       },
       {
         icon: "iconsminds-receipt-4",
         label: "menu.formales",
-        to: "/app/formales"
+        to: "/app/comunicaciones/formales"
       }      
     ]
   },
@@ -51,13 +51,18 @@ const data = [
   {
     id: "clase-virtual",
     icon: "iconsminds-blackboard",
-    label: "menu.clases",
-    to: "/app/clases",
+    label: "menu.classes",
+    to: "/app/clases-virtuales",
     subs: [
       {
+        icon: "iconsminds-book",
+        label: "menu.my-classes",
+        to: "/app/clases-virtuales/classes"
+      },
+      {
         icon: "iconsminds-blackboard",
-        label: "menu.mis-clases",
-        to: "/app/clases"
+        label: "menu.board",
+        to: "/app/clases-virtuales/board"
       }
     ]
   },

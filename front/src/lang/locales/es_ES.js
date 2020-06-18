@@ -44,7 +44,7 @@ module.exports = {
   "menu.comunicaciones": "Comunicaciones",
   "menu.contenidos": "Contenidos",
   "menu.correcciones": "Correcciones",
-  "menu.clases": "Clases Virtuales",
+  "menu.classes": "Clases Virtuales",
   "menu.practicas": "Prácticas",
   "menu.evaluaciones": "Evaluaciones",
   "menu.foro": "Foro",
@@ -52,7 +52,8 @@ module.exports = {
   "menu.formales": "Comunicaciones Formales",
   "menu.mis-contenidos": "Mis Contenidos",
   "menu.mis-correcciones": "Mis Correcciones",
-  "menu.mis-clases": "Mis Clases",
+  "menu.my-classes": "Mis Clases",
+  "menu.board": "Pizarrón",
   "menu.mis-practicas": "Mis Prácticas",
   "menu.mis-evaluaciones": "Mis Evaluaciones",
 

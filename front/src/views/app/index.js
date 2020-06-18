@@ -4,48 +4,33 @@ import { connect } from 'react-redux';
 
 import AppLayout from '../../layout/AppLayout';
 
-const Inicio = React.lazy(() =>
-  import('./pages/start/start')
-);
-const SecondMenu = React.lazy(() =>
-  import('./pages/second-menu')
-);
-const BlankPage = React.lazy(() =>
-  import('./pages/blank-page')
-);
-
-const Correcciones = React.lazy(() =>
-  import('./pages/correcciones')
-);
-
-const Foro = React.lazy(() =>
-  import('./pages/comunicaciones/foro')
-);
-
-const Mensajeria = React.lazy(() =>
-  import('./pages/comunicaciones/mensajeria')
-);
-
-const Formales = React.lazy(() =>
-  import('./pages/comunicaciones/formales')
+const Home = React.lazy(() =>
+  import('./home')
 );
 
 const ClasesVirtuales = React.lazy(() =>
-  import('./pages/clases-virtuales')
+  import('./clases-virtuales')
 );
 
-const Practicas = React.lazy(() =>
-  import('./pages/practicas')
-);
-
-const Evaluaciones = React.lazy(() =>
-  import('./pages/evaluaciones')
+const Comunicaciones = React.lazy(() =>
+  import('./comunicaciones')
 );
 
 const Contenidos = React.lazy(() =>
-  import('./pages/contenidos')
+  import('./contenidos')
 );
 
+const Correcciones = React.lazy(() =>
+  import('./correcciones')
+);
+
+const Evaluaciones = React.lazy(() =>
+  import('./evaluaciones')
+);
+
+const Practicas = React.lazy(() =>
+  import('./practicas')
+);
 
 class App extends Component {
   render() {
@@ -56,50 +41,35 @@ class App extends Component {
         <div className="dashboard-wrapper">
           <Suspense fallback={<div className="loading" />}>
             <Switch>
-              <Redirect exact from={`${match.url}/`} to={`${match.url}/inicio`} />
+              <Redirect exact from={`${match.url}/`} to={`${match.url}/home`} />
               <Route
-                path={`${match.url}/inicio`}
-                render={props => <Inicio {...props} />}
+                path={`${match.url}/home`}
+                render={props => <Home {...props} />}
               />
               <Route
-                path={`${match.url}/second-menu`}
-                render={props => <SecondMenu {...props} />}
+                path={`${match.url}/clases-virtuales`}
+                render={props => <ClasesVirtuales {...props} />}
               />
               <Route
-                path={`${match.url}/virtual-classes`}
-                render={props => <VirtualClasses {...props} />}
+                path={`${match.url}/contenidos`}
+                render={props => <Contenidos {...props} />}
               />
-               <Route
+              <Route
+                path={`${match.url}/comunicaciones`}
+                render={props => <Comunicaciones {...props} />}
+              />
+              <Route
                 path={`${match.url}/correcciones`}
                 render={props => <Correcciones {...props} />}
               />
-               <Route
-                path={`${match.url}/foro`}
-                render={props => <Foro {...props} />}
-              />
-               <Route
-                path={`${match.url}/mensajeria`}
-                render={props => <Mensajeria {...props} />}
-              />
-                <Route
-                path={`${match.url}/formales`}
-                render={props => <Formales {...props} />}
-              />
-              <Route
-                path={`${match.url}/clases`}
-                render={props => <ClasesVirtuales {...props} />}
-              />
+
               <Route
                 path={`${match.url}/practicas`}
                 render={props => <Practicas {...props} />}
               />
-            <Route
+              <Route
                 path={`${match.url}/evaluaciones`}
                 render={props => <Evaluaciones {...props} />}
-              />
-            <Route
-                path={`${match.url}/contenidos`}
-                render={props => <Contenidos {...props} />}
               />
               <Redirect to="/error" />
             </Switch>
