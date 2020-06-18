@@ -1,4 +1,4 @@
-/* Gogo Language Texts
+/* Language Texts
 
 Table of Contents
 
@@ -11,12 +11,11 @@ Table of Contents
 
 module.exports = {
   /* 01.General */
-  "general.copyright": "Gogo React © Todos los derechos reservados.",
 
   /* 02.Inicio de sesión de usuario, cierre de sesión, registro */
   "user.login-title": "Iniciar sesión",
   "user.register": "Registro",
-  "user.forgot-password": "Se te olvidó tu contraseña",
+  "user.forgot-password": "Reinicie su contraseña",
   "user.email": "Email",
   "user.password": "Contraseña",
   "user.forgot-password-question": "¿Contraseña olvidada?",
@@ -30,8 +29,8 @@ module.exports = {
   /* 03.Menú */
   "menu.app": "Inicio",
   "menu.dashboards": "Tableros",
-  "menu.gogo": "Gogo",
-  "menu.start": "Comienzo",
+  "menu.inicio": "Inicio",
+  "menu.start": "¡Hola!",
   "menu.second-menu": "Segundo menú",
   "menu.second": "Segundo",
   "menu.ui": "IU",
@@ -45,31 +44,20 @@ module.exports = {
   "menu.comunicaciones": "Comunicaciones",
   "menu.contenidos": "Contenidos",
   "menu.correcciones": "Correcciones",
-  "menu.virtual-classes": "Clases Virtuales",
-  "menu.myclasses" : "Mis clases",
-  "menu.board" : "Pizarrón",
-  "menu.practicas": "Practicas",
+  "menu.clases": "Clases Virtuales",
+  "menu.practicas": "Prácticas",
   "menu.evaluaciones": "Evaluaciones",
   "menu.foro": "Foro",
   "menu.mensajeria": "Mensajería",
+  "menu.formales": "Comunicaciones Formales",
+  "menu.mis-contenidos": "Mis Contenidos",
+  "menu.mis-correcciones": "Mis Correcciones",
+  "menu.mis-clases": "Mis Clases",
+  "menu.mis-practicas": "Mis Prácticas",
+  "menu.mis-evaluaciones": "Mis Evaluaciones",
 
   /* 04.Error  */
   "pages.error-title": "Vaya, parece que ha ocurrido un error!",
   "pages.error-code": "Código de error",
-  "pages.go-back-home": "REGRESAR A INICIO",
-
-  /* 05.Esquemas */
-  "pages.add-new": "AGREGAR NUEVO",
-  "pages.add-new-modal-title": "Agregar ítem nuevo",
-  "pages.display-options": "Opciones de Pantalla",
-  "pages.orderby": "Ordenar por : ",
-  "pages.product-name": "Nombre del Producto",
-  "pages.category": "Categoría",
-  "pages.description": "Descripción",
-  "pages.status": "Estado",
-  "pages.cancel": "Cancelar",
-  "pages.submit": "Enviar",
-  "pages.delete": "Borrar",
-  "pages.another-action": "Otra accion",
-  "pages.actions": "ACCIONES",
+  "pages.go-back-home": "Regresar a Inicio"
 };

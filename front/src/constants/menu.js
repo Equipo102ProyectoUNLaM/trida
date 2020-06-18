@@ -3,30 +3,35 @@ const data = [
     id: "comunicaciones",
     icon: "iconsminds-mail",
     label: "menu.comunicaciones",
-    to: "/app/gogo",
+    to: "/app/comunicaciones",
     subs: [
       {
         icon: "iconsminds-speach-bubble-comic-2",
         label: "menu.foro",
-        to: "/app/gogo/start"
+        to: "/app/foro"
       },
       {
         icon: "simple-icon-paper-plane",
         label: "menu.mensajeria",
-        to: "/app/gogo/start"
-      }    
+        to: "/app/mensajeria"
+      },
+      {
+        icon: "iconsminds-receipt-4",
+        label: "menu.formales",
+        to: "/app/formales"
+      }      
     ]
   },
   {
     id: "contenidos",
     icon: "simple-icon-cloud-upload",
     label: "menu.contenidos",
-    to: "/app/second-menu",
+    to: "/app/contenidos",
     subs: [
       {
-        icon: "simple-icon-paper-plane",
-        label: "menu.second",
-        to: "/app/second-menu/second"
+        icon: "simple-icon-cloud-upload",
+        label: "menu.mis-contenidos",
+        to: "/app/contenidos"
       }
     ]
   },
@@ -34,23 +39,25 @@ const data = [
     id: "correcciones",
     icon: "simple-icon-check",
     label: "menu.correcciones",
-    to: "/app/blank-page"
-  },
-  {
-    id: "clases",
-    icon: "iconsminds-blackboard",
-    label: "menu.virtual-classes",
-    to: "/app/virtual-classes",
+    to: "/app/correcciones",
     subs: [
       {
-        icon: "iconsminds-book",
-        label: "menu.myclasses",
-        to: "/app/virtual-classes/classes"
-      },
+        icon: "simple-icon-check",
+        label: "menu.mis-correcciones",
+        to: "/app/correcciones"
+      }
+    ]
+  },
+  {
+    id: "clase-virtual",
+    icon: "iconsminds-blackboard",
+    label: "menu.clases",
+    to: "/app/clases",
+    subs: [
       {
         icon: "iconsminds-blackboard",
-        label: "menu.board",
-        to: "/app/virtual-classes/board"
+        label: "menu.mis-clases",
+        to: "/app/clases"
       }
     ]
   },
@@ -58,13 +65,27 @@ const data = [
     id: "practicas",
     icon: "iconsminds-library",
     label: "menu.practicas",
-    to: "/app",
+    to: "/app/practicas",
+    subs: [
+      {
+        icon: "iconsminds-library",
+        label: "menu.mis-practicas",
+        to: "/app/practicas"
+      }
+    ]
   },
   {
     id: "evaluaciones",
     icon: "simple-icon-note",
     label: "menu.evaluaciones",
-    to: "/app",
+    to: "/app/evaluaciones",
+    subs: [
+      {
+        icon: "simple-icon-note",
+        label: "menu.mis-evaluaciones",
+        to: "/app/evaluaciones"
+      }
+    ]
   }
 ];
 export default data;

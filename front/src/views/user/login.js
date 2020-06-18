@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { NotificationManager } from "../../components/common/react-notifications";
 import { Formik, Form, Field } from "formik";
 
-import { loginUser } from "../../redux/actions";
+import { loginUser, menuSetClassNames } from "redux/actions";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 
@@ -23,6 +23,7 @@ class Login extends Component {
     if (!this.props.loading) {
       if (values.email !== "" && values.password !== "") {
         this.props.loginUser(values, this.props.history);
+        this.props.menuSetClassNames('menu-sub-hidden')
       }
     }
   }
@@ -30,9 +31,9 @@ class Login extends Component {
   validateEmail = (value) => {
     let error;
     if (!value) {
-      error = "Please enter your email address";
+      error = "Por favor, ingrese su mail";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-      error = "Invalid email address";
+      error = "Dirección de mail inválida";
     }
     return error;
   }
@@ -40,9 +41,9 @@ class Login extends Component {
   validatePassword = (value) => {
     let error;
     if (!value) {
-      error = "Please enter your password";
+      error = "Por favor, ingrese su password";
     } else if (value.length < 4) {
-      error = "Value must be longer than 3 characters";
+      error = "El password debe ser mayor a 3 caracteres";
     }
     return error;
   }
@@ -51,7 +52,7 @@ class Login extends Component {
     if (this.props.error) {
       NotificationManager.warning(
         this.props.error,
-        "Login Error",
+        "Error de Login",
         3000,
         null,
         null,
@@ -159,6 +160,7 @@ const mapStateToProps = ({ authUser }) => {
 export default connect(
   mapStateToProps,
   {
-    loginUser
+    loginUser,
+    menuSetClassNames
   }
 )(Login);

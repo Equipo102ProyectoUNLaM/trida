@@ -12,7 +12,7 @@ class ForgotPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "demo@gogo.com"
+      email: "demo@trida.com.ar"
     };
   }
 
@@ -27,9 +27,9 @@ class ForgotPassword extends Component {
   validateEmail = (value) => {
     let error;
     if (!value) {
-      error = "Please enter your email address";
+      error = "Por favor, ingrese su dirección de mail";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-      error = "Invalid email address";
+      error = "Dirección de email inválida";
     }
     return error;
   }
@@ -38,7 +38,7 @@ class ForgotPassword extends Component {
     if (this.props.error) {
       NotificationManager.warning(
         this.props.error,
-        "Forgot Password Error",
+        "Olvidó su password?",
         3000,
         null,
         null,
@@ -47,8 +47,8 @@ class ForgotPassword extends Component {
     } else {
       if (!this.props.loading && this.props.forgotUserMail === "success")
         NotificationManager.success(
-          "Please check your email.",
-          "Forgot Password Success",
+          "Por favor, verifique su mail",
+          "Recuperación de password exitosa",
           3000,
           null,
           null,
@@ -69,12 +69,12 @@ class ForgotPassword extends Component {
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
             <div className="position-relative image-side ">
-              <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
+              <p className="text-white h2">třída</p>
               <p className="white mb-0">
-                Please use your e-mail to reset your password. <br />
-                If you are not a member, please{" "}
-                <NavLink to={`/register`} className="white">
-                  register
+                Por favor, use su mail para reiniciar su password.<br />
+                Si todavía no es miembro, por favor{" "}
+                <NavLink to={`/register`} className="btn-link">
+                  regístrese
                 </NavLink>
                 .
               </p>
@@ -108,10 +108,7 @@ class ForgotPassword extends Component {
                       )}
                     </FormGroup>
 
-                    <div className="d-flex justify-content-between align-items-center">
-                      <NavLink to={`/user/forgot-password`}>
-                        <IntlMessages id="user.forgot-password-question" />
-                      </NavLink>
+                    <div className="d-flex justify-content-between align-items-right">
                       <Button
                         color="primary"
                         className={`btn-shadow btn-multiple-state ${this.props.loading ? "show-spinner" : ""}`}

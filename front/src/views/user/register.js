@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Card, CardTitle, Label, Input, Button, FormGroup } from "reactstrap";
+import { Row, Card, CardTitle, Label, Button, FormGroup } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { registerUser } from "../../redux/actions";

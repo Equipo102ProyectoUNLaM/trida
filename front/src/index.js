@@ -14,7 +14,7 @@ const color =
 localStorage.setItem(themeColorStorageKey, color);
 
 let render = () => {
-  import('./assets/css/sass/themes/gogo.' + color + '.scss').then(x => {
+  import('./assets/css/sass/themes/trida.' + color + '.scss').then(x => {
      require('./AppRenderer');
   });
 };

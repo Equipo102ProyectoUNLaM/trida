@@ -21,6 +21,7 @@ import menuItems from '../../constants/menu';
 class Sidebar extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       selectedParentMenu: '',
       viewingParentMenu: '',
@@ -230,11 +231,8 @@ class Sidebar extends Component {
   getIsHasSubItem = () => {
     const { selectedParentMenu } = this.state;
     const menuItem = menuItems.find(x => x.id === selectedParentMenu);
-    if (menuItem)
-      return menuItem && menuItem.subs && menuItem.subs.length > 0
-        ? true
-        : false;
-    else return false;
+    
+    return menuItem && menuItem.subs && menuItem.subs.length > 0
   };
 
   componentDidUpdate(prevProps) {
@@ -329,6 +327,7 @@ class Sidebar extends Component {
       viewingParentMenu,
       collapsedMenus
     } = this.state;
+
     return (
       <div className="sidebar">
         <div className="main-menu">

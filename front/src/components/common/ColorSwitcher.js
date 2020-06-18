@@ -4,7 +4,7 @@ import {
   themeColorStorageKey,
   themeRadiusStorageKey
 } from '../../constants/defaultValues';
-import { FormGroup, Label, CustomInput } from 'reactstrap';
+
 class ColorSwitcher extends Component {
   constructor(props) {
     super();
@@ -77,13 +77,13 @@ class ColorSwitcher extends Component {
   };
 
   render() {
-    const { selectedColor, radius } = this.state;
+    const { selectedColor } = this.state;
     return (
       <div className={`theme-colors ${this.state.isOpen ? 'shown' : ''}`}>
         <div className="p-4">
           <p className="text-muted mb-2">Light Theme</p>
           <div className="d-flex flex-row justify-content-between mb-4">
-            {['purple', 'blue', 'green', 'orange', 'red'].map(color => (
+            {['blue', 'orange'].map(color => (
               <a
                 key={`light.${color}`}
                 href={`#light.${color}`}
@@ -98,7 +98,7 @@ class ColorSwitcher extends Component {
           </div>
           <p className="text-muted mb-2">Dark Theme</p>
           <div className="d-flex flex-row justify-content-between">
-            {['purple', 'blue', 'green', 'orange', 'red'].map(color => (
+            {['blue', 'orange'].map(color => (
               <a
                 key={`dark.${color}`}
                 href={`#dark.${color}`}
@@ -112,32 +112,6 @@ class ColorSwitcher extends Component {
             ))}
           </div>
         </div>
-        <div className=" pb-0 pl-4 pt-4">
-          <FormGroup>
-            <Label for="radiusRadio">Border Radius </Label>
-            <div>
-              <CustomInput
-                type="radio"
-                name="radiusRadio"
-                id="rounded"
-                label="Rounded"
-                inline
-                defaultChecked={radius === 'rounded'}
-                onChange={() => this.changeRadius('rounded')}
-              />
-              <CustomInput
-                type="radio"
-                name="radiusRadio"
-                id="flat"
-                label="Flat"
-                inline
-                defaultChecked={radius === 'flat'}
-                onChange={() => this.changeRadius('flat')}
-              />
-            </div>
-          </FormGroup>
-        </div>
-
         <a href="#section" className="theme-button" onClick={this.toggle}>
           {' '}
           <i className="simple-icon-magic-wand" />{' '}
