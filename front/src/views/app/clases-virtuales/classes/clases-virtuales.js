@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Row, Pagination, PaginationItem, PaginationLink } from "reactstrap";
-import { classData } from "../../../../data/class";
-import { injectIntl } from "react-intl";
-import IntlMessages from "../../../../helpers/IntlMessages";
-import { Colxx, Separator } from "../../../../components/common/CustomBootstrap";
+import CLASS_DATA from "../../../../data/class";
 import ContextMenuContainer from "../../../../containers/pages/ContextMenuContainer";
 import ListPageHeading from "../../../../containers/pages/ListPageHeading";
 import ImageListView from "../../../../containers/pages/ImageListView";
@@ -188,30 +185,11 @@ componentDidMount() {
 
     this.setState({
       totalPage: 1,
-      items: classData,
+      items: CLASS_DATA,
       selectedItems: [],
       totalItemCount: 5,
       isLoading: true
     });
-
-    // axios
-    //   .get(
-    //     `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${
-    //       selectedOrderOption.column
-    //     }&search=${search}`
-    //   )
-    //   .then(res => {
-    //     return res.data;
-    //   })
-    //   .then(data => {
-    //     this.setState({
-    //       totalPage: data.totalPage,
-    //       items: data.data,
-    //       selectedItems: [],
-    //       totalItemCount: data.totalItem,
-    //       isLoading: true
-    //     });
-    //   });
   }
 
   onContextMenuClick = (e, data, target) => {
@@ -309,5 +287,5 @@ componentDidMount() {
     );
   }
 }
-export default injectIntl(ClasesVirtuales);
+export default ClasesVirtuales;
 

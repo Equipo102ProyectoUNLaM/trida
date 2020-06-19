@@ -14,7 +14,6 @@ const Mensajeria = React.lazy(() =>
 const Comunicaciones = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/formales`} />
       <Route
         path={`${match.url}/formales`}
         render={props => <Formales {...props} />}

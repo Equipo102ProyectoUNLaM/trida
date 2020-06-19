@@ -1,4 +1,4 @@
-export const classData = [
+const CLASS_DATA = [
     {
         category:"Criptografia",
         date:"17.06.2020",
@@ -36,3 +36,5 @@ export const classData = [
         title:"Clase 4 - Tipos de cifrado",
       }
 ]
+
+export default CLASS_DATA;
