@@ -3,13 +3,13 @@ import { Row } from "reactstrap";
 import IntlMessages from "../../../helpers/IntlMessages";
 import { Colxx, Separator } from "../../../components/common/CustomBootstrap";
 
-export default class Corrections extends Component {
+export default class MyActivities extends Component {
     render() {
         return (
             <Fragment>
             <Row>
               <Colxx xxs="12">
-                <h1><IntlMessages id="menu.corrections"/></h1>
+                <h1><IntlMessages id="menu.my-activities"/></h1>
                 <Separator className="mb-5" />
               </Colxx>
             </Row>

@@ -2,20 +2,16 @@ import React, { Component, Fragment } from "react";
 import { Row } from "reactstrap";
 import IntlMessages from "../../../helpers/IntlMessages";
 import { Colxx, Separator } from "../../../components/common/CustomBootstrap";
-import Contents from "../../../containers/dashboards/contents"
 
-export default class Content extends Component {
+export default class MyEvaluations extends Component {
     render() {
         return (
             <Fragment>
             <Row>
               <Colxx xxs="12">
-                <h1><IntlMessages id="menu.content"/></h1>
+                <h1><IntlMessages id="menu.my-evaluations"/></h1>
                 <Separator className="mb-5" />
               </Colxx>
-            </Row>
-            <Row>
-              <Contents/>
             </Row>
           </Fragment>
         )

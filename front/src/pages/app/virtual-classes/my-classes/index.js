@@ -13,7 +13,7 @@ const ClassDetail = React.lazy(() =>
 const MyClassesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-    <Redirect exact from={`${match.url}/`} to={`${match.url}/my-classes`} />
+    <Redirect exact from={`${match.url}`} to={`${match.url}/my-classes`} />
       <Route
         path={`${match.url}/my-classes`}
         render={props => <MyClasses {...props} />}
