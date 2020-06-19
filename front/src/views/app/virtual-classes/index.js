@@ -5,18 +5,18 @@ const Board = React.lazy(() =>
   import(/* webpackChunkName: "pages-product" */ './board')
 );
 
-const Classes = React.lazy(() =>
-  import(/* webpackChunkName: "pages-profile" */ './classes')
+const MyClasses = React.lazy(() =>
+  import(/* webpackChunkName: "pages-profile" */ './my-classes')
 );
 
 
-const ClasesVirtualesMenu = ({ match }) => (
+const VirtualClassesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/classes`} />
+      <Redirect exact from={`${match.url}/`} to={`${match.url}/my-classes`} />
       <Route
-        path={`${match.url}/classes`}
-        render={props => <Classes {...props} />}
+        path={`${match.url}/my-classes`}
+        render={props => <MyClasses {...props} />}
       />
       <Route
         path={`${match.url}/board`}
@@ -26,4 +26,4 @@ const ClasesVirtualesMenu = ({ match }) => (
     </Switch>
   </Suspense>
 );
-export default ClasesVirtualesMenu;
+export default VirtualClassesMenu;

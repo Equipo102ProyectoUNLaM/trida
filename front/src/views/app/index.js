@@ -8,28 +8,28 @@ const Home = React.lazy(() =>
   import('./home')
 );
 
-const ClasesVirtuales = React.lazy(() =>
-  import('./clases-virtuales')
+const VirtualClasses = React.lazy(() =>
+  import('./virtual-classes')
 );
 
-const Comunicaciones = React.lazy(() =>
-  import('./comunicaciones')
+const Communications = React.lazy(() =>
+  import('./communications')
 );
 
-const Contenidos = React.lazy(() =>
-  import('./contenidos')
+const Content = React.lazy(() =>
+  import('./content')
 );
 
-const Correcciones = React.lazy(() =>
-  import('./correcciones')
+const Corrections = React.lazy(() =>
+  import('./corrections')
 );
 
-const Evaluaciones = React.lazy(() =>
-  import('./evaluaciones')
+const Evaluations = React.lazy(() =>
+  import('./evaluations')
 );
 
-const Practicas = React.lazy(() =>
-  import('./practicas')
+const Activities = React.lazy(() =>
+  import('./activities')
 );
 
 class App extends Component {
@@ -47,29 +47,29 @@ class App extends Component {
                 render={props => <Home {...props} />}
               />
               <Route
-                path={`${match.url}/clases-virtuales`}
-                render={props => <ClasesVirtuales {...props} />}
+                path={`${match.url}/virtual-classes`}
+                render={props => <VirtualClasses {...props} />}
               />
               <Route
-                path={`${match.url}/contenidos`}
-                render={props => <Contenidos {...props} />}
+                path={`${match.url}/content`}
+                render={props => <Content {...props} />}
               />
               <Route
-                path={`${match.url}/comunicaciones`}
-                render={props => <Comunicaciones {...props} />}
+                path={`${match.url}/communications`}
+                render={props => <Communications {...props} />}
               />
               <Route
-                path={`${match.url}/correcciones`}
-                render={props => <Correcciones {...props} />}
+                path={`${match.url}/corrections`}
+                render={props => <Corrections {...props} />}
               />
 
               <Route
-                path={`${match.url}/practicas`}
-                render={props => <Practicas {...props} />}
+                path={`${match.url}/activities`}
+                render={props => <Activities {...props} />}
               />
               <Route
-                path={`${match.url}/evaluaciones`}
-                render={props => <Evaluaciones {...props} />}
+                path={`${match.url}/evaluations`}
+                render={props => <Evaluations {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

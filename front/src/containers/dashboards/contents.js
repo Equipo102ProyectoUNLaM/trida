@@ -69,7 +69,7 @@ class Contents extends Component {
       <Card className="h-100">
         <CardBody>
           <CardTitle>
-            <IntlMessages id={"menu.mis-contenidos"} />
+            <IntlMessages id={"menu.my-contents"} />
           </CardTitle>
             <ReactTable
               data={this.state.data}

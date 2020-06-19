@@ -1,18 +1,18 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-const Foro = React.lazy(() =>
-  import(/* webpackChunkName: "second" */ './foro')
+const Messages = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './messages')
 );
-const ForoMenu = ({ match }) => (
+const MessagesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
         path={`${match.url}/`}
-        render={props => <Foro {...props} />}
+        render={props => <Messages {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
   </Suspense>
 );
-export default ForoMenu;
+export default MessagesMenu;

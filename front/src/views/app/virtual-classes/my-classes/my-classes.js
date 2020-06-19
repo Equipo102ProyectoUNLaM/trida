@@ -5,15 +5,15 @@ import { injectIntl } from "react-intl";
 import IntlMessages from "../../../../helpers/IntlMessages";
 import { Colxx, Separator } from "../../../../components/common/CustomBootstrap";
 import ContextMenuContainer from "../../../../containers/pages/ContextMenuContainer";
-import ListPageHeading from "../../../../containers/pages/ListPageHeading";
+import ClassesHeading from "../../../../containers/pages/ClassesHeading";
 import ImageListView from "../../../../containers/pages/ImageListView";
-import AddNewModal from "../../../../containers/pages/AddNewModal";
+import AddNewClass from "../../../../containers/pages/AddNewClass";
 
 function collect(props) {
   return { data: props.data };
 }
 
-class ClasesVirtuales extends Component {
+class MyClasses extends Component {
 
   constructor(props) {
     super(props);
@@ -256,8 +256,8 @@ componentDidMount() {
     ) : (
       <Fragment>
         <div className="disable-text-selection">
-          <ListPageHeading
-            heading="menu.classes"
+          <ClassesHeading
+            heading="menu.my-classes"
             displayMode={displayMode}
             changeDisplayMode={this.changeDisplayMode}
             handleChangeSelectAll={this.handleChangeSelectAll}
@@ -276,7 +276,7 @@ componentDidMount() {
             pageSizes={pageSizes}
             toggleModal={this.toggleModal}
           />
-          <AddNewModal
+          <AddNewClass
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}
             categories={categories}
@@ -309,5 +309,5 @@ componentDidMount() {
     );
   }
 }
-export default injectIntl(ClasesVirtuales);
+export default injectIntl(MyClasses);
 

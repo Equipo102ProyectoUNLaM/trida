@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-const ClasesVirtuales = React.lazy(() =>
-  import(/* webpackChunkName: "second" */ './clases-virtuales')
+const MyClasses = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './my-classes')
 );
 
 const ClassDetail = React.lazy(() =>
@@ -10,13 +10,13 @@ const ClassDetail = React.lazy(() =>
 );
 
 
-const ClasesVirtualesMenu = ({ match }) => (
+const MyClassesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-    <Redirect exact from={`${match.url}/`} to={`${match.url}/clases-virtuales`} />
+    <Redirect exact from={`${match.url}/`} to={`${match.url}/my-classes`} />
       <Route
-        path={`${match.url}/clases-virtuales`}
-        render={props => <ClasesVirtuales {...props} />}
+        path={`${match.url}/my-classes`}
+        render={props => <MyClasses {...props} />}
       />
       <Route
         path={`${match.url}/class-detail`}
@@ -27,4 +27,4 @@ const ClasesVirtualesMenu = ({ match }) => (
     </Switch>
   </Suspense>
 );
-export default ClasesVirtualesMenu;
+export default MyClassesMenu;
