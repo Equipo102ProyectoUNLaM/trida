@@ -9,7 +9,7 @@ class Board extends React.Component {
 
     this.state = {
       width: 0,
-      height: 600
+      height: 800
     }
 
     this.boardParentEl = React.createRef();
@@ -20,7 +20,6 @@ class Board extends React.Component {
   }
 
   getParentDimensions = () => {
-    console.log(this.boardParentEl.current);
     if(this.boardParentEl.current) {
       this.setState({
         width: this.boardParentEl.current.clientWidth,
