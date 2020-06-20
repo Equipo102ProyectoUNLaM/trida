@@ -7,7 +7,6 @@ const MyActivities = React.lazy(() =>
 const ActivitiesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-    <Redirect exact from={`${match.url}/`} to={`${match.url}/my-activities`} />
       <Route
         path={`${match.url}/`}
         render={props => <MyActivities {...props} />}

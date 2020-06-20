@@ -7,7 +7,6 @@ const MyContent = React.lazy(() =>
 const ContentMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-    <Redirect exact from={`${match.url}/`} to={`${match.url}/my-content`} />
       <Route
         path={`${match.url}/`}
         render={props => <MyContent {...props} />}

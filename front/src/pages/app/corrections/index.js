@@ -7,7 +7,6 @@ const MyCorrections = React.lazy(() =>
 const CorrectionsMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-    <Redirect exact from={`${match.url}/`} to={`${match.url}/my-corrections`} />
       <Route
         path={`${match.url}/`}
         render={props => <MyCorrections {...props} />}

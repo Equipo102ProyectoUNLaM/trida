@@ -16,7 +16,7 @@ class Error extends Component {
     return (
       <Fragment>
         <div className="fixed-background" />
-        <main>
+        <main className="main-app">
           <div className="container">
             <Row className="h-100">
               <Colxx xxs="12" md="10" className="mx-auto my-auto">

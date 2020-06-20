@@ -1,18 +1,18 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-const MyEvaluations = React.lazy(() =>
-  import(/* webpackChunkName: "second" */ './my-evaluations')
+const Correcciones = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './correcciones')
 );
-const EvaluationsMenu = ({ match }) => (
+const CorreccionesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
         path={`${match.url}/`}
-        render={props => <MyEvaluations {...props} />}
+        render={props => <Correcciones {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
   </Suspense>
 );
-export default EvaluationsMenu;
+export default CorreccionesMenu;
