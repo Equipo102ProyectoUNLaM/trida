@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import Excalidraw from "excalidraw";
  
 import "excalidraw/dist/excalidraw.min.css";
