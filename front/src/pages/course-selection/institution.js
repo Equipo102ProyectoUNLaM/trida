@@ -1,27 +1,13 @@
-import React, { Component, Fragment } from "react";
-import { Row, Button, Card, CardBody, Jumbotron } from "reactstrap";
+import React, { Fragment } from "react";
+import { Row, Card, CardBody, Jumbotron, Button } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
-import { Colxx, Separator } from "../../components/common/CustomBootstrap";
-import Breadcrumb from "../../containers/navs/Breadcrumb";
-import { Redirect, NavLink, Route } from "react-router-dom";
-import { Formik, Form, Field } from "formik";
+import { Colxx } from "../../components/common/CustomBootstrap";
+import { withRouter } from 'react-router-dom';
 
+const HOME_URL = '/app/home';
 
-export default class Institution extends Component {
+const Institution = ({history}) => {
 
-    constructor(props) {
-        super(props);
-        // Este enlace es necesario para hacer que `this` funcione en el callback
-        this.goToApp = this.goToApp.bind(this);
-    }
-
-
-
-    goToApp() {
-        return (<Route to="/app" />);
-    }
-
-    render() {
         return (
             <Fragment>
                 <Row>
@@ -41,7 +27,7 @@ export default class Institution extends Component {
                                     </p>
                                     <p className="lead mb-0">
                                         <Colxx xxs="12" className="mb-4">
-                                            <Button onClick={this.goToApp} color="primary" className="mb-2">
+                                            <Button onClick={() => history.push(HOME_URL)} color="primary" className="mb-2">
                                                 <IntlMessages id="menu.my-classes" />
                                             </Button>
                                         </Colxx>
@@ -52,26 +38,7 @@ export default class Institution extends Component {
                     </Colxx>
                 </Row>
             </Fragment>
-            //     <Row className="h-100">
-            //     <Colxx xxs="12" md="10" className="mx-auto my-auto">
-            //       <Card className="auth-card">
-
-            //         <div className="form-side">
-            //           <NavLink to={`/`} className="white">
-            //             <span className="logo-single" />
-            //           </NavLink>
-            //           <CardTitle className="mb-4">
-            //             <IntlMessages id="user.login-title" />
-            //           </CardTitle>
-            //           <Colxx xxs="12" className="mb-4">
-            //                     <Button onClick={this.goToApp} color="primary" className="mb-2">
-            //                         <IntlMessages id="menu.my-classes" />
-            //                     </Button>
-            //                 </Colxx>
-            //         </div>
-            //       </Card>
-            //     </Colxx>
-            //   </Row>
         )
-    }
-}
+    };
+
+    export default withRouter(Institution);
