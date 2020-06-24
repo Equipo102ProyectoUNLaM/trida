@@ -9,6 +9,8 @@ Table of Contents
 05.Pages General
 06.Virtual Classes
   06.01.My Classes
+07.Institution Selection
+
 */ 
 
 module.exports = {
@@ -79,4 +81,6 @@ module.exports = {
     "class.level": "Nivel educativo",
     "class.description": "Descripción",
 
+  /* 07.Institution Selection */
+    "institution.selection" : "¿A qué institución desea acceder?",
 };

@@ -24,28 +24,20 @@ export default class Institution extends Component {
     render() {
         return (
             <Fragment>
-                <Row>
-                    <Colxx xxs="12" className="mb-4">
-                        <Card>
+                <Row className="course-row-container">
+                    <Colxx xxs="12" className="mb-4 course-col-container">
+                        <Card className="course-card-center">
                             <CardBody>
                                 <Jumbotron>
-                                    <h1 className="display-4">
-                                        <IntlMessages id="jumbotron.hello-world" />
-                                    </h1>
-                                    <p className="lead">
-                                        <IntlMessages id="jumbotron.lead" />
-                                    </p>
+                                    <h2 className="display-5">
+                                        <IntlMessages id="institution.selection" />
+                                    </h2>
                                     <hr className="my-4" />
-                                    <p>
-                                        <IntlMessages id="jumbotron.lead-detail" />
-                                    </p>
-                                    <p className="lead mb-0">
                                         <Colxx xxs="12" className="mb-4">
                                             <Button onClick={this.goToApp} color="primary" className="mb-2">
                                                 <IntlMessages id="menu.my-classes" />
                                             </Button>
                                         </Colxx>
-                                    </p>
                                 </Jumbotron>
                             </CardBody>
                         </Card>

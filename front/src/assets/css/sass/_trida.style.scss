@@ -48,6 +48,7 @@ Table of Contents
 43.Rounded
 44.Rtl
 45.Board
+46.Course Selection
 
 */
 
@@ -8843,4 +8844,18 @@ footer.page-footer {
 
 .board {
   text-align: center;
+}
+
+// 46 Course Selection
+
+.course-row-container{
+  height: 100%;
+}
+
+.course-col-container{
+  display: flex;
+}
+
+.course-card-center{
+  margin: auto;
 }
