@@ -1,36 +1,52 @@
-import React, { Fragment } from "react";
+import React, { Fragment, Component } from "react";
 import { Row, Card, CardBody, Jumbotron, Button } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import { withRouter } from 'react-router-dom';
+import InstitutionListView from '../../containers/pages/InstitutionListView';
+import { institutions } from './../../data/institutions';
 
-const HOME_URL = '/app/home';
+function collect(props) {
+    return { data: props.data };
+}
 
-const Institution = ({history}) => {
+class Institution extends Component {
 
-        return (
-            <Fragment>
-                <Row className="course-row-container">
-                    <Colxx xxs="12" className="mb-4 course-col-container">
-                        <Card className="course-card-center">
-                            <CardBody>
-                                <Jumbotron>
-                                    <h2 className="display-5">
-                                        <IntlMessages id="institution.selection" />
-                                    </h2>
-                                    <hr className="my-4" />
-                                        <Colxx xxs="12" className="mb-4">
-                                            <Button onClick={() => history.push(HOME_URL)} color="primary" className="mb-2">
-                                                <IntlMessages id="menu.my-classes" />
-                                            </Button>
-                                        </Colxx>
-                                </Jumbotron>
-                            </CardBody>
-                        </Card>
-                    </Colxx>
-                </Row>
-            </Fragment>
-        )
-    };
-
-    export default withRouter(Institution);
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: institutions
+        }
+    }
+    render() {
+        return (<Fragment>
+            <Row className="course-row-container">
+                <Colxx xxs="12" className="mb-4 course-col-container">
+                    <Card className="course-card-center">
+                        <CardBody>
+                            <Jumbotron>
+                                <h2 className="display-5">
+                                    <IntlMessages id="institution.selection" />
+                                </h2>
+                                <hr className="my-4" />
+                                <Row>
+                                    {this.state.items.map(institution => {
+                                        return (
+                                            <InstitutionListView
+                                                key={institution.id}
+                                                institution={institution}
+                                                collect={collect}
+                                                navTo="course"
+                                            />
+                                        );
+                                    })}{" "}
+                                </Row>
+                            </Jumbotron>
+                        </CardBody>
+                    </Card>
+                </Colxx>
+            </Row>
+        </Fragment>);
+    }
+}
+export default withRouter(Institution);

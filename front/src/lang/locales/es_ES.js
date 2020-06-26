@@ -10,7 +10,7 @@ Table of Contents
 06.Virtual Classes
   06.01.My Classes
 07.Institution Selection
-
+07.Course Selection
 */ 
 
 module.exports = {
@@ -83,4 +83,7 @@ module.exports = {
 
   /* 07.Institution Selection */
     "institution.selection" : "¿A qué institución desea acceder?",
+
+  /* 07.Course Selection */
+  "course.selection" : "¿Qué materia desea gestionar?",
 };
