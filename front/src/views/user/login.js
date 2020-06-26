@@ -74,7 +74,7 @@ class Login extends Component {
               <p className="white mb-0">
                 Ingrese sus datos para acceder.
                 <br />
-                Si todavía no es miembro, por favor{" "}
+                Si usted es docente, por favor{" "}
                 <NavLink to={`/user/register`} className="btn-link">
                   regístrese
                 </NavLink>
@@ -153,6 +153,7 @@ class Login extends Component {
   }
 }
 const mapStateToProps = ({ authUser }) => {
+  //TODO call function to get user data
   const { user, loading, error } = authUser;
   return { user, loading, error };
 };
