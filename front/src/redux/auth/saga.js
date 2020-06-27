@@ -1,6 +1,6 @@
 
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { auth } from '../../helpers/Firebase';
+import { auth, functions } from '../../helpers/Firebase';
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -55,16 +55,21 @@ export function* watchRegisterUser() {
     yield takeEvery(REGISTER_USER, registerWithEmailPassword);
 }
 
-const registerWithEmailPasswordAsync = async (email, password) =>
-    await auth.createUserWithEmailAndPassword(email, password)
-        .then(authUser => authUser)
-        .catch(error => error);
+const registerWithEmailPasswordAsync = async (email, password, name) => {
+    createUser = functions.httpsCallable('createUser');
+    createUser({mail: email, pass: password, name: name})
+    .then(authUser => authUser)
+    .catch(error => error);
+}
+  /*await functions.httpsCallable('createUser')
+    .then(authUser => authUser)
+    .catch(error => error);*/
 
 function* registerWithEmailPassword({ payload }) {
-    const { email, password } = payload.user;
+    const { email, password, name } = payload.user;
     const { history } = payload
     try {
-        const registerUser = yield call(registerWithEmailPasswordAsync, email, password);
+        const registerUser = yield call(registerWithEmailPasswordAsync, email, password, name);
         if (!registerUser.message) {
             localStorage.setItem('user_id', registerUser.user.uid);
             yield put(registerUserSuccess(registerUser));
