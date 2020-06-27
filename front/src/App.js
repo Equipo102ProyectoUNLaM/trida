@@ -20,6 +20,9 @@ const ViewMain = React.lazy(() =>
 const ViewApp = React.lazy(() =>
   import(/* webpackChunkName: "views-app" */ './pages/app')
 );
+const ViewCourse = React.lazy(() =>
+  import(/* webpackChunkName: "views-user" */ './pages/course-selection')
+);
 const ViewUser = React.lazy(() =>
   import(/* webpackChunkName: "views-user" */ './pages/user')
 );
@@ -77,9 +80,13 @@ class App extends Component {
               <Router>
                 <Switch>
                   <AuthRoute
-                    path="/app"
+                    path="/course-selection"
                     authUser={loginUser}
-                    component={ViewApp}
+                    component={ViewCourse}
+                  />
+                  <Route
+                    path="/app"
+                    render={props => <ViewApp {...props} />}
                   />
                   <Route
                     path="/user"

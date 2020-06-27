@@ -1,17 +1,7 @@
 import React, { Component, Fragment } from "react";
-import IntlMessages from "../../../../helpers/IntlMessages";
-import { Colxx, Separator } from "../../../../components/common/CustomBootstrap";
+import { Colxx } from "../../../../components/common/CustomBootstrap";
 import TabClassesMenu from "../../../../containers/ui/TabClassesMenu";
-import {
-    Row,
-    Card,
-    CardBody,
-    CardTitle,
-    Nav,
-    NavItem,
-    NavLink,
-    Breadcrumb
-  } from "reactstrap";
+import { Row  } from "reactstrap";
 
 export default class ClassDetail extends Component {
     render() {

@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from "react";
-import { Row, Pagination, PaginationItem, PaginationLink } from "reactstrap";
+import { Row, Pagination } from "reactstrap";
 import { classData } from "../../../../data/class";
 import { injectIntl } from "react-intl";
-import IntlMessages from "../../../../helpers/IntlMessages";
-import { Colxx, Separator } from "../../../../components/common/CustomBootstrap";
 import ContextMenuContainer from "../../../../containers/pages/ContextMenuContainer";
 import ClassesHeading from "../../../../containers/pages/ClassesHeading";
 import ImageListView from "../../../../containers/pages/ImageListView";
