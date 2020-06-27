@@ -15,16 +15,16 @@ import { isMultiColorActive, isDemo } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 
 const ViewMain = React.lazy(() =>
-  import(/* webpackChunkName: "views" */ './views')
+  import(/* webpackChunkName: "views" */ './pages')
 );
 const ViewApp = React.lazy(() =>
-  import(/* webpackChunkName: "views-app" */ './views/app')
+  import(/* webpackChunkName: "views-app" */ './pages/app')
 );
 const ViewUser = React.lazy(() =>
-  import(/* webpackChunkName: "views-user" */ './views/user')
+  import(/* webpackChunkName: "views-user" */ './pages/user')
 );
 const ViewError = React.lazy(() =>
-  import(/* webpackChunkName: "views-error" */ './views/error')
+  import(/* webpackChunkName: "views-error" */ './pages/error')
 );
 
 const AuthRoute = ({ component: Component, authUser, ...rest }) => {

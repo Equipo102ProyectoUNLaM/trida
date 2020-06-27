@@ -1,89 +1,94 @@
 const data = [
   {
-    id: "comunicaciones",
+    id: "communications",
     icon: "iconsminds-mail",
-    label: "menu.comunicaciones",
-    to: "/app/comunicaciones",
+    label: "menu.communications",
+    to: "/app/communications",
     subs: [
       {
         icon: "iconsminds-speach-bubble-comic-2",
-        label: "menu.foro",
-        to: "/app/foro"
+        label: "menu.forum",
+        to: "/app/communications/forum"
       },
       {
         icon: "simple-icon-paper-plane",
-        label: "menu.mensajeria",
-        to: "/app/mensajeria"
+        label: "menu.messages",
+        to: "/app/communications/messages"
       },
       {
         icon: "iconsminds-receipt-4",
-        label: "menu.formales",
-        to: "/app/formales"
+        label: "menu.formal",
+        to: "/app/communications/formal"
       }      
     ]
   },
   {
-    id: "contenidos",
+    id: "content",
     icon: "simple-icon-cloud-upload",
-    label: "menu.contenidos",
-    to: "/app/contenidos",
+    label: "menu.content",
+    to: "/app/content",
     subs: [
       {
         icon: "simple-icon-cloud-upload",
-        label: "menu.mis-contenidos",
-        to: "/app/contenidos"
+        label: "menu.my-contents",
+        to: "/app/content"
       }
     ]
   },
   {
-    id: "correcciones",
+    id: "corrections",
     icon: "simple-icon-check",
-    label: "menu.correcciones",
-    to: "/app/correcciones",
+    label: "menu.corrections",
+    to: "/app/corrections",
     subs: [
       {
         icon: "simple-icon-check",
-        label: "menu.mis-correcciones",
-        to: "/app/correcciones"
+        label: "menu.my-corrections",
+        to: "/app/corrections"
       }
     ]
   },
   {
-    id: "clase-virtual",
+    id: "virtual-classes",
     icon: "iconsminds-blackboard",
-    label: "menu.clases",
-    to: "/app/clases",
+    label: "menu.virtual-classes",
+    to: "/app/virtual-classes",
     subs: [
       {
+        icon: "iconsminds-book",
+        label: "menu.my-classes",
+        to: "/app/virtual-classes/my-classes"
+      },
+      {
         icon: "iconsminds-blackboard",
-        label: "menu.mis-clases",
-        to: "/app/clases"
+        label: "menu.board",
+        to: "/app/virtual-classes/board"
       }
     ]
   },
   {
-    id: "practicas",
+    id: "activities",
     icon: "iconsminds-library",
-    label: "menu.practicas",
-    to: "/app/practicas",
+    label: "menu.activities",
+    to: "/app/activities",
     subs: [
       {
         icon: "iconsminds-library",
-        label: "menu.mis-practicas",
-        to: "/app/practicas"
+        label: "menu.my-activities",
+        to: "/app/activities"
       }
     ]
   },
   {
-    id: "evaluaciones",
+    id: "evaluations",
     icon: "simple-icon-note",
-    label: "menu.evaluaciones",
-    to: "/app/evaluaciones",
+    label: "menu.evaluations",
+    to: "/app/evaluations",
     subs: [
       {
         icon: "simple-icon-note",
-        label: "menu.mis-evaluaciones",
-        to: "/app/evaluaciones"
+        label: "menu.my-evaluations",
+        to: "/app/evaluations"
       }
     ]
   }

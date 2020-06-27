@@ -47,6 +47,7 @@ Table of Contents
 42.Details Page
 43.Rounded
 44.Rtl
+45.Board
 
 */
 
@@ -2685,7 +2686,7 @@ button {
 }
 
 /* 15.Main*/
-main {
+.main-app {
   margin-left: $sub-menu-width + $main-menu-width + $main-margin;
   margin-top: $navbar-height + $main-margin - 15;
   margin-right: $main-margin;
@@ -2774,7 +2775,7 @@ main {
 .card {
   border: initial;
   background: $foreground-color;
-  width: 80%;
+  width: 100%;
 
   .card-header .card-icon {
     right: 5px;
@@ -8823,4 +8824,23 @@ footer.page-footer {
       }
     }
   }
+}
+
+// 45 Board
+
+.excalidraw {
+  height: 800px;
+  width: 100% !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+
+  .encrypted-icon, .github-corner {
+    display: none !important;
+  }
+
+}
+
+.board {
+  text-align: center;
 }

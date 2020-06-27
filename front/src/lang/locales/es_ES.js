@@ -6,7 +6,10 @@ Table of Contents
 02.User Login, Logout, Register
 03.Menu
 04.Error Page
-*/
+05.Pages General
+06.Virtual Classes
+  06.01.My Classes
+*/ 
 
 module.exports = {
   /* 01.General */
@@ -40,23 +43,40 @@ module.exports = {
   "menu.search": "Búsqueda",
   "menu.docs": "Docs",
   "menu.blank-page": "Blank Page",
-  "menu.comunicaciones": "Comunicaciones",
-  "menu.contenidos": "Contenidos",
-  "menu.correcciones": "Correcciones",
-  "menu.clases": "Clases Virtuales",
-  "menu.practicas": "Prácticas",
-  "menu.evaluaciones": "Evaluaciones",
-  "menu.foro": "Foro",
-  "menu.mensajeria": "Mensajería",
-  "menu.formales": "Comunicaciones Formales",
-  "menu.mis-contenidos": "Mis Contenidos",
-  "menu.mis-correcciones": "Mis Correcciones",
-  "menu.mis-clases": "Mis Clases",
-  "menu.mis-practicas": "Mis Prácticas",
-  "menu.mis-evaluaciones": "Mis Evaluaciones",
+  "menu.communications": "Comunicaciones",
+  "menu.content": "Contenidos",
+  "menu.corrections": "Correcciones",
+  "menu.virtual-classes": "Clases Virtuales",
+  "menu.activities": "Prácticas",
+  "menu.evaluations": "Evaluaciones",
+  "menu.forum": "Foro",
+  "menu.messages": "Mensajería",
+  "menu.formal": "Comunicaciones Formales",
+  "menu.my-contents": "Mis Contenidos",
+  "menu.my-corrections": "Mis Correcciones",
+  "menu.my-classes": "Mis Clases",
+  "menu.board": "Pizarrón",
+  "menu.my-activities": "Mis Prácticas",
+  "menu.my-evaluations": "Mis Evaluaciones",
 
   /* 04.Error  */
   "pages.error-title": "Vaya, parece que ha ocurrido un error!",
   "pages.error-code": "Código de error",
-  "pages.go-back-home": "Regresar a Inicio"
+  "pages.go-back-home": "Regresar a Inicio",
+
+  /* 06.Pages general */
+  "pages.orderby" : "Ordenar por",
+  "pages.delete" : "Eliminar",
+  "pages.submit": "Aceptar",
+  "pages.cancel": "Cancelar",
+
+  /* 06.Virtual Classes */
+
+    /* 06.01.My Classes */
+    "classes.add" : "AGREGAR CLASE",
+    "classes.edit" : "Editar",
+    "class.name": "Nombre",
+    "class.level": "Nivel educativo",
+    "class.description": "Descripción",
+
 };
