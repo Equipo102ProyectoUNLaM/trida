@@ -49,17 +49,17 @@ class Course extends Component {
                                     <Row>
                                         {this.state.items.map((course, index) => {
                                             return (
-                                                <Row className="mb-4 col-6">
+                                                <Row key={index} className="mb-4 col-4">
                                                     <Colxx >
-                                                        <Button color="primary" onClick={() => this.toggle(index)} className="mb-1">
+                                                        <Button color="primary" onClick={() => this.toggle(index)} block className="mb-2">
                                                             {course.name}
                                                         </Button>
                                                         <Collapse isOpen={course.collapsed}>
-                                                            {course.subjects.map(subject => {
+                                                            {course.subjects.map((subject, i) => {
                                                                 return (
-                                                                    <li>
-                                                                    <h4 onClick={() => history.push(HOME_URL)} >{subject.name} </h4>
-                                                                    </li>
+                                                                    <Row key={i + "div"} >
+                                                                            <h4 className="subject" onClick={() => history.push(HOME_URL)} >{subject.name} </h4>
+                                                                    </Row>
                                                                 );
                                                             })}
                                                         </Collapse>
