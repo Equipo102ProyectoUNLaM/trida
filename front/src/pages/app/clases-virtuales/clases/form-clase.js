@@ -3,9 +3,6 @@ import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from "rc-switch";
 import { createUUID } from "helpers/Utils";
 import { firestore } from 'helpers/Firebase';
-import {firebaseConfig} from 'constants/defaultValues'
-import * as admin from 'firebase-admin';
-admin.initializeApp(firebaseConfig)
 
 class FormClase extends React.Component {
   constructor() {
@@ -28,10 +25,10 @@ class FormClase extends React.Component {
   handleSubmit = () => {
     // acá mandar el state a firestore
 
-    admin.firestore().collection("clases").add({
-      nombre: this.state.nombre,
+    firestore.collection("clases").add({
+      descripcion: this.state.descripcion,
       fecha: this.state.fecha,
-      descripcion: this.state.descripcion
+      nombre: this.state.nombre
     })
     .then(function() {
         console.log("Document successfully written!");
