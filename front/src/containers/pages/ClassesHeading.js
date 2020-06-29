@@ -13,7 +13,7 @@ import {
 import { injectIntl } from "react-intl";
 
 import { Colxx, Separator } from "../../components/common/CustomBootstrap";
-import Breadcrumb from "../navs/Breadcrumb";
+import Breadcrumb from "../navegacion/Breadcrumb";
 import IntlMessages from "../../helpers/IntlMessages";
 
 class ClassesHeading extends Component {
@@ -106,7 +106,6 @@ class ClassesHeading extends Component {
                 </DropdownMenu>
               </ButtonDropdown>
             </div>
-            <Breadcrumb match={match} />
           </div>
 
           <div className="mb-2">

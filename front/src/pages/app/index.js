@@ -9,27 +9,27 @@ const Home = React.lazy(() =>
 );
 
 const VirtualClasses = React.lazy(() =>
-  import('./virtual-classes')
+  import('./clases-virtuales')
 );
 
 const Communications = React.lazy(() =>
-  import('./communications')
+  import('./comunicaciones')
 );
 
 const Content = React.lazy(() =>
-  import('./content')
+  import('./contenidos')
 );
 
 const Corrections = React.lazy(() =>
-  import('./corrections')
+  import('./correcciones')
 );
 
 const Evaluations = React.lazy(() =>
-  import('./evaluations')
+  import('./evaluaciones')
 );
 
 const Activities = React.lazy(() =>
-  import('./activities')
+  import('./practicas')
 );
 
 class App extends Component {

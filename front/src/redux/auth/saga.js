@@ -56,10 +56,10 @@ export function* watchRegisterUser() {
 }
 
 const registerWithEmailPasswordAsync = async (email, password, name) => {
-    createUser = functions.httpsCallable('createUser');
+    /* createUser = functions.httpsCallable('createUser');
     createUser({mail: email, pass: password, name: name})
     .then(authUser => authUser)
-    .catch(error => error);
+    .catch(error => error); */
 }
   /*await functions.httpsCallable('createUser')
     .then(authUser => authUser)

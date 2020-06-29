@@ -1,12 +1,12 @@
-/* Language Texts
+/* Textos
 
-Table of Contents
+Tabla de Contenidos
 
-01.General
-02.User Login, Logout, Register
-03.Menu
-04.Error Page
-05.Pages General
+01. General
+02. Inicio de sesión, registro, cierre de sesión
+03. Menu
+04. Página de error
+05. Páginas generales
 06.Virtual Classes
   06.01.My Classes
 07.Institution Selection
@@ -17,7 +17,7 @@ module.exports = {
   /* 01.General */
 
   /* 02.Inicio de sesión de usuario, cierre de sesión, registro */
-  "user.login-title": "Iniciar sesión",
+  "usuario.login-title": "Iniciar sesión",
   "user.register": "Registro",
   "user.forgot-password": "Reinicie su contraseña",
   "user.email": "Email",
