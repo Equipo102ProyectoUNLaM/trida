@@ -3,9 +3,10 @@ import { Row, Pagination } from "reactstrap";
 import { classData } from "../../../../data/class";
 import { injectIntl } from "react-intl";
 import ContextMenuContainer from "../../../../containers/pages/ContextMenuContainer";
-import ClassesHeading from "../../../../containers/pages/ClassesHeading";
+import HeaderDeModulo from "components/common/HeaderDeModulo";
 import ImageListView from "../../../../containers/pages/ImageListView";
-import AddNewClass from "../../../../containers/pages/AddNewClass";
+import ModalGrande from "containers/pages/ModalGrande";
+import FormClase from "./form-clase";
 
 function collect(props) {
   return { data: props.data };
@@ -19,14 +20,6 @@ class Clase extends Component {
 
     this.state = {
         displayMode: "list",
-
-        selectedPageSize: 10,
-        orderOptions: [
-            { column: "title", label: "Título" },
-            { column: "date", label: "Fecha" },
-        ],
-        pageSizes: [10, 20, 30, 50, 100],
-
         selectedOrderOption: { column: "title", label: "Título" },
         dropdownSplitOpen: false,
         modalOpen: false,
@@ -58,24 +51,17 @@ componentDidMount() {
   componentWillUnmount() {
   }
 
-/*   toggleModal = () => {
+  toggleModal = () => {
     this.setState({
       modalOpen: !this.state.modalOpen
     });
-  }; */
+  };
 
   toggle = () => {
     this.setState(prevState => ({
       modal: !prevState.modal
     }));
   };
-
-  toggleModal = () => {
-    this.setState(prevState => ({
-      modalLarge: !prevState.modalLarge
-    }));
-  };
-
 
   changeOrderBy = column => {
     this.setState(
@@ -225,48 +211,30 @@ componentDidMount() {
 
   render() {
     const {
-      currentPage,
-      items,
-      selectedPageSize,
-      totalItemCount,
-      selectedOrderOption,
-      selectedItems,
-      orderOptions,
-      pageSizes,
       modalOpen,
-      categories
     } = this.state;
     const { match } = this.props;
-    const startIndex = (currentPage - 1) * selectedPageSize;
-    const endIndex = currentPage * selectedPageSize;
+
 
     return !this.state.isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
         <div className="disable-text-selection">
-          <ClassesHeading
+          <HeaderDeModulo
             heading="menu.my-classes"
-            changeOrderBy={this.changeOrderBy}
-            changePageSize={this.changePageSize}
-            selectedPageSize={selectedPageSize}
-            totalItemCount={totalItemCount}
-            selectedOrderOption={selectedOrderOption}
-            match={match}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            selectedItemsLength={selectedItems ? selectedItems.length : 0}
-            itemsLength={items ? items.length : 0}
-            onSearchKey={this.onSearchKey}
-            orderOptions={orderOptions}
-            pageSizes={pageSizes}
             toggleModal={this.toggleModal}
+            buttonText="classes.add"
           />
-          <AddNewClass
+          <ModalGrande
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}
-            categories={categories}
-          />
+            modalHeader="classes.add"
+            buttonPrimary="Agregar"
+            buttonSecondary="Cancelar"
+          >
+            <FormClase />
+          </ModalGrande>
           <Row>
             {this.state.items.map(product => {
                 return (
