@@ -1,7 +1,11 @@
 import React from 'react';
-import { Input, InputGroup, InputGroupAddon, FormGroup, Label } from 'reactstrap';
+import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from "rc-switch";
-import {createUUID} from "helpers/Utils";
+import { createUUID } from "helpers/Utils";
+import { firestore } from 'helpers/Firebase';
+import {firebaseConfig} from 'constants/defaultValues'
+import * as admin from 'firebase-admin';
+admin.initializeApp(firebaseConfig)
 
 class FormClase extends React.Component {
   constructor() {
@@ -22,26 +26,37 @@ class FormClase extends React.Component {
   };
 
   handleSubmit = () => {
-    // acá mandar el state firestore
+    // acá mandar el state a firestore
+
+    admin.firestore().collection("clases").add({
+      nombre: this.state.nombre,
+      fecha: this.state.fecha,
+      descripcion: this.state.descripcion
+    })
+    .then(function() {
+        console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+    });
+  
   };
 
   generateIdSala = () => {
     this.setState(prevState => ({
       switchVideollamada: !prevState.switchVideollamada
-    }, () => {
+    }), () => {
       if(this.state.switchVideollamada) {
         const uuid = createUUID();
         console.log(uuid);
       }
     }
-    ));
-    /* if(this.state.switchVideollamada) {
-      const uuid = createUUID();
-      console.log(uuid);
-    } */
+    );
   };
 
   render() {
+    const { toggleModal } = this.props;
+
     return (
       <form onSubmit={this.handleSubmit}>
         <FormGroup className="mb-3">
@@ -71,7 +86,14 @@ class FormClase extends React.Component {
           unCheckedChildren="No"
         />
       </FormGroup>
-
+      <ModalFooter>
+        <Button color="primary" type="submit">
+          Agregar
+        </Button>
+        <Button color="secondary" onClick={toggleModal}>
+          Cancelar
+        </Button>
+      </ModalFooter>
       </form>
     );
   }

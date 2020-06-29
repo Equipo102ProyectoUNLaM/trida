@@ -12,7 +12,9 @@
     "classnames": "2.2.6",
     "excalidraw": "^0.2.0",
     "firebase": "^7.14.6",
+    "firebase-admin": "^8.13.0",
     "formik": "^1.5.1",
+    "http2": "^3.3.7",
     "moment": "2.22.2",
     "mousetrap": "^1.6.3",
     "rc-slider": "^8.6.1",
@@ -68,6 +70,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "node-sass": "^4.13.0"
+    "node-sass": "^4.14.1"
   }
 }

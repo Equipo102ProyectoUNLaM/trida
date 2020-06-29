@@ -2,13 +2,6 @@ import React, { Component } from "react";
 import {
   Row,
   Button,
-  ButtonDropdown,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  CustomInput,
-  Collapse
 } from "reactstrap";
 import { injectIntl } from "react-intl";
 

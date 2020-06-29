@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Row, Pagination } from "reactstrap";
+import { Row } from "reactstrap";
 import { classData } from "../../../../data/class";
 import { injectIntl } from "react-intl";
 import ContextMenuContainer from "../../../../containers/pages/ContextMenuContainer";
@@ -31,7 +31,8 @@ class Clase extends Component {
         search: "",
         selectedItems: [],
         lastChecked: null,
-        isLoading: false
+        isLoading: false,
+        submitClicked: false
     };
 }
 
@@ -230,10 +231,8 @@ componentDidMount() {
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}
             modalHeader="classes.add"
-            buttonPrimary="Agregar"
-            buttonSecondary="Cancelar"
           >
-            <FormClase />
+            <FormClase toggleModal={this.toggleModal}/>
           </ModalGrande>
           <Row>
             {this.state.items.map(product => {
