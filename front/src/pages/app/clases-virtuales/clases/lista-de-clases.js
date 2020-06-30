@@ -6,20 +6,18 @@ import {
   CardSubtitle,
   CardImg,
   CardText,
-  CustomInput,
   Badge
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import classnames from "classnames";
 import { ContextMenuTrigger } from "react-contextmenu";
-import { Colxx } from "../../components/common/CustomBootstrap";
+import { Colxx } from "components/common/CustomBootstrap";
 
-const ImageListView = ({ product, isSelect, collect, onCheckItem, navTo }) => {
+const ListaDeClases = ({ product, isSelect, collect, navTo }) => {
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={product.id}>
       <ContextMenuTrigger id="menu_id" data={product.id} collect={collect}>
         <Card
-          onClick={event => onCheckItem(event, product.id)}
           className={classnames({
             active: isSelect
           })}
@@ -38,15 +36,6 @@ const ImageListView = ({ product, isSelect, collect, onCheckItem, navTo }) => {
           </div>
           <CardBody>
             <Row>
-              <Colxx xxs="2">
-                <CustomInput
-                  className="item-check mb-0"
-                  type="checkbox"
-                  id={`check_${product.id}`}
-                  checked={isSelect}
-                  onChange={() => {}}
-                  label=""/>
-              </Colxx>
               <Colxx xxs="10" className="mb-3">
                 <CardSubtitle>{product.title}</CardSubtitle>
                 <CardText className="text-muted text-small mb-0 font-weight-light">
@@ -65,4 +54,4 @@ const ImageListView = ({ product, isSelect, collect, onCheckItem, navTo }) => {
 };
 
 /* React.memo detail : https://reactjs.org/docs/react-api.html#reactpurecomponent  */
-export default React.memo(ImageListView);
+export default React.memo(ListaDeClases);
