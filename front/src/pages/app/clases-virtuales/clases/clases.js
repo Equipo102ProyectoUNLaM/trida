@@ -1,55 +1,79 @@
-import React, { Component, Fragment } from "react";
-import { Row } from "reactstrap";
-import { classData } from "../../../../data/class";
-import { injectIntl } from "react-intl";
-import HeaderDeModulo from "components/common/HeaderDeModulo";
-import ListaDeClases from "./lista-de-clases";
-import ModalGrande from "containers/pages/ModalGrande";
-import FormClase from "./form-clase";
+import React, { Component, Fragment } from 'react';
+import { Row } from 'reactstrap';
+import { injectIntl } from 'react-intl';
+import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import ListaConImagen from 'components/lista-con-imagen';
+import ModalGrande from 'containers/pages/ModalGrande';
+import FormClase from './form-clase';
+import { firestore } from 'helpers/Firebase';
 
 function collect(props) {
   return { data: props.data };
 }
 
 class Clase extends Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
-        modalOpen: false,
-        selectedItems: [],
-        isLoading: false,
+      items: [],
+      modalOpen: false,
+      selectedItems: [],
+      isLoading: false,
     };
-}
-
-componentDidMount() {
-    this.dataListRender();
   }
 
-  componentWillUnmount() {
+  getClases = async () => {
+    const arrayDeObjetos = [];
+    const clasesRef = firestore.collection('clases');
+    try {
+      var allClasesSnapShot = await clasesRef.get();
+      allClasesSnapShot.forEach((doc) => {
+        const docId = doc.id;
+        const { nombre, fecha, descripcion } = doc.data();
+        const obj = {
+          id: docId,
+          nombre: nombre,
+          descripcion: descripcion,
+          fecha: fecha,
+          imagen:
+            'https://image.freepik.com/free-vector/online-education-illustration-tablet-notes-pencil-education-icon-concept-white-isolated_138676-631.jpg',
+        };
+        arrayDeObjetos.push(obj);
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.dataListRenderer(arrayDeObjetos);
+    }
+  };
+
+  componentDidMount() {
+    this.getClases();
   }
 
   toggleModal = () => {
     this.setState({
-      modalOpen: !this.state.modalOpen
+      modalOpen: !this.state.modalOpen,
     });
   };
 
-  dataListRender() {
+  onClaseAgregada = () => {
+    this.toggleModal();
+    this.getClases();
+  };
+
+  dataListRenderer(arrayDeObjetos) {
     this.setState({
-      items: classData,
+      items: arrayDeObjetos,
       selectedItems: [],
-      isLoading: true
+      isLoading: true,
     });
   }
 
-
   render() {
-    const {
-      modalOpen,
-    } = this.state;
-
+    const { modalOpen, items } = this.state;
+    console.log(items);
     return !this.state.isLoading ? (
       <div className="loading" />
     ) : (
@@ -65,20 +89,23 @@ componentDidMount() {
             toggleModal={this.toggleModal}
             modalHeader="classes.add"
           >
-            <FormClase toggleModal={this.toggleModal}/>
+            <FormClase
+              toggleModal={this.toggleModal}
+              onClaseAgregada={this.onClaseAgregada}
+            />
           </ModalGrande>
           <Row>
-            {this.state.items.map(product => {
-                return (
-                  <ListaDeClases
-                    key={product.id}
-                    product={product}
-                    isSelect={this.state.selectedItems.includes(product.id)}
-                    collect={collect}
-                    navTo = "class-detail"
-                  />
-                );                
-            })}{" "}
+            {items.map((clase) => {
+              return (
+                <ListaConImagen
+                  key={clase.id}
+                  item={clase}
+                  isSelect={this.state.selectedItems.includes(clase.id)}
+                  collect={collect}
+                  navTo={`class-detail/${clase.id}`}
+                />
+              );
+            })}{' '}
           </Row>
         </div>
       </Fragment>
@@ -86,4 +113,3 @@ componentDidMount() {
   }
 }
 export default injectIntl(Clase);
-
