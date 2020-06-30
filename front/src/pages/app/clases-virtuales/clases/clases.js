@@ -36,8 +36,7 @@ class Clase extends Component {
           nombre: nombre,
           descripcion: descripcion,
           fecha: fecha,
-          imagen:
-            'https://image.freepik.com/free-vector/online-education-illustration-tablet-notes-pencil-education-icon-concept-white-isolated_138676-631.jpg',
+          imagen: 'https://shorturl.at/dfjN0',
         };
         arrayDeObjetos.push(obj);
       });
