@@ -17,9 +17,7 @@ const ListaConImagen = ({ item, isSelect, collect, navTo }) => {
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={item.id}>
       <ContextMenuTrigger id="menu_id" data={item.id} collect={collect}>
-        <Card
-          className="card-img-top"
-        >
+        <Card className="card-img-top">
           <div className="position-relative">
             <NavLink
               to={{
@@ -30,7 +28,12 @@ const ListaConImagen = ({ item, isSelect, collect, navTo }) => {
               }}
               className="w-40 w-sm-100"
             >
-              <CardImg top className="card-img-fluid" alt={item.nombre} src={item.imagen} />
+              <CardImg
+                top
+                className="card-img-fluid"
+                alt={item.nombre}
+                src={item.imagen}
+              />
             </NavLink>
           </div>
           <CardBody className="card-body">
