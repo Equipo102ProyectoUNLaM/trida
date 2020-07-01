@@ -103,7 +103,7 @@ class Clase extends Component {
                   item={clase}
                   isSelect={this.state.selectedItems.includes(clase.id)}
                   collect={collect}
-                  navTo={`class-detail/${clase.id}`}
+                  navTo={`/app/virtual-classes/my-classes/class-detail/${clase.id}`}
                 />
               );
             })}{' '}
