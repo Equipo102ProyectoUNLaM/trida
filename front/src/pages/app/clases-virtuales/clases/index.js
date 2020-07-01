@@ -18,9 +18,8 @@ const MyClassesMenu = ({ match }) => (
         render={(props) => <Clase {...props} />}
       />
       <Route
-        path={`${match.url}/class-detail`}
+        path={`${match.url}/class-detail/:claseId`}
         render={(props) => <DetalleClase {...props} />}
-        isExact
       />
       <Redirect to="/error" />
     </Switch>
