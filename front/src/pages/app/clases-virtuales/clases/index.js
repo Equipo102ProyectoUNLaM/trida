@@ -9,6 +9,10 @@ const DetalleClase = React.lazy(() =>
   import(/* webpackChunkName: "application-todo" */ './detalle-clase')
 );
 
+const PaginaVideollamada = React.lazy(() =>
+  import(/* webpackChunkName: "application-todo" */ './videollamada')
+);
+
 const MyClassesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
@@ -20,6 +24,11 @@ const MyClassesMenu = ({ match }) => (
       <Route
         path={`${match.url}/class-detail`}
         render={(props) => <DetalleClase {...props} />}
+        isExact
+      />
+      <Route
+        path={`${match.url}/videollamada`}
+        render={(props) => <PaginaVideollamada {...props} />}
         isExact
       />
       <Redirect to="/error" />
