@@ -23,7 +23,15 @@ const ListaConImagen = ({ item, isSelect, collect, navTo }) => {
           })}
         >
           <div className="position-relative">
-            <NavLink to={`${navTo}`} className="w-40 w-sm-100">
+            <NavLink
+              to={{
+                pathname: `${navTo}`,
+                navProps: {
+                  itemId: item.id,
+                },
+              }}
+              className="w-40 w-sm-100"
+            >
               <CardImg top alt={item.nombre} src={item.imagen} />
             </NavLink>
           </div>
