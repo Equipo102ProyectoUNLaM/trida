@@ -29,6 +29,10 @@ class TabsDeClase extends Component {
     };
   }
 
+  onVideollamadaClick = (sala) => {
+    this.props.history.push('videollamada');
+  };
+
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
