@@ -3,6 +3,7 @@ import { Colxx } from '../../../../components/common/CustomBootstrap';
 import TabClassesMenu from '../../../../containers/ui/TabClassesMenu';
 import { Row, Col } from 'reactstrap';
 import { firestore } from 'helpers/Firebase';
+import {capitalize} from 'underscore.string';
 
 export default class DetalleClase extends Component {
   constructor(props) {
@@ -14,19 +15,24 @@ export default class DetalleClase extends Component {
       fecha: '',
       descripcion: '',
       idSala: '',
+      isLoading: true,
     };
   }
 
-  getDetalleDeClase = async (claseId) => {
+  getDetalleDeClase = async () => {
+    const { claseId } = this.props.match.params;
+
     const claseRef = firestore.doc(`clases/${claseId}`);
     try {
       const claseSnapShot = await claseRef.get();
       const { nombre, fecha, descripcion, idSala } = claseSnapShot.data();
       this.setState({
-        nombre: nombre,
-        fecha: fecha,
-        descripcion: descripcion,
-        idSala: idSala,
+        claseId,
+        nombre,
+        fecha,
+        descripcion,
+        idSala,
+        isLoading: false
       });
     } catch (err) {
       console.log('Error getting documents', err);
@@ -34,21 +40,21 @@ export default class DetalleClase extends Component {
   };
 
   componentDidMount() {
-    const claseId = this.props.location.navProps.itemId;
-
-    this.getDetalleDeClase(claseId);
+    this.getDetalleDeClase();
   }
 
   render() {
-    const { nombre, fecha, descripcion, idSala } = this.state;
-    return (
+    const { nombre, fecha, descripcion, idSala, isLoading } = this.state;
+    return isLoading ? (
+      <div className="loading" />
+    ) : (
       <Fragment>
         <Row>
           <Colxx xxs="12">
             <h1>
               <i className="simple-icon-notebook heading-icon" />{' '}
               <span className="align-middle d-inline-block pt-1">
-                {nombre.toUpperCase()}
+                {capitalize(nombre)}
               </span>
             </h1>
           </Colxx>
