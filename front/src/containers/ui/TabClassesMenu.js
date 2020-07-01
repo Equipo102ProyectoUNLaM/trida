@@ -11,11 +11,11 @@ import {
   TabPane,
   Button,
 } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 
 import classnames from 'classnames';
-import IntlMessages from '../../helpers/IntlMessages';
-import { Colxx } from '../../components/common/CustomBootstrap';
+import { Colxx } from 'components/common/CustomBootstrap';
+import { Videollamada } from 'components/videollamada/videollamada';
 
 class TabClassesMenu extends Component {
   constructor(props) {
@@ -28,6 +28,10 @@ class TabClassesMenu extends Component {
       activeSecondTab: '1',
     };
   }
+
+  onVideollamadaClick = (sala) => {
+    this.props.history.push('videollamada');
+  };
 
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
@@ -125,7 +129,14 @@ class TabClassesMenu extends Component {
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <Button>Ir a videollamada</Button>
+                            <Button
+                              color="primary"
+                              className="btn-shadow btn-multiple-state"
+                              onClick={this.onVideollamadaClick}
+                            >
+                              {' '}
+                              Ir a videollamada{' '}
+                            </Button>
                           )}
                         </CardBody>
                       </Colxx>
@@ -172,4 +183,4 @@ class TabClassesMenu extends Component {
   }
 }
 
-export default TabClassesMenu;
+export default withRouter(TabClassesMenu);
