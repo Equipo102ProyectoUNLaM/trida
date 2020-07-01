@@ -72,7 +72,7 @@ class Clase extends Component {
 
   render() {
     const { modalOpen, items } = this.state;
-    console.log(items);
+
     return !this.state.isLoading ? (
       <div className="loading" />
     ) : (
