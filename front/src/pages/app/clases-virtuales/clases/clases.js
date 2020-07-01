@@ -6,6 +6,9 @@ import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormClase from './form-clase';
 import { firestore } from 'helpers/Firebase';
+//import Imagen from process.env.PUBLIC_URL + 'imagen-clase.jpeg'
+const publicUrl = process.env.PUBLIC_URL;
+const imagenClase = `${publicUrl}/assets/img/imagen-clase.jpeg`;
 
 function collect(props) {
   return { data: props.data };
@@ -19,7 +22,7 @@ class Clase extends Component {
       items: [],
       modalOpen: false,
       selectedItems: [],
-      isLoading: false,
+      isLoading: true,
     };
   }
 
@@ -36,7 +39,7 @@ class Clase extends Component {
           nombre: nombre,
           descripcion: descripcion,
           fecha: fecha,
-          imagen: 'https://shorturl.at/dfjN0',
+          imagen: imagenClase,
         };
         arrayDeObjetos.push(obj);
       });
@@ -66,14 +69,14 @@ class Clase extends Component {
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
-      isLoading: true,
+      isLoading: false,
     });
   }
 
   render() {
-    const { modalOpen, items } = this.state;
+    const { modalOpen, items, isLoading } = this.state;
 
-    return !this.state.isLoading ? (
+    return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
@@ -101,7 +104,7 @@ class Clase extends Component {
                   item={clase}
                   isSelect={this.state.selectedItems.includes(clase.id)}
                   collect={collect}
-                  navTo={`class-detail/${clase.id}`}
+                  navTo={`/app/virtual-classes/my-classes/class-detail/${clase.id}`}
                 />
               );
             })}{' '}
