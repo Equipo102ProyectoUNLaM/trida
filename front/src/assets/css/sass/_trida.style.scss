@@ -397,6 +397,10 @@ p {
   font-size: 1.9rem !important;
 }
 
+.text-medium {
+  font-size: 1.2rem !important;
+}
+
 .text-one {
   font-size: 1rem !important;
 }
@@ -2813,7 +2817,7 @@ button {
   }
 
   .card-title {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     @include respond-below(sm) {
       margin-bottom: 1.25rem;
     }
@@ -2821,7 +2825,7 @@ button {
 }
 
 .card-title {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   @include respond-below(sm) {
     font-size: 0.9rem;
   }

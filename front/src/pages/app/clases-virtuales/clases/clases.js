@@ -21,7 +21,7 @@ class Clase extends Component {
       items: [],
       modalOpen: false,
       selectedItems: [],
-      isLoading: false,
+      isLoading: true,
     };
   }
 
@@ -38,7 +38,7 @@ class Clase extends Component {
           nombre: nombre,
           descripcion: descripcion,
           fecha: fecha,
-          imagen: 'https://shorturl.at/dfjN0',
+          imagen: imagenClase,
         };
         arrayDeObjetos.push(obj);
       });
@@ -68,14 +68,14 @@ class Clase extends Component {
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
-      isLoading: true,
+      isLoading: false,
     });
   }
 
   render() {
-    const { modalOpen, items } = this.state;
+    const { modalOpen, items, isLoading } = this.state;
 
-    return !this.state.isLoading ? (
+    return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
