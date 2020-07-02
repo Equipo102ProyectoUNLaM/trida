@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { Colxx } from '../../../../components/common/CustomBootstrap';
-import TabClassesMenu from '../../../../containers/ui/TabClassesMenu';
+import { Colxx } from '../../../../../components/common/CustomBootstrap';
+import TabsDeClase from './tabs-de-clase';
 import { Row, Col } from 'reactstrap';
 import { firestore } from 'helpers/Firebase';
-import {capitalize} from 'underscore.string';
+import { capitalize } from 'underscore.string';
 
 export default class DetalleClase extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ export default class DetalleClase extends Component {
         fecha,
         descripcion,
         idSala,
-        isLoading: false
+        isLoading: false,
       });
     } catch (err) {
       console.log('Error getting documents', err);
@@ -59,7 +59,7 @@ export default class DetalleClase extends Component {
             </h1>
           </Colxx>
         </Row>
-        <TabClassesMenu idSala={idSala} />
+        <TabsDeClase idSala={idSala} />
       </Fragment>
     );
   }

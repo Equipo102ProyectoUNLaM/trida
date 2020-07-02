@@ -15,9 +15,9 @@ import { NavLink, withRouter } from 'react-router-dom';
 
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { Videollamada } from 'components/videollamada/videollamada';
+import PaginaVideollamada from './videollamada';
 
-class TabClassesMenu extends Component {
+class TabsDeClase extends Component {
   constructor(props) {
     super(props);
 
@@ -28,10 +28,6 @@ class TabClassesMenu extends Component {
       activeSecondTab: '1',
     };
   }
-
-  onVideollamadaClick = (sala) => {
-    this.props.history.push('videollamada');
-  };
 
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
@@ -48,6 +44,7 @@ class TabClassesMenu extends Component {
     }
   }
   render() {
+    const idSala = this.props.idSala;
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
@@ -124,19 +121,12 @@ class TabClassesMenu extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          {!this.props.idSala ? (
+                          {!idSala ? (
                             <CardTitle className="mb-4">
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <Button
-                              color="primary"
-                              className="btn-shadow btn-multiple-state"
-                              onClick={this.onVideollamadaClick}
-                            >
-                              {' '}
-                              Ir a videollamada{' '}
-                            </Button>
+                            <PaginaVideollamada idSala={idSala} />
                           )}
                         </CardBody>
                       </Colxx>
@@ -183,4 +173,4 @@ class TabClassesMenu extends Component {
   }
 }
 
-export default withRouter(TabClassesMenu);
+export default withRouter(TabsDeClase);

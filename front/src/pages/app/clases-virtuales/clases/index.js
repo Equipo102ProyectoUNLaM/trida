@@ -6,32 +6,39 @@ const Clase = React.lazy(() =>
 );
 
 const DetalleClase = React.lazy(() =>
-  import(/* webpackChunkName: "application-todo" */ './detalle-clase')
+  import(
+    /* webpackChunkName: "application-todo" */ './detalle-clase/detalle-clase'
+  )
 );
 
 const PaginaVideollamada = React.lazy(() =>
-  import(/* webpackChunkName: "application-todo" */ './videollamada')
+  import(
+    /* webpackChunkName: "application-todo" */ './detalle-clase/videollamada'
+  )
 );
 
-const MyClassesMenu = ({ match }) => (
-  <Suspense fallback={<div className="loading" />}>
-    <Switch>
-      <Redirect exact from={`${match.url}`} to={`${match.url}/my-classes`} />
-      <Route
-        path={`${match.url}/my-classes`}
-        render={(props) => <Clase {...props} />}
-      />
-      <Route
-        path={`${match.url}/class-detail/:claseId`}
-        render={(props) => <DetalleClase {...props} />}
-      />
-      <Route
-        path={`${match.url}/videollamada`}
-        render={(props) => <PaginaVideollamada {...props} />}
-        isExact
-      />
-      <Redirect to="/error" />
-    </Switch>
-  </Suspense>
-);
+const MyClassesMenu = ({ match }) => {
+  console.log(match);
+  return (
+    <Suspense fallback={<div className="loading" />}>
+      <Switch>
+        <Redirect exact from={`${match.url}`} to={`${match.url}/my-classes`} />
+        <Route
+          path={`${match.url}/my-classes`}
+          render={(props) => <Clase {...props} />}
+        />
+        <Route
+          path={`${match.url}/class-detail/:claseId`}
+          render={(props) => <DetalleClase {...props} />}
+        />
+        <Route
+          path={`${match.url}/class-detail/:claseId/videollamada`}
+          render={(props) => <PaginaVideollamada {...props} />}
+          isExact
+        />
+        <Redirect to="/error" />
+      </Switch>
+    </Suspense>
+  );
+};
 export default MyClassesMenu;
