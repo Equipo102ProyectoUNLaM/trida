@@ -29,10 +29,6 @@ class TabsDeClase extends Component {
     };
   }
 
-  onVideollamadaClick = (sala) => {
-    this.props.history.push('videollamada');
-  };
-
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -125,9 +121,6 @@ class TabsDeClase extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">
-                            Jitsi + chat + lanzar preguntas
-                          </CardTitle>
                           {!idSala ? (
                             <CardTitle className="mb-4">
                               No hay videollamada asociada
