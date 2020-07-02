@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { Card, CardBody, CardTitle, CustomInput } from "reactstrap";
-import Pagination from "../../components/DatatablePagination";
 import IntlMessages from "../../helpers/IntlMessages";
 
 import data from "../../data/contents";
@@ -76,7 +75,7 @@ class Contents extends Component {
               defaultPageSize={6}
               showPageJump={false}
               showPageSizeOptions={false}
-              PaginationComponent={Pagination}
+              // PaginationComponent={Pagination}
               columns={[
                 {
                   sortable: false,

@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter} from "react-router-dom";
 
-import TopNav from "../containers/navs/Topnav";
-import Sidebar from "../containers/navs/Sidebar";
-import Footer from "../containers/navs/Footer";
+import TopNav from "../containers/navegacion/Topnav";
+import Sidebar from "../containers/navegacion/Sidebar";
+import Footer from "../containers/navegacion/Footer";
 
 class AppLayout extends Component {
   render() {

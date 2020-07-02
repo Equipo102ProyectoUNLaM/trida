@@ -64,3 +64,4 @@ build/
 
 TODO
 .history/
+.eslintcache

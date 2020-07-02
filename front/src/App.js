@@ -4,7 +4,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect
+  Redirect,
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import './helpers/Firebase';
@@ -34,21 +34,21 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props =>
+      render={(props) =>
         authUser || isDemo ? (
           <Component {...props} />
         ) : (
           <Redirect
             to={{
               pathname: '/user/login',
-              state: { from: props.location }
+              state: { from: props.location },
             }}
           />
         )
       }
     />
   );
-}
+};
 
 class App extends Component {
   constructor(props) {
@@ -86,21 +86,21 @@ class App extends Component {
                   />
                   <Route
                     path="/app"
-                    render={props => <ViewApp {...props} />}
+                    render={(props) => <ViewApp {...props} />}
                   />
                   <Route
                     path="/user"
-                    render={props => <ViewUser {...props} />}
+                    render={(props) => <ViewUser {...props} />}
                   />
                   <Route
                     path="/error"
                     exact
-                    render={props => <ViewError {...props} />}
+                    render={(props) => <ViewError {...props} />}
                   />
                   <Route
                     path="/"
                     exact
-                    render={props => <ViewMain {...props} />}
+                    render={(props) => <ViewMain {...props} />}
                   />
                   <Redirect to="/error" />
                 </Switch>
@@ -120,7 +120,4 @@ const mapStateToProps = ({ authUser, settings }) => {
 };
 const mapActionsToProps = {};
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(App);
+export default connect(mapStateToProps, mapActionsToProps)(App);

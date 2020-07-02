@@ -134,7 +134,7 @@ class ResetPassword extends Component {
 
                                         <div className="d-flex justify-content-between align-items-center">
                                             <NavLink to={`/user/login`}>
-                                                <IntlMessages id="user.login-title" />
+                                                <IntlMessages id="usuario.login-title" />
                                             </NavLink>
                                             <Button
                                                 color="primary"
