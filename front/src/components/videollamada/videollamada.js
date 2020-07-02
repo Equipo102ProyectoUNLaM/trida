@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { useJitsi } from 'react-jutsu'; // Custom hook
 /* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
@@ -7,8 +8,17 @@ import { useJitsi } from 'react-jutsu'; // Custom hook
         'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone', 'security' */
 // const TOOLBAR_BUTTONS = ['microphone', 'camera', 'shortcuts', 'videoquality', 'fullscreen', 'hangup', 'tileview'];
 
-const Videollamada = ({ roomName, subject = 'Clase Virtual', userName }) => {
+const Videollamada = ({
+  roomName,
+  subject = 'Clase Virtual',
+  userName,
+  options,
+  history,
+  isHost,
+}) => {
+  const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
+
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
     if (element) {
@@ -31,19 +41,32 @@ const Videollamada = ({ roomName, subject = 'Clase Virtual', userName }) => {
       TOOLBAR_BUTTONS: [
         'microphone',
         'camera',
-        'mute-everyone',
         'hangup',
         'raisehand',
         'recording',
+        'settings',
+        'tileview',
+        'desktop',
+        'chat',
+        'sharedvideo',
+        'shortcuts',
+        'mute-everyone',
+        'videobackgroundblur',
       ],
+      SETTINGS_SECTIONS: ['devices', 'language', 'profile'],
       SHOW_JITSI_WATERMARK: false,
       SHOW_WATERMARK_FOR_GUESTS: false,
       TOOLBAR_ALWAYS_VISIBLE: true,
+      DEFAULT_LOCAL_DISPLAY_NAME: userName,
     },
     configOverwrite: {
       disableDeepLinking: true,
-      startAudioMuted: 1,
-      startVideoMuted: 1,
+      startWithAudioMuted: microfono,
+      startWithVideoMuted: camara,
+      defaultLanguage: 'es',
+      disableRemoteMute: true,
+      disableRemoteControl: true,
+      remoteVideoMenu: { disableKick: { isHost } },
     },
   });
 
@@ -52,6 +75,10 @@ const Videollamada = ({ roomName, subject = 'Clase Virtual', userName }) => {
       jitsi.addEventListener('videoConferenceJoined', () => {
         jitsi.executeCommand('displayName', userName);
         jitsi.executeCommand('subject', subject);
+        jitsi.executeCommand('enableLobby');
+      });
+      jitsi.addEventListener('readyToClose', () => {
+        history.goBack();
       });
     }
     return () => jitsi && jitsi.dispose();
@@ -59,4 +86,4 @@ const Videollamada = ({ roomName, subject = 'Clase Virtual', userName }) => {
   return <div id={parentNode}></div>;
 };
 
-export default Videollamada;
+export default withRouter(Videollamada);
