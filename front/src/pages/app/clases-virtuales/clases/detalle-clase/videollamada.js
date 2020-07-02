@@ -18,7 +18,6 @@ const PaginaVideollamada = ({ idSala }) => {
   const room = idSala;
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
   const isHost = true;
-
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [name, setName] = useState('');
   const [call, setCall] = useState(false);

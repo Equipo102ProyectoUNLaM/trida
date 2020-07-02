@@ -20,6 +20,7 @@ const Videollamada = ({
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
+
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
     if (element) {
