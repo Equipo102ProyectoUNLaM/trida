@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Videollamada from 'components/videollamada/videollamada';
 import {
-  Jumbotron,
   Container,
   Form,
   Input,
@@ -13,17 +12,24 @@ import {
 
 const PaginaVideollamada = ({ idSala }) => {
   const room = idSala;
+  // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
+  const isHost = true;
+  const [options, setOptions] = useState({ microfono: true, camara: true });
   const [name, setName] = useState('');
   const [call, setCall] = useState(false);
   const [password, setPassword] = useState('');
 
   const handleClick = (event) => {
-    console.log(room);
-    console.log(name);
     event.preventDefault();
     if (room && name) setCall(true);
   };
 
+  const handleChange = (event) => {
+    setOptions({
+      ...options,
+      [event.target.name]: event.target.checked,
+    });
+  };
   return call ? (
     <>
       <Videollamada
@@ -31,6 +37,8 @@ const PaginaVideollamada = ({ idSala }) => {
         userName={name}
         password={password}
         containerStyles={{ width: '100%', height: '700px' }}
+        options={options}
+        isHost={isHost}
       />
     </>
   ) : (
@@ -45,14 +53,13 @@ const PaginaVideollamada = ({ idSala }) => {
                 type="text"
                 placeholder="Sala"
                 value={idSala}
-                disabled="true"
+                disabled={true}
               />
             </FormGroup>
             <FormGroup className="mb-3">
               <Label>Nombre</Label>
               <Input
                 id="name"
-                class="input"
                 type="text"
                 placeholder="Nombre"
                 value={name}
@@ -63,9 +70,8 @@ const PaginaVideollamada = ({ idSala }) => {
               <Label>Password (opcional)</Label>
               <Input
                 id="password"
-                class="input"
                 type="text"
-                placeholder="Password (opcional)"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -74,14 +80,20 @@ const PaginaVideollamada = ({ idSala }) => {
               <Label>Opciones de Videollamada</Label>
               <div>
                 <CustomInput
+                  id="microfono"
                   type="checkbox"
-                  id="microfonoOff"
+                  name="microfono"
                   label="Ingresar con micrófono apagado"
+                  checked={options.microfono}
+                  onChange={handleChange}
                 />
                 <CustomInput
+                  id="camara"
                   type="checkbox"
-                  id="camaraOff"
+                  name="camara"
                   label="Ingresar con cámara apagada"
+                  checked={options.camara}
+                  onChange={handleChange}
                 />
               </div>
             </FormGroup>
