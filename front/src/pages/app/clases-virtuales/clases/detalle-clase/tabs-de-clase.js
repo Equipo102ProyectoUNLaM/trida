@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Row,
   Card,
@@ -15,70 +15,69 @@ import { NavLink, withRouter } from 'react-router-dom';
 
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { Videollamada } from 'components/videollamada/videollamada';
+import PaginaVideollamada from './videollamada';
 
-class TabClassesMenu extends Component {
+class TabsDeClase extends Component {
   constructor(props) {
     super(props);
 
     this.toggleFirstTab = this.toggleFirstTab.bind(this);
     this.toggleSecondTab = this.toggleSecondTab.bind(this);
     this.state = {
-      activeFirstTab: "1",
-      activeSecondTab: "1"
+      activeFirstTab: '1',
+      activeSecondTab: '1',
     };
   }
-
-  onVideollamadaClick = (sala) => {
-    this.props.history.push('videollamada');
-  };
 
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
-        activeFirstTab: tab
+        activeFirstTab: tab,
       });
     }
   }
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
-        activeSecondTab: tab
+        activeSecondTab: tab,
       });
     }
   }
   render() {
+    const idSala = this.props.idSala;
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
           <Row lg="12">
             <Colxx xxs="12" xs="12" lg="12">
               <Card className="mb-4">
-                <CardHeader className="pl-0 pr-0"> 
+                <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "1",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '1',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("1");
+                          this.toggleSecondTab('1');
                         }}
                       >
                         Aula Virtual
                       </NavLink>
-                    </NavItem>                 
+                    </NavItem>
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "2",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '2',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("2");
+                          this.toggleSecondTab('2');
                         }}
                       >
                         Preguntas
@@ -86,13 +85,14 @@ class TabClassesMenu extends Component {
                     </NavItem>
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "3",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '3',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("3");
+                          this.toggleSecondTab('3');
                         }}
                       >
                         Respuestas
@@ -100,13 +100,14 @@ class TabClassesMenu extends Component {
                     </NavItem>
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "4",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '4',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("4");
+                          this.toggleSecondTab('4');
                         }}
                       >
                         Asistencia
@@ -120,26 +121,16 @@ class TabClassesMenu extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-<<<<<<< HEAD
                           <CardTitle className="mb-4">
                             Jitsi + chat + lanzar preguntas
                           </CardTitle>
-=======
-                          {!this.props.idSala ? (
+                          {!idSala ? (
                             <CardTitle className="mb-4">
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <Button
-                              color="primary"
-                              className="btn-shadow btn-multiple-state"
-                              onClick={this.onVideollamadaClick}
-                            >
-                              {' '}
-                              Ir a videollamada{' '}
-                            </Button>
+                            <PaginaVideollamada idSala={idSala} />
                           )}
->>>>>>> 81e1d60... feature/DEV-69: se agrean componentes de videollamada
                         </CardBody>
                       </Colxx>
                     </Row>
@@ -149,7 +140,7 @@ class TabClassesMenu extends Component {
                       <Colxx sm="12" lg="12">
                         <CardBody>
                           <CardTitle className="mb-4">
-                          Crear preguntas
+                            Crear preguntas
                           </CardTitle>
                         </CardBody>
                       </Colxx>
@@ -160,7 +151,7 @@ class TabClassesMenu extends Component {
                       <Colxx sm="12" lg="12">
                         <CardBody>
                           <CardTitle className="mb-4">
-                          Resultados de preguntas
+                            Resultados de preguntas
                           </CardTitle>
                         </CardBody>
                       </Colxx>
@@ -170,9 +161,7 @@ class TabClassesMenu extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">
-                            Asistencia
-                          </CardTitle>
+                          <CardTitle className="mb-4">Asistencia</CardTitle>
                         </CardBody>
                       </Colxx>
                     </Row>
@@ -187,4 +176,4 @@ class TabClassesMenu extends Component {
   }
 }
 
-export default withRouter(TabClassesMenu);
+export default withRouter(TabsDeClase);
