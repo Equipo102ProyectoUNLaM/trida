@@ -64,3 +64,5 @@ build/
 
 TODO
 .history/
+
+package-lock.json
