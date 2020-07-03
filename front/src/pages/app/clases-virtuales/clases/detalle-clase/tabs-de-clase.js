@@ -121,9 +121,6 @@ class TabsDeClase extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">
-                            Jitsi + chat + lanzar preguntas
-                          </CardTitle>
                           {!idSala ? (
                             <CardTitle className="mb-4">
                               No hay videollamada asociada

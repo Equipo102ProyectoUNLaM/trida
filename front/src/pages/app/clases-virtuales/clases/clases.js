@@ -21,7 +21,7 @@ class Clase extends Component {
       items: [],
       modalOpen: false,
       selectedItems: [],
-      isLoading: false,
+      isLoading: true,
     };
   }
 
@@ -38,8 +38,7 @@ class Clase extends Component {
           nombre: nombre,
           descripcion: descripcion,
           fecha: fecha,
-          imagen:
-            'https://image.freepik.com/free-vector/online-education-illustration-tablet-notes-pencil-education-icon-concept-white-isolated_138676-631.jpg',
+          imagen: imagenClase,
         };
         arrayDeObjetos.push(obj);
       });
@@ -69,14 +68,14 @@ class Clase extends Component {
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
-      isLoading: true,
+      isLoading: false,
     });
   }
 
   render() {
-    const { modalOpen, items } = this.state;
-    console.log(items);
-    return !this.state.isLoading ? (
+    const { modalOpen, items, isLoading } = this.state;
+
+    return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
@@ -104,7 +103,7 @@ class Clase extends Component {
                   item={clase}
                   isSelect={this.state.selectedItems.includes(clase.id)}
                   collect={collect}
-                  navTo={`class-detail/${clase.id}`}
+                  navTo={`/app/virtual-classes/my-classes/class-detail/${clase.id}`}
                 />
               );
             })}{' '}
