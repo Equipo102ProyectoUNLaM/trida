@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Videollamada from 'components/videollamada/videollamada';
 import {
   Container,
@@ -8,19 +9,22 @@ import {
   Label,
   CustomInput,
   FormGroup,
+  FormText,
 } from 'reactstrap';
 import { createRandomString } from 'helpers/Utils';
 
 const PaginaVideollamada = ({ idSala }) => {
+  const { handleSubmit, register, errors } = useForm();
   const room = idSala;
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
   const isHost = true;
+
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [name, setName] = useState('');
   const [call, setCall] = useState(false);
 
-  const handleClick = (event) => {
-    event.preventDefault();
+  const onSubmit = (event) => {
+    //event.preventDefault();
     if (room && name) setCall(true);
   };
 
@@ -45,11 +49,12 @@ const PaginaVideollamada = ({ idSala }) => {
     <>
       <div>
         <Container>
-          <Form>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <FormGroup className="mb-3">
               <Label>Sala</Label>
               <Input
                 id="room"
+                name="room"
                 type="text"
                 placeholder="Sala"
                 value={idSala}
@@ -60,11 +65,20 @@ const PaginaVideollamada = ({ idSala }) => {
               <Label>Nombre</Label>
               <Input
                 id="name"
+                name="name"
                 type="text"
                 placeholder="Nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                innerRef={register({
+                  required: 'El nombre es requerido!',
+                })}
               />
+              {errors.name && (
+                <FormText className="error-text-color">
+                  {errors.name.message}
+                </FormText>
+              )}
             </FormGroup>
             <FormGroup>
               <Label>Opciones de Videollamada</Label>
@@ -90,7 +104,7 @@ const PaginaVideollamada = ({ idSala }) => {
             <Button
               color="primary"
               size="lg"
-              onClick={handleClick}
+              //onClick={handleClick}
               type="submit"
             >
               Iniciar
