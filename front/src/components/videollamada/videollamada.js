@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useJitsi } from 'react-jutsu'; // Custom hook
+const CLASES_URL = '/app/virtual-classes/my-classes';
 /* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
         'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
@@ -12,13 +13,13 @@ const Videollamada = ({
   roomName,
   subject = 'Clase Virtual',
   userName,
+  password,
   options,
   history,
   isHost,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
-
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
     if (element) {
@@ -75,14 +76,14 @@ const Videollamada = ({
       jitsi.addEventListener('videoConferenceJoined', () => {
         jitsi.executeCommand('displayName', userName);
         jitsi.executeCommand('subject', subject);
-        jitsi.executeCommand('enableLobby');
+        jitsi.executeCommand('password', password);
       });
       jitsi.addEventListener('readyToClose', () => {
-        history.goBack();
+        history.push(CLASES_URL);
       });
     }
     return () => jitsi && jitsi.dispose();
-  }, [jitsi, userName, subject]);
+  }, [jitsi, userName, password, subject]);
   return <div id={parentNode}></div>;
 };
 

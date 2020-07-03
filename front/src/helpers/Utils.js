@@ -1,9 +1,10 @@
-import { defaultDirection } from "../constants/defaultValues";
+import { defaultDirection } from '../constants/defaultValues';
 
 export const mapOrder = (array, order, key) => {
   array.sort(function (a, b) {
-    var A = a[key], B = b[key];
-    if (order.indexOf(A + "") > order.indexOf(B + "")) {
+    var A = a[key],
+      B = b[key];
+    if (order.indexOf(A + '') > order.indexOf(B + '')) {
       return 1;
     } else {
       return -1;
@@ -11,7 +12,6 @@ export const mapOrder = (array, order, key) => {
   });
   return array;
 };
-
 
 export const getDateWithFormat = () => {
   const today = new Date();
@@ -26,42 +26,48 @@ export const getDateWithFormat = () => {
     mm = '0' + mm;
   }
   return dd + '.' + mm + '.' + yyyy;
-}
+};
 
-export const getCurrentTime=()=>{
+export const getCurrentTime = () => {
   const now = new Date();
-  return now.getHours() + ":" + now.getMinutes()
-}
+  return now.getHours() + ':' + now.getMinutes();
+};
 
 export const getDirection = () => {
   let direction = defaultDirection;
-  if (localStorage.getItem("direction")) {
-    const localValue = localStorage.getItem("direction");
-    if (localValue === "rtl" || localValue === "ltr") {
+  if (localStorage.getItem('direction')) {
+    const localValue = localStorage.getItem('direction');
+    if (localValue === 'rtl' || localValue === 'ltr') {
       direction = localValue;
     }
   }
   return {
     direction,
-    isRtl: direction === "rtl"
+    isRtl: direction === 'rtl',
   };
 };
 
-export const setDirection = localValue => {
-  let direction = "ltr";
-  if (localValue === "rtl" || localValue === "ltr") {
+export const setDirection = (localValue) => {
+  let direction = 'ltr';
+  if (localValue === 'rtl' || localValue === 'ltr') {
     direction = localValue;
   }
-  localStorage.setItem("direction", direction);
+  localStorage.setItem('direction', direction);
 };
 
 export const createUUID = () => {
   var dt = new Date().getTime();
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = (dt + Math.random()*16)%16 | 0;
-      dt = Math.floor(dt/16);
-      return (c==='x' ? r :(r&0x3|0x8)).toString(16);
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (
+    c
+  ) {
+    var r = (dt + Math.random() * 16) % 16 | 0;
+    dt = Math.floor(dt / 16);
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });
-  
+
   return uuid;
-}
+};
+
+export const createRandomString = () => {
+  return Math.random().toString(36).slice(-8);
+};

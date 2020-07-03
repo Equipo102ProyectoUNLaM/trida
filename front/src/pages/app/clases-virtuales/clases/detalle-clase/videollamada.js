@@ -9,6 +9,7 @@ import {
   CustomInput,
   FormGroup,
 } from 'reactstrap';
+import { createRandomString } from 'helpers/Utils';
 
 const PaginaVideollamada = ({ idSala }) => {
   const room = idSala;
@@ -17,7 +18,6 @@ const PaginaVideollamada = ({ idSala }) => {
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [name, setName] = useState('');
   const [call, setCall] = useState(false);
-  const [password, setPassword] = useState('');
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -35,7 +35,7 @@ const PaginaVideollamada = ({ idSala }) => {
       <Videollamada
         roomName={idSala}
         userName={name}
-        password={password}
+        password={createRandomString()}
         containerStyles={{ width: '100%', height: '700px' }}
         options={options}
         isHost={isHost}
@@ -64,16 +64,6 @@ const PaginaVideollamada = ({ idSala }) => {
                 placeholder="Nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-              />
-            </FormGroup>
-            <FormGroup className="mb-3">
-              <Label>Password (opcional)</Label>
-              <Input
-                id="password"
-                type="text"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
             </FormGroup>
             <FormGroup>

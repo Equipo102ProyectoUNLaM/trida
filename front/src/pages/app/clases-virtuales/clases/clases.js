@@ -6,7 +6,6 @@ import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormClase from './form-clase';
 import { firestore } from 'helpers/Firebase';
-//import Imagen from process.env.PUBLIC_URL + 'imagen-clase.jpeg'
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase.jpeg`;
 
