@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Row,
   Card,
@@ -10,14 +10,12 @@ import {
   TabContent,
   TabPane,
   Button,
-} from "reactstrap";
-import { NavLink } from "react-router-dom";
+} from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 
-
-
-import classnames from "classnames";
-import IntlMessages from "../../helpers/IntlMessages";
-import { Colxx } from "../../components/common/CustomBootstrap";
+import classnames from 'classnames';
+import IntlMessages from '../../helpers/IntlMessages';
+import { Colxx } from '../../components/common/CustomBootstrap';
 
 class TabClassesMenu extends Component {
   constructor(props) {
@@ -26,22 +24,22 @@ class TabClassesMenu extends Component {
     this.toggleFirstTab = this.toggleFirstTab.bind(this);
     this.toggleSecondTab = this.toggleSecondTab.bind(this);
     this.state = {
-      activeFirstTab: "1",
-      activeSecondTab: "1"
+      activeFirstTab: '1',
+      activeSecondTab: '1',
     };
   }
 
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
-        activeFirstTab: tab
+        activeFirstTab: tab,
       });
     }
   }
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
-        activeSecondTab: tab
+        activeSecondTab: tab,
       });
     }
   }
@@ -52,31 +50,33 @@ class TabClassesMenu extends Component {
           <Row lg="12">
             <Colxx xxs="12" xs="12" lg="12">
               <Card className="mb-4">
-                <CardHeader className="pl-0 pr-0"> 
+                <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "1",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '1',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("1");
+                          this.toggleSecondTab('1');
                         }}
                       >
                         Aula Virtual
                       </NavLink>
-                    </NavItem>                 
+                    </NavItem>
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "2",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '2',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("2");
+                          this.toggleSecondTab('2');
                         }}
                       >
                         Preguntas
@@ -84,13 +84,14 @@ class TabClassesMenu extends Component {
                     </NavItem>
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "3",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '3',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("3");
+                          this.toggleSecondTab('3');
                         }}
                       >
                         Respuestas
@@ -98,13 +99,14 @@ class TabClassesMenu extends Component {
                     </NavItem>
                     <NavItem className="w-25 text-center">
                       <NavLink
-                        to="#" location={{}}
+                        to="#"
+                        location={{}}
                         className={classnames({
-                          active: this.state.activeSecondTab === "4",
-                          "nav-link": true
+                          active: this.state.activeSecondTab === '4',
+                          'nav-link': true,
                         })}
                         onClick={() => {
-                          this.toggleSecondTab("4");
+                          this.toggleSecondTab('4');
                         }}
                       >
                         Asistencia
@@ -118,9 +120,13 @@ class TabClassesMenu extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">
-                            Jitsi + chat + lanzar preguntas
-                          </CardTitle>
+                          {!this.props.idSala ? (
+                            <CardTitle className="mb-4">
+                              No hay videollamada asociada
+                            </CardTitle>
+                          ) : (
+                            <Button>Ir a videollamada</Button>
+                          )}
                         </CardBody>
                       </Colxx>
                     </Row>
@@ -130,7 +136,7 @@ class TabClassesMenu extends Component {
                       <Colxx sm="12" lg="12">
                         <CardBody>
                           <CardTitle className="mb-4">
-                          Crear preguntas
+                            Crear preguntas
                           </CardTitle>
                         </CardBody>
                       </Colxx>
@@ -141,7 +147,7 @@ class TabClassesMenu extends Component {
                       <Colxx sm="12" lg="12">
                         <CardBody>
                           <CardTitle className="mb-4">
-                          Resultados de preguntas
+                            Resultados de preguntas
                           </CardTitle>
                         </CardBody>
                       </Colxx>
@@ -151,9 +157,7 @@ class TabClassesMenu extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">
-                            Asistencia
-                          </CardTitle>
+                          <CardTitle className="mb-4">Asistencia</CardTitle>
                         </CardBody>
                       </Colxx>
                     </Row>
