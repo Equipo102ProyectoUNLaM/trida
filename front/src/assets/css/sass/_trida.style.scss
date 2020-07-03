@@ -3831,6 +3831,11 @@ div[data-notify="container"] {
   }
 }
 
+.error-text-color {
+  color: $error-color !important;
+  font-size: 0.8rem;
+}
+
 .error-l-0 .invalid-feedback {
   left: 0px;
 }
