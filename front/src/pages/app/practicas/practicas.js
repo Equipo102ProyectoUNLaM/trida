@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import { Row } from "reactstrap";
 import HeaderDeModulo from "components/common/HeaderDeModulo";
 import ModalGrande from "containers/pages/ModalGrande";
-import FormPractica from "./form-practica";
 import { practicasData } from './../../../data/practicas';
 import DataListView from 'containers/pages/DataListView';
 
@@ -71,13 +70,13 @@ class Practicas extends Component {
               toggleModal={this.toggleModal}
               modalHeader="activity.add"
             >
-              {/* <FormPractica toggleModal={this.toggleModal} /> */}
+              
             </ModalGrande>
             <Row>
               {this.state.items.map(practica => {
                 return (
                   <DataListView
-                    key={practica.id}
+                    key={practica.id + "dataList"}
                     id={practica.id}
                     title= {practica.description}
                     text1= {"Fecha de publicación: " + practica.publicationDate.toLocaleDateString() }
@@ -85,6 +84,7 @@ class Practicas extends Component {
                     isSelect={this.state.selectedItems.includes(practica.id)}
                     onEditItem={this.editItem}
                     onDeleteItem={this.deleteItem}
+                    navTo = ""
                     collect={collect}/>
                 );
               })}{" "}
