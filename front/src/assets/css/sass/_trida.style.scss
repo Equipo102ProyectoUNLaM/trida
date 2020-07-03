@@ -3831,11 +3831,6 @@ div[data-notify="container"] {
   }
 }
 
-.error-text-color {
-  color: $error-color !important;
-  font-size: 0.8rem;
-}
-
 .error-l-0 .invalid-feedback {
   left: 0px;
 }
@@ -6189,6 +6184,19 @@ input:-webkit-autofill {
   @include respond-below(xs) {
     width: 50%;
   }
+}
+.delete-action-icon{
+  font-size: 1.2rem;
+  padding: 5px;
+  cursor: pointer;
+  color: $theme-color-red;
+}
+
+.edit-action-icon{
+  font-size: 1.2rem;
+  padding: 5px;
+  cursor: pointer;
+  color: $primary-color;
 }
 
 .chart-container {
