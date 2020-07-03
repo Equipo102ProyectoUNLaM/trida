@@ -10,7 +10,8 @@ Tabla de Contenidos
 06.Virtual Classes
   06.01.My Classes
 07.Institution Selection
-07.Course Selection
+08.Course Selection
+09.Prácticas
 */ 
 
 module.exports = {
@@ -84,6 +85,9 @@ module.exports = {
   /* 07.Institution Selection */
     "institution.selection" : "¿A qué institución desea acceder?",
 
-  /* 07.Course Selection */
+  /* 08.Course Selection */
   "course.selection" : "¿Qué materia desea gestionar?",
+
+  /* 08.Prácticas */
+  "activity.add" : "AGREGAR PRÁCTICA",
 };
