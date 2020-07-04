@@ -3975,6 +3975,7 @@ select.form-control:not([size]):not([multiple]) {
 .custom-control-input {
   outline: initial !important;
   box-shadow: initial !important;
+  cursor: pointer;
 }
 
 .was-validated .custom-control-input:invalid ~ .custom-control-label::before,

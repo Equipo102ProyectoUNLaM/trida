@@ -9,13 +9,12 @@ import {
   NavItem,
   TabContent,
   TabPane,
-  Button,
 } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
 
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
-import PaginaVideollamada from './videollamada';
+import PaginaVideollamada from './pagina-videollamada';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -44,7 +43,7 @@ class TabsDeClase extends Component {
     }
   }
   render() {
-    const idSala = this.props.idSala;
+    const { idSala, idClase } = this.props;
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
@@ -126,7 +125,10 @@ class TabsDeClase extends Component {
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <PaginaVideollamada idSala={idSala} />
+                            <PaginaVideollamada
+                              idSala={idSala}
+                              idClase={idClase}
+                            />
                           )}
                         </CardBody>
                       </Colxx>
