@@ -6,23 +6,27 @@ const Clase = React.lazy(() =>
 );
 
 const DetalleClase = React.lazy(() =>
-  import(/* webpackChunkName: "application-todo" */ './detalle-clase')
+  import(
+    /* webpackChunkName: "application-todo" */ './detalle-clase/detalle-clase'
+  )
 );
 
-const MyClassesMenu = ({ match }) => (
-  <Suspense fallback={<div className="loading" />}>
-    <Switch>
-      <Redirect exact from={`${match.url}`} to={`${match.url}/my-classes`} />
-      <Route
-        path={`${match.url}/my-classes`}
-        render={(props) => <Clase {...props} />}
-      />
-      <Route
-        path={`${match.url}/class-detail/:claseId`}
-        render={(props) => <DetalleClase {...props} />}
-      />
-      <Redirect to="/error" />
-    </Switch>
-  </Suspense>
-);
+const MyClassesMenu = ({ match }) => {
+  return (
+    <Suspense fallback={<div className="loading" />}>
+      <Switch>
+        <Route
+          path={`${match.url}`}
+          render={(props) => <Clase {...props} />}
+          exact
+        />
+        <Route
+          path={`${match.url}/class-detail/:claseId`}
+          render={(props) => <DetalleClase {...props} />}
+        />
+        <Redirect to="/error" />
+      </Switch>
+    </Suspense>
+  );
+};
 export default MyClassesMenu;
