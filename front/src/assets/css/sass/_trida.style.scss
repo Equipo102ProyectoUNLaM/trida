@@ -1,4 +1,4 @@
-/* Main Style 
+/* Main Style
 
 Table of Contents
 
@@ -4040,7 +4040,7 @@ select.form-control:not([size]):not([multiple]) {
       &:after {
         top: 0 !important;
       }
-  
+
     }
   }
 
@@ -6197,6 +6197,7 @@ input:-webkit-autofill {
   padding: 5px;
   cursor: pointer;
   color: $primary-color;
+  margin-right: 0.5rem;
 }
 
 .chart-container {
