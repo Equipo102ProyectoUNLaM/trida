@@ -5,7 +5,6 @@ import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormPractica from './form-practica';
 import { firestore } from 'helpers/Firebase';
-import { practicasData } from './../../../data/practicas';
 import DataListView from 'containers/pages/DataListView';
 
 function collect(props) {
@@ -20,16 +19,16 @@ class Practica extends Component {
       items: [],
       modalOpen: false,
       selectedItems: [],
-      isLoading: false,
+      isLoading: true,
     };
   }
 
   getPracticas = async () => {
     const arrayDeObjetos = [];
-    const clasesRef = firestore.collection('practicas');
+    const actividadesRef = firestore.collection('practicas');
     try {
-      var allClasesSnapShot = await clasesRef.get();
-      allClasesSnapShot.forEach((doc) => {
+      var allActivitiesSnapShot = await actividadesRef.get();
+      allActivitiesSnapShot.forEach((doc) => {
         const docId = doc.id;
         const {
           nombre,
@@ -72,8 +71,8 @@ class Practica extends Component {
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
-      isLoading: true,
-      // modalOpen:false,
+      isLoading: false,
+      modalOpen: false,
     });
   }
 
@@ -86,9 +85,10 @@ class Practica extends Component {
   };
 
   render() {
-    const { modalOpen, items } = this.state;
+    const { modalOpen, items, isLoading } = this.state;
     console.log(items);
-    return !this.state.isLoading ? (
+
+    return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
@@ -115,13 +115,8 @@ class Practica extends Component {
                   key={practica.id + 'dataList'}
                   id={practica.id}
                   title={practica.name}
-                  text1={
-                    'Fecha de publicación: ' +
-                    practica.startDate.toLocaleDateString()
-                  }
-                  text2={
-                    'Fecha de entrega: ' + practica.dueDate.toLocaleDateString()
-                  }
+                  text1={'Fecha de publicación: ' + practica.startDate}
+                  text2={'Fecha de entrega: ' + practica.dueDate}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.editItem}
                   onDeleteItem={this.deleteItem}
