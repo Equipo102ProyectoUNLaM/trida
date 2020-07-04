@@ -44,7 +44,7 @@ export default class DetalleClase extends Component {
   }
 
   render() {
-    const { nombre, idSala, isLoading, claseId } = this.state;
+    const { nombre, idSala, isLoading } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -59,7 +59,7 @@ export default class DetalleClase extends Component {
             </h1>
           </Colxx>
         </Row>
-        <TabsDeClase idSala={idSala} idClase={claseId} />
+        <TabsDeClase idSala={idSala} />
       </Fragment>
     );
   }

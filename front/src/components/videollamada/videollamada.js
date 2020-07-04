@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
 import { useJitsi } from 'react-jutsu'; // Custom hook
-const CLASES_URL = '/app/virtual-classes/my-classes/class-detail';
 
 /* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
@@ -16,12 +14,9 @@ const Videollamada = ({
   userName,
   password,
   options,
-  history,
   isHost,
-  idClase,
   setCallOff,
 }) => {
-  const CLASE_URL = `${CLASES_URL}/${idClase}`;
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
   const setElementHeight = () => {
@@ -84,7 +79,6 @@ const Videollamada = ({
       });
       jitsi.addEventListener('readyToClose', () => {
         setCallOff();
-        history.push(CLASE_URL);
       });
     }
     return () => jitsi && jitsi.dispose();
@@ -92,4 +86,4 @@ const Videollamada = ({
   return <div id={parentNode}></div>;
 };
 
-export default withRouter(Videollamada);
+export default Videollamada;

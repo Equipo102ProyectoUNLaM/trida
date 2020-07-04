@@ -43,7 +43,7 @@ class TabsDeClase extends Component {
     }
   }
   render() {
-    const { idSala, idClase } = this.props;
+    const { idSala } = this.props;
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
@@ -125,10 +125,7 @@ class TabsDeClase extends Component {
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <PaginaVideollamada
-                              idSala={idSala}
-                              idClase={idClase}
-                            />
+                            <PaginaVideollamada idSala={idSala} />
                           )}
                         </CardBody>
                       </Colxx>

@@ -13,7 +13,7 @@ import {
 } from 'reactstrap';
 import { createRandomString } from 'helpers/Utils';
 
-const PaginaVideollamada = ({ idSala, idClase }) => {
+const PaginaVideollamada = ({ idSala }) => {
   const { handleSubmit, register, errors } = useForm();
   const room = idSala;
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
@@ -48,7 +48,6 @@ const PaginaVideollamada = ({ idSala, idClase }) => {
         containerStyles={{ width: '100%', height: '700px' }}
         options={options}
         isHost={isHost}
-        idClase={idClase}
         setCallOff={setVideollamadaOff}
       />
     </>
