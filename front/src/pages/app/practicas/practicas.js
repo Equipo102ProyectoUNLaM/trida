@@ -5,6 +5,8 @@ import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormPractica from './form-practica';
 import { firestore } from 'helpers/Firebase';
+import { practicasData } from './../../../data/practicas';
+import DataListView from 'containers/pages/DataListView';
 
 function collect(props) {
   return { data: props.data };
@@ -29,13 +31,18 @@ class Practica extends Component {
       var allClasesSnapShot = await clasesRef.get();
       allClasesSnapShot.forEach((doc) => {
         const docId = doc.id;
-        const { nombre, fechaLanzada, descripcion } = doc.data();
+        const {
+          nombre,
+          fechaLanzada,
+          fechaVencimiento,
+          descripcion,
+        } = doc.data();
         const obj = {
           id: docId,
-          nombre: nombre,
-          descripcion: descripcion,
-          fecha: fechaLanzada,
-          imagen: 'https://shorturl.at/dfjN0',
+          name: nombre,
+          description: descripcion,
+          startDate: fechaLanzada,
+          dueDate: fechaVencimiento,
         };
         arrayDeObjetos.push(obj);
       });
@@ -66,8 +73,17 @@ class Practica extends Component {
       items: arrayDeObjetos,
       selectedItems: [],
       isLoading: true,
+      // modalOpen:false,
     });
   }
+
+  deleteItem = () => {
+    alert('delete');
+  };
+
+  editItem = () => {
+    alert('edit');
+  };
 
   render() {
     const { modalOpen, items } = this.state;
@@ -80,18 +96,41 @@ class Practica extends Component {
           <HeaderDeModulo
             heading="menu.my-activities"
             toggleModal={this.toggleModal}
-            buttonText="practices.add"
+            buttonText="activity.add"
           />
           <ModalGrande
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}
-            modalHeader="practices.add"
+            modalHeader="activity.add"
           >
             <FormPractica
               toggleModal={this.toggleModal}
               onPracticaAgregada={this.onPracticaAgregada}
             />
           </ModalGrande>
+          <Row>
+            {this.state.items.map((practica) => {
+              return (
+                <DataListView
+                  key={practica.id + 'dataList'}
+                  id={practica.id}
+                  title={practica.name}
+                  text1={
+                    'Fecha de publicación: ' +
+                    practica.startDate.toLocaleDateString()
+                  }
+                  text2={
+                    'Fecha de entrega: ' + practica.dueDate.toLocaleDateString()
+                  }
+                  isSelect={this.state.selectedItems.includes(practica.id)}
+                  onEditItem={this.editItem}
+                  onDeleteItem={this.deleteItem}
+                  navTo="#"
+                  collect={collect}
+                />
+              );
+            })}{' '}
+          </Row>
         </div>
       </Fragment>
     );
