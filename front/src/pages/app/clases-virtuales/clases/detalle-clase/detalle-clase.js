@@ -53,7 +53,11 @@ export default class DetalleClase extends Component {
       <Fragment>
         <Row>
           <Colxx xxs="12">
-            <HeaderDeModulo heading={capitalize(nombre)} match={match} />
+            <HeaderDeModulo
+              heading={capitalize(nombre)}
+              match={match}
+              breadcrumb
+            />
           </Colxx>
         </Row>
         <TabsDeClase idSala={idSala} />

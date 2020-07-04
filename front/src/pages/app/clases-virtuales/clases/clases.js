@@ -74,7 +74,6 @@ class Clase extends Component {
 
   render() {
     const { modalOpen, items, isLoading } = this.state;
-    const { match } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -84,7 +83,6 @@ class Clase extends Component {
             heading="menu.my-classes"
             toggleModal={this.toggleModal}
             buttonText="classes.add"
-            match={match}
           />
           <ModalGrande
             modalOpen={modalOpen}
