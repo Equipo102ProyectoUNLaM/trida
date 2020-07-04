@@ -49,6 +49,7 @@ class Practicas extends Component {
 
   render() {
     const { modalOpen } = this.state;
+    const { match } = this.props;
 
     return !this.state.isLoading ? (
       <div className="loading" />
@@ -59,6 +60,7 @@ class Practicas extends Component {
             heading="menu.my-activities"
             toggleModal={this.toggleModal}
             buttonText="activity.add"
+            match={match}
           />
           <ModalGrande
             modalOpen={modalOpen}

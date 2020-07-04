@@ -4,6 +4,7 @@ import TabsDeClase from './tabs-de-clase';
 import { Row, Col } from 'reactstrap';
 import { firestore } from 'helpers/Firebase';
 import { capitalize } from 'underscore.string';
+import HeaderDeModulo from 'components/common/HeaderDeModulo';
 
 export default class DetalleClase extends Component {
   constructor(props) {
@@ -45,18 +46,14 @@ export default class DetalleClase extends Component {
 
   render() {
     const { nombre, idSala, isLoading } = this.state;
+    const { match } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
         <Row>
           <Colxx xxs="12">
-            <h1>
-              <i className="simple-icon-notebook heading-icon" />{' '}
-              <span className="align-middle d-inline-block pt-1">
-                {capitalize(nombre)}
-              </span>
-            </h1>
+            <HeaderDeModulo heading={capitalize(nombre)} match={match} />
           </Colxx>
         </Row>
         <TabsDeClase idSala={idSala} />
