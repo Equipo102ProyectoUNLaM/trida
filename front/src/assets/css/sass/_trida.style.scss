@@ -1347,7 +1347,7 @@ button {
     left: -7px;
   }
 
-  &.badge-top-right {
+  &.badge-top-right-1 {
     top: 8px;
     right: -7px;
   }
@@ -1355,6 +1355,10 @@ button {
   &.badge-top-right-2 {
     top: 40px;
     right: -7px;
+  }
+  &.badge-top-right-3 {
+    top: 70px;
+    left: -7px;
   }
 }
 

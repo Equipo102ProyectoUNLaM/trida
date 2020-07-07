@@ -1,43 +1,49 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
 import {
   UncontrolledDropdown,
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
-  Input
-} from "reactstrap";
+  Breadcrumb,
+  BreadcrumbItem,
+} from 'reactstrap';
 
-import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import IntlMessages from "../../helpers/IntlMessages";
+import IntlMessages from '../../helpers/IntlMessages';
 import {
   setContainerClassnames,
   clickOnMobileMenu,
   logoutUser,
-  changeLocale
-} from "../../redux/actions";
+  changeLocale,
+} from '../../redux/actions';
 
 import {
   menuHiddenBreakpoint,
   searchPath,
   localeOptions,
-  isDarkSwitchActive
-} from "../../constants/defaultValues";
+  isDarkSwitchActive,
+} from '../../constants/defaultValues';
 
-import { MobileMenuIcon, MenuIcon } from "../../components/svg";
-import TopnavDarkSwitch from "./Topnav.DarkSwitch";
+import { MobileMenuIcon, MenuIcon } from '../../components/svg';
+import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
-import { getDirection, setDirection } from "../../helpers/Utils";
+import { getDirection, setDirection } from '../../helpers/Utils';
 
 class TopNav extends Component {
   constructor(props) {
     super(props);
-
+    var institution = JSON.parse(localStorage.getItem('institution'));
+    var course = JSON.parse(localStorage.getItem('course'));
+    var subject = JSON.parse(localStorage.getItem('subject'));
     this.state = {
       isInFullScreen: false,
-      searchKeyword: ""
+      searchKeyword: '',
+      institution: institution,
+      course: course,
+      subject: subject,
     };
   }
 
@@ -63,25 +69,25 @@ class TopNav extends Component {
       (document.msFullscreenElement && document.msFullscreenElement !== null)
     );
   };
-  handleSearchIconClick = e => {
+  handleSearchIconClick = (e) => {
     if (window.innerWidth < menuHiddenBreakpoint) {
       let elem = e.target;
-      if (!e.target.classList.contains("search")) {
-        if (e.target.parentElement.classList.contains("search")) {
+      if (!e.target.classList.contains('search')) {
+        if (e.target.parentElement.classList.contains('search')) {
           elem = e.target.parentElement;
         } else if (
-          e.target.parentElement.parentElement.classList.contains("search")
+          e.target.parentElement.parentElement.classList.contains('search')
         ) {
           elem = e.target.parentElement.parentElement;
         }
       }
 
-      if (elem.classList.contains("mobile-view")) {
+      if (elem.classList.contains('mobile-view')) {
         this.search();
-        elem.classList.remove("mobile-view");
+        elem.classList.remove('mobile-view');
         this.removeEventsSearch();
       } else {
-        elem.classList.add("mobile-view");
+        elem.classList.add('mobile-view');
         this.addEventsSearch();
       }
     } else {
@@ -89,56 +95,56 @@ class TopNav extends Component {
     }
   };
   addEventsSearch = () => {
-    document.addEventListener("click", this.handleDocumentClickSearch, true);
+    document.addEventListener('click', this.handleDocumentClickSearch, true);
   };
   removeEventsSearch = () => {
-    document.removeEventListener("click", this.handleDocumentClickSearch, true);
+    document.removeEventListener('click', this.handleDocumentClickSearch, true);
   };
 
-  handleDocumentClickSearch = e => {
+  handleDocumentClickSearch = (e) => {
     let isSearchClick = false;
     if (
       e.target &&
       e.target.classList &&
-      (e.target.classList.contains("navbar") ||
-        e.target.classList.contains("simple-icon-magnifier"))
+      (e.target.classList.contains('navbar') ||
+        e.target.classList.contains('simple-icon-magnifier'))
     ) {
       isSearchClick = true;
-      if (e.target.classList.contains("simple-icon-magnifier")) {
+      if (e.target.classList.contains('simple-icon-magnifier')) {
         this.search();
       }
     } else if (
       e.target.parentElement &&
       e.target.parentElement.classList &&
-      e.target.parentElement.classList.contains("search")
+      e.target.parentElement.classList.contains('search')
     ) {
       isSearchClick = true;
     }
 
     if (!isSearchClick) {
-      const input = document.querySelector(".mobile-view");
-      if (input && input.classList) input.classList.remove("mobile-view");
+      const input = document.querySelector('.mobile-view');
+      if (input && input.classList) input.classList.remove('mobile-view');
       this.removeEventsSearch();
       this.setState({
-        searchKeyword: ""
+        searchKeyword: '',
       });
     }
   };
-  handleSearchInputChange = e => {
+  handleSearchInputChange = (e) => {
     this.setState({
-      searchKeyword: e.target.value
+      searchKeyword: e.target.value,
     });
   };
-  handleSearchInputKeyPress = e => {
-    if (e.key === "Enter") {
+  handleSearchInputKeyPress = (e) => {
+    if (e.key === 'Enter') {
       this.search();
     }
   };
 
   search = () => {
-    this.props.history.push(searchPath + "/" + this.state.searchKeyword);
+    this.props.history.push(searchPath + '/' + this.state.searchKeyword);
     this.setState({
-      searchKeyword: ""
+      searchKeyword: '',
     });
   };
 
@@ -168,7 +174,7 @@ class TopNav extends Component {
       }
     }
     this.setState({
-      isInFullScreen: !isInFullScreen
+      isInFullScreen: !isInFullScreen,
     });
   };
 
@@ -180,8 +186,8 @@ class TopNav extends Component {
     e.preventDefault();
 
     setTimeout(() => {
-      var event = document.createEvent("HTMLEvents");
-      event.initEvent("resize", false, false);
+      var event = document.createEvent('HTMLEvents');
+      event.initEvent('resize', false, false);
       window.dispatchEvent(event);
     }, 350);
     this.props.setContainerClassnames(
@@ -202,22 +208,42 @@ class TopNav extends Component {
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
           <NavLink
-            to="#" location={{}}
+            to="#"
+            location={{}}
             className="menu-button d-none d-md-block"
-            onClick={e =>
+            onClick={(e) =>
               this.menuButtonClick(e, menuClickCount, containerClassnames)
             }
           >
             <MenuIcon />
           </NavLink>
           <NavLink
-            to="#" location={{}}
+            to="#"
+            location={{}}
             className="menu-button-mobile d-xs-block d-sm-block d-md-none"
-            onClick={e => this.mobileMenuButtonClick(e, containerClassnames)}
+            onClick={(e) => this.mobileMenuButtonClick(e, containerClassnames)}
           >
             <MobileMenuIcon />
           </NavLink>
+          <div className="d-inline-block">
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <a href="/course-selection/institution">
+                  {this.state.institution.name}
+                </a>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <a
+                  href={`/course-selection/course/${this.state.institution.id}`}
+                >
+                  {this.state.course.name}
+                </a>
+              </BreadcrumbItem>
+              <BreadcrumbItem active>{this.state.subject.name}</BreadcrumbItem>
+            </Breadcrumb>
+          </div>
         </div>
+
         <a className="navbar-logo" href="/">
           <span className="logo d-none d-xs-block" />
           <span className="logo-mobile d-block d-xs-none" />
@@ -226,7 +252,6 @@ class TopNav extends Component {
           {isDarkSwitchActive && <TopnavDarkSwitch />}
 
           <div className="header-icons d-inline-block align-middle">
-
             {/* <TopnavEasyAccess /> */}
             {/* <TopnavNotifications /> */}
             <button
@@ -238,14 +263,14 @@ class TopNav extends Component {
               {this.state.isInFullScreen ? (
                 <i className="simple-icon-size-actual d-block" />
               ) : (
-                  <i className="simple-icon-size-fullscreen d-block" />
-                )}
+                <i className="simple-icon-size-fullscreen d-block" />
+              )}
             </button>
           </div>
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-              <span className="name mr-1">{user}</span>
+                <span className="name mr-1">{user}</span>
                 <span>
                   <img alt="Profile" src="/assets/img/user.png" />
                 </span>
@@ -279,8 +304,10 @@ const mapStateToProps = ({ menu, settings, authUser }) => {
 };
 
 export default injectIntl(
-  connect(
-    mapStateToProps,
-    { setContainerClassnames, clickOnMobileMenu, logoutUser, changeLocale }
-  )(TopNav)
+  connect(mapStateToProps, {
+    setContainerClassnames,
+    clickOnMobileMenu,
+    logoutUser,
+    changeLocale,
+  })(TopNav)
 );
