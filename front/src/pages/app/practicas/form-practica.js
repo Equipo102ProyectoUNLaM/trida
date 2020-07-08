@@ -5,15 +5,15 @@ import { firestore } from 'helpers/Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
 
 class FormPractica extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      nombre: '',
-      descripcion: '',
-      fechaLanzada: '',
-      duracion: '',
-      fechaVencimiento: '',
+      nombre: props.nombre ? props.nombre : '',
+      descripcion: props.descripcion ? props.descripcion : '',
+      fechaLanzada: props.fechaLanzada ? props.fechaLanzada : '',
+      duracion: props.duracion ? props.duracion : '',
+      fechaVencimiento: props.fechaVencimiento ? props.fechaVencimiento : '',
     };
   }
 
@@ -60,7 +60,7 @@ class FormPractica extends React.Component {
   };
 
   render() {
-    const { toggleModal } = this.props;
+    const { toggleModal, textConfirm } = this.props;
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -115,7 +115,7 @@ class FormPractica extends React.Component {
         </FormGroup>
         <ModalFooter>
           <Button color="primary" type="submit">
-            Agregar
+            {textConfirm}
           </Button>
           <Button color="secondary" onClick={toggleModal}>
             Cancelar

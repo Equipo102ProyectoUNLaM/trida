@@ -90,4 +90,6 @@ module.exports = {
 
   /* 08.Prácticas */
   'activity.add': 'AGREGAR PRÁCTICA',
+  'activity.edit': 'EDITAR PRÁCTICA',
+  'activity.delete': 'ELIMINAR PRÁCTICA',
 };

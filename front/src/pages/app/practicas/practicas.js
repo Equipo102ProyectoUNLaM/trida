@@ -17,7 +17,8 @@ class Practica extends Component {
 
     this.state = {
       items: [],
-      modalOpen: false,
+      modalCreateOpen: false,
+      modalEditOpen: false,
       selectedItems: [],
       isLoading: true,
     };
@@ -56,14 +57,20 @@ class Practica extends Component {
     this.getPracticas();
   }
 
-  toggleModal = () => {
+  toggleCreateModal = () => {
     this.setState({
-      modalOpen: !this.state.modalOpen,
+      modalCreateOpen: !this.state.modalCreateOpen,
+    });
+  };
+
+  toggleEditModal = () => {
+    this.setState({
+      modalEditOpen: !this.state.modalEditOpen,
     });
   };
 
   onPracticaAgregada = () => {
-    this.toggleModal();
+    this.toggleCreateModal();
     this.getPracticas();
   };
 
@@ -72,7 +79,8 @@ class Practica extends Component {
       items: arrayDeObjetos,
       selectedItems: [],
       isLoading: false,
-      modalOpen: false,
+      modalCreateOpen: false,
+      modalEditOpen: false,
     });
   }
 
@@ -81,11 +89,26 @@ class Practica extends Component {
   };
 
   editItem = () => {
-    alert('edit');
+    const { modalEditOpen } = this.state;
+    console.log('entrovich');
+    this.toggleEditModal();
+    return (
+      <ModalGrande
+        modalOpen={modalEditOpen}
+        toggleModal={this.toggleEditModal}
+        modalHeader="activity.edit"
+      >
+        <FormPractica
+          toggleModal={this.toggleEditModal}
+          onPracticaAgregada={this.onPracticaAgregada}
+          textConfirm="Editar"
+        />
+      </ModalGrande>
+    );
   };
 
   render() {
-    const { modalOpen, items, isLoading } = this.state;
+    const { modalCreateOpen, items, isLoading } = this.state;
     console.log(items);
 
     return isLoading ? (
@@ -95,17 +118,18 @@ class Practica extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.my-activities"
-            toggleModal={this.toggleModal}
+            toggleModal={this.toggleCreateModal}
             buttonText="activity.add"
           />
           <ModalGrande
-            modalOpen={modalOpen}
-            toggleModal={this.toggleModal}
+            modalOpen={modalCreateOpen}
+            toggleModal={this.toggleCreateModal}
             modalHeader="activity.add"
           >
             <FormPractica
-              toggleModal={this.toggleModal}
+              toggleModal={this.toggleCreateModal}
               onPracticaAgregada={this.onPracticaAgregada}
+              textConfirm="Agregar"
             />
           </ModalGrande>
           <Row>
