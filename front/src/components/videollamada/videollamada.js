@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
+import { Button } from 'reactstrap';
 
 /* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
@@ -19,10 +20,20 @@ const Videollamada = ({
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
+  const [shareButtonText, setShareScreenButtonText] = useState(
+    'Compartir pantalla'
+  );
+
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
     if (element) {
       element.style.height = '85vh';
+    }
+  };
+
+  const toggleShareScreen = () => {
+    if (jitsi) {
+      jitsi.executeCommand('toggleShareScreen');
     }
   };
 
@@ -80,10 +91,29 @@ const Videollamada = ({
       jitsi.addEventListener('readyToClose', () => {
         setCallOff();
       });
+      jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
+        on
+          ? setShareScreenButtonText('Dejar de Compartir pantalla')
+          : setShareScreenButtonText('Compartir pantalla');
+      });
     }
-    return () => jitsi && jitsi.dispose();
+    return () => {
+      jitsi && jitsi.dispose();
+    };
   }, [jitsi, userName, password, subject]);
-  return <div id={parentNode}></div>;
+  return (
+    <Fragment>
+      <Button
+        className="btn"
+        color="primary"
+        size="lg"
+        onClick={toggleShareScreen}
+      >
+        {shareButtonText}
+      </Button>{' '}
+      <div id={parentNode}></div>
+    </Fragment>
+  );
 };
 
 export default Videollamada;
