@@ -1442,6 +1442,13 @@ button {
   margin-bottom: 0.5rem;
 }
 
+nav .nomargin {
+  ol{
+    background-color: transparent;
+    margin-bottom: 0;
+  }
+}
+
 .breadcrumb-item + .breadcrumb-item::before {
   content: "|";
 }

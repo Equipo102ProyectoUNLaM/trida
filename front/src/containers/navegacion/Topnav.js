@@ -226,7 +226,7 @@ class TopNav extends Component {
             <MobileMenuIcon />
           </NavLink>
           <div className="d-inline-block">
-            <Breadcrumb>
+            <Breadcrumb className="nomargin">
               <BreadcrumbItem>
                 <a href="/course-selection/institution">
                   {this.state.institution.name}
