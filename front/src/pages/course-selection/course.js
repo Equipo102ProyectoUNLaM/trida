@@ -1,18 +1,8 @@
 import React, { Fragment, Component } from 'react';
-import {
-  Collapse,
-  Button,
-  Row,
-  Card,
-  CardSubtitle,
-  CardBody,
-  CardTitle,
-  Jumbotron,
-} from 'reactstrap';
+import { Collapse, Button, Row, Card, CardBody, Jumbotron } from 'reactstrap';
 import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
-import { courses } from './../../data/courses';
 import { firestore } from 'helpers/Firebase';
 
 const HOME_URL = '/app/home';
@@ -24,6 +14,10 @@ class Course extends Component {
       items: [],
       isLoading: true,
     };
+  }
+
+  componentDidMount() {
+    this.getCourses();
   }
 
   getCourses = async () => {
@@ -47,7 +41,7 @@ class Course extends Component {
       var userDoc = await userRef.get();
       const { instituciones } = userDoc.data(); //Traigo las instituciones del usuario
       var instf = instituciones.filter(
-        (i) => i.institucion_id.id == institutionId
+        (i) => i.institucion_id.id === institutionId
       ); //Busco la que seleccionó anteriormente
       for (const c of instf[0].cursos) {
         //Itero en sus cursos, me traigo toda la info del documento
@@ -88,10 +82,6 @@ class Course extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getCourses();
-  }
-
   toggle = (i) => {
     var prevState = this.state.items;
     prevState[i].collapsed = !prevState[i].collapsed;
@@ -108,7 +98,6 @@ class Course extends Component {
 
   render() {
     const { items, isLoading } = this.state;
-    const { history } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -123,7 +112,7 @@ class Course extends Component {
                   </h2>
                   <hr className="my-4" />
                   <Row>
-                    {this.state.items.map((course, index) => {
+                    {items.map((course, index) => {
                       return (
                         <Row key={index} className="mb-4 col-4">
                           <Colxx>
