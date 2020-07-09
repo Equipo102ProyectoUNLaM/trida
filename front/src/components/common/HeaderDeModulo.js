@@ -4,6 +4,7 @@ import { injectIntl } from 'react-intl';
 
 import { Colxx, Separator } from './CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
+import Breadcrumb from 'containers/navegacion/Breadcrumb';
 
 class HeaderDeModulo extends Component {
   constructor(props) {
@@ -21,8 +22,7 @@ class HeaderDeModulo extends Component {
   };
 
   render() {
-    const { heading, toggleModal, buttonText } = this.props;
-
+    const { heading, toggleModal, buttonText, match, breadcrumb } = this.props;
     return (
       <Row>
         <Colxx xxs="12">
@@ -30,6 +30,7 @@ class HeaderDeModulo extends Component {
             <h1>
               <IntlMessages id={heading} />
             </h1>
+            {breadcrumb && <Breadcrumb match={match} />}
             <>
               {buttonText && (
                 <div className="text-zero top-right-button-container">
