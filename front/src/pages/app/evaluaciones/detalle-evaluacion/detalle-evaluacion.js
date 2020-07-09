@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { Colxx } from '../../../../components/common/CustomBootstrap';
-import TabClassesMenu from '../../../../containers/ui/TabClassesMenu';
+import { Colxx } from 'components/common/CustomBootstrap';
 import { Row, Col } from 'reactstrap';
 import { firestore } from 'helpers/Firebase';
-import {capitalize} from 'underscore.string';
+import { capitalize } from 'underscore.string';
+import HeaderDeModulo from 'components/common/HeaderDeModulo';
 
-export default class DetalleClase extends Component {
+export default class DetalleEvaluacion extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      claseId: '',
+      evalId: '',
       nombre: '',
       fecha: '',
       descripcion: '',
@@ -19,9 +19,10 @@ export default class DetalleClase extends Component {
     };
   }
 
-  getDetalleDeClase = async () => {
-    const { claseId } = this.props.match.params;
-
+  getDetalleDeEvaluacion = async () => {
+    const { evalId } = this.props.match.params;
+    this.setState({ evalId });
+    /* 
     const claseRef = firestore.doc(`clases/${claseId}`);
     try {
       const claseSnapShot = await claseRef.get();
@@ -32,34 +33,34 @@ export default class DetalleClase extends Component {
         fecha,
         descripcion,
         idSala,
-        isLoading: false
+        isLoading: false,
       });
     } catch (err) {
       console.log('Error getting documents', err);
-    }
+    } */
   };
 
   componentDidMount() {
-    this.getDetalleDeClase();
+    this.getDetalleDeEvaluacion();
   }
 
   render() {
-    const { nombre, fecha, descripcion, idSala, isLoading } = this.state;
+    console.log('here');
+    const { nombre, isLoading } = this.state;
+    const { match } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
         <Row>
           <Colxx xxs="12">
-            <h1>
-              <i className="simple-icon-notebook heading-icon" />{' '}
-              <span className="align-middle d-inline-block pt-1">
-                {capitalize(nombre)}
-              </span>
-            </h1>
+            <HeaderDeModulo
+              heading={capitalize(nombre)}
+              match={match}
+              breadcrumb
+            />
           </Colxx>
         </Row>
-        <TabClassesMenu idSala={idSala} />
       </Fragment>
     );
   }
