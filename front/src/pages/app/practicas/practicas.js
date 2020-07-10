@@ -26,7 +26,10 @@ class Practica extends Component {
 
   getPracticas = async () => {
     const arrayDeObjetos = [];
-    const actividadesRef = firestore.collection('practicas');
+    const actividadesRef = firestore
+      .collection('practicas')
+      .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
+      .orderBy('fechaLanzada', 'asc');
     try {
       var allActivitiesSnapShot = await actividadesRef.get();
       allActivitiesSnapShot.forEach((doc) => {
@@ -59,14 +62,17 @@ class Practica extends Component {
 
   toggleCreateModal = () => {
     this.setState({
+      ...this.state,
       modalCreateOpen: !this.state.modalCreateOpen,
     });
   };
 
   toggleEditModal = () => {
     this.setState({
+      ...this.state,
       modalEditOpen: !this.state.modalEditOpen,
     });
+    console.log(this.state);
   };
 
   onPracticaAgregada = () => {
@@ -88,10 +94,11 @@ class Practica extends Component {
     alert('delete');
   };
 
-  editItem = () => {
+  editItem = async () => {
     const { modalEditOpen } = this.state;
-    console.log('entrovich');
-    this.toggleEditModal();
+    await this.toggleEditModal();
+    console.log(modalEditOpen);
+
     return (
       <ModalGrande
         modalOpen={modalEditOpen}
@@ -109,7 +116,6 @@ class Practica extends Component {
 
   render() {
     const { modalCreateOpen, items, isLoading } = this.state;
-    console.log(items);
 
     return isLoading ? (
       <div className="loading" />
