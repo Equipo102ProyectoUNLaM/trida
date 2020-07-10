@@ -4,18 +4,35 @@ import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { NavLink } from 'react-router-dom';
+import Calendario from 'components/common/Calendario';
+import { injectIntl } from 'react-intl';
+import "react-datepicker/dist/react-datepicker.css";
 
-const DataListView = ({
-  id,
-  title,
-  text1,
-  text2,
-  isSelect,
-  collect,
-  onEditItem,
-  onDeleteItem,
-  navTo,
-}) => {
+class DataListView extends React.Component {
+  constructor(props){
+    super(props);
+  }
+
+  handleClick = () => {
+    console.log('test');
+  }
+
+  setDate = () => {
+    console.log('date');
+  }
+
+  render() {
+    const {
+      id,
+      title,
+      text1,
+      text2,
+      isSelect,
+      collect,
+      onEditItem,
+      onDeleteItem,
+      navTo,
+    } = this.props;
   return (
     <Colxx xxs="12" className="mb-3">
       <ContextMenuTrigger id="menu_id" data={id} collect={collect}>
@@ -37,11 +54,12 @@ const DataListView = ({
                 <div
                   className="glyph-icon simple-icon-pencil edit-action-icon"
                   onClick={onEditItem}
-                ></div>
+                />
                 <div
                   className="glyph-icon simple-icon-trash delete-action-icon"
                   onClick={onDeleteItem}
-                ></div>
+                />
+                <Calendario handleClick={this.handleClick} text="Modificar fecha de entrega"/>
               </Row>
             </div>
           </div>
@@ -49,7 +67,7 @@ const DataListView = ({
       </ContextMenuTrigger>
     </Colxx>
   );
+        }
 };
 
-/* React.memo detail : https://reactjs.org/docs/react-api.html#reactpurecomponent  */
-export default React.memo(DataListView);
+export default injectIntl(DataListView);

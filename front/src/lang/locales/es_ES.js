@@ -91,6 +91,7 @@ module.exports = {
 
   /* 08.Prácticas */
   'activity.add': 'AGREGAR PRÁCTICA',
+  'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 09.Evaluaciones */
   'evaluacion.agregar': 'AGREGAR EVALUACIÓN',

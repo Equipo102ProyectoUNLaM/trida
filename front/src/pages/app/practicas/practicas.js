@@ -47,6 +47,11 @@ class Practicas extends Component {
     alert('edit');
   };
 
+  setDate = (practica) => {
+    alert('date');
+    console.log(practica);
+  };
+
   render() {
     const { modalOpen } = this.state;
 
@@ -82,6 +87,7 @@ class Practicas extends Component {
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.editItem}
                   onDeleteItem={this.deleteItem}
+                  setDate={this.setDate}
                   navTo=""
                   collect={collect}
                 />
