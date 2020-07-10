@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Row } from 'reactstrap';
+import { Row, Modal } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
@@ -72,7 +72,6 @@ class Practica extends Component {
       ...this.state,
       modalEditOpen: !this.state.modalEditOpen,
     });
-    console.log(this.state);
   };
 
   onPracticaAgregada = () => {
@@ -94,28 +93,8 @@ class Practica extends Component {
     alert('delete');
   };
 
-  editItem = async () => {
-    const { modalEditOpen } = this.state;
-    await this.toggleEditModal();
-    console.log(modalEditOpen);
-
-    return (
-      <ModalGrande
-        modalOpen={modalEditOpen}
-        toggleModal={this.toggleEditModal}
-        modalHeader="activity.edit"
-      >
-        <FormPractica
-          toggleModal={this.toggleEditModal}
-          onPracticaAgregada={this.onPracticaAgregada}
-          textConfirm="Editar"
-        />
-      </ModalGrande>
-    );
-  };
-
   render() {
-    const { modalCreateOpen, items, isLoading } = this.state;
+    const { modalCreateOpen, modalEditOpen, items, isLoading } = this.state;
 
     return isLoading ? (
       <div className="loading" />
@@ -148,7 +127,7 @@ class Practica extends Component {
                   text1={'Fecha de publicación: ' + practica.startDate}
                   text2={'Fecha de entrega: ' + practica.dueDate}
                   isSelect={this.state.selectedItems.includes(practica.id)}
-                  onEditItem={this.editItem}
+                  onEditItem={this.toggleEditModal}
                   onDeleteItem={this.deleteItem}
                   navTo="#"
                   collect={collect}
@@ -156,6 +135,19 @@ class Practica extends Component {
               );
             })}{' '}
           </Row>
+          {modalEditOpen && (
+            <ModalGrande
+              modalOpen={modalEditOpen}
+              toggleModal={this.toggleEditModal}
+              modalHeader="activity.edit"
+            >
+              <FormPractica
+                toggleModal={this.toggleEditModal}
+                onPracticaAgregada={this.onPracticaAgregada}
+                textConfirm="Editar"
+              />
+            </ModalGrande>
+          )}
         </div>
       </Fragment>
     );
