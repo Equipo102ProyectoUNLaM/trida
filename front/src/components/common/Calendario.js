@@ -1,66 +1,75 @@
-import React from "react";
-import DatePicker from "react-datepicker";
-import {UncontrolledDropdown, DropdownMenu, DropdownToggle, Button } from 'reactstrap';
+import React from 'react';
+import DatePicker from 'react-datepicker';
+import { DropdownMenu, Button } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 
-//import "react-datepicker/dist/react-datepicker.css";
-
-
 class Calendario extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+  constructor(props, context) {
+    super(props, context);
 
-        this.state = ({
-            fecha: null,
-            close: 'show',
-        });
+    this.state = {
+      fecha: null,
+      close: '',
+    };
+  }
+
+  handleChange = (date) =>
+    this.setState({
+      fecha: date,
+    });
+
+  handleClick = (event) => {
+    if (event.target === event.currentTarget) {
+      const close = this.state.close === 'show' ? '' : 'show';
+
+      this.setState({
+        close,
+      });
     }
+  };
 
-    handleChange = date => {
-        this.setState({
-          fecha: date
-        }, ()=>console.log(this.state.fecha.format('DD/MM/YYYY')));
-      };
+  onConfirm = () => {
+    this.setState({
+      close: '',
+    });
 
-    handleClick = () => {
-        this.setState({
-          close: ''
-        }, ()=> console.log(this.state.close));
-      };
-    
-    render() {
-        const { text, handleClick } = this.props;
+    this.props.handleClick(this.state.fecha);
+  };
 
-        return (
-            <div>
-                <UncontrolledDropdown className={"dropdown-menu-right" + this.state.close}>
-                    <DropdownToggle color="empty">
-                        <i className="glyph-icon simple-icon-calendar set-date-action-icon" />
-                    </DropdownToggle>
-                    <DropdownMenu
-                        className="dropdown-menu-calendar"
-                        right
-                        id="iconMenuDropdown"
-                    >
-                        <p className="mb-1">{text}</p>
-                        <DatePicker
-                            className="react-datepicker"
-                            inline
-                            id={this.props.id}
-                            selected={this.state.fecha}
-                            onChange={this.handleChange}
-                            peekNextMonth={true}
-                            dropdownMode="select"
-                            dateFormat="DD/MM/YYYY"
-                            shouldCloseOnSelect={true}
-                            defaultValue={null}
-                        />
-                        <Button color="primary" onClick={this.handleClick}>Confirmar</Button>
-                    </DropdownMenu>
-                </UncontrolledDropdown>
-            </div>
-        );
-    }
+  render() {
+    const { text } = this.props;
 
+    return (
+      <div
+        className="glyph-icon simple-icon-calendar set-date-action-icon relative"
+        onClick={this.handleClick}
+      >
+        <DropdownMenu
+          className={'dropdown-menu-calendar ' + this.state.close}
+          right
+          id="iconMenuDropdown"
+        >
+          <p className="mb-1">{text}</p>
+          <DatePicker
+            className="react-datepicker"
+            inline
+            id={this.props.id}
+            selected={this.state.fecha}
+            onChange={this.handleChange}
+            peekNextMonth={true}
+            dropdownMode="select"
+            dateFormat="DD/MM/YYYY"
+            defaultValue={null}
+          />
+          <Button color="primary" onClick={this.onConfirm}>
+            Confirmar
+          </Button>
+          <Button color="primary" onClick={this.handleClick}>
+            Cancelar
+          </Button>
+        </DropdownMenu>
+      </div>
+    );
+  }
 }
 export default injectIntl(Calendario);

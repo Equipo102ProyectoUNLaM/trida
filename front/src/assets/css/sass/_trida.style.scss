@@ -6222,6 +6222,10 @@ input:-webkit-autofill {
   padding: 5px;
   cursor: pointer;
   color: $primary-color;
+
+  &.relative {
+    position: relative;
+  }
 }
 
 .chart-container {
