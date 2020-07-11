@@ -17,8 +17,8 @@ class DataListView extends React.Component {
   handleClick = (date) => {
     if (date) {
       const fecha = date.format('YYYY-MM-DD');
-      var ref = firestore.collection('cities').doc(this.props.id);
-
+      var ref = firestore.collection('practicas').doc(this.props.id);
+      // solo  modifica el campo con la nueva fecha de vencimiento
       ref.set(
         {
           fechaVencimiento: fecha,
