@@ -33,6 +33,7 @@ class FormClase extends React.Component {
         fecha: this.state.fecha,
         descripcion: this.state.descripcion,
         idSala: this.state.idSala,
+        idMateria: JSON.parse(localStorage.getItem('subject')),
       })
       .then(function () {
         NotificationManager.success(
