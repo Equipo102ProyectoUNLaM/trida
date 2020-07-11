@@ -8,58 +8,70 @@ class FormPractica extends React.Component {
   constructor(props) {
     super(props);
 
-    const practicaData = this.getDoc();
-
     this.state = {
-      nombre: practicaData && practicaData.id ? practicaData.id : '',
-      descripcion:
-        practicaData && practicaData.descripcion
-          ? practicaData.descripcion
-          : '',
-      fechaLanzada:
-        practicaData && practicaData.fechaLanzada
-          ? practicaData.fechaLanzada
-          : '',
-      duracion:
-        practicaData && practicaData.duracion ? practicaData.duracion : '',
-      fechaVencimiento:
-        practicaData && practicaData.fechaVencimiento
-          ? practicaData.fechaVencimiento
-          : '',
+      nombre: '',
+      descripcion: '',
+      fechaLanzada: '',
+      duracion: '',
+      fechaVencimiento: '',
     };
+  }
+
+  componentDidMount() {
+    this.getDoc();
   }
 
   getDoc = async () => {
     const obj = {};
-    var docRef = firestore.collection('practicas').doc(this.props.id);
-    try {
-      var doc = await docRef.get();
-      const docId = doc.id;
-      const {
-        nombre,
-        fechaLanzada,
-        descripcion,
-        fechaVencimiento,
-        duracion,
-      } = doc.data();
-      obj = {
-        id: docId,
-        nombre: nombre,
-        descripcion: descripcion,
-        fechaLanzada: fechaLanzada,
-        fechaVencimiento: fechaVencimiento,
-        duracion: duracion,
-      };
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      return obj;
+    if (this.props.id) {
+      var docRef = firestore.collection('practicas').doc(this.props.id);
+      try {
+        var doc = await docRef.get();
+        const docId = doc.id;
+        const {
+          nombre,
+          fechaLanzada,
+          descripcion,
+          fechaVencimiento,
+          duracion,
+        } = doc.data();
+        obj = {
+          id: docId,
+          nombre: nombre,
+          descripcion: descripcion,
+          fechaLanzada: fechaLanzada,
+          fechaVencimiento: fechaVencimiento,
+          duracion: duracion,
+        };
+      } catch (err) {
+        console.log('Error getting documents', err);
+      } finally {
+        return this.dataRenderer(obj);
+      }
     }
+    return;
   };
 
   handleChange = (event) => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
+  };
+
+  dataRenderer = (obj) => {
+    const {
+      nombre,
+      descripcion,
+      fechaLanzada,
+      duracion,
+      fechaVencimiento,
+    } = obj;
+    this.setState({
+      nombre,
+      descripcion,
+      fechaLanzada,
+      duracion,
+      fechaVencimiento,
+    });
   };
 
   handleSubmit = (event) => {
