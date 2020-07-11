@@ -6,6 +6,7 @@ import { Colxx } from '../../components/common/CustomBootstrap';
 import { NavLink } from 'react-router-dom';
 import Calendario from 'components/common/Calendario';
 import { injectIntl } from 'react-intl';
+import { firestore } from 'helpers/Firebase';
 import 'react-datepicker/dist/react-datepicker.css';
 
 class DataListView extends React.Component {
@@ -15,7 +16,17 @@ class DataListView extends React.Component {
 
   handleClick = (date) => {
     if (date) {
-      console.log('test', date.format('DD/MM/YYYY'));
+      const fecha = date.format('YYYY-MM-DD');
+      var ref = firestore.collection('cities').doc(this.props.id);
+
+      ref.set(
+        {
+          fechaVencimiento: fecha,
+        },
+        { merge: true }
+      );
+
+      return;
     }
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import { DropdownMenu, Button } from 'reactstrap';
+import { DropdownMenu, Button, ModalFooter, ModalHeader } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 
 class Calendario extends React.Component {
@@ -49,7 +49,9 @@ class Calendario extends React.Component {
           right
           id="iconMenuDropdown"
         >
-          <p className="mb-1">{text}</p>
+          <ModalHeader>
+            <p className="mb-1">{text}</p>
+          </ModalHeader>
           <DatePicker
             className="react-datepicker"
             inline
@@ -61,12 +63,14 @@ class Calendario extends React.Component {
             dateFormat="DD/MM/YYYY"
             defaultValue={null}
           />
-          <Button color="primary" onClick={this.onConfirm}>
-            Confirmar
-          </Button>
-          <Button color="primary" onClick={this.handleClick}>
-            Cancelar
-          </Button>
+          <ModalFooter>
+            <Button color="primary" onClick={this.onConfirm}>
+              Confirmar
+            </Button>
+            <Button color="primary" onClick={this.handleClick}>
+              Cancelar
+            </Button>
+          </ModalFooter>
         </DropdownMenu>
       </div>
     );
