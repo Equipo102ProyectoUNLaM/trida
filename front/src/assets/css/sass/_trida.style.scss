@@ -6217,6 +6217,17 @@ input:-webkit-autofill {
   color: $primary-color;
 }
 
+.set-date-action-icon{
+  font-size: 1.2rem;
+  padding: 5px;
+  cursor: pointer;
+  color: $primary-color;
+
+  &.relative {
+    position: relative;
+  }
+}
+
 .chart-container {
   height: 300px;
 }
@@ -7375,6 +7386,14 @@ i.large-icon {
 
   .dropdown-menu {
     border-radius: $border-radius-rounded;
+  }
+
+  .dropdown-menu-calendar {
+    padding: 0.8rem;
+  }
+
+  .react-datepicker {
+    border: #ffffff !important;
   }
 
   .btn.default {
