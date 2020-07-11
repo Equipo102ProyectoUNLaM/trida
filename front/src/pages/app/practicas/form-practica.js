@@ -22,7 +22,7 @@ class FormPractica extends React.Component {
   }
 
   getDoc = async () => {
-    const obj = {};
+    const arrayDeObjetos = [];
     if (this.props.id) {
       var docRef = firestore.collection('practicas').doc(this.props.id);
       try {
@@ -35,7 +35,7 @@ class FormPractica extends React.Component {
           fechaVencimiento,
           duracion,
         } = doc.data();
-        obj = {
+        const obj = {
           id: docId,
           nombre: nombre,
           descripcion: descripcion,
@@ -43,10 +43,11 @@ class FormPractica extends React.Component {
           fechaVencimiento: fechaVencimiento,
           duracion: duracion,
         };
+        arrayDeObjetos.push(obj);
       } catch (err) {
         console.log('Error getting documents', err);
       } finally {
-        return this.dataRenderer(obj);
+        return this.dataRenderer(arrayDeObjetos);
       }
     }
     return;
@@ -58,13 +59,14 @@ class FormPractica extends React.Component {
   };
 
   dataRenderer = (obj) => {
+    const [objeto] = obj;
     const {
       nombre,
       descripcion,
       fechaLanzada,
       duracion,
       fechaVencimiento,
-    } = obj;
+    } = objeto;
     this.setState({
       nombre,
       descripcion,
