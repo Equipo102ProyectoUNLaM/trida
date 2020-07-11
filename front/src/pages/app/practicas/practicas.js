@@ -1,41 +1,98 @@
 import React, { Component, Fragment } from 'react';
-import { Row } from 'reactstrap';
+import { Row, Modal } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
-import { practicasData } from './../../../data/practicas';
+import FormPractica from './form-practica';
+import { firestore } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
 
 function collect(props) {
   return { data: props.data };
 }
 
-class Practicas extends Component {
+class Practica extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      modalOpen: false,
-      selectedItems: [],
-      isLoading: false,
       items: [],
+      modalCreateOpen: false,
+      modalEditOpen: false,
+      selectedItems: [],
+      isLoading: true,
+      idItemSelected: null,
     };
   }
 
+  getPracticas = async () => {
+    const arrayDeObjetos = [];
+    const actividadesRef = firestore
+      .collection('practicas')
+      .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
+      .orderBy('fechaLanzada', 'asc');
+    try {
+      var allActivitiesSnapShot = await actividadesRef.get();
+      allActivitiesSnapShot.forEach((doc) => {
+        const docId = doc.id;
+        const {
+          nombre,
+          fechaLanzada,
+          fechaVencimiento,
+          descripcion,
+        } = doc.data();
+        const obj = {
+          id: docId,
+          name: nombre,
+          description: descripcion,
+          startDate: fechaLanzada,
+          dueDate: fechaVencimiento,
+        };
+        arrayDeObjetos.push(obj);
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.dataListRenderer(arrayDeObjetos);
+    }
+  };
+
   componentDidMount() {
-    this.practicasRender();
+    this.getPracticas();
   }
 
-  toggleModal = () => {
+  toggleCreateModal = () => {
     this.setState({
-      modalOpen: !this.state.modalOpen,
+      ...this.state,
+      modalCreateOpen: !this.state.modalCreateOpen,
     });
   };
 
-  practicasRender() {
+  toggleEditModal = (id) => {
     this.setState({
-      modalOpen: false,
-      items: practicasData,
+      ...this.state,
+      modalEditOpen: !this.state.modalEditOpen,
+      idItemSelected: id,
+    });
+  };
+
+  onPracticaAgregada = () => {
+    this.toggleCreateModal();
+    this.getPracticas();
+  };
+
+  onPracticaEditada = () => {
+    this.toggleEditModal();
+    this.getPracticas();
+  };
+
+  dataListRenderer(arrayDeObjetos) {
+    this.setState({
+      items: arrayDeObjetos,
       selectedItems: [],
-      isLoading: true,
+      isLoading: false,
+      modalCreateOpen: false,
+      modalEditOpen: false,
     });
   }
 
@@ -43,54 +100,72 @@ class Practicas extends Component {
     alert('delete');
   };
 
-  editItem = () => {
-    alert('edit');
-  };
-
   render() {
-    const { modalOpen } = this.state;
+    const {
+      modalCreateOpen,
+      modalEditOpen,
+      idItemSelected,
+      isLoading,
+    } = this.state;
 
-    return !this.state.isLoading ? (
+    return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.my-activities"
-            toggleModal={this.toggleModal}
+            toggleModal={this.toggleCreateModal}
             buttonText="activity.add"
           />
           <ModalGrande
-            modalOpen={modalOpen}
-            toggleModal={this.toggleModal}
+            modalOpen={modalCreateOpen}
+            toggleModal={this.toggleCreateModal}
             modalHeader="activity.add"
-          ></ModalGrande>
+          >
+            <FormPractica
+              toggleModal={this.toggleCreateModal}
+              onPracticaOperacion={this.onPracticaAgregada}
+              textConfirm="Agregar"
+              operationType="add"
+            />
+          </ModalGrande>
           <Row>
             {this.state.items.map((practica) => {
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
-                  title={practica.description}
-                  text1={
-                    'Fecha de publicación: ' +
-                    practica.publicationDate.toLocaleDateString()
-                  }
-                  text2={
-                    'Fecha de entrega: ' + practica.dueDate.toLocaleDateString()
-                  }
+                  title={practica.name}
+                  text1={'Fecha de publicación: ' + practica.startDate}
+                  text2={'Fecha de entrega: ' + practica.dueDate}
                   isSelect={this.state.selectedItems.includes(practica.id)}
-                  onEditItem={this.editItem}
+                  onEditItem={this.toggleEditModal}
                   onDeleteItem={this.deleteItem}
-                  navTo=""
+                  navTo="#"
                   collect={collect}
                 />
               );
             })}{' '}
           </Row>
+          {modalEditOpen && (
+            <ModalGrande
+              modalOpen={modalEditOpen}
+              toggleModal={this.toggleEditModal}
+              modalHeader="activity.edit"
+            >
+              <FormPractica
+                toggleModal={this.toggleEditModal}
+                onPracticaOperacion={this.onPracticaEditada}
+                textConfirm="Editar"
+                operationType="edit"
+                id={idItemSelected}
+              />
+            </ModalGrande>
+          )}
         </div>
       </Fragment>
     );
   }
 }
-export default Practicas;
+export default injectIntl(Practica);

@@ -58,7 +58,6 @@ module.exports = {
   'menu.my-contents': 'Mis Contenidos',
   'menu.my-corrections': 'Mis Correcciones',
   'menu.my-classes': 'Mis Clases',
-  'menu.class-detail': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas',
   'menu.my-evaluations': 'Mis Evaluaciones',
@@ -91,6 +90,8 @@ module.exports = {
 
   /* 08.Prácticas */
   'activity.add': 'AGREGAR PRÁCTICA',
+  'activity.edit': 'EDITAR PRÁCTICA',
+  'activity.delete': 'ELIMINAR PRÁCTICA',
   'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 09.Evaluaciones */
