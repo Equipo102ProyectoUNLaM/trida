@@ -3,6 +3,7 @@ import { Row, Modal } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
+import ModalInformativo from 'containers/pages/ModalInformativo';
 import FormPractica from './form-practica';
 import { firestore } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
@@ -19,6 +20,7 @@ class Practica extends Component {
       items: [],
       modalCreateOpen: false,
       modalEditOpen: false,
+      modalDeleteOpen: false,
       selectedItems: [],
       isLoading: true,
       idItemSelected: null,
@@ -61,6 +63,17 @@ class Practica extends Component {
     this.getPracticas();
   }
 
+  deletePractice = (id) => {
+    var docRef = firestore.collection('practicas').doc(id);
+    try {
+      docRef.remove();
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.onPracticaBorrada();
+    }
+  };
+
   toggleCreateModal = () => {
     this.setState({
       ...this.state,
@@ -76,6 +89,13 @@ class Practica extends Component {
     });
   };
 
+  toggleDeleteModal = (id) => {
+    this.setState({
+      ...this.state,
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
   onPracticaAgregada = () => {
     this.toggleCreateModal();
     this.getPracticas();
@@ -83,6 +103,11 @@ class Practica extends Component {
 
   onPracticaEditada = () => {
     this.toggleEditModal();
+    this.getPracticas();
+  };
+
+  onPracticaBorrada = () => {
+    this.toggleDeleteModal();
     this.getPracticas();
   };
 
@@ -96,14 +121,11 @@ class Practica extends Component {
     });
   }
 
-  deleteItem = () => {
-    alert('delete');
-  };
-
   render() {
     const {
       modalCreateOpen,
       modalEditOpen,
+      modalDeleteOpen,
       idItemSelected,
       isLoading,
     } = this.state;
@@ -141,7 +163,7 @@ class Practica extends Component {
                   text2={'Fecha de entrega: ' + practica.dueDate}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
-                  onDeleteItem={this.deleteItem}
+                  onDeleteItem={this.toggleDeleteModal}
                   navTo="#"
                   collect={collect}
                 />
@@ -162,6 +184,14 @@ class Practica extends Component {
                 id={idItemSelected}
               />
             </ModalGrande>
+          )}
+          {modalDeleteOpen && (
+            <ModalInformativo
+              modalOpen={modalDeleteOpen}
+              toggleModal={this.toggleDeleteModal}
+              modalHeader="activity.delete"
+              onConfirmAction="deletePractice"
+            ></ModalInformativo>
           )}
         </div>
       </Fragment>

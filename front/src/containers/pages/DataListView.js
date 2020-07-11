@@ -40,7 +40,7 @@ const DataListView = ({
                 ></div>
                 <div
                   className="glyph-icon simple-icon-trash delete-action-icon"
-                  onClick={onDeleteItem}
+                  onClick={() => onDeleteItem(id)}
                 ></div>
               </Row>
             </div>
