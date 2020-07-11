@@ -1,19 +1,17 @@
-import React, { Component } from "react";
-import ReactTable from "react-table";
-import "react-table/react-table.css";
-import { Card, CardBody, CardTitle, CustomInput } from "reactstrap";
-import IntlMessages from "../../helpers/IntlMessages";
-
-import data from "../../data/contents";
-
+import React, { Component } from 'react';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import { Card, CardBody, CardTitle, CustomInput } from 'reactstrap';
+import IntlMessages from 'helpers/IntlMessages';
+import contents from 'data/contents';
 
 class Contents extends Component {
   constructor() {
     super();
     this.state = {
       selectAll: false,
-      data: [],
-      checked: []
+      data: contents,
+      checked: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSingleCheckboxChange = this.handleSingleCheckboxChange.bind(
@@ -28,29 +26,35 @@ class Contents extends Component {
     this.state.data.forEach(function (e, index) {
       checkedCopy.push(selectAll);
     });
-    this.setState({
-      checked: checkedCopy
-    }, () => {
-      console.log(this.state.checked);
-    });
+    this.setState(
+      {
+        checked: checkedCopy,
+      },
+      () => {
+        console.log(this.state.checked);
+      }
+    );
   };
 
-  handleSingleCheckboxChange = index => {
+  handleSingleCheckboxChange = (index) => {
     console.log(index);
     var checkedCopy = this.state.checked;
     checkedCopy[index] = !this.state.checked[index];
     if (checkedCopy[index] === false) {
       this.setState({ selectAll: false });
     }
-    this.setState({
-      checked: checkedCopy
-    }, () => {
-      console.log(this.state.checked);
-    });
+    this.setState(
+      {
+        checked: checkedCopy,
+      },
+      () => {
+        console.log(this.state.checked);
+      }
+    );
   };
 
   componentDidMount() {
-    const dataEdited = data.slice(0, 12);
+    const dataEdited = this.props.data.slice(0, 12);
     var checkedCopy = [];
     var selectAll = this.state.selectAll;
     dataEdited.forEach(function (e, index) {
@@ -59,7 +63,7 @@ class Contents extends Component {
     this.setState({
       data: dataEdited,
       checked: checkedCopy,
-      selectAll: selectAll
+      selectAll: selectAll,
     });
   }
 
@@ -68,54 +72,54 @@ class Contents extends Component {
       <Card className="h-100">
         <CardBody>
           <CardTitle>
-            <IntlMessages id={"menu.my-contents"} />
+            <IntlMessages id={'menu.my-contents'} />
           </CardTitle>
-            <ReactTable
-              data={this.state.data}
-              defaultPageSize={6}
-              showPageJump={false}
-              showPageSizeOptions={false}
-              // PaginationComponent={Pagination}
-              columns={[
-                {
-                  sortable: false,
-                  Header: (
-                    <CustomInput
-                      type="checkbox"
-                      id="checkAll"
-                      label="All"
-                      onChange={this.handleChange}
-                      checked={this.state.selectAll}
-                    />
-                  ),
-                  Cell: row => (
-                    <CustomInput
-                      type="checkbox"
-                      id={"check"+row.index}
-                      label=""
-                      checked={this.state.checked[row.index]}
-                      onChange={() => this.handleSingleCheckboxChange(row.index)}
-                    />
-                  ),
-                  filterable: false
-                },
-                {
-                  Header: "Nombre",
-                  accessor: "title",
-                  Cell: props => <p className="text-muted">{props.value}</p>
-                },
-                {
-                  Header: "Fecha de Subida",
-                  accessor: "sales",
-                  Cell: props => <p className="text-muted">{props.value}</p>
-                },
-                {
-                  Header: "Acciones",
-                  accessor: "stock",
-                  Cell: props => <p className="text-muted">{props.value}</p>
-                }
-              ]}
-            />
+          <ReactTable
+            data={this.state.data}
+            defaultPageSize={6}
+            showPageJump={false}
+            showPageSizeOptions={false}
+            // PaginationComponent={Pagination}
+            columns={[
+              {
+                sortable: false,
+                Header: (
+                  <CustomInput
+                    type="checkbox"
+                    id="checkAll"
+                    label="All"
+                    onChange={this.handleChange}
+                    checked={this.state.selectAll}
+                  />
+                ),
+                Cell: (row) => (
+                  <CustomInput
+                    type="checkbox"
+                    id={'check' + row.index}
+                    label=""
+                    checked={this.state.checked[row.index]}
+                    onChange={() => this.handleSingleCheckboxChange(row.index)}
+                  />
+                ),
+                filterable: false,
+              },
+              {
+                Header: 'Nombre',
+                accessor: 'title',
+                Cell: (props) => <p className="text-muted">{props.value}</p>,
+              },
+              {
+                Header: 'Fecha de Subida',
+                accessor: 'sales',
+                Cell: (props) => <p className="text-muted">{props.value}</p>,
+              },
+              {
+                Header: 'Acciones',
+                accessor: 'stock',
+                Cell: (props) => <p className="text-muted">{props.value}</p>,
+              },
+            ]}
+          />
         </CardBody>
       </Card>
     );

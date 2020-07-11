@@ -92,4 +92,10 @@ module.exports = {
   'activity.add': 'AGREGAR PRÁCTICA',
   'activity.edit': 'EDITAR PRÁCTICA',
   'activity.delete': 'ELIMINAR PRÁCTICA',
+
+  /* 09.Evaluaciones */
+  'evaluacion.agregar': 'AGREGAR EVALUACIÓN',
+
+  /* 10.Contenidos */
+  'contenido.agregar': 'AGREGAR CONTENIDO',
 };

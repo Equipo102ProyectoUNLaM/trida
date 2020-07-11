@@ -4,12 +4,19 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Evaluaciones = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './evaluaciones')
 );
+const DetalleEvaluacion = React.lazy(() =>
+  import('./detalle-evaluacion/detalle-evaluacion')
+);
 const MenuEvaluaciones = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
         path={`${match.url}/`}
-        render={props => <Evaluaciones {...props} />}
+        render={(props) => <Evaluaciones {...props} />}
+      />
+      <Route
+        path={`${match.url}/detalle-evaluacion/:evaluacionId`}
+        render={(props) => <DetalleEvaluacion {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
