@@ -8,14 +8,54 @@ class FormPractica extends React.Component {
   constructor(props) {
     super(props);
 
+    const practicaData = this.getDoc();
+
     this.state = {
-      nombre: props.nombre ? props.nombre : '',
-      descripcion: props.descripcion ? props.descripcion : '',
-      fechaLanzada: props.fechaLanzada ? props.fechaLanzada : '',
-      duracion: props.duracion ? props.duracion : '',
-      fechaVencimiento: props.fechaVencimiento ? props.fechaVencimiento : '',
+      nombre: practicaData && practicaData.id ? practicaData.id : '',
+      descripcion:
+        practicaData && practicaData.descripcion
+          ? practicaData.descripcion
+          : '',
+      fechaLanzada:
+        practicaData && practicaData.fechaLanzada
+          ? practicaData.fechaLanzada
+          : '',
+      duracion:
+        practicaData && practicaData.duracion ? practicaData.duracion : '',
+      fechaVencimiento:
+        practicaData && practicaData.fechaVencimiento
+          ? practicaData.fechaVencimiento
+          : '',
     };
   }
+
+  getDoc = async () => {
+    const obj = {};
+    var docRef = firestore.collection('practicas').doc(this.props.id);
+    try {
+      var doc = await docRef.get();
+      const docId = doc.id;
+      const {
+        nombre,
+        fechaLanzada,
+        descripcion,
+        fechaVencimiento,
+        duracion,
+      } = doc.data();
+      obj = {
+        id: docId,
+        nombre: nombre,
+        descripcion: descripcion,
+        fechaLanzada: fechaLanzada,
+        fechaVencimiento: fechaVencimiento,
+        duracion: duracion,
+      };
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      return obj;
+    }
+  };
 
   handleChange = (event) => {
     const { value, name } = event.target;
@@ -24,39 +64,41 @@ class FormPractica extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    if (this.props.operationType === 'add') {
+      firestore
+        .collection('practicas')
+        .add({
+          nombre: this.state.nombre,
+          fechaLanzada: this.state.fechaLanzada,
+          descripcion: this.state.descripcion,
+          duracion: this.state.duracion,
+          fechaVencimiento: this.state.fechaVencimiento,
+          fechaPublicada: new Date(),
+          idMateria: JSON.parse(localStorage.getItem('subject')),
+        })
+        .then(function () {
+          NotificationManager.success(
+            'Práctica agregada!',
+            'La práctica fue agregada exitosamente',
+            3000,
+            null,
+            null,
+            ''
+          );
+        })
+        .catch(function (error) {
+          NotificationManager.error(
+            'Error al agregar la práctica',
+            error,
+            3000,
+            null,
+            null,
+            ''
+          );
+        });
+    }
 
-    firestore
-      .collection('practicas')
-      .add({
-        nombre: this.state.nombre,
-        fechaLanzada: this.state.fechaLanzada,
-        descripcion: this.state.descripcion,
-        duracion: this.state.duracion,
-        fechaVencimiento: this.state.fechaVencimiento,
-        fechaPublicada: new Date(),
-      })
-      .then(function () {
-        NotificationManager.success(
-          'Práctica agregada!',
-          'La práctica fue agregada exitosamente',
-          3000,
-          null,
-          null,
-          ''
-        );
-      })
-      .catch(function (error) {
-        NotificationManager.error(
-          'Error al agregar la práctica',
-          error,
-          3000,
-          null,
-          null,
-          ''
-        );
-      });
-
-    this.props.onPracticaAgregada();
+    this.props.onPracticaOperation();
   };
 
   render() {

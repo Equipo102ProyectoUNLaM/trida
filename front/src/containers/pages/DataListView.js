@@ -36,7 +36,7 @@ const DataListView = ({
               <Row>
                 <div
                   className="glyph-icon simple-icon-pencil edit-action-icon"
-                  onClick={onEditItem}
+                  onClick={() => onEditItem(id)}
                 ></div>
                 <div
                   className="glyph-icon simple-icon-trash delete-action-icon"

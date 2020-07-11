@@ -21,6 +21,7 @@ class Practica extends Component {
       modalEditOpen: false,
       selectedItems: [],
       isLoading: true,
+      idItemSelected: null,
     };
   }
 
@@ -67,15 +68,21 @@ class Practica extends Component {
     });
   };
 
-  toggleEditModal = () => {
+  toggleEditModal = (id) => {
     this.setState({
       ...this.state,
       modalEditOpen: !this.state.modalEditOpen,
+      idItemSelected: id,
     });
   };
 
   onPracticaAgregada = () => {
     this.toggleCreateModal();
+    this.getPracticas();
+  };
+
+  onPracticaEditada = () => {
+    this.toggleEditModal();
     this.getPracticas();
   };
 
@@ -94,7 +101,12 @@ class Practica extends Component {
   };
 
   render() {
-    const { modalCreateOpen, modalEditOpen, items, isLoading } = this.state;
+    const {
+      modalCreateOpen,
+      modalEditOpen,
+      idItemSelected,
+      isLoading,
+    } = this.state;
 
     return isLoading ? (
       <div className="loading" />
@@ -113,8 +125,9 @@ class Practica extends Component {
           >
             <FormPractica
               toggleModal={this.toggleCreateModal}
-              onPracticaAgregada={this.onPracticaAgregada}
+              onPracticaOperacion={this.onPracticaAgregada}
               textConfirm="Agregar"
+              operationType="add"
             />
           </ModalGrande>
           <Row>
@@ -143,8 +156,10 @@ class Practica extends Component {
             >
               <FormPractica
                 toggleModal={this.toggleEditModal}
-                onPracticaAgregada={this.onPracticaAgregada}
+                onPracticaOperacion={this.onPracticaEditada}
                 textConfirm="Editar"
+                operationType="edit"
+                id={idItemSelected}
               />
             </ModalGrande>
           )}
