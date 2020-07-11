@@ -1,6 +1,5 @@
 import React from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
-import Switch from 'rc-switch';
 import { firestore } from 'helpers/Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
 
@@ -92,8 +91,8 @@ class FormPractica extends React.Component {
         })
         .then(function () {
           NotificationManager.success(
-            'Práctica agregada!',
             'La práctica fue agregada exitosamente',
+            'Práctica agregada!',
             3000,
             null,
             null,
@@ -110,9 +109,42 @@ class FormPractica extends React.Component {
             ''
           );
         });
+    } else {
+      var ref = firestore.collection('practicas').doc(this.props.id);
+      ref
+        .set(
+          {
+            nombre: this.state.nombre,
+            fechaLanzada: this.state.fechaLanzada,
+            descripcion: this.state.descripcion,
+            duracion: this.state.duracion,
+            fechaVencimiento: this.state.fechaVencimiento,
+          },
+          { merge: true }
+        )
+        .then(function () {
+          NotificationManager.success(
+            'La práctica fue editada exitosamente',
+            'Práctica editada!',
+            3000,
+            null,
+            null,
+            ''
+          );
+        })
+        .catch(function (error) {
+          NotificationManager.error(
+            'Error al editar la práctica',
+            error,
+            3000,
+            null,
+            null,
+            ''
+          );
+        });
     }
 
-    this.props.onPracticaOperation();
+    this.props.onPracticaOperacion();
   };
 
   render() {
