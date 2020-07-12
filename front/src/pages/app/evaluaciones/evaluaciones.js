@@ -140,9 +140,9 @@ class Evaluaciones extends Component {
             modalHeader="evaluacion.agregar"
           >
             <FormEvaluacion
-              toggleModal={this.toggleModal}
               onEvaluacionAgregada={this.onEvaluacionAgregada}
               materiaId={this.state.materiaId}
+              idEval={this.state.evalId}
             />
           </ModalGrande>
           <Row>

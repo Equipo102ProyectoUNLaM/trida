@@ -5052,6 +5052,14 @@ input:-webkit-autofill {
   }
 }
 
+.form-nav-link {
+  padding: 0 !important;
+
+  &.active {
+    color: $theme-color-1;
+  }
+}
+
 .page-item {
   padding: 10px;
 
@@ -6253,6 +6261,18 @@ input:-webkit-autofill {
 
   &.relative {
     position: relative;
+  }
+}
+
+.agregar-ejercicios-action-icon{
+  display: flex;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: $primary-color;
+
+  .icon-text{
+    font-size: 1.3rem;
+    margin-left: 0.5rem;
   }
 }
 

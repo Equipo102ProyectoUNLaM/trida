@@ -61,6 +61,7 @@ module.exports = {
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas',
   'menu.my-evaluations': 'Mis Evaluaciones',
+  'menu.detalle-evaluacion': 'Detalle de Evaluación',
 
   /* 04.Error  */
   'pages.error-title': 'Vaya, parece que ha ocurrido un error!',

@@ -136,8 +136,13 @@ class CardTabs extends Component {
                     <Row>
                       <Colxx sm="12">
                         <CardBody>
-                          <p>Traer ejercicios</p>
-                          <Button outline size="sm" color="primary">
+                          <p>Traer ejercicios asociados a la eval</p>
+                          <Button
+                            outline
+                            size="sm"
+                            color="primary"
+                            onClick={this.handleClickEdit}
+                          >
                             Editar
                           </Button>
                         </CardBody>

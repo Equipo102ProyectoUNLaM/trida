@@ -15,6 +15,7 @@ class FormEvaluacion extends React.Component {
     super();
 
     this.state = {
+      evaluacionId: '',
       nombre: '',
       fecha: '',
       descripcion: '',
@@ -27,9 +28,18 @@ class FormEvaluacion extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
+  componentDidMount() {
+    if (this.props.idEval) {
+      this.setState({
+        evaluacionId: this.props.idEval,
+        nombre: this.props.itemsEval.nombre,
+        fecha: this.props.itemsEval.fecha,
+        descripcion: this.props.itemsEval.descripcion,
+      });
+    }
+  }
 
+  onSubmit = () => {
     firestore
       .collection('evaluaciones')
       .add({
@@ -62,10 +72,33 @@ class FormEvaluacion extends React.Component {
     this.props.onEvaluacionAgregada();
   };
 
+  onEdit = () => {
+    var ref = firestore.collection('evaluaciones').doc(this.state.evaluacionId);
+    ref.set(
+      {
+        nombre: this.state.nombre,
+        fecha: this.state.fecha,
+        descripcion: this.state.descripcion,
+      },
+      { merge: true }
+    );
+
+    NotificationManager.success(
+      'Evaluación editada!',
+      'La evaluación fue editada exitosamente',
+      3000,
+      null,
+      null,
+      ''
+    );
+    this.props.onEvaluacionEditada();
+    return;
+  };
+
   render() {
     const { toggleModal } = this.props;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form>
         <FormGroup className="mb-3">
           <Label>Nombre de la evaluacion</Label>
           <Input
@@ -96,16 +129,37 @@ class FormEvaluacion extends React.Component {
           />
         </FormGroup>
         <FormGroup className="mb-3">
-          <Label>Ejercicios</Label>
-          <NavLink>Agregar Ejercicios</NavLink>
+          {!this.props.idEval && (
+            <NavLink
+              className="form-nav-link" //onClick={} -> guardar y navegar a pantalla de detalle de clase, para agregar ejercicios
+            >
+              <div className="glyph-icon simple-icon-plus agregar-ejercicios-action-icon">
+                <p className="icon-text">Agregar ejercicios</p>
+              </div>
+            </NavLink>
+          )}
+          {this.props.idEval && (
+            <p>Acá se van a mostrar ejercicios asociados a esa eval</p>
+          )}
         </FormGroup>
         <ModalFooter>
-          <Button color="primary" type="submit">
-            Agregar
-          </Button>
-          <Button color="secondary" onClick={toggleModal}>
-            Cancelar
-          </Button>
+          {!this.props.idEval && (
+            <>
+              <Button color="primary" onClick={this.onSubmit}>
+                Agregar
+              </Button>
+              <Button color="secondary" onClick={toggleModal}>
+                Cancelar
+              </Button>
+            </>
+          )}
+          {this.props.idEval && (
+            <>
+              <Button color="primary" onClick={this.onEdit}>
+                Editar
+              </Button>
+            </>
+          )}
         </ModalFooter>
       </form>
     );

@@ -1,5 +1,7 @@
 import { defaultDirection } from '../constants/defaultValues';
 
+export const isEmpty = (obj) => !obj || Object.keys(obj).length === 0;
+
 export const mapOrder = (array, order, key) => {
   array.sort(function (a, b) {
     var A = a[key],

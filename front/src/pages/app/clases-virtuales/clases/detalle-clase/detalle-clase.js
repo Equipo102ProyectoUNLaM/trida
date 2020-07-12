@@ -54,7 +54,7 @@ export default class DetalleClase extends Component {
         <Row>
           <Colxx xxs="12">
             <HeaderDeModulo
-              heading={capitalize(nombre)}
+              text={capitalize(nombre)}
               match={match}
               breadcrumb
             />
