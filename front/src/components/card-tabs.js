@@ -43,8 +43,12 @@ class CardTabs extends Component {
     }
   }
 
-  handleClick = () => {
+  handleClickEdit = () => {
     this.props.onEdit(this.props.item.id);
+  };
+
+  handleClickDelete = () => {
+    this.props.onDelete(this.props.item.id);
   };
 
   render() {
@@ -59,7 +63,7 @@ class CardTabs extends Component {
                   <Nav tabs className=" card-header-tabs ml-0 mr-0">
                     <NavItem className="w-50 text-center">
                       <NavLink
-                        to={navTo}
+                        to="#"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '1',
@@ -74,7 +78,7 @@ class CardTabs extends Component {
                     </NavItem>
                     <NavItem className="w-50 text-center">
                       <NavLink
-                        to={navTo}
+                        to="#"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '2',
@@ -96,19 +100,34 @@ class CardTabs extends Component {
                       <Colxx sm="12">
                         <CardBody>
                           <CardTitle className="mb-4">{item.nombre}</CardTitle>
-                          <p className="mb-4">{item.description}</p>
-                          <p className="mb-4">{item.date}</p>
-                          <Button
-                            onClick={this.handleClick}
-                            outline
-                            size="sm"
-                            color="primary"
-                          >
-                            Editar
-                          </Button>
-                          <Button outline size="sm" color="primary">
-                            Borrar
-                          </Button>
+                          {item.description && (
+                            <p className="mb-4">{item.description}</p>
+                          )}
+                          {!item.description && (
+                            <p className="mb-4">Sin descripción</p>
+                          )}
+                          {item.fecha && <p className="mb-4">{item.fecha}</p>}
+                          {!item.fecha && <p className="mb-4">Sin fecha</p>}
+                          <Row className="button-group">
+                            <Button
+                              outline
+                              onClick={this.handleClickEdit}
+                              size="sm"
+                              color="primary"
+                              className="button"
+                            >
+                              Editar
+                            </Button>
+                            <Button
+                              outline
+                              onClick={this.handleClickDelete}
+                              size="sm"
+                              color="primary"
+                              className="button"
+                            >
+                              Borrar
+                            </Button>
+                          </Row>
                         </CardBody>
                       </Colxx>
                     </Row>

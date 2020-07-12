@@ -1,7 +1,12 @@
 import React from 'react';
-import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
-import Switch from 'rc-switch';
-import { createUUID } from 'helpers/Utils';
+import {
+  Input,
+  ModalFooter,
+  Button,
+  FormGroup,
+  Label,
+  NavLink,
+} from 'reactstrap';
 import { firestore } from 'helpers/Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
 
@@ -45,7 +50,7 @@ class FormEvaluacion extends React.Component {
       })
       .catch(function (error) {
         NotificationManager.error(
-          'Error al agregar la clase',
+          'Error al agregar la evaluación',
           error,
           3000,
           null,
@@ -89,6 +94,10 @@ class FormEvaluacion extends React.Component {
             onChange={this.handleChange}
             value={this.state.descripcion}
           />
+        </FormGroup>
+        <FormGroup className="mb-3">
+          <Label>Ejercicios</Label>
+          <NavLink>Agregar Ejercicios</NavLink>
         </FormGroup>
         <ModalFooter>
           <Button color="primary" type="submit">

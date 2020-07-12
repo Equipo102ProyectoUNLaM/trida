@@ -11,6 +11,7 @@ const MenuEvaluaciones = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
+        exact
         path={`${match.url}/`}
         render={(props) => <Evaluaciones {...props} />}
       />

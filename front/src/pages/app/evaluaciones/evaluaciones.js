@@ -1,11 +1,14 @@
 import React, { Component, Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalGrande from 'containers/pages/ModalGrande';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { firestore } from 'helpers/Firebase';
 import FormEvaluacion from './form-evaluacion';
+import { NotificationManager } from 'components/common/react-notifications';
 
 function collect(props) {
   return { data: props.data };
@@ -20,9 +23,11 @@ class Evaluaciones extends Component {
     this.state = {
       items: [],
       modalOpen: false,
+      modalDeleteOpen: false,
       selectedItems: [],
       isLoading: true,
       materiaId: id,
+      evalId: '',
     };
   }
 
@@ -39,7 +44,7 @@ class Evaluaciones extends Component {
         const { nombre, fecha, descripcion } = doc.data();
         const obj = {
           id: docId,
-          name: nombre,
+          nombre: nombre,
           description: descripcion,
           fecha: fecha,
         };
@@ -62,6 +67,12 @@ class Evaluaciones extends Component {
     });
   };
 
+  toggleDeleteModal = () => {
+    this.setState({
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
   onEvaluacionAgregada = () => {
     this.toggleModal();
     this.getEvaluaciones(this.state.materiaId);
@@ -76,11 +87,43 @@ class Evaluaciones extends Component {
   }
 
   onEdit = (idEvaluacion) => {
-    console.log('edit' + idEvaluacion);
+    this.props.history.push(
+      `/app/evaluations/detalle-evaluacion/${idEvaluacion}`
+    );
+  };
+
+  onDelete = (idEvaluacion) => {
+    this.setState({
+      evalId: idEvaluacion,
+    });
+    this.toggleDeleteModal();
+  };
+
+  borrarEvaluacion = async () => {
+    const evalRef = firestore.collection('evaluaciones').doc(this.state.evalId);
+    try {
+      await evalRef.delete();
+    } catch (err) {
+      console.log('Error deleting documents', err);
+    } finally {
+      NotificationManager.success(
+        'Evaluación agregada!',
+        'La evaluación fue borrada exitosamente',
+        3000,
+        null,
+        null,
+        ''
+      );
+      this.setState({
+        evalId: '',
+      });
+      this.toggleDeleteModal();
+      this.getEvaluaciones(this.state.materiaId);
+    }
   };
 
   render() {
-    const { modalOpen, items, isLoading } = this.state;
+    const { modalOpen, modalDeleteOpen, items, isLoading } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -112,13 +155,25 @@ class Evaluaciones extends Component {
                   collect={collect}
                   navTo={`/app/evaluations/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
+                  onDelete={this.onDelete}
                 />
               );
             })}{' '}
           </Row>
+          {modalDeleteOpen && (
+            <ModalConfirmacion
+              texto="Está seguro de que desea borrar la evaluación?"
+              titulo="Borrar Evaluación"
+              buttonPrimary="Aceptar"
+              buttonSecondary="Cancelar"
+              toggle={this.toggleDeleteModal}
+              isOpen={modalDeleteOpen}
+              onConfirm={this.borrarEvaluacion}
+            />
+          )}
         </div>
       </Fragment>
     );
   }
 }
-export default injectIntl(Evaluaciones);
+export default withRouter(Evaluaciones);

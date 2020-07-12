@@ -644,6 +644,14 @@ button {
   }
 }
 
+.button-group {
+  justify-content: flex-end;
+
+  .button {
+    margin: 0 0.2rem;
+  }
+}
+
 .check-button {
   cursor: default !important;
 }
@@ -2818,6 +2826,18 @@ nav .nomargin {
 
   .card-body {
     padding: 1.75rem;
+
+    @include respond-below(xs) {
+      padding: 1.25rem;
+    }
+
+    &.sm {
+      padding: 1.25rem 1.75rem;
+    }
+  }
+
+  .card-eval-body {
+    padding: 1rem 1.25rem .25rem 1.25rem;
 
     @include respond-below(xs) {
       padding: 1.25rem;
