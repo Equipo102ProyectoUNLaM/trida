@@ -2,9 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import ListaConImagen from 'components/lista-con-imagen';
+import CardTabs from 'components/card-tabs';
 import ModalGrande from 'containers/pages/ModalGrande';
-import { evaluacion } from 'data/evaluacion';
+import { firestore } from 'helpers/Firebase';
+import FormEvaluacion from './form-evaluacion';
 
 function collect(props) {
   return { data: props.data };
@@ -14,20 +15,45 @@ class Evaluaciones extends Component {
   constructor(props) {
     super(props);
 
+    const { id } = JSON.parse(localStorage.getItem('subject'));
+
     this.state = {
       items: [],
       modalOpen: false,
       selectedItems: [],
       isLoading: true,
+      materiaId: id,
     };
   }
 
-  getEvaluaciones = async () => {
-    this.dataListRenderer(evaluacion);
+  getEvaluaciones = async (materiaId) => {
+    const arrayDeObjetos = [];
+
+    const evaluacionesRef = firestore
+      .collection('evaluaciones')
+      .where('idMateria', '==', materiaId);
+    try {
+      var evaluacionesSnapShot = await evaluacionesRef.get();
+      evaluacionesSnapShot.forEach((doc) => {
+        const docId = doc.id;
+        const { nombre, fecha, descripcion } = doc.data();
+        const obj = {
+          id: docId,
+          name: nombre,
+          description: descripcion,
+          fecha: fecha,
+        };
+        arrayDeObjetos.push(obj);
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.dataListRenderer(arrayDeObjetos);
+    }
   };
 
   componentDidMount() {
-    this.getEvaluaciones();
+    this.getEvaluaciones(this.state.materiaId);
   }
 
   toggleModal = () => {
@@ -38,7 +64,7 @@ class Evaluaciones extends Component {
 
   onEvaluacionAgregada = () => {
     this.toggleModal();
-    this.getEvaluaciones();
+    this.getEvaluaciones(this.state.materiaId);
   };
 
   dataListRenderer(arrayDeObjetos) {
@@ -48,6 +74,10 @@ class Evaluaciones extends Component {
       isLoading: false,
     });
   }
+
+  onEdit = (idEvaluacion) => {
+    console.log('edit' + idEvaluacion);
+  };
 
   render() {
     const { modalOpen, items, isLoading } = this.state;
@@ -66,21 +96,22 @@ class Evaluaciones extends Component {
             toggleModal={this.toggleModal}
             modalHeader="evaluacion.agregar"
           >
-            {/* Acá va el form de evaluaciones */}
-            {/* <FormClase
+            <FormEvaluacion
               toggleModal={this.toggleModal}
-              onClaseAgregada={this.onClaseAgregada}
-            /> */}
+              onEvaluacionAgregada={this.onEvaluacionAgregada}
+              materiaId={this.state.materiaId}
+            />
           </ModalGrande>
           <Row>
             {items.map((evaluacion) => {
               return (
-                <ListaConImagen
+                <CardTabs
                   key={evaluacion.id}
                   item={evaluacion}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
                   navTo={`/app/evaluations/detalle-evaluacion/${evaluacion.id}`}
+                  onEdit={this.onEdit}
                 />
               );
             })}{' '}

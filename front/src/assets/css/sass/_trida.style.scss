@@ -2836,6 +2836,13 @@ nav .nomargin {
   }
 }
 
+.tab-card {
+  border: initial;
+  background: $foreground-color;
+  width: 20rem !important;
+  margin: 0.8rem;
+}
+
 .card-title {
   font-size: 1.3rem;
   @include respond-below(sm) {
