@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   Breadcrumb,
   BreadcrumbItem,
+  Button,
 } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
@@ -155,6 +156,10 @@ class TopNav extends Component {
     });
   };
 
+  goHome = () => {
+    this.props.history.push('app/home');
+  };
+
   toggleFullScreen = () => {
     const isInFullScreen = this.isInFullScreen();
 
@@ -264,11 +269,15 @@ class TopNav extends Component {
           </div>
         </div>
 
-        <a className="navbar-logo" href="/">
+        <a className="navbar-logo" href="/app/home">
           <span className="logo d-none d-xs-block" />
           <span className="logo-mobile d-block d-xs-none" />
         </a>
         <div className="navbar-right">
+          <NavLink
+            className="header-icons glyph-icon simple-icon-home"
+            to="/app/home"
+          />
           {isDarkSwitchActive && <TopnavDarkSwitch />}
 
           <div className="header-icons d-inline-block align-middle">
@@ -288,13 +297,11 @@ class TopNav extends Component {
             </button>
           </div>
           <div className="user d-inline-block">
-            <UncontrolledDropdown className="dropdown-menu-right">
+            <UncontrolledDropdown className="dropdown-menu-user">
               <DropdownToggle className="p-0" color="empty">
                 <span className="name mr-1">{this.state.userName}</span>
-                <span>
-                  <img alt="Profile" src="/assets/img/user.png" />
-                </span>
               </DropdownToggle>
+              <div className="header-icons glyph-icon simple-icon-user" />
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>
                 <DropdownItem divider />

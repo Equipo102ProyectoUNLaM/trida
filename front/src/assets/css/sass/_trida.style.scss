@@ -1705,6 +1705,7 @@ nav .nomargin {
   .navbar-right {
     flex-basis: 40%;
     text-align: right;
+    font-size: 1.3rem;
 
     .user {
       margin-right: $main-margin;
@@ -2846,6 +2847,14 @@ nav .nomargin {
     &.sm {
       padding: 1.25rem 1.75rem;
     }
+  }
+
+  .card-inicio {
+
+    .card{
+    width: 10rem !important;
+    padding: 1rem 1.25rem .25rem 1.25rem;
+    margin: 0.8rem !important;}
   }
 
   .card-title {
@@ -7544,8 +7553,17 @@ i.large-icon {
   }
 
   .dropdown-menu-right {
+    display: flex !important;
     right: initial !important;
     left: 0 !important;
+  }
+
+  .dropdown-menu-user {
+    display: flex !important;
+
+    .dropdown {
+      display: flex;
+    }
   }
 
   .dropdown-menu-left {
@@ -8371,6 +8389,7 @@ i.large-icon {
       .user {
         margin-left: $main-margin;
         margin-right: 0;
+        display: flex;
 
         @include respond-below(xl) {
           margin-left: $main-margin-lg;
@@ -8399,6 +8418,12 @@ i.large-icon {
         @include respond-below(xs) {
           margin-left: 0;
         }
+
+        .glyph-icon
+        {display: flex;
+        font-size: 1.3rem;
+        cursor: pointer;
+        color: $primary-color;}
       }
 
       #notificationButton {
