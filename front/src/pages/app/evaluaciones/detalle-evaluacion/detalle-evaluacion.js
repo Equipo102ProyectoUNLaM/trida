@@ -46,7 +46,7 @@ export default class DetalleEvaluacion extends Component {
   };
 
   onEvaluacionEditada = () => {
-    this.getDoc();
+    this.props.history.push('/app/evaluaciones');
   };
 
   render() {

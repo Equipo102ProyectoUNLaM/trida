@@ -112,7 +112,7 @@ class FormEvaluacion extends React.Component {
   };
 
   render() {
-    const { toggleModal } = this.props;
+    const { onCancel } = this.props;
     const { modalEditOpen, modalAddOpen } = this.state;
 
     return (
@@ -166,7 +166,7 @@ class FormEvaluacion extends React.Component {
               <Button color="primary" onClick={this.toggleAddModal}>
                 Agregar
               </Button>
-              <Button color="secondary" onClick={toggleModal}>
+              <Button color="secondary" onClick={onCancel}>
                 Cancelar
               </Button>
             </>

@@ -48,6 +48,7 @@ export default class AgregarEvaluacion extends Component {
               idEval={this.state.evaluacionId}
               itemsEval={this.state}
               onEvaluacionAgregada={this.onEvaluacionAgregada}
+              onCancel={this.onEvaluacionAgregada}
               idMateria={this.state.idMateria}
             />{' '}
           </Colxx>
