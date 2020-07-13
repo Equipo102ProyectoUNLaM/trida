@@ -1,4 +1,4 @@
-/* Main Style 
+/* Main Style
 
 Table of Contents
 
@@ -4058,7 +4058,7 @@ select.form-control:not([size]):not([multiple]) {
       &:after {
         top: 0 !important;
       }
-  
+
     }
   }
 
@@ -6215,6 +6215,18 @@ input:-webkit-autofill {
   padding: 5px;
   cursor: pointer;
   color: $primary-color;
+  margin-right: 0.5rem;
+}
+
+.set-date-action-icon{
+  font-size: 1.2rem;
+  padding: 5px;
+  cursor: pointer;
+  color: $primary-color;
+
+  &.relative {
+    position: relative;
+  }
 }
 
 .chart-container {
@@ -7375,6 +7387,14 @@ i.large-icon {
 
   .dropdown-menu {
     border-radius: $border-radius-rounded;
+  }
+
+  .dropdown-menu-calendar {
+    padding: 0.8rem;
+  }
+
+  .react-datepicker {
+    border: #ffffff !important;
   }
 
   .btn.default {
