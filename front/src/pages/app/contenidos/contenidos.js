@@ -16,57 +16,18 @@ function collect(props) {
 class Contenidos extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      files: [
-        {
-          key: 'photos/animals/cat in a hat.png',
-          modified: +Moment().subtract(1, 'hours'),
-          size: 1.5 * 1024 * 1024,
-        },
-        {
-          key: 'photos/animals/kitten_ball.png',
-          modified: +Moment().subtract(3, 'days'),
-          size: 545 * 1024,
-        },
-        {
-          key: 'photos/animals/elephants.png',
-          modified: +Moment().subtract(3, 'days'),
-          size: 52 * 1024,
-        },
-        {
-          key: 'photos/funny fall.gif',
-          modified: +Moment().subtract(2, 'months'),
-          size: 13.2 * 1024 * 1024,
-        },
-        {
-          key: 'photos/holiday.jpg',
-          modified: +Moment().subtract(25, 'days'),
-          size: 85 * 1024,
-        },
-        {
-          key: 'documents/letter chunks.doc',
-          modified: +Moment().subtract(15, 'days'),
-          size: 480 * 1024,
-        },
-        {
-          key: 'documents/export.pdf',
-          modified: +Moment().subtract(15, 'days'),
-          size: 4.2 * 1024 * 1024,
-        },
-      ],
-      selectedItems: [],
       isLoading: true,
     };
   }
 
   // Esto va a hacer el get del storage para la materia
   getContenidos = async () => {
-    this.dataListRenderer();
+    await this.dataListRenderer();
   };
 
-  componentDidMount() {
-    this.getContenidos();
+  async componentDidMount() {
+    await this.getContenidos();
   }
 
   // El toggle va a ser directamente abrir el cuadro de dialogo para subir un archivo, no la modal
@@ -81,33 +42,185 @@ class Contenidos extends Component {
     this.getContenidos();
   };
 
-  dataListRenderer() {
+  async dataListRenderer() {
     var array = [];
-    var subject = localStorage.getItem('subject');
-    // Create a reference under which you want to list
-    var listRef = storage.ref(subject.id);
+    try {
+      var subject = JSON.parse(localStorage.getItem('subject'));
+      // Create a reference under which you want to list
+      var listRef = storage.ref(subject.id);
 
-    // Find all the prefixes and items.
-    listRef
-      .listAll()
-      .then(function (res) {
-        res.prefixes.forEach(function (folderRef) {
-          // All the prefixes under listRef.
-          // You may call listAll() recursively on them.
-        });
-        res.items.forEach(function (itemRef) {
-          // All the items under listRef.
-        });
-      })
-      .catch(function (error) {
-        // Uh-oh, an error occurred!
+      // Now we get the references of these images
+
+      await listRef.listAll().then(async function (result) {
+        for (const folderRef of result.prefixes) {
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            subject.id
+          );
+          array.concat(subFolderElements);
+        }
+
+        for (const res of result.items) {
+          // And finally display them
+          await res.getMetadata().then(function (metadata) {
+            console.log(metadata);
+            console.log(metadata.fullPath.replace(subject.id + '/', ''));
+            var obj = {
+              key: metadata.fullPath.replace(subject.id + '/', ''),
+              modified: metadata.updated,
+              size: metadata.size,
+            };
+            array.push(obj);
+          });
+        }
       });
-    this.setState({
-      items: array,
-      selectedItems: [],
-      isLoading: false,
-    });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.setState({
+        files: array,
+        isLoading: false,
+      });
+    }
   }
+
+  listFolderItems = async (ref, subjectId) => {
+    var array = [];
+    try {
+      await ref.listAll().then(async function (result) {
+        for (const folderRef of result.prefixes) {
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            subjectId
+          );
+          array.concat(subFolderElements);
+        }
+
+        for (const res of result.items) {
+          // And finally display them
+          await res.getMetadata().then(function (metadata) {
+            console.log(metadata);
+            console.log(metadata.fullPath.replace(subjectId + '/', ''));
+            var obj = {
+              key: metadata.fullPath.replace(subjectId + '/', ''),
+              modified: metadata.updated,
+              size: metadata.size,
+            };
+            array.push(obj);
+          });
+        }
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      return array;
+    }
+  };
+
+  handleCreateFolder = (key) => {
+    this.setState((state) => {
+      state.files = state.files.concat([
+        {
+          key: key,
+        },
+      ]);
+      return state;
+    });
+  };
+  handleCreateFiles = (files, prefix) => {
+    this.setState((state) => {
+      const newFiles = files.map((file) => {
+        let newKey = prefix;
+        if (
+          prefix !== '' &&
+          prefix.substring(prefix.length - 1, prefix.length) !== '/'
+        ) {
+          newKey += '/';
+        }
+        newKey += file.name;
+        return {
+          key: newKey,
+          size: file.size,
+          modified: +Moment(),
+        };
+      });
+
+      const uniqueNewFiles = [];
+      newFiles.map((newFile) => {
+        let exists = false;
+        state.files.map((existingFile) => {
+          if (existingFile.key === newFile.key) {
+            exists = true;
+          }
+        });
+        if (!exists) {
+          uniqueNewFiles.push(newFile);
+        }
+      });
+      state.files = state.files.concat(uniqueNewFiles);
+      return state;
+    });
+  };
+  handleRenameFolder = (oldKey, newKey) => {
+    this.setState((state) => {
+      const newFiles = [];
+      state.files.map((file) => {
+        if (file.key.substr(0, oldKey.length) === oldKey) {
+          newFiles.push({
+            ...file,
+            key: file.key.replace(oldKey, newKey),
+            modified: +Moment(),
+          });
+        } else {
+          newFiles.push(file);
+        }
+      });
+      state.files = newFiles;
+      return state;
+    });
+  };
+  handleRenameFile = (oldKey, newKey) => {
+    this.setState((state) => {
+      const newFiles = [];
+      state.files.map((file) => {
+        if (file.key === oldKey) {
+          newFiles.push({
+            ...file,
+            key: newKey,
+            modified: +Moment(),
+          });
+        } else {
+          newFiles.push(file);
+        }
+      });
+      state.files = newFiles;
+      return state;
+    });
+  };
+  handleDeleteFolder = (folderKey) => {
+    this.setState((state) => {
+      const newFiles = [];
+      state.files.map((file) => {
+        if (file.key.substr(0, folderKey.length) !== folderKey) {
+          newFiles.push(file);
+        }
+      });
+      state.files = newFiles;
+      return state;
+    });
+  };
+  handleDeleteFile = (fileKey) => {
+    this.setState((state) => {
+      const newFiles = [];
+      state.files.map((file) => {
+        if (file.key !== fileKey) {
+          newFiles.push(file);
+        }
+      });
+      state.files = newFiles;
+      return state;
+    });
+  };
 
   render() {
     const { modalOpen, items, isLoading } = this.state;
@@ -121,20 +234,21 @@ class Contenidos extends Component {
             toggleModal={this.toggleModal}
             buttonText="contenido.agregar"
           />
-          <Row>
-            <FileBrowser
-              files={this.state.files}
-              icons={Icons.FontAwesome(4)}
-              onCreateFolder={this.handleCreateFolder}
-              onCreateFiles={this.handleCreateFiles}
-              onMoveFolder={this.handleRenameFolder}
-              onMoveFile={this.handleRenameFile}
-              onRenameFolder={this.handleRenameFolder}
-              onRenameFile={this.handleRenameFile}
-              onDeleteFolder={this.handleDeleteFolder}
-              onDeleteFile={this.handleDeleteFile}
-            />
-          </Row>
+        </div>
+        <div className="demo-mount-nested-editable">
+          <FileBrowser
+            files={this.state.files}
+            icons={Icons.FontAwesome(4)}
+            detailRenderer={() => null}
+            onCreateFolder={this.handleCreateFolder}
+            onCreateFiles={this.handleCreateFiles}
+            onMoveFolder={this.handleRenameFolder}
+            onMoveFile={this.handleRenameFile}
+            onRenameFolder={this.handleRenameFolder}
+            onRenameFile={this.handleRenameFile}
+            onDeleteFolder={this.handleDeleteFolder}
+            onDeleteFile={this.handleDeleteFile}
+          />
         </div>
       </Fragment>
     );

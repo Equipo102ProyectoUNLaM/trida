@@ -12,6 +12,7 @@
     "excalidraw": "^0.2.0",
     "firebase": "^7.14.6",
     "firebase-admin": "^8.13.0",
+    "font-awesome": "^4.7.0",
     "formik": "^1.5.1",
     "http2": "^3.3.7",
     "moment": "2.22.2",
