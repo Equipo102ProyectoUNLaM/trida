@@ -12,13 +12,13 @@ const MyClasses = React.lazy(() =>
 const VirtualClassesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/my-classes`} />
+      <Redirect exact from={`${match.url}/`} to={`${match.url}/mis-clases`} />
       <Route
-        path={`${match.url}/my-classes`}
+        path={`${match.url}/mis-clases`}
         render={(props) => <MyClasses {...props} />}
       />
       <Route
-        path={`${match.url}/board`}
+        path={`${match.url}/pizarron`}
         render={(props) => <Board {...props} />}
       />
       <Redirect to="/error" />

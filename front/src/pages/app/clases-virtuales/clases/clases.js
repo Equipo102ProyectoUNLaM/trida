@@ -80,7 +80,7 @@ class Clase extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.my-classes"
+            heading="menu.mis-clases"
             toggleModal={this.toggleModal}
             buttonText="classes.add"
           />
@@ -102,7 +102,7 @@ class Clase extends Component {
                   item={clase}
                   isSelect={this.state.selectedItems.includes(clase.id)}
                   collect={collect}
-                  navTo={`/app/virtual-classes/my-classes/class-detail/${clase.id}`}
+                  navTo={`/app/clases-virtuales/mis-clases/detalle-clase/${clase.id}`}
                 />
               );
             })}{' '}

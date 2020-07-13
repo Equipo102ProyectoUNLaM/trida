@@ -80,7 +80,7 @@ class Evaluaciones extends Component {
                   item={evaluacion}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
-                  navTo={`/app/evaluations/detalle-evaluacion/${evaluacion.id}`}
+                  navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                 />
               );
             })}{' '}
