@@ -50,7 +50,7 @@ class App extends Component {
               />
 
               <Route
-                path={`${match.url}/actividades`}
+                path={`${match.url}/practicas`}
                 render={(props) => <Activities {...props} />}
               />
               <Route

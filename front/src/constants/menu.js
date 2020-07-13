@@ -70,12 +70,12 @@ const data = [
     id: 'activities',
     icon: 'iconsminds-library',
     label: 'menu.activities',
-    to: '/app/actividades',
+    to: '/app/practicas',
     subs: [
       {
         icon: 'iconsminds-library',
         label: 'menu.my-activities',
-        to: '/app/actividades',
+        to: '/app/practicas',
       },
     ],
   },
