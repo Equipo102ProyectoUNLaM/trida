@@ -1,51 +1,55 @@
 import React, { Component, Fragment } from 'react';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { Row, Col } from 'reactstrap';
+import { Row } from 'reactstrap';
 import { firestore } from 'helpers/Firebase';
 import { capitalize } from 'underscore.string';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 
 export default class DetalleEvaluacion extends Component {
   constructor(props) {
     super(props);
+    const { evaluacionId } = this.props.match.params;
 
     this.state = {
-      evalId: '',
+      evaluacionId,
       nombre: '',
       fecha: '',
       descripcion: '',
-      idSala: '',
       isLoading: true,
     };
   }
 
-  getDetalleDeEvaluacion = async () => {
-    const { evalId } = this.props.match.params;
-    this.setState({ evalId });
-    /* 
-    const claseRef = firestore.doc(`clases/${claseId}`);
+  componentDidMount() {
+    this.getDoc();
+  }
+
+  getDoc = async () => {
+    var docRef = firestore
+      .collection('evaluaciones')
+      .doc(this.state.evaluacionId);
     try {
-      const claseSnapShot = await claseRef.get();
-      const { nombre, fecha, descripcion, idSala } = claseSnapShot.data();
+      var doc = await docRef.get();
+      const docId = doc.id;
+      const { nombre, fecha, descripcion } = doc.data();
       this.setState({
-        claseId,
+        evaluacionId: docId,
         nombre,
         fecha,
         descripcion,
-        idSala,
-        isLoading: false,
       });
     } catch (err) {
       console.log('Error getting documents', err);
-    } */
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
-  componentDidMount() {
-    this.getDetalleDeEvaluacion();
-  }
+  onEvaluacionEditada = () => {
+    this.props.history.push('/app/evaluaciones');
+  };
 
   render() {
-    console.log('here');
     const { nombre, isLoading } = this.state;
     const { match } = this.props;
     return isLoading ? (
@@ -55,10 +59,15 @@ export default class DetalleEvaluacion extends Component {
         <Row>
           <Colxx xxs="12">
             <HeaderDeModulo
-              heading={capitalize(nombre)}
+              text={capitalize(nombre)}
               match={match}
               breadcrumb
             />
+            <FormEvaluacion
+              idEval={this.state.evaluacionId}
+              itemsEval={this.state}
+              onEvaluacionEditada={this.onEvaluacionEditada}
+            />{' '}
           </Colxx>
         </Row>
       </Fragment>
