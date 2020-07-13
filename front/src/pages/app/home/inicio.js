@@ -15,8 +15,10 @@ export default class Inicio extends Component {
       items: [],
       isLoading: true,
       showCourses: false,
+      showSubjects: false,
       instId: '',
       courses: [],
+      subjects: [],
     };
   }
 
@@ -51,13 +53,47 @@ export default class Inicio extends Component {
   };
 
   showCourses = (institutionId) => {
-    console.log(institutionId);
     this.setState({
       showCourses: true,
       isLoading: true,
     });
     this.getUserCourses(institutionId);
   };
+
+  showSubjects = (courseId) => {
+    this.setState({
+      showSubjects: true,
+      isLoading: true,
+    });
+    this.getUserSubjects(courseId);
+  };
+
+  navigateToSubjects = () => {
+    console.log('materias');
+  };
+
+  async getUserSubjects(materiasIds) {
+    const array = [];
+    try {
+      for (const m of materiasIds) {
+        //Busco los documentos de las materias y me traigo la info
+        const matRef = firestore.doc(`/${m.path}`);
+        var matDoc = await matRef.get();
+        const { nombre } = matDoc.data();
+        const obj = {
+          id: m.id,
+          name: nombre,
+        };
+        array.push(obj);
+      }
+      this.setState({
+        subjects: array,
+        isLoading: false,
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    }
+  }
 
   async getUserCourses(institutionId) {
     var array = [];
@@ -73,10 +109,10 @@ export default class Inicio extends Component {
         const courseRef = firestore.doc(`${c.curso_id.path}`);
         var courseDoc = await courseRef.get();
         const { nombre } = courseDoc.data();
-        //var subjects_with_data = await this.renderSubjects(c.materias); //Busco las materias que tiene asignadas
+        var subjects_with_data = await this.getUserSubjects(c.materias); //Busco las materias que tiene asignadas
         const obj = {
           id: c.curso_id.id,
-          //subjects: subjects_with_data,
+          subjects: subjects_with_data,
           name: nombre,
         };
         array.push(obj); //Armo el array con la info del curso y las materias
@@ -98,7 +134,14 @@ export default class Inicio extends Component {
   }
 
   render() {
-    const { items, isLoading, showCourses, courses } = this.state;
+    const {
+      items,
+      isLoading,
+      showCourses,
+      courses,
+      showSubjects,
+      subjects,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -110,48 +153,64 @@ export default class Inicio extends Component {
             </h1>
             <Separator className="mb-5" />
           </Colxx>
-          <Row>
-            {items.map((institution) => {
-              return (
-                <CardInicio
-                  showCourses={this.showCourses}
-                  key={institution.id}
-                  item={institution}
-                  instId={institution.id}
-                />
-              );
-            })}{' '}
-          </Row>
-          {showCourses && (
+          <Colxx xxs="12">
+            <h2>
+              <IntlMessages id="menu.mis-instituciones" />
+            </h2>
+          </Colxx>
+          <Colxx xxs="6">
             <Row>
-              {courses.map((course) => {
+              {items.map((institution) => {
                 return (
-                  <Colxx sm="12" lg="8" xl="6" className="mb-4" key={course.id}>
-                    <NavLink className="subject">
-                      <ContextMenuTrigger id="menu_id" data={course.id}>
-                        <Card className="card-inicio">
-                          <CardBody className="card-body">
-                            <Row>
-                              <Colxx xxs="16" className="mb-4">
-                                <CardTitle className="mb-3">
-                                  {course.name}
-                                </CardTitle>
-                                <CardText className="text-muted text-small mb-3 font-weight-light">
-                                  test
-                                </CardText>
-                                <CardText className="text-muted text-medium mb-0 font-weight-semibold">
-                                  test
-                                </CardText>
-                              </Colxx>
-                            </Row>
-                          </CardBody>
-                        </Card>
-                      </ContextMenuTrigger>
-                    </NavLink>
-                  </Colxx>
+                  <CardInicio
+                    showChildren={this.showCourses}
+                    key={institution.id}
+                    item={institution}
+                    itemId={institution.id}
+                  />
                 );
               })}{' '}
             </Row>
+          </Colxx>
+          {showCourses && (
+            <Colxx xxs="12">
+              <Separator className="mb-5" />
+              <Colxx xxs="12">
+                <h2>
+                  <IntlMessages id="menu.mis-cursos" />
+                </h2>
+              </Colxx>
+              {courses.map((course) => {
+                return (
+                  <CardInicio
+                    showChildren={this.showSubjects}
+                    key={course.id}
+                    item={course}
+                    itemId={course.id}
+                  />
+                );
+              })}{' '}
+            </Colxx>
+          )}
+          {showSubjects && (
+            <Colxx xxs="12">
+              <Separator className="mb-5" />
+              <Colxx xxs="12">
+                <h2>
+                  <IntlMessages id="menu.mis-materias" />
+                </h2>
+              </Colxx>
+              {subjects.map((subject) => {
+                return (
+                  <CardInicio
+                    showChildren={this.navigateToSubject}
+                    key={subject.id}
+                    item={subject}
+                    itemId={subject.id}
+                  />
+                );
+              })}{' '}
+            </Colxx>
           )}
         </Row>
       </Fragment>

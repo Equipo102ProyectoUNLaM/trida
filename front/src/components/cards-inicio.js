@@ -9,35 +9,23 @@ export default class Inicio extends React.Component {
     super(props);
 
     this.state = {
-      instId: this.props.instId,
+      instId: this.props.itemId,
     };
-
-    console.log(this.state);
   }
 
   showCourses = () => {
-    this.props.showCourses(this.state.instId);
+    this.props.showChildren(this.state.instId);
   };
 
   render() {
-    const { instId, name } = this.props;
+    const { itemId, item } = this.props;
     return (
       <Colxx sm="12" lg="8" xl="6" className="mb-4">
         <NavLink className="subject" onClick={this.showCourses} to="#">
-          <ContextMenuTrigger id="menu_id" data={instId}>
+          <ContextMenuTrigger id="menu_id" data={itemId}>
             <Card className="card-inicio">
               <CardBody className="card-body">
-                <Row>
-                  <Colxx xxs="16" className="mb-4">
-                    <CardTitle className="mb-3">{name}</CardTitle>
-                    <CardText className="text-muted text-small mb-3 font-weight-light">
-                      test
-                    </CardText>
-                    <CardText className="text-muted text-medium mb-0 font-weight-semibold">
-                      test
-                    </CardText>
-                  </Colxx>
-                </Row>
+                <CardTitle className="mb-4">{item.name}</CardTitle>
               </CardBody>
             </Card>
           </ContextMenuTrigger>
