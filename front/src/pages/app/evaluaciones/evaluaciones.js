@@ -22,7 +22,6 @@ class Evaluaciones extends Component {
 
     this.state = {
       items: [],
-      modalOpen: false,
       modalDeleteOpen: false,
       selectedItems: [],
       isLoading: true,
@@ -60,12 +59,6 @@ class Evaluaciones extends Component {
   componentDidMount() {
     this.getEvaluaciones(this.state.materiaId);
   }
-
-  toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen,
-    });
-  };
 
   toggleDeleteModal = () => {
     this.setState({
@@ -133,17 +126,6 @@ class Evaluaciones extends Component {
             toggleModal={this.onAdd}
             buttonText="evaluacion.agregar"
           />
-          {/* <ModalGrande
-            modalOpen={modalOpen}
-            toggleModal={this.toggleModal}
-            modalHeader="evaluacion.agregar"
-          >
-            <FormEvaluacion
-              onEvaluacionAgregada={this.onEvaluacionAgregada}
-              materiaId={this.state.materiaId}
-              idEval={this.state.evalId}
-            />
-          </ModalGrande> */}
           <Row>
             {items.map((evaluacion) => {
               return (
@@ -155,6 +137,7 @@ class Evaluaciones extends Component {
                   navTo={`/app/evaluations/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
+                  navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                 />
               );
             })}{' '}
