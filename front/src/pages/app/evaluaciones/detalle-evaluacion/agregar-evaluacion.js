@@ -27,7 +27,7 @@ export default class AgregarEvaluacion extends Component {
   }
 
   onEvaluacionAgregada = () => {
-    this.props.history.push(`/app/evaluations`);
+    this.props.history.push(`/app/evaluaciones`);
   };
 
   render() {

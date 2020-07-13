@@ -76,12 +76,12 @@ class Evaluaciones extends Component {
 
   onEdit = (idEvaluacion) => {
     this.props.history.push(
-      `/app/evaluations/detalle-evaluacion/${idEvaluacion}`
+      `/app/evaluaciones/detalle-evaluacion/${idEvaluacion}`
     );
   };
 
   onAdd = () => {
-    this.props.history.push(`/app/evaluations/agregar`);
+    this.props.history.push(`/app/evaluaciones/agregar`);
   };
 
   onDelete = (idEvaluacion) => {
@@ -134,10 +134,9 @@ class Evaluaciones extends Component {
                   item={evaluacion}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
-                  navTo={`/app/evaluations/detalle-evaluacion/${evaluacion.id}`}
+                  navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
-                  navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                 />
               );
             })}{' '}
