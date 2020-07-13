@@ -73,11 +73,6 @@ class Evaluaciones extends Component {
     });
   };
 
-  onEvaluacionAgregada = () => {
-    this.toggleModal();
-    this.getEvaluaciones(this.state.materiaId);
-  };
-
   dataListRenderer(arrayDeObjetos) {
     this.setState({
       items: arrayDeObjetos,
@@ -90,6 +85,10 @@ class Evaluaciones extends Component {
     this.props.history.push(
       `/app/evaluations/detalle-evaluacion/${idEvaluacion}`
     );
+  };
+
+  onAdd = () => {
+    this.props.history.push(`/app/evaluations/agregar`);
   };
 
   onDelete = (idEvaluacion) => {
@@ -107,7 +106,7 @@ class Evaluaciones extends Component {
       console.log('Error deleting documents', err);
     } finally {
       NotificationManager.success(
-        'Evaluación agregada!',
+        'Evaluación borrada!',
         'La evaluación fue borrada exitosamente',
         3000,
         null,
@@ -131,10 +130,10 @@ class Evaluaciones extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.evaluations"
-            toggleModal={this.toggleModal}
+            toggleModal={this.onAdd}
             buttonText="evaluacion.agregar"
           />
-          <ModalGrande
+          {/* <ModalGrande
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}
             modalHeader="evaluacion.agregar"
@@ -144,7 +143,7 @@ class Evaluaciones extends Component {
               materiaId={this.state.materiaId}
               idEval={this.state.evalId}
             />
-          </ModalGrande>
+          </ModalGrande> */}
           <Row>
             {items.map((evaluacion) => {
               return (

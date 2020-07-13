@@ -9,6 +9,7 @@ import {
 } from 'reactstrap';
 import { firestore } from 'helpers/Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
 class FormEvaluacion extends React.Component {
   constructor() {
@@ -20,12 +21,26 @@ class FormEvaluacion extends React.Component {
       fecha: '',
       descripcion: '',
       idMateria: '',
+      modalEditOpen: false,
+      modalAddOpen: false,
     };
   }
 
   handleChange = (event) => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
+  };
+
+  toggleEditModal = () => {
+    this.setState({
+      modalEditOpen: !this.state.modalEditOpen,
+    });
+  };
+
+  toggleAddModal = () => {
+    this.setState({
+      modalAddOpen: !this.state.modalAddOpen,
+    });
   };
 
   componentDidMount() {
@@ -46,7 +61,7 @@ class FormEvaluacion extends React.Component {
         nombre: this.state.nombre,
         fecha: this.state.fecha,
         descripcion: this.state.descripcion,
-        idMateria: this.props.materiaId,
+        idMateria: this.props.idMateria,
       })
       .then(function () {
         NotificationManager.success(
@@ -91,12 +106,15 @@ class FormEvaluacion extends React.Component {
       null,
       ''
     );
+    this.toggleEditModal();
     this.props.onEvaluacionEditada();
     return;
   };
 
   render() {
     const { toggleModal } = this.props;
+    const { modalEditOpen, modalAddOpen } = this.state;
+
     return (
       <form>
         <FormGroup className="mb-3">
@@ -145,7 +163,7 @@ class FormEvaluacion extends React.Component {
         <ModalFooter>
           {!this.props.idEval && (
             <>
-              <Button color="primary" onClick={this.onSubmit}>
+              <Button color="primary" onClick={this.toggleAddModal}>
                 Agregar
               </Button>
               <Button color="secondary" onClick={toggleModal}>
@@ -155,12 +173,34 @@ class FormEvaluacion extends React.Component {
           )}
           {this.props.idEval && (
             <>
-              <Button color="primary" onClick={this.onEdit}>
-                Editar
+              <Button color="primary" onClick={this.toggleEditModal}>
+                Guardar
               </Button>
             </>
           )}
         </ModalFooter>
+        {modalEditOpen && (
+          <ModalConfirmacion
+            texto="Está seguro de que desea guardar la evaluación?"
+            titulo="Guardar Evaluación"
+            buttonPrimary="Aceptar"
+            buttonSecondary="Cancelar"
+            toggle={this.toggleEditModal}
+            isOpen={modalEditOpen}
+            onConfirm={this.onEdit}
+          />
+        )}
+        {modalAddOpen && (
+          <ModalConfirmacion
+            texto="Está seguro de que desea guardar la evaluación?"
+            titulo="Guardar Evaluación"
+            buttonPrimary="Aceptar"
+            buttonSecondary="Cancelar"
+            toggle={this.toggleAddModal}
+            isOpen={modalAddOpen}
+            onConfirm={this.onSubmit}
+          />
+        )}
       </form>
     );
   }

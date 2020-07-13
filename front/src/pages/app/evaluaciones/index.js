@@ -7,6 +7,9 @@ const Evaluaciones = React.lazy(() =>
 const DetalleEvaluacion = React.lazy(() =>
   import('./detalle-evaluacion/detalle-evaluacion')
 );
+const AgregarEvaluacion = React.lazy(() =>
+  import('./detalle-evaluacion/agregar-evaluacion')
+);
 const MenuEvaluaciones = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
@@ -18,6 +21,10 @@ const MenuEvaluaciones = ({ match }) => (
       <Route
         path={`${match.url}/detalle-evaluacion/:evaluacionId`}
         render={(props) => <DetalleEvaluacion {...props} />}
+      />
+      <Route
+        path={`${match.url}/agregar`}
+        render={(props) => <AgregarEvaluacion {...props} />}
       />
       <Redirect to="/error" />
     </Switch>

@@ -61,6 +61,7 @@ module.exports = {
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas',
   'menu.my-evaluations': 'Mis Evaluaciones',
+  'menu.agregar': 'Agregar Evaluación',
   'menu.detalle-evaluacion': 'Detalle de Evaluación',
 
   /* 04.Error  */
