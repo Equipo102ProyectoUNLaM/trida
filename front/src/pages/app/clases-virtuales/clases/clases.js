@@ -5,7 +5,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormClase from './form-clase';
-import { firestore } from 'helpers/Firebase';
+import { getCollection } from 'helpers/Firebase-db';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase.jpeg`;
 
@@ -26,27 +26,8 @@ class Clase extends Component {
   }
 
   getClases = async () => {
-    const arrayDeObjetos = [];
-    const clasesRef = firestore.collection('clases');
-    try {
-      var allClasesSnapShot = await clasesRef.get();
-      allClasesSnapShot.forEach((doc) => {
-        const docId = doc.id;
-        const { nombre, fecha, descripcion } = doc.data();
-        const obj = {
-          id: docId,
-          nombre: nombre,
-          descripcion: descripcion,
-          fecha: fecha,
-          imagen: imagenClase,
-        };
-        arrayDeObjetos.push(obj);
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(arrayDeObjetos);
-    }
+    const arrayDeObjetos = await getCollection('clases');
+    this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
@@ -100,6 +81,7 @@ class Clase extends Component {
                 <ListaConImagen
                   key={clase.id}
                   item={clase}
+                  imagen={imagenClase}
                   isSelect={this.state.selectedItems.includes(clase.id)}
                   collect={collect}
                   navTo={`/app/virtual-classes/my-classes/class-detail/${clase.id}`}

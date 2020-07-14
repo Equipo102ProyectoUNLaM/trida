@@ -53,6 +53,7 @@ class CardTabs extends Component {
 
   render() {
     const { item, navTo } = this.props;
+    const { data } = item;
     return (
       <Row>
         <Colxx xxs="12">
@@ -99,14 +100,14 @@ class CardTabs extends Component {
                     <Row>
                       <Colxx sm="12">
                         <CardBody>
-                          <CardTitle className="mb-4">{item.nombre}</CardTitle>
+                          <CardTitle className="mb-4">{data.nombre}</CardTitle>
                           {item.description && (
-                            <p className="mb-4">{item.description}</p>
+                            <p className="mb-4">{data.description}</p>
                           )}
                           {!item.description && (
                             <p className="mb-4">Sin descripción</p>
                           )}
-                          {item.fecha && <p className="mb-4">{item.fecha}</p>}
+                          {item.fecha && <p className="mb-4">{data.fecha}</p>}
                           {!item.fecha && <p className="mb-4">Sin fecha</p>}
                           <Row className="button-group">
                             <Button

@@ -301,7 +301,9 @@ class TopNav extends Component {
               <DropdownToggle className="p-0" color="empty">
                 <span className="name mr-1">{this.state.userName}</span>
               </DropdownToggle>
-              <div className="header-icons glyph-icon simple-icon-user" />
+              <DropdownToggle className="p-0" color="empty">
+                <div className="header-icons glyph-icon simple-icon-user" />
+              </DropdownToggle>
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>
                 <DropdownItem divider />

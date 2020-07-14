@@ -7,8 +7,7 @@ import {
   Label,
   NavLink,
 } from 'reactstrap';
-import { firestore } from 'helpers/Firebase';
-import { NotificationManager } from 'components/common/react-notifications';
+import { addDocument, editDocument } from 'helpers/Firebase-db';
 
 class FormEvaluacion extends React.Component {
   constructor() {
@@ -39,57 +38,29 @@ class FormEvaluacion extends React.Component {
     }
   }
 
-  onSubmit = () => {
-    firestore
-      .collection('evaluaciones')
-      .add({
-        nombre: this.state.nombre,
-        fecha: this.state.fecha,
-        descripcion: this.state.descripcion,
-        idMateria: this.props.materiaId,
-      })
-      .then(function () {
-        NotificationManager.success(
-          'Evaluación agregada!',
-          'La evaluación fue agregada exitosamente',
-          3000,
-          null,
-          null,
-          ''
-        );
-      })
-      .catch(function (error) {
-        NotificationManager.error(
-          'Error al agregar la evaluación',
-          error,
-          3000,
-          null,
-          null,
-          ''
-        );
-      });
+  onSubmit = async () => {
+    const obj = {
+      nombre: this.state.nombre,
+      fecha: this.state.fecha,
+      descripcion: this.state.descripcion,
+      idMateria: this.props.materiaId,
+    };
+    await addDocument('evaluaciones', obj, 'Evaluación');
 
     this.props.onEvaluacionAgregada();
   };
 
-  onEdit = () => {
-    var ref = firestore.collection('evaluaciones').doc(this.state.evaluacionId);
-    ref.set(
-      {
-        nombre: this.state.nombre,
-        fecha: this.state.fecha,
-        descripcion: this.state.descripcion,
-      },
-      { merge: true }
-    );
-
-    NotificationManager.success(
-      'Evaluación editada!',
-      'La evaluación fue editada exitosamente',
-      3000,
-      null,
-      null,
-      ''
+  onEdit = async () => {
+    const obj = {
+      nombre: this.state.nombre,
+      fecha: this.state.fecha,
+      descripcion: this.state.descripcion,
+    };
+    await editDocument(
+      'evaluaciones',
+      this.state.evaluacionId,
+      obj,
+      'Evaluación'
     );
     this.props.onEvaluacionEditada();
     return;

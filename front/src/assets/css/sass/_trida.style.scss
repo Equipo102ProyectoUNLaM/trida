@@ -605,7 +605,6 @@ button {
   font-size: 0.8rem;
   padding: 0.75rem 1.3rem 0.6rem 1.3rem;
   transition: background-color box-shadow 0.1s linear;
-  margin-bottom: 1rem !important;
 }
 
 .btn-shadow {
@@ -7562,7 +7561,7 @@ i.large-icon {
     display: flex !important;
 
     .dropdown {
-      display: flex;
+      display: flex !important;
     }
   }
 

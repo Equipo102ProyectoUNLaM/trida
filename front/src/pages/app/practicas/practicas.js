@@ -4,8 +4,9 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormPractica from './form-practica';
-import { firestore } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
+import { getCollection } from 'helpers/Firebase-db';
+import * as moment from 'moment';
 
 function collect(props) {
   return { data: props.data };
@@ -26,35 +27,15 @@ class Practica extends Component {
   }
 
   getPracticas = async () => {
-    const arrayDeObjetos = [];
-    const actividadesRef = firestore
-      .collection('practicas')
-      .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
-      .orderBy('fechaLanzada', 'asc');
-    try {
-      var allActivitiesSnapShot = await actividadesRef.get();
-      allActivitiesSnapShot.forEach((doc) => {
-        const docId = doc.id;
-        const {
-          nombre,
-          fechaLanzada,
-          fechaVencimiento,
-          descripcion,
-        } = doc.data();
-        const obj = {
-          id: docId,
-          name: nombre,
-          description: descripcion,
-          startDate: fechaLanzada,
-          dueDate: fechaVencimiento,
-        };
-        arrayDeObjetos.push(obj);
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(arrayDeObjetos);
-    }
+    const arrayDeObjetos = await getCollection(
+      'practicas',
+      'fechaLanzada',
+      '>',
+      moment().format('DD/MM/AAAA'),
+      'fechaLanzada',
+      'asc'
+    );
+    this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
@@ -106,6 +87,7 @@ class Practica extends Component {
       modalEditOpen,
       idItemSelected,
       isLoading,
+      items,
     } = this.state;
 
     return isLoading ? (
@@ -131,14 +113,16 @@ class Practica extends Component {
             />
           </ModalGrande>
           <Row>
-            {this.state.items.map((practica) => {
+            {items.map((practica) => {
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
-                  title={practica.name}
-                  text1={'Fecha de publicación: ' + practica.startDate}
-                  text2={'Fecha de entrega: ' + practica.dueDate}
+                  title={practica.data.nombre}
+                  text1={
+                    'Fecha de publicación: ' + practica.data.fechaPublicada
+                  }
+                  text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
                   onDeleteItem={this.deleteItem}
