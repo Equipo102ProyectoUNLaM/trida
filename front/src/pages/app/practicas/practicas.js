@@ -67,7 +67,6 @@ class Practica extends Component {
 
   toggleCreateModal = () => {
     this.setState({
-      ...this.state,
       modalCreateOpen: !this.state.modalCreateOpen,
     });
   };
@@ -79,7 +78,6 @@ class Practica extends Component {
 
   toggleEditModal = (id) => {
     this.setState({
-      ...this.state,
       modalEditOpen: !this.state.modalEditOpen,
       idItemSelected: id,
     });
@@ -92,7 +90,6 @@ class Practica extends Component {
 
   toggleDeleteModal = (id) => {
     this.setState({
-      ...this.state,
       modalDeleteOpen: !this.state.modalDeleteOpen,
     });
   };
@@ -105,9 +102,11 @@ class Practica extends Component {
   };
 
   deletePractice = async () => {
-    var docRef = firestore.collection('practicas').doc(this.state.practicaId);
+    var practicaRef = firestore
+      .collection('practicas')
+      .doc(this.state.practicaId);
     try {
-      await docRef.delete();
+      await practicaRef.delete();
     } catch (err) {
       console.log('Error getting documents', err);
     } finally {
@@ -138,6 +137,7 @@ class Practica extends Component {
       isLoading: false,
       modalCreateOpen: false,
       modalEditOpen: false,
+      practicaId: '',
     });
   }
 
