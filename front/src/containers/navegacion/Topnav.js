@@ -287,7 +287,7 @@ class TopNav extends Component {
               )}
             </button>
           </div>
-          <div className="user d-inline-block">
+          <div className="nabvar-user user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
                 <span className="name mr-1">{this.state.userName}</span>
