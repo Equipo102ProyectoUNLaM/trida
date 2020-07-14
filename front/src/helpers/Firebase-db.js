@@ -64,8 +64,8 @@ export const addDocument = async (collection, object, message) => {
     .add(object)
     .then(function () {
       NotificationManager.success(
-        `${message} agregada!`,
         `${message} agregada exitosamente`,
+        `${message} agregada!`,
         3000,
         null,
         null,
@@ -91,8 +91,8 @@ export const editDocument = async (collection, docId, obj, message) => {
   ref.set(obj, { merge: true });
 
   NotificationManager.success(
-    `${message} editada!`,
     `${message} editada exitosamente`,
+    `${message} editada!`,
     3000,
     null,
     null,
@@ -110,8 +110,8 @@ export const deleteDocument = async (collection, document, message) => {
     console.log('Error deleting documents', err);
   } finally {
     NotificationManager.success(
-      `${message} borrada!`,
       `${message} borrada exitosamente`,
+      `${message} borrada!`,
       3000,
       null,
       null,

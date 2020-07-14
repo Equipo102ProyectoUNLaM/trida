@@ -81,7 +81,7 @@ class Evaluaciones extends Component {
   };
 
   render() {
-    const { modalOpen, modalDeleteOpen, items, isLoading } = this.state;
+    const { modalDeleteOpen, items, isLoading } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (

@@ -58,7 +58,7 @@ class FormEvaluacion extends React.Component {
       nombre: this.state.nombre,
       fecha: this.state.fecha,
       descripcion: this.state.descripcion,
-      idMateria: this.props.materiaId,
+      idMateria: this.props.idMateria,
     };
     await addDocument('evaluaciones', obj, 'Evaluación');
 
@@ -85,7 +85,6 @@ class FormEvaluacion extends React.Component {
   render() {
     const { onCancel } = this.props;
     const { modalEditOpen, modalAddOpen } = this.state;
-
     return (
       <form>
         <FormGroup className="mb-3">

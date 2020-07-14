@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Card, CardBody, CardTitle, CardText } from 'reactstrap';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';

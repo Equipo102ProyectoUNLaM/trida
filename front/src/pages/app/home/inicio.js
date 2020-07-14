@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import { Row, Card, CardTitle, CardBody, CardText, NavLink } from 'reactstrap';
+import { Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { firestore } from 'helpers/Firebase';
-import { ContextMenuTrigger } from 'react-contextmenu';
 import CardInicio from 'components/cards-inicio';
 
 export default class Inicio extends Component {

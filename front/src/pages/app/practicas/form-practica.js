@@ -1,7 +1,5 @@
 import React from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
-import { firestore } from 'helpers/Firebase';
-import { NotificationManager } from 'components/common/react-notifications';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import * as moment from 'moment';
 

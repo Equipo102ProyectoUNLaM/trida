@@ -1,15 +1,6 @@
 import React from 'react';
-import {
-  Row,
-  Card,
-  CardBody,
-  CardTitle,
-  CardImg,
-  CardText,
-  Badge,
-} from 'reactstrap';
+import { Row, Card, CardBody, CardTitle, CardImg, CardText } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
-import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
 

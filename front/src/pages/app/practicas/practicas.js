@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Row, Modal } from 'reactstrap';
+import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
