@@ -3,9 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
-import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import FormEvaluacion from './form-evaluacion';
 import { deleteDocument, getCollection } from 'helpers/Firebase-db';
 
 function collect(props) {
@@ -20,7 +18,6 @@ class Evaluaciones extends Component {
 
     this.state = {
       items: [],
-      modalOpen: false,
       modalDeleteOpen: false,
       selectedItems: [],
       isLoading: true,
@@ -43,21 +40,10 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   }
 
-  toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen,
-    });
-  };
-
   toggleDeleteModal = () => {
     this.setState({
       modalDeleteOpen: !this.state.modalDeleteOpen,
     });
-  };
-
-  onEvaluacionAgregada = () => {
-    this.toggleModal();
-    this.getEvaluaciones(this.state.materiaId);
   };
 
   dataListRenderer(arrayDeObjetos) {
@@ -70,8 +56,12 @@ class Evaluaciones extends Component {
 
   onEdit = (idEvaluacion) => {
     this.props.history.push(
-      `/app/evaluations/detalle-evaluacion/${idEvaluacion}`
+      `/app/evaluaciones/detalle-evaluacion/${idEvaluacion}`
     );
+  };
+
+  onAdd = () => {
+    this.props.history.push(`/app/evaluaciones/agregar`);
   };
 
   onDelete = (idEvaluacion) => {
@@ -99,20 +89,9 @@ class Evaluaciones extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.evaluations"
-            toggleModal={this.toggleModal}
+            toggleModal={this.onAdd}
             buttonText="evaluacion.agregar"
           />
-          <ModalGrande
-            modalOpen={modalOpen}
-            toggleModal={this.toggleModal}
-            modalHeader="evaluacion.agregar"
-          >
-            <FormEvaluacion
-              onEvaluacionAgregada={this.onEvaluacionAgregada}
-              materiaId={this.state.materiaId}
-              idEval={this.state.evalId}
-            />
-          </ModalGrande>
           <Row>
             {items.map((evaluacion) => {
               return (
@@ -121,7 +100,7 @@ class Evaluaciones extends Component {
                   item={evaluacion}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
-                  navTo={`/app/evaluations/detalle-evaluacion/${evaluacion.id}`}
+                  navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
                 />

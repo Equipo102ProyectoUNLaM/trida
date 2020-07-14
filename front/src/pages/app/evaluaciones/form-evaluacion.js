@@ -8,6 +8,7 @@ import {
   NavLink,
 } from 'reactstrap';
 import { addDocument, editDocument } from 'helpers/Firebase-db';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
 class FormEvaluacion extends React.Component {
   constructor() {
@@ -19,12 +20,26 @@ class FormEvaluacion extends React.Component {
       fecha: '',
       descripcion: '',
       idMateria: '',
+      modalEditOpen: false,
+      modalAddOpen: false,
     };
   }
 
   handleChange = (event) => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
+  };
+
+  toggleEditModal = () => {
+    this.setState({
+      modalEditOpen: !this.state.modalEditOpen,
+    });
+  };
+
+  toggleAddModal = () => {
+    this.setState({
+      modalAddOpen: !this.state.modalAddOpen,
+    });
   };
 
   componentDidMount() {
@@ -62,12 +77,15 @@ class FormEvaluacion extends React.Component {
       obj,
       'Evaluación'
     );
+    this.toggleEditModal();
     this.props.onEvaluacionEditada();
     return;
   };
 
   render() {
-    const { toggleModal } = this.props;
+    const { onCancel } = this.props;
+    const { modalEditOpen, modalAddOpen } = this.state;
+
     return (
       <form>
         <FormGroup className="mb-3">
@@ -116,22 +134,44 @@ class FormEvaluacion extends React.Component {
         <ModalFooter>
           {!this.props.idEval && (
             <>
-              <Button color="primary" onClick={this.onSubmit}>
+              <Button color="primary" onClick={this.toggleAddModal}>
                 Agregar
               </Button>
-              <Button color="secondary" onClick={toggleModal}>
+              <Button color="secondary" onClick={onCancel}>
                 Cancelar
               </Button>
             </>
           )}
           {this.props.idEval && (
             <>
-              <Button color="primary" onClick={this.onEdit}>
-                Editar
+              <Button color="primary" onClick={this.toggleEditModal}>
+                Guardar
               </Button>
             </>
           )}
         </ModalFooter>
+        {modalEditOpen && (
+          <ModalConfirmacion
+            texto="Está seguro de que desea guardar la evaluación?"
+            titulo="Guardar Evaluación"
+            buttonPrimary="Aceptar"
+            buttonSecondary="Cancelar"
+            toggle={this.toggleEditModal}
+            isOpen={modalEditOpen}
+            onConfirm={this.onEdit}
+          />
+        )}
+        {modalAddOpen && (
+          <ModalConfirmacion
+            texto="Está seguro de que desea guardar la evaluación?"
+            titulo="Guardar Evaluación"
+            buttonPrimary="Aceptar"
+            buttonSecondary="Cancelar"
+            toggle={this.toggleAddModal}
+            isOpen={modalAddOpen}
+            onConfirm={this.onSubmit}
+          />
+        )}
       </form>
     );
   }
