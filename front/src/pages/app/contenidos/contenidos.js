@@ -4,7 +4,12 @@ import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import contents from 'data/contents';
 import Contents from 'containers/dashboards/contents';
-import FileBrowser, { Icons } from 'react-keyed-file-browser';
+import FileBrowser, {
+  FileRenderers,
+  FolderRenderers,
+  Groupers,
+  Icons,
+} from 'react-keyed-file-browser';
 import { storage } from 'helpers/Firebase';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
@@ -17,8 +22,10 @@ class Contenidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      files: [],
       isLoading: true,
     };
+    this.listFolderItems = this.listFolderItems.bind(this);
   }
 
   // Esto va a hacer el get del storage para la materia
@@ -30,18 +37,6 @@ class Contenidos extends Component {
     await this.getContenidos();
   }
 
-  // El toggle va a ser directamente abrir el cuadro de dialogo para subir un archivo, no la modal
-  toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen,
-    });
-  };
-
-  onContenidoAgregado = () => {
-    this.toggleModal();
-    this.getContenidos();
-  };
-
   async dataListRenderer() {
     var array = [];
     try {
@@ -51,62 +46,64 @@ class Contenidos extends Component {
 
       // Now we get the references of these images
 
-      await listRef.listAll().then(async function (result) {
+      await listRef.listAll().then(async (result) => {
         for (const folderRef of result.prefixes) {
           var subFolderElements = await this.listFolderItems(
             folderRef,
             subject.id
           );
-          array.concat(subFolderElements);
+          array = array.concat(subFolderElements);
         }
 
         for (const res of result.items) {
           // And finally display them
-          await res.getMetadata().then(function (metadata) {
-            console.log(metadata);
-            console.log(metadata.fullPath.replace(subject.id + '/', ''));
-            var obj = {
-              key: metadata.fullPath.replace(subject.id + '/', ''),
-              modified: metadata.updated,
-              size: metadata.size,
-            };
-            array.push(obj);
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(subject.id + '/', ''),
+                modified: metadata.updated,
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
           });
         }
       });
     } catch (err) {
       console.log('Error getting documents', err);
     } finally {
-      this.setState({
+      this.setState((state) => ({
         files: array,
         isLoading: false,
-      });
+      }));
     }
   }
 
-  listFolderItems = async (ref, subjectId) => {
+  async listFolderItems(ref, subjectId) {
     var array = [];
     try {
-      await ref.listAll().then(async function (result) {
+      await ref.listAll().then(async (result) => {
         for (const folderRef of result.prefixes) {
           var subFolderElements = await this.listFolderItems(
             folderRef,
             subjectId
           );
-          array.concat(subFolderElements);
+          array = array.concat(subFolderElements);
         }
 
         for (const res of result.items) {
           // And finally display them
-          await res.getMetadata().then(function (metadata) {
-            console.log(metadata);
-            console.log(metadata.fullPath.replace(subjectId + '/', ''));
-            var obj = {
-              key: metadata.fullPath.replace(subjectId + '/', ''),
-              modified: metadata.updated,
-              size: metadata.size,
-            };
-            array.push(obj);
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(subjectId + '/', ''),
+                modified: metadata.updated,
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
           });
         }
       });
@@ -115,7 +112,7 @@ class Contenidos extends Component {
     } finally {
       return array;
     }
-  };
+  }
 
   handleCreateFolder = (key) => {
     this.setState((state) => {
@@ -222,8 +219,13 @@ class Contenidos extends Component {
     });
   };
 
+  handleDownloadFile = (fileKey) => {
+    var file = this.state.files.find((i) => i.key == fileKey);
+    window.open(file.url, '_blank'); //to open new page
+  };
+
   render() {
-    const { modalOpen, items, isLoading } = this.state;
+    const { isLoading } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -248,6 +250,7 @@ class Contenidos extends Component {
             onRenameFile={this.handleRenameFile}
             onDeleteFolder={this.handleDeleteFolder}
             onDeleteFile={this.handleDeleteFile}
+            onDownloadFile={this.handleDownloadFile}
           />
         </div>
       </Fragment>
