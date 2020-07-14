@@ -6,7 +6,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
 import { getCollection } from 'helpers/Firebase-db';
-import * as moment from 'moment';
+import { toDateTime } from 'helpers/Utils';
 
 function collect(props) {
   return { data: props.data };
@@ -27,14 +27,16 @@ class Practica extends Component {
   }
 
   getPracticas = async () => {
+    const date = new Date().toISOString().slice(0, 10);
     const arrayDeObjetos = await getCollection(
       'practicas',
       'fechaLanzada',
       '>',
-      moment().format('DD/MM/AAAA'),
+      date,
       'fechaLanzada',
       'asc'
     );
+    console.log(arrayDeObjetos);
     this.dataListRenderer(arrayDeObjetos);
   };
 
@@ -114,14 +116,15 @@ class Practica extends Component {
           </ModalGrande>
           <Row>
             {items.map((practica) => {
+              const fechaPublicada = toDateTime(
+                practica.data.fechaPublicada.seconds
+              );
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
                   title={practica.data.nombre}
-                  text1={
-                    'Fecha de publicación: ' + practica.data.fechaPublicada
-                  }
+                  text1={'Fecha de publicación: ' + fechaPublicada}
                   text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
