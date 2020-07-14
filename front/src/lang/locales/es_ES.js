@@ -49,7 +49,7 @@ module.exports = {
   'menu.communications': 'Comunicaciones',
   'menu.content': 'Contenidos',
   'menu.corrections': 'Correcciones',
-  'menu.virtual-classes': 'Clases Virtuales',
+  'menu.clases-virtuales': 'Clases Virtuales',
   'menu.activities': 'Prácticas',
   'menu.evaluations': 'Evaluaciones',
   'menu.forum': 'Foro',
@@ -57,13 +57,17 @@ module.exports = {
   'menu.formal': 'Comunicaciones Formales',
   'menu.my-contents': 'Mis Contenidos',
   'menu.my-corrections': 'Mis Correcciones',
-  'menu.my-classes': 'Mis Clases',
+  'menu.mis-clases': 'Mis Clases',
+  'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas',
   'menu.my-evaluations': 'Mis Evaluaciones',
+  'menu.evaluaciones': 'Evaluaciones',
+  'menu.agregar': 'Agregar Evaluación',
+  'menu.detalle-evaluacion': 'Detalle de Evaluación',
 
   /* 04.Error  */
-  'pages.error-title': 'Vaya, parece que ha ocurrido un error!',
+  'pages.error-title': 'Ups, parece que ha ocurrido un error!',
   'pages.error-code': 'Código de error',
   'pages.go-back-home': 'Regresar a Inicio',
 
@@ -92,4 +96,11 @@ module.exports = {
   'activity.add': 'AGREGAR PRÁCTICA',
   'activity.edit': 'EDITAR PRÁCTICA',
   'activity.delete': 'ELIMINAR PRÁCTICA',
+  'fecha.modificar': 'Modificar fecha de entrega',
+
+  /* 09.Evaluaciones */
+  'evaluacion.agregar': 'AGREGAR EVALUACIÓN',
+
+  /* 10.Contenidos */
+  'contenido.agregar': 'AGREGAR CONTENIDO',
 };

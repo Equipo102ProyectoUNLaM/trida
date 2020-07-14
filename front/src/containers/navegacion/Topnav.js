@@ -31,6 +31,7 @@ import { MobileMenuIcon, MenuIcon } from '../../components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
+import { firestore } from 'helpers/Firebase';
 
 class TopNav extends Component {
   constructor(props) {
@@ -38,13 +39,19 @@ class TopNav extends Component {
     var institution = JSON.parse(localStorage.getItem('institution'));
     var course = JSON.parse(localStorage.getItem('course'));
     var subject = JSON.parse(localStorage.getItem('subject'));
+    var userName = localStorage.getItem('user_name');
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
       institution: institution,
       course: course,
       subject: subject,
+      userName,
     };
+  }
+
+  componentDidMount() {
+    this.getUserName(localStorage.getItem('user_id'));
   }
 
   handleChangeLocale = (locale, direction) => {
@@ -201,6 +208,19 @@ class TopNav extends Component {
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
+  async getUserName(userId) {
+    try {
+      const userRef = firestore.doc(`users/${userId}`);
+      var userDoc = await userRef.get();
+      const { name } = userDoc.data();
+      this.setState({
+        userName: name,
+      });
+    } catch (err) {
+      console.log('Error getting users document', err);
+    }
+  }
+
   render() {
     const { containerClassnames, menuClickCount, user } = this.props;
     const { messages } = this.props.intl;
@@ -270,7 +290,7 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">{user}</span>
+                <span className="name mr-1">{this.state.userName}</span>
                 <span>
                   <img alt="Profile" src="/assets/img/user.png" />
                 </span>

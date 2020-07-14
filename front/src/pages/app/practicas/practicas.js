@@ -3,10 +3,11 @@ import { Row, Modal } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
-import ModalInformativo from 'containers/pages/ModalInformativo';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import { firestore } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
+import { NotificationManager } from 'components/common/react-notifications';
 
 function collect(props) {
   return { data: props.data };
@@ -63,13 +64,24 @@ class Practica extends Component {
     this.getPracticas();
   }
 
-  deletePractice = (id) => {
-    var docRef = firestore.collection('practicas').doc(id);
+  deletePractice = async () => {
+    var docRef = firestore.collection('practicas').doc(this.state.practicaId);
     try {
-      docRef.remove();
+      await docRef.delete();
     } catch (err) {
       console.log('Error getting documents', err);
     } finally {
+      NotificationManager.success(
+        'Práctica borrada!',
+        'La práctica fue borrada exitosamente',
+        3000,
+        null,
+        null,
+        ''
+      );
+      this.setState({
+        practicaId: '',
+      });
       this.onPracticaBorrada();
     }
   };
@@ -94,6 +106,13 @@ class Practica extends Component {
       ...this.state,
       modalDeleteOpen: !this.state.modalDeleteOpen,
     });
+  };
+
+  onDelete = (idPractica) => {
+    this.setState({
+      practicaId: idPractica,
+    });
+    this.toggleDeleteModal();
   };
 
   onPracticaAgregada = () => {
@@ -163,7 +182,7 @@ class Practica extends Component {
                   text2={'Fecha de entrega: ' + practica.dueDate}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
-                  onDeleteItem={this.toggleDeleteModal}
+                  onDelete={this.onDelete}
                   navTo="#"
                   collect={collect}
                 />
@@ -186,12 +205,15 @@ class Practica extends Component {
             </ModalGrande>
           )}
           {modalDeleteOpen && (
-            <ModalInformativo
-              modalOpen={modalDeleteOpen}
-              toggleModal={this.toggleDeleteModal}
-              modalHeader="activity.delete"
-              onConfirmAction="deletePractice"
-            ></ModalInformativo>
+            <ModalConfirmacion
+              texto="¿Está seguro de que desea borrar la práctica?"
+              titulo="Borrar Práctica"
+              buttonPrimary="Aceptar"
+              buttonSecondary="Cancelar"
+              toggle={this.toggleDeleteModal}
+              isOpen={modalDeleteOpen}
+              onConfirm={this.deletePractice}
+            ></ModalConfirmacion>
           )}
         </div>
       </Fragment>

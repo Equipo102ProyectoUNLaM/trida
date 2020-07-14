@@ -22,14 +22,24 @@ class HeaderDeModulo extends Component {
   };
 
   render() {
-    const { heading, toggleModal, buttonText, match, breadcrumb } = this.props;
+    const {
+      heading,
+      toggleModal,
+      buttonText,
+      match,
+      breadcrumb,
+      text,
+    } = this.props;
     return (
       <Row>
         <Colxx xxs="12">
           <div className="mb-2">
-            <h1>
-              <IntlMessages id={heading} />
-            </h1>
+            {heading && (
+              <h1>
+                <IntlMessages id={heading} />
+              </h1>
+            )}
+            {text && <h1>{text}</h1>}
             {breadcrumb && <Breadcrumb match={match} />}
             <>
               {buttonText && (
