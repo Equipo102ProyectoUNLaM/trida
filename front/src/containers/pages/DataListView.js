@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Card, Row } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
@@ -9,7 +9,7 @@ import { injectIntl } from 'react-intl';
 import { firestore } from 'helpers/Firebase';
 import 'react-datepicker/dist/react-datepicker.css';
 
-class DataListView extends React.Component {
+class DataListView extends Component {
   constructor(props) {
     super(props);
   }
@@ -31,7 +31,7 @@ class DataListView extends React.Component {
   };
 
   handleClickDelete = () => {
-    this.props.onDelete(this.props.item.id);
+    this.props.onDelete(this.props.id);
   };
 
   render() {
@@ -43,7 +43,6 @@ class DataListView extends React.Component {
       isSelect,
       collect,
       onEditItem,
-      onDelete,
       navTo,
     } = this.props;
     return (

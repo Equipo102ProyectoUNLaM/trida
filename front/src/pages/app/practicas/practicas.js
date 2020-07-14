@@ -25,6 +25,7 @@ class Practica extends Component {
       selectedItems: [],
       isLoading: true,
       idItemSelected: null,
+      practicaId: '',
     };
   }
 
@@ -64,6 +65,45 @@ class Practica extends Component {
     this.getPracticas();
   }
 
+  toggleCreateModal = () => {
+    this.setState({
+      ...this.state,
+      modalCreateOpen: !this.state.modalCreateOpen,
+    });
+  };
+
+  onPracticaAgregada = () => {
+    this.toggleCreateModal();
+    this.getPracticas();
+  };
+
+  toggleEditModal = (id) => {
+    this.setState({
+      ...this.state,
+      modalEditOpen: !this.state.modalEditOpen,
+      idItemSelected: id,
+    });
+  };
+
+  onPracticaEditada = () => {
+    this.toggleEditModal();
+    this.getPracticas();
+  };
+
+  toggleDeleteModal = (id) => {
+    this.setState({
+      ...this.state,
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
+  onDelete = (idPractica) => {
+    this.setState({
+      practicaId: idPractica,
+    });
+    this.toggleDeleteModal();
+  };
+
   deletePractice = async () => {
     var docRef = firestore.collection('practicas').doc(this.state.practicaId);
     try {
@@ -84,45 +124,6 @@ class Practica extends Component {
       });
       this.onPracticaBorrada();
     }
-  };
-
-  toggleCreateModal = () => {
-    this.setState({
-      ...this.state,
-      modalCreateOpen: !this.state.modalCreateOpen,
-    });
-  };
-
-  toggleEditModal = (id) => {
-    this.setState({
-      ...this.state,
-      modalEditOpen: !this.state.modalEditOpen,
-      idItemSelected: id,
-    });
-  };
-
-  toggleDeleteModal = (id) => {
-    this.setState({
-      ...this.state,
-      modalDeleteOpen: !this.state.modalDeleteOpen,
-    });
-  };
-
-  onDelete = (idPractica) => {
-    this.setState({
-      practicaId: idPractica,
-    });
-    this.toggleDeleteModal();
-  };
-
-  onPracticaAgregada = () => {
-    this.toggleCreateModal();
-    this.getPracticas();
-  };
-
-  onPracticaEditada = () => {
-    this.toggleEditModal();
-    this.getPracticas();
   };
 
   onPracticaBorrada = () => {
@@ -213,7 +214,7 @@ class Practica extends Component {
               toggle={this.toggleDeleteModal}
               isOpen={modalDeleteOpen}
               onConfirm={this.deletePractice}
-            ></ModalConfirmacion>
+            />
           )}
         </div>
       </Fragment>
