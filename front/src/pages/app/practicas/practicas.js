@@ -17,6 +17,8 @@ class Practica extends Component {
   constructor(props) {
     super(props);
 
+    const { id } = JSON.parse(localStorage.getItem('subject'));
+
     this.state = {
       items: [],
       modalCreateOpen: false,
@@ -26,13 +28,15 @@ class Practica extends Component {
       isLoading: true,
       idItemSelected: null,
       practicaId: '',
+      idMateria: id,
     };
   }
 
-  getPracticas = async () => {
+  getPracticas = async (materiaId) => {
     const arrayDeObjetos = [];
     const actividadesRef = firestore
       .collection('practicas')
+      .where('idMateria', '==', materiaId.toString())
       .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
       .orderBy('fechaLanzada', 'asc');
     try {
@@ -62,7 +66,7 @@ class Practica extends Component {
   };
 
   componentDidMount() {
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   }
 
   toggleCreateModal = () => {
@@ -73,7 +77,7 @@ class Practica extends Component {
 
   onPracticaAgregada = () => {
     this.toggleCreateModal();
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   };
 
   toggleEditModal = (id) => {
@@ -85,7 +89,7 @@ class Practica extends Component {
 
   onPracticaEditada = () => {
     this.toggleEditModal();
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   };
 
   toggleDeleteModal = (id) => {
@@ -127,7 +131,7 @@ class Practica extends Component {
 
   onPracticaBorrada = () => {
     this.toggleDeleteModal();
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   };
 
   dataListRenderer(arrayDeObjetos) {
@@ -170,6 +174,7 @@ class Practica extends Component {
               onPracticaOperacion={this.onPracticaAgregada}
               textConfirm="Agregar"
               operationType="add"
+              idMateria={this.state.idMateria}
             />
           </ModalGrande>
           <Row>

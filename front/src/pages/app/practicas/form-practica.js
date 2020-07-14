@@ -13,6 +13,7 @@ class FormPractica extends React.Component {
       fechaLanzada: '',
       duracion: '',
       fechaVencimiento: '',
+      idMateria: '',
     };
   }
 
@@ -87,7 +88,7 @@ class FormPractica extends React.Component {
           duracion: this.state.duracion,
           fechaVencimiento: this.state.fechaVencimiento,
           fechaPublicada: new Date(),
-          idMateria: JSON.parse(localStorage.getItem('subject')),
+          idMateria: this.props.idMateria,
         })
         .then(function () {
           NotificationManager.success(
