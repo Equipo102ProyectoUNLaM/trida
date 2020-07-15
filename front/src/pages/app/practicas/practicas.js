@@ -36,8 +36,8 @@ class Practica extends Component {
     const arrayDeObjetos = [];
     const actividadesRef = firestore
       .collection('practicas')
-      .where('idMateria', '==', materiaId.toString())
       .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
+      // .where('idMateria', '==', materiaId)
       .orderBy('fechaLanzada', 'asc');
     try {
       var allActivitiesSnapShot = await actividadesRef.get();
