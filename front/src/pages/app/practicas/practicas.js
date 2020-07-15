@@ -3,9 +3,11 @@ import { Row, Modal } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import { firestore } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
+import { NotificationManager } from 'components/common/react-notifications';
 
 function collect(props) {
   return { data: props.data };
@@ -19,9 +21,11 @@ class Practica extends Component {
       items: [],
       modalCreateOpen: false,
       modalEditOpen: false,
+      modalDeleteOpen: false,
       selectedItems: [],
       isLoading: true,
       idItemSelected: null,
+      practicaId: '',
     };
   }
 
@@ -63,16 +67,7 @@ class Practica extends Component {
 
   toggleCreateModal = () => {
     this.setState({
-      ...this.state,
       modalCreateOpen: !this.state.modalCreateOpen,
-    });
-  };
-
-  toggleEditModal = (id) => {
-    this.setState({
-      ...this.state,
-      modalEditOpen: !this.state.modalEditOpen,
-      idItemSelected: id,
     });
   };
 
@@ -81,8 +76,57 @@ class Practica extends Component {
     this.getPracticas();
   };
 
+  toggleEditModal = (id) => {
+    this.setState({
+      modalEditOpen: !this.state.modalEditOpen,
+      idItemSelected: id,
+    });
+  };
+
   onPracticaEditada = () => {
     this.toggleEditModal();
+    this.getPracticas();
+  };
+
+  toggleDeleteModal = (id) => {
+    this.setState({
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
+  onDelete = (idPractica) => {
+    this.setState({
+      practicaId: idPractica,
+    });
+    this.toggleDeleteModal();
+  };
+
+  deletePractice = async () => {
+    var practicaRef = firestore
+      .collection('practicas')
+      .doc(this.state.practicaId);
+    try {
+      await practicaRef.delete();
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      NotificationManager.success(
+        'Práctica borrada!',
+        'La práctica fue borrada exitosamente',
+        3000,
+        null,
+        null,
+        ''
+      );
+      this.setState({
+        practicaId: '',
+      });
+      this.onPracticaBorrada();
+    }
+  };
+
+  onPracticaBorrada = () => {
+    this.toggleDeleteModal();
     this.getPracticas();
   };
 
@@ -93,17 +137,15 @@ class Practica extends Component {
       isLoading: false,
       modalCreateOpen: false,
       modalEditOpen: false,
+      practicaId: '',
     });
   }
-
-  deleteItem = () => {
-    alert('delete');
-  };
 
   render() {
     const {
       modalCreateOpen,
       modalEditOpen,
+      modalDeleteOpen,
       idItemSelected,
       isLoading,
     } = this.state;
@@ -141,7 +183,7 @@ class Practica extends Component {
                   text2={'Fecha de entrega: ' + practica.dueDate}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
-                  onDeleteItem={this.deleteItem}
+                  onDelete={this.onDelete}
                   navTo="#"
                   collect={collect}
                 />
@@ -162,6 +204,17 @@ class Practica extends Component {
                 id={idItemSelected}
               />
             </ModalGrande>
+          )}
+          {modalDeleteOpen && (
+            <ModalConfirmacion
+              texto="¿Está seguro de que desea borrar la práctica?"
+              titulo="Borrar Práctica"
+              buttonPrimary="Aceptar"
+              buttonSecondary="Cancelar"
+              toggle={this.toggleDeleteModal}
+              isOpen={modalDeleteOpen}
+              onConfirm={this.deletePractice}
+            />
           )}
         </div>
       </Fragment>

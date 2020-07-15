@@ -1,13 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Row } from 'reactstrap';
-import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
-import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { firestore } from 'helpers/Firebase';
-import FormEvaluacion from './form-evaluacion';
 import { NotificationManager } from 'components/common/react-notifications';
 
 function collect(props) {
@@ -115,7 +112,7 @@ class Evaluaciones extends Component {
   };
 
   render() {
-    const { modalOpen, modalDeleteOpen, items, isLoading } = this.state;
+    const { modalDeleteOpen, items, isLoading } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -143,7 +140,7 @@ class Evaluaciones extends Component {
           </Row>
           {modalDeleteOpen && (
             <ModalConfirmacion
-              texto="Está seguro de que desea borrar la evaluación?"
+              texto="¿Está seguro de que desea borrar la evaluación?"
               titulo="Borrar Evaluación"
               buttonPrimary="Aceptar"
               buttonSecondary="Cancelar"
