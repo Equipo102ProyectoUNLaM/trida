@@ -253,13 +253,13 @@ class TopNav extends Component {
           <div className="d-inline-block">
             <Breadcrumb className="nomargin">
               <BreadcrumbItem>
-                <a href="/course-selection/institution">
+                <a href="/seleccion-curso/institution">
                   {this.state.institution.name}
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <a
-                  href={`/course-selection/course/${this.state.institution.id}`}
+                  href={`/seleccion-curso/course/${this.state.institution.id}`}
                 >
                   {this.state.course.name}
                 </a>

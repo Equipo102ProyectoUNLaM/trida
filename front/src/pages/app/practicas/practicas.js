@@ -6,7 +6,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
-import { getCollection } from 'helpers/Firebase-db';
+import { getCollection, deleteDocument } from 'helpers/Firebase-db';
 import { toDateTime } from 'helpers/Utils';
 
 function collect(props) {
@@ -84,27 +84,15 @@ class Practica extends Component {
   };
 
   deletePractice = async () => {
-    var practicaRef = firestore
-      .collection('practicas')
-      .doc(this.state.practicaId);
-    try {
-      await practicaRef.delete();
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      NotificationManager.success(
-        'Práctica borrada!',
-        'La práctica fue borrada exitosamente',
-        3000,
-        null,
-        null,
-        ''
-      );
-      this.setState({
-        practicaId: '',
-      });
-      this.onPracticaBorrada();
-    }
+    await deleteDocument('practicas', this.state.practicaId, 'Práctica');
+    this.setState({
+      evalId: '',
+    });
+
+    this.setState({
+      practicaId: '',
+    });
+    this.onPracticaBorrada();
   };
 
   onPracticaBorrada = () => {
