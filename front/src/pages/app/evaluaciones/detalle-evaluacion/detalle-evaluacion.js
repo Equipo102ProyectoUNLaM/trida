@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { Row } from 'reactstrap';
-import { firestore } from 'helpers/Firebase';
 import { capitalize } from 'underscore.string';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
+import { getDocument } from 'helpers/Firebase-db';
 
 export default class DetalleEvaluacion extends Component {
   constructor(props) {
@@ -25,24 +25,16 @@ export default class DetalleEvaluacion extends Component {
   }
 
   getDoc = async () => {
-    var docRef = firestore
-      .collection('evaluaciones')
-      .doc(this.state.evaluacionId);
-    try {
-      var doc = await docRef.get();
-      const docId = doc.id;
-      const { nombre, fecha, descripcion } = doc.data();
-      this.setState({
-        evaluacionId: docId,
-        nombre,
-        fecha,
-        descripcion,
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.setState({ isLoading: false });
-    }
+    const docObj = await getDocument(`evaluaciones/${this.state.evaluacionId}`);
+    const { id, data } = docObj;
+    const { nombre, fecha, descripcion } = data;
+    this.setState({
+      evaluacionId: id,
+      nombre,
+      fecha,
+      descripcion,
+      isLoading: false,
+    });
   };
 
   onEvaluacionEditada = () => {

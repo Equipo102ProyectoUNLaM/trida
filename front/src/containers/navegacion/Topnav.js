@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   Breadcrumb,
   BreadcrumbItem,
+  Button,
 } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
@@ -43,9 +44,9 @@ class TopNav extends Component {
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
-      institution: institution,
-      course: course,
-      subject: subject,
+      institution,
+      course,
+      subject,
       userName,
     };
   }
@@ -155,6 +156,10 @@ class TopNav extends Component {
     });
   };
 
+  goHome = () => {
+    this.props.history.push('app/home');
+  };
+
   toggleFullScreen = () => {
     const isInFullScreen = this.isInFullScreen();
 
@@ -248,13 +253,13 @@ class TopNav extends Component {
           <div className="d-inline-block">
             <Breadcrumb className="nomargin">
               <BreadcrumbItem>
-                <a href="/course-selection/institution">
+                <a href="/seleccion-curso/institution">
                   {this.state.institution.name}
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <a
-                  href={`/course-selection/course/${this.state.institution.id}`}
+                  href={`/seleccion-curso/course/${this.state.institution.id}`}
                 >
                   {this.state.course.name}
                 </a>
@@ -264,11 +269,15 @@ class TopNav extends Component {
           </div>
         </div>
 
-        <a className="navbar-logo" href="/">
+        <a className="navbar-logo" href="/app/home">
           <span className="logo d-none d-xs-block" />
           <span className="logo-mobile d-block d-xs-none" />
         </a>
         <div className="navbar-right">
+          <NavLink
+            className="header-icons glyph-icon simple-icon-home"
+            to="/app/home"
+          />
           {isDarkSwitchActive && <TopnavDarkSwitch />}
 
           <div className="header-icons d-inline-block align-middle">
@@ -287,13 +296,13 @@ class TopNav extends Component {
               )}
             </button>
           </div>
-          <div className="nabvar-user user d-inline-block">
-            <UncontrolledDropdown className="dropdown-menu-right">
+          <div className="user d-inline-block">
+            <UncontrolledDropdown className="dropdown-menu-user">
               <DropdownToggle className="p-0" color="empty">
                 <span className="name mr-1">{this.state.userName}</span>
-                <span>
-                  <img alt="Profile" src="/assets/img/user.png" />
-                </span>
+              </DropdownToggle>
+              <DropdownToggle className="p-0" color="empty">
+                <div className="header-icons glyph-icon simple-icon-user" />
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>

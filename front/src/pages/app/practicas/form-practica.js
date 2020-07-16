@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
-import { firestore } from 'helpers/Firebase';
-import { NotificationManager } from 'components/common/react-notifications';
+import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
+import * as moment from 'moment';
 
 class FormPractica extends React.Component {
   constructor(props) {
@@ -22,33 +22,22 @@ class FormPractica extends React.Component {
   }
 
   getDoc = async () => {
-    const arrayDeObjetos = [];
     if (this.props.id) {
-      var docRef = firestore.collection('practicas').doc(this.props.id);
-      try {
-        var doc = await docRef.get();
-        const docId = doc.id;
-        const {
-          nombre,
-          fechaLanzada,
-          descripcion,
-          fechaVencimiento,
-          duracion,
-        } = doc.data();
-        const obj = {
-          id: docId,
-          nombre: nombre,
-          descripcion: descripcion,
-          fechaLanzada: fechaLanzada,
-          fechaVencimiento: fechaVencimiento,
-          duracion: duracion,
-        };
-        arrayDeObjetos.push(obj);
-      } catch (err) {
-        console.log('Error getting documents', err);
-      } finally {
-        return this.dataRenderer(arrayDeObjetos);
-      }
+      const { data } = await getDocument(`practicas/${this.props.id}`);
+      const {
+        nombre,
+        descripcion,
+        fechaLanzada,
+        duracion,
+        fechaVencimiento,
+      } = data;
+      this.setState({
+        nombre,
+        descripcion,
+        fechaLanzada,
+        duracion,
+        fechaVencimiento,
+      });
     }
     return;
   };
@@ -58,91 +47,28 @@ class FormPractica extends React.Component {
     this.setState({ [name]: value });
   };
 
-  dataRenderer = (obj) => {
-    const [objeto] = obj;
-    const {
-      nombre,
-      descripcion,
-      fechaLanzada,
-      duracion,
-      fechaVencimiento,
-    } = objeto;
-    this.setState({
-      nombre,
-      descripcion,
-      fechaLanzada,
-      duracion,
-      fechaVencimiento,
-    });
-  };
-
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
     if (this.props.operationType === 'add') {
-      firestore
-        .collection('practicas')
-        .add({
-          nombre: this.state.nombre,
-          fechaLanzada: this.state.fechaLanzada,
-          descripcion: this.state.descripcion,
-          duracion: this.state.duracion,
-          fechaVencimiento: this.state.fechaVencimiento,
-          fechaPublicada: new Date(),
-          idMateria: this.props.idMateria,
-        })
-        .then(function () {
-          NotificationManager.success(
-            'La práctica fue agregada exitosamente',
-            'Práctica agregada!',
-            3000,
-            null,
-            null,
-            ''
-          );
-        })
-        .catch(function (error) {
-          NotificationManager.error(
-            'Error al agregar la práctica',
-            error,
-            3000,
-            null,
-            null,
-            ''
-          );
-        });
+      const obj = {
+        nombre: this.state.nombre,
+        fechaLanzada: this.state.fechaLanzada,
+        descripcion: this.state.descripcion,
+        duracion: this.state.duracion,
+        fechaVencimiento: this.state.fechaVencimiento,
+        fechaPublicada: new Date(),
+        idMateria: JSON.parse(localStorage.getItem('subject')),
+      };
+      await addDocument('practicas', obj, 'Práctica');
     } else {
-      var ref = firestore.collection('practicas').doc(this.props.id);
-      ref
-        .set(
-          {
-            nombre: this.state.nombre,
-            fechaLanzada: this.state.fechaLanzada,
-            descripcion: this.state.descripcion,
-            duracion: this.state.duracion,
-            fechaVencimiento: this.state.fechaVencimiento,
-          },
-          { merge: true }
-        )
-        .then(function () {
-          NotificationManager.success(
-            'La práctica fue editada exitosamente',
-            'Práctica editada!',
-            3000,
-            null,
-            null,
-            ''
-          );
-        })
-        .catch(function (error) {
-          NotificationManager.error(
-            'Error al editar la práctica',
-            error,
-            3000,
-            null,
-            null,
-            ''
-          );
-        });
+      const obj = {
+        nombre: this.state.nombre,
+        fechaLanzada: this.state.fechaLanzada,
+        descripcion: this.state.descripcion,
+        duracion: this.state.duracion,
+        fechaVencimiento: this.state.fechaVencimiento,
+      };
+      await editDocument('practicas', this.props.id, obj, 'Práctica');
     }
 
     this.props.onPracticaOperacion();

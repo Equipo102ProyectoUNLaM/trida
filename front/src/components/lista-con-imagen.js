@@ -1,19 +1,11 @@
 import React from 'react';
-import {
-  Row,
-  Card,
-  CardBody,
-  CardTitle,
-  CardImg,
-  CardText,
-  Badge,
-} from 'reactstrap';
+import { Row, Card, CardBody, CardTitle, CardImg, CardText } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
-import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
 
-const ListaConImagen = ({ item, isSelect, collect, navTo }) => {
+const ListaConImagen = ({ item, imagen, collect, navTo }) => {
+  const { data } = item;
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={item.id}>
       <ContextMenuTrigger id="menu_id" data={item.id} collect={collect}>
@@ -31,19 +23,19 @@ const ListaConImagen = ({ item, isSelect, collect, navTo }) => {
               <CardImg
                 top
                 className="card-img-fluid"
-                alt={item.nombre}
-                src={item.imagen}
+                alt={data.nombre}
+                src={imagen}
               />
             </div>
             <CardBody className="card-body">
               <Row>
                 <Colxx xxs="10" className="mb-3">
-                  <CardTitle className="mb-1">{item.nombre}</CardTitle>
+                  <CardTitle className="mb-1">{data.nombre}</CardTitle>
                   <CardText className="text-muted text-small mb-3 font-weight-light">
-                    {item.descripcion}
+                    {data.descripcion}
                   </CardText>
                   <CardText className="text-muted text-medium mb-0 font-weight-semibold">
-                    {item.fecha}
+                    {data.fecha}
                   </CardText>
                 </Colxx>
               </Row>

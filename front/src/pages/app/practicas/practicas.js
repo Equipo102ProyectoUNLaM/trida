@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react';
-import { Row, Modal } from 'reactstrap';
+import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
-import { firestore } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
-import { NotificationManager } from 'components/common/react-notifications';
+import { getCollection, deleteDocument } from 'helpers/Firebase-db';
+import { toDateTime } from 'helpers/Utils';
 
 function collect(props) {
   return { data: props.data };
@@ -106,27 +106,15 @@ class Practica extends Component {
   };
 
   deletePractice = async () => {
-    var practicaRef = firestore
-      .collection('practicas')
-      .doc(this.state.practicaId);
-    try {
-      await practicaRef.delete();
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      NotificationManager.success(
-        'Práctica borrada!',
-        'La práctica fue borrada exitosamente',
-        3000,
-        null,
-        null,
-        ''
-      );
-      this.setState({
-        practicaId: '',
-      });
-      this.onPracticaBorrada();
-    }
+    await deleteDocument('practicas', this.state.practicaId, 'Práctica');
+    this.setState({
+      evalId: '',
+    });
+
+    this.setState({
+      practicaId: '',
+    });
+    this.onPracticaBorrada();
   };
 
   onPracticaBorrada = () => {
@@ -152,6 +140,7 @@ class Practica extends Component {
       modalDeleteOpen,
       idItemSelected,
       isLoading,
+      items,
     } = this.state;
 
     return isLoading ? (
@@ -178,14 +167,17 @@ class Practica extends Component {
             />
           </ModalGrande>
           <Row>
-            {this.state.items.map((practica) => {
+            {items.map((practica) => {
+              const fechaPublicada = toDateTime(
+                practica.data.fechaPublicada.seconds
+              );
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
-                  title={practica.name}
-                  text1={'Fecha de publicación: ' + practica.startDate}
-                  text2={'Fecha de entrega: ' + practica.dueDate}
+                  title={practica.data.nombre}
+                  text1={'Fecha de publicación: ' + fechaPublicada}
+                  text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
                   onDelete={this.onDelete}
