@@ -4,8 +4,7 @@ import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import { firestore } from 'helpers/Firebase';
-import { NotificationManager } from 'components/common/react-notifications';
+import { deleteDocument, getCollection } from 'helpers/Firebase-db';
 
 function collect(props) {
   return { data: props.data };
@@ -28,29 +27,13 @@ class Evaluaciones extends Component {
   }
 
   getEvaluaciones = async (materiaId) => {
-    const arrayDeObjetos = [];
-
-    const evaluacionesRef = firestore
-      .collection('evaluaciones')
-      .where('idMateria', '==', materiaId);
-    try {
-      var evaluacionesSnapShot = await evaluacionesRef.get();
-      evaluacionesSnapShot.forEach((doc) => {
-        const docId = doc.id;
-        const { nombre, fecha, descripcion } = doc.data();
-        const obj = {
-          id: docId,
-          nombre: nombre,
-          description: descripcion,
-          fecha: fecha,
-        };
-        arrayDeObjetos.push(obj);
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(arrayDeObjetos);
-    }
+    const arrayDeObjetos = await getCollection(
+      'evaluaciones',
+      'idMateria',
+      '==',
+      materiaId
+    );
+    this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
@@ -89,26 +72,12 @@ class Evaluaciones extends Component {
   };
 
   borrarEvaluacion = async () => {
-    const evalRef = firestore.collection('evaluaciones').doc(this.state.evalId);
-    try {
-      await evalRef.delete();
-    } catch (err) {
-      console.log('Error deleting documents', err);
-    } finally {
-      NotificationManager.success(
-        'Evaluación borrada!',
-        'La evaluación fue borrada exitosamente',
-        3000,
-        null,
-        null,
-        ''
-      );
-      this.setState({
-        evalId: '',
-      });
-      this.toggleDeleteModal();
-      this.getEvaluaciones(this.state.materiaId);
-    }
+    await deleteDocument('evaluaciones', this.state.evalId, 'Evaluación');
+    this.setState({
+      evalId: '',
+    });
+    this.toggleDeleteModal();
+    this.getEvaluaciones(this.state.materiaId);
   };
 
   render() {

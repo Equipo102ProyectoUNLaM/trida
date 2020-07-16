@@ -9,11 +9,7 @@ import { injectIntl } from 'react-intl';
 import { firestore } from 'helpers/Firebase';
 import 'react-datepicker/dist/react-datepicker.css';
 
-class DataListView extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+class DataListView extends React.Component {
   handleClick = (date) => {
     if (date) {
       const fecha = date.format('YYYY-MM-DD');

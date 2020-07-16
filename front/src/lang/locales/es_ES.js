@@ -65,6 +65,9 @@ module.exports = {
   'menu.evaluaciones': 'Evaluaciones',
   'menu.agregar': 'Agregar Evaluación',
   'menu.detalle-evaluacion': 'Detalle de Evaluación',
+  'menu.mis-instituciones': 'Mis Instituciones',
+  'menu.mis-cursos': 'Mis Cursos',
+  'menu.mis-materias': 'Mis Materias',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -86,7 +89,7 @@ module.exports = {
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
 
-  /* 07.Institution Selection */
+  /* 07.Institution */
   'institution.selection': '¿A qué institución desea acceder?',
 
   /* 08.Course Selection */
