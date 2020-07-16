@@ -6285,6 +6285,18 @@ input:-webkit-autofill {
   }
 }
 
+.set-date-action-icon-eval {
+  font-size: 1.2rem;
+  padding-right: 5px;
+  margin-left: 0.9rem;
+  cursor: pointer;
+  color: $primary-color;
+
+  &.relative {
+    position: relative;
+  }
+}
+
 .chart-container {
   height: 300px;
 }

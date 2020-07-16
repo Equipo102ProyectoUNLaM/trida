@@ -37,11 +37,15 @@ class Calendario extends React.Component {
   };
 
   render() {
-    const { text } = this.props;
-
+    const { text, evalCalendar } = this.props;
+    const classText = evalCalendar ? '-eval' : '';
     return (
       <div
-        className="glyph-icon simple-icon-calendar set-date-action-icon relative"
+        className={
+          'glyph-icon simple-icon-calendar set-date-action-icon' +
+          classText +
+          ' relative'
+        }
         onClick={this.handleClick}
       >
         <DropdownMenu
