@@ -13,6 +13,7 @@ class FormPractica extends React.Component {
       fechaLanzada: '',
       duracion: '',
       fechaVencimiento: '',
+      idMateria: '',
     };
   }
 

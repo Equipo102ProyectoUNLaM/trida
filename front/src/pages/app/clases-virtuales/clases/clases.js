@@ -5,7 +5,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormClase from './form-clase';
-import { getCollection } from 'helpers/Firebase-db';
+import { firestore } from 'helpers/Firebase';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase.jpeg`;
 
@@ -17,21 +17,41 @@ class Clase extends Component {
   constructor(props) {
     super(props);
 
+    const { id } = JSON.parse(localStorage.getItem('subject'));
+
     this.state = {
       items: [],
       modalOpen: false,
       selectedItems: [],
       isLoading: true,
+      idMateria: id,
     };
   }
 
-  getClases = async () => {
-    const arrayDeObjetos = await getCollection('clases');
-    this.dataListRenderer(arrayDeObjetos);
+  getClases = async (materiaId) => {
+    const arrayDeObjetos = [];
+    const actividadesRef = firestore
+      .collection('clases')
+      .where('idMateria', '==', materiaId);
+    try {
+      var allClasesSnapShot = await actividadesRef.get();
+      allClasesSnapShot.forEach((doc) => {
+        const docId = doc.id;
+        const obj = {
+          id: docId,
+          data: doc.data(),
+        };
+        arrayDeObjetos.push(obj);
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.dataListRenderer(arrayDeObjetos);
+    }
   };
 
   componentDidMount() {
-    this.getClases();
+    this.getClases(this.state.idMateria);
   }
 
   toggleModal = () => {
@@ -42,7 +62,7 @@ class Clase extends Component {
 
   onClaseAgregada = () => {
     this.toggleModal();
-    this.getClases();
+    this.getClases(this.state.idMateria);
   };
 
   dataListRenderer(arrayDeObjetos) {
