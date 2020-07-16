@@ -191,27 +191,42 @@ class Contenidos extends Component {
       return state;
     });
   };
-  handleDeleteFolder = (folderKey) => {
-    this.setState((state) => {
-      const newFiles = [];
-      state.files.map((file) => {
-        if (file.key.substr(0, folderKey.length) !== folderKey) {
-          newFiles.push(file);
-        }
+
+  handleDeleteFolder = (folderKeys) => {
+    var files = [];
+    for (const folder of folderKeys) {
+      files = files.concat(
+        this.state.files
+          .filter(function (obj) {
+            return obj.key.startsWith(folder);
+          })
+          .map(function (obj) {
+            return obj.key;
+          })
+      );
+
+      this.setState((state) => {
+        const newFiles = [];
+        state.files.map((file) => {
+          if (file.key.substr(0, folder.length) !== folder) {
+            newFiles.push(file);
+          }
+        });
+        state.files = newFiles;
+        return state;
       });
-      state.files = newFiles;
-      return state;
-    });
+    }
+    console.log(files);
+    this.handleDeleteFile(files);
   };
+
   handleDeleteFile = (filesKey) => {
+    if (filesKey.length == 0) return;
     this.setState((state) => ({
       isLoading: true,
     }));
     var cant = filesKey.length;
     for (const f of filesKey) {
-      console.log(f);
-      console.log(this.state.subjectId);
-      console.log(this.state.files);
       var fileRef = storage.ref(`${this.state.subjectId}/${f}`);
       fileRef
         .delete()
@@ -356,11 +371,11 @@ class Contenidos extends Component {
             detailRenderer={() => null}
             onCreateFolder={this.handleCreateFolder}
             onCreateFiles={this.handleCreateFiles}
+            onDeleteFolder={this.handleDeleteFolder}
             onMoveFolder={this.handleRenameFolder}
             onMoveFile={this.handleRenameFile}
             onRenameFolder={this.handleRenameFolder}
             onRenameFile={this.handleRenameFile}
-            onDeleteFolder={this.handleDeleteFolder}
             onDeleteFile={this.handleDeleteFile}
             onDownloadFile={this.handleDownloadFile}
           />
