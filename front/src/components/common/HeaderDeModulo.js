@@ -22,7 +22,14 @@ class HeaderDeModulo extends Component {
   };
 
   render() {
-    const { heading, toggleModal, buttonText, match, breadcrumb } = this.props;
+    const {
+      heading,
+      toggleModal,
+      buttonText,
+      match,
+      breadcrumb,
+      buttonType,
+    } = this.props;
     return (
       <Row>
         <Colxx xxs="12">
@@ -37,8 +44,9 @@ class HeaderDeModulo extends Component {
                   <Button
                     color="primary"
                     size="lg"
+                    type={buttonType ? buttonType : 'button'}
                     className="top-right-button"
-                    onClick={() => toggleModal()}
+                    onClick={toggleModal ? () => toggleModal() : null}
                   >
                     <IntlMessages id={buttonText} />
                   </Button>

@@ -1,31 +1,29 @@
 import React, { Component, Fragment } from 'react';
-import { Row } from 'reactstrap';
+import { Row, Card, CardBody, Button } from 'reactstrap';
+import IntlMessages from '../../../helpers/IntlMessages';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import contents from 'data/contents';
-import Contents from 'containers/dashboards/contents';
-import FileBrowser, {
-  FileRenderers,
-  FolderRenderers,
-  Groupers,
-  Icons,
-} from 'react-keyed-file-browser';
+import FileBrowser, { Icons } from 'react-keyed-file-browser';
 import { storage } from 'helpers/Firebase';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
-
-function collect(props) {
-  return { data: props.data };
-}
+import Dropzone from '../../../containers/forms/Dropzone';
+import { Colxx } from '../../../components/common/CustomBootstrap';
+import { NotificationManager } from '../../../components/common/react-notifications';
 
 class Contenidos extends Component {
   constructor(props) {
     super(props);
+    var subject = JSON.parse(localStorage.getItem('subject'));
     this.state = {
       files: [],
       isLoading: true,
+      canSubmitFiles: true, //boton inhabilitado
+      dropZone: [],
+      subjectId: subject.id,
     };
     this.listFolderItems = this.listFolderItems.bind(this);
+    this.dropZoneRef = React.createRef();
   }
 
   // Esto va a hacer el get del storage para la materia
@@ -41,27 +39,26 @@ class Contenidos extends Component {
     var array = [];
     try {
       var subject = JSON.parse(localStorage.getItem('subject'));
-      // Create a reference under which you want to list
+      //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
       var listRef = storage.ref(subject.id);
-
-      // Now we get the references of these images
-
+      // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
+        //Carpetas
         for (const folderRef of result.prefixes) {
+          //Listamos archivos de cada carpeta
           var subFolderElements = await this.listFolderItems(
             folderRef,
             subject.id
           );
           array = array.concat(subFolderElements);
         }
-
+        //Archivos
         for (const res of result.items) {
-          // And finally display them
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
                 key: metadata.fullPath.replace(subject.id + '/', ''),
-                modified: metadata.updated,
+                modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
               };
@@ -84,6 +81,7 @@ class Contenidos extends Component {
     var array = [];
     try {
       await ref.listAll().then(async (result) => {
+        //Carpetas
         for (const folderRef of result.prefixes) {
           var subFolderElements = await this.listFolderItems(
             folderRef,
@@ -91,14 +89,13 @@ class Contenidos extends Component {
           );
           array = array.concat(subFolderElements);
         }
-
+        //Archivos
         for (const res of result.items) {
-          // And finally display them
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
                 key: metadata.fullPath.replace(subjectId + '/', ''),
-                modified: metadata.updated,
+                modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
               };
@@ -206,17 +203,48 @@ class Contenidos extends Component {
       return state;
     });
   };
-  handleDeleteFile = (fileKey) => {
-    this.setState((state) => {
-      const newFiles = [];
-      state.files.map((file) => {
-        if (file.key !== fileKey) {
-          newFiles.push(file);
-        }
-      });
-      state.files = newFiles;
-      return state;
-    });
+  handleDeleteFile = (filesKey) => {
+    this.setState((state) => ({
+      isLoading: true,
+    }));
+
+    for (const f of filesKey) {
+      console.log(f);
+      console.log(this.state.subjectId);
+      console.log(this.state.files);
+      var fileRef = storage.ref(`${this.state.subjectId}/${f}`);
+      fileRef
+        .delete()
+        .then(function () {
+          // File deleted successfully
+          this.setState((state) => {
+            console.log(state.files);
+            const newFiles = [];
+            state.files.map((file) => {
+              if (file.key !== f) {
+                newFiles.push(file);
+              }
+            });
+            state.files = newFiles;
+            return state;
+          });
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+        });
+    }
+
+    NotificationManager.success(
+      'Los archivos han sido eliminados correctamente',
+      '¡Archivos eliminados!',
+      3000,
+      null,
+      null,
+      ''
+    );
+    this.setState((state) => ({
+      isLoading: false,
+    }));
   };
 
   handleDownloadFile = (fileKey) => {
@@ -224,19 +252,98 @@ class Contenidos extends Component {
     window.open(file.url, '_blank'); //to open new page
   };
 
+  handleOnChange(event) {
+    this.setState((state) => ({
+      isLoading: true,
+    }));
+    var subject = JSON.parse(localStorage.getItem('subject'));
+    var cant = this.state.dropZone.length;
+    for (const file of this.state.dropZone) {
+      //Obtenemos la referencia a la materia
+      console.log(file);
+      var listRef = storage.ref(
+        `${subject.id}/${file.fullPath ? file.fullPath : file.name}`
+      );
+      const task = listRef.put(file);
+      task.on(
+        'state_changed',
+        (snapshot) => {},
+        (error) => {
+          console.error(error.message);
+        },
+        () => {
+          cant = cant - 1;
+          //Elimino de dropzone los archivos ya subidos
+          var buttonRemove = document.getElementById('buttonRemove');
+          if (buttonRemove) buttonRemove.click();
+          if (cant === 0) this.updateFilesList();
+        }
+      );
+    }
+  }
+
+  updateFilesList() {
+    NotificationManager.success(
+      'Tus archivos han sido cargados correctamente',
+      '¡Carga completa!',
+      3000,
+      null,
+      null,
+      ''
+    );
+    this.setState((state) => ({
+      dropZone: [],
+      isLoading: true,
+      canSubmitFiles: true,
+    }));
+    this.dataListRenderer();
+  }
+
+  callbackFunction = (childData, dropZone) => {
+    this.setState((state) => ({
+      canSubmitFiles: childData,
+      dropZone: dropZone ? state.dropZone.concat(dropZone) : state.dropZone,
+    }));
+  };
+
+  callbackDeleteFunction = (file) => {
+    this.setState((state) => ({
+      dropZone: state.dropZone.filter(function (value, index, arr) {
+        return value.name != file.name;
+      }),
+      canSubmitFiles: state.dropZone.length != 0,
+    }));
+  };
+
   render() {
-    const { isLoading } = this.state;
-    return isLoading ? (
-      <div className="loading" />
-    ) : (
+    const { isLoading, canSubmitFiles } = this.state;
+    return (
       <Fragment>
+        {isLoading ? <div id="cover-spin"></div> : <span></span>}
         <div className="disable-text-selection">
-          <HeaderDeModulo
-            heading="menu.content"
-            toggleModal={this.toggleModal}
-            buttonText="contenido.agregar"
-          />
+          <HeaderDeModulo heading="menu.content" />
         </div>
+        <Row className="mb-4">
+          <Colxx xxs="12">
+            <Card>
+              <CardBody>
+                <Dropzone
+                  ref={this.dropZoneRef}
+                  parentCallback={this.callbackFunction}
+                  deleteFile={this.callbackDeleteFunction}
+                />
+              </CardBody>
+            </Card>
+          </Colxx>
+        </Row>
+        <Button
+          color="primary"
+          disabled={canSubmitFiles}
+          className="mb-2"
+          onClick={this.handleOnChange.bind(this)}
+        >
+          <IntlMessages id="contenido.agregar" />
+        </Button>
         <div className="demo-mount-nested-editable">
           <FileBrowser
             files={this.state.files}
