@@ -5,7 +5,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormClase from './form-clase';
-import { firestore } from 'helpers/Firebase';
+import { getCollection } from 'helpers/Firebase-db';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase.jpeg`;
 
@@ -29,25 +29,13 @@ class Clase extends Component {
   }
 
   getClases = async (materiaId) => {
-    const arrayDeObjetos = [];
-    const actividadesRef = firestore
-      .collection('clases')
-      .where('idMateria', '==', materiaId);
-    try {
-      var allClasesSnapShot = await actividadesRef.get();
-      allClasesSnapShot.forEach((doc) => {
-        const docId = doc.id;
-        const obj = {
-          id: docId,
-          data: doc.data(),
-        };
-        arrayDeObjetos.push(obj);
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(arrayDeObjetos);
-    }
+    const arrayDeObjetos = await getCollection(
+      'clases',
+      'idMateria',
+      '==',
+      materiaId
+    );
+    this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
