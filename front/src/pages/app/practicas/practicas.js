@@ -6,7 +6,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
-import { deleteDocument } from 'helpers/Firebase-db';
+import { deleteDocument, getCollection } from 'helpers/Firebase-db';
 import { toDateTime } from 'helpers/Utils';
 import { firestore } from 'helpers/Firebase';
 
@@ -34,35 +34,15 @@ class Practica extends Component {
   }
 
   getPracticas = async (materiaId) => {
-    const arrayDeObjetos = [];
-    const actividadesRef = firestore
-      .collection('practicas')
-      .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
-      .where('idMateria', '==', materiaId);
-    try {
-      var allActivitiesSnapShot = await actividadesRef.get();
-      allActivitiesSnapShot.forEach((doc) => {
-        const docId = doc.id;
-        const {
-          nombre,
-          fechaLanzada,
-          fechaVencimiento,
-          descripcion,
-        } = doc.data();
-        const obj = {
-          id: docId,
-          name: nombre,
-          description: descripcion,
-          startDate: fechaLanzada,
-          dueDate: fechaVencimiento,
-        };
-        arrayDeObjetos.push(obj);
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(arrayDeObjetos);
-    }
+    const arrayDeObjetos = await getCollection('practicas', [
+      {
+        field: 'fechaLanzada',
+        operator: '>',
+        id: new Date().toISOString().slice(0, 10),
+      },
+      { field: 'idMateria', operator: '==', id: materiaId },
+    ]);
+    this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
@@ -142,7 +122,6 @@ class Practica extends Component {
       isLoading,
       items,
     } = this.state;
-
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -168,13 +147,14 @@ class Practica extends Component {
           </ModalGrande>
           <Row>
             {items.map((practica) => {
+              const fechaPub = toDateTime(practica.data.fechaPublicada.seconds);
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
-                  title={practica.name}
-                  text1={'Fecha de publicación: ' + practica.startDate}
-                  text2={'Fecha de entrega: ' + practica.dueDate}
+                  title={practica.data.nombre}
+                  text1={'Fecha de publicación: ' + fechaPub}
+                  text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
                   onDelete={this.onDelete}

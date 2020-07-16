@@ -29,12 +29,9 @@ class Clase extends Component {
   }
 
   getClases = async (materiaId) => {
-    const arrayDeObjetos = await getCollection(
-      'clases',
-      'idMateria',
-      '==',
-      materiaId
-    );
+    const arrayDeObjetos = await getCollection('clases', [
+      { field: 'idMateria', operator: '==', id: materiaId },
+    ]);
     this.dataListRenderer(arrayDeObjetos);
   };
 
