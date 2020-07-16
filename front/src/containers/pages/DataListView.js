@@ -69,7 +69,6 @@ class DataListView extends Component {
                   />
                   <div
                     className="glyph-icon simple-icon-trash delete-action-icon"
-                    // onClick={onDeleteItem}
                     onClick={this.handleClickDelete}
                   />
                   <Calendario
