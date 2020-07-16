@@ -6,8 +6,9 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
-import { getCollection, deleteDocument } from 'helpers/Firebase-db';
+import { deleteDocument } from 'helpers/Firebase-db';
 import { toDateTime } from 'helpers/Utils';
+import { firestore } from 'helpers/Firebase';
 
 function collect(props) {
   return { data: props.data };
@@ -34,7 +35,6 @@ class Practica extends Component {
 
   getPracticas = async (materiaId) => {
     const arrayDeObjetos = [];
-    console.log(materiaId);
     const actividadesRef = firestore
       .collection('practicas')
       .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
@@ -168,16 +168,13 @@ class Practica extends Component {
           </ModalGrande>
           <Row>
             {items.map((practica) => {
-              const fechaPublicada = toDateTime(
-                practica.data.fechaPublicada.seconds
-              );
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
-                  title={practica.data.nombre}
-                  text1={'Fecha de publicación: ' + fechaPublicada}
-                  text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
+                  title={practica.name}
+                  text1={'Fecha de publicación: ' + practica.startDate}
+                  text2={'Fecha de entrega: ' + practica.dueDate}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
                   onDelete={this.onDelete}
