@@ -6,7 +6,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
-import { getCollection, deleteDocument } from 'helpers/Firebase-db';
+import { getCollection, logicDeleteDocument } from 'helpers/Firebase-db';
 import { toDateTime } from 'helpers/Utils';
 
 function collect(props) {
@@ -84,7 +84,7 @@ class Practica extends Component {
   };
 
   deletePractice = async () => {
-    await deleteDocument('practicas', this.state.practicaId, 'Práctica');
+    await logicDeleteDocument('practicas', this.state.practicaId, 'Práctica');
     this.setState({
       evalId: '',
     });

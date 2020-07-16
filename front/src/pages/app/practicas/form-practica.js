@@ -56,6 +56,7 @@ class FormPractica extends React.Component {
         duracion: this.state.duracion,
         fechaVencimiento: this.state.fechaVencimiento,
         fechaPublicada: new Date(),
+        activo: false,
         idMateria: JSON.parse(localStorage.getItem('subject')),
       };
       await addDocument('practicas', obj, 'Práctica');
