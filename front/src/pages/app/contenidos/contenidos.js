@@ -207,7 +207,7 @@ class Contenidos extends Component {
     this.setState((state) => ({
       isLoading: true,
     }));
-
+    var cant = filesKey.length;
     for (const f of filesKey) {
       console.log(f);
       console.log(this.state.subjectId);
@@ -215,7 +215,7 @@ class Contenidos extends Component {
       var fileRef = storage.ref(`${this.state.subjectId}/${f}`);
       fileRef
         .delete()
-        .then(function () {
+        .then(() => {
           // File deleted successfully
           this.setState((state) => {
             console.log(state.files);
@@ -228,12 +228,17 @@ class Contenidos extends Component {
             state.files = newFiles;
             return state;
           });
+          cant = cant - 1;
+          if (cant === 0) this.showDeleteMessage();
         })
         .catch(function (error) {
           // Uh-oh, an error occurred!
+          console.log('Error deleting documents', error);
         });
     }
+  };
 
+  showDeleteMessage() {
     NotificationManager.success(
       'Los archivos han sido eliminados correctamente',
       '¡Archivos eliminados!',
@@ -245,7 +250,7 @@ class Contenidos extends Component {
     this.setState((state) => ({
       isLoading: false,
     }));
-  };
+  }
 
   handleDownloadFile = (fileKey) => {
     var file = this.state.files.find((i) => i.key == fileKey);
