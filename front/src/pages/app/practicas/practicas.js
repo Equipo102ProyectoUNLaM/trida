@@ -34,11 +34,11 @@ class Practica extends Component {
 
   getPracticas = async (materiaId) => {
     const arrayDeObjetos = [];
+    console.log(materiaId);
     const actividadesRef = firestore
       .collection('practicas')
       .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
-      // .where('idMateria', '==', materiaId)
-      .orderBy('fechaLanzada', 'asc');
+      .where('idMateria', '==', materiaId);
     try {
       var allActivitiesSnapShot = await actividadesRef.get();
       allActivitiesSnapShot.forEach((doc) => {
