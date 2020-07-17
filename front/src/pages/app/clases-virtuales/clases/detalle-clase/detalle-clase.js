@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { Colxx } from '../../../../../components/common/CustomBootstrap';
 import TabsDeClase from './tabs-de-clase';
-import { Row, Col } from 'reactstrap';
-import { firestore } from 'helpers/Firebase';
+import { Row } from 'reactstrap';
 import { capitalize } from 'underscore.string';
+import { getDocument } from 'helpers/Firebase-db';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 
 export default class DetalleClase extends Component {
@@ -23,21 +23,17 @@ export default class DetalleClase extends Component {
   getDetalleDeClase = async () => {
     const { claseId } = this.props.match.params;
 
-    const claseRef = firestore.doc(`clases/${claseId}`);
-    try {
-      const claseSnapShot = await claseRef.get();
-      const { nombre, fecha, descripcion, idSala } = claseSnapShot.data();
-      this.setState({
-        claseId,
-        nombre,
-        fecha,
-        descripcion,
-        idSala,
-        isLoading: false,
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    }
+    const docObj = await getDocument(`clases/${claseId}`);
+    const { data } = docObj;
+    const { nombre, fecha, descripcion, idSala } = data;
+    this.setState({
+      claseId,
+      nombre,
+      fecha,
+      descripcion,
+      idSala,
+      isLoading: false,
+    });
   };
 
   componentDidMount() {
@@ -54,7 +50,7 @@ export default class DetalleClase extends Component {
         <Row>
           <Colxx xxs="12">
             <HeaderDeModulo
-              heading={capitalize(nombre)}
+              text={capitalize(nombre)}
               match={match}
               breadcrumb
             />

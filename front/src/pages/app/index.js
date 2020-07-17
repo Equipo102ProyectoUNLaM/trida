@@ -4,33 +4,19 @@ import { connect } from 'react-redux';
 
 import AppLayout from '../../layout/AppLayout';
 
-const Home = React.lazy(() =>
-  import('./home')
-);
+const Home = React.lazy(() => import('./home'));
 
-const VirtualClasses = React.lazy(() =>
-  import('./clases-virtuales')
-);
+const VirtualClasses = React.lazy(() => import('./clases-virtuales'));
 
-const Communications = React.lazy(() =>
-  import('./comunicaciones')
-);
+const Communications = React.lazy(() => import('./comunicaciones'));
 
-const Content = React.lazy(() =>
-  import('./contenidos')
-);
+const Content = React.lazy(() => import('./contenidos'));
 
-const Corrections = React.lazy(() =>
-  import('./correcciones')
-);
+const Corrections = React.lazy(() => import('./correcciones'));
 
-const Evaluations = React.lazy(() =>
-  import('./evaluaciones')
-);
+const Evaluations = React.lazy(() => import('./evaluaciones'));
 
-const Activities = React.lazy(() =>
-  import('./practicas')
-);
+const Activities = React.lazy(() => import('./practicas'));
 
 class App extends Component {
   render() {
@@ -44,32 +30,32 @@ class App extends Component {
               <Redirect exact from={`${match.url}/`} to={`${match.url}/home`} />
               <Route
                 path={`${match.url}/home`}
-                render={props => <Home {...props} />}
+                render={(props) => <Home {...props} />}
               />
               <Route
-                path={`${match.url}/virtual-classes`}
-                render={props => <VirtualClasses {...props} />}
+                path={`${match.url}/clases-virtuales`}
+                render={(props) => <VirtualClasses {...props} />}
               />
               <Route
-                path={`${match.url}/content`}
-                render={props => <Content {...props} />}
+                path={`${match.url}/contenidos`}
+                render={(props) => <Content {...props} />}
               />
               <Route
-                path={`${match.url}/communications`}
-                render={props => <Communications {...props} />}
+                path={`${match.url}/comunicaciones`}
+                render={(props) => <Communications {...props} />}
               />
               <Route
-                path={`${match.url}/corrections`}
-                render={props => <Corrections {...props} />}
+                path={`${match.url}/correcciones`}
+                render={(props) => <Corrections {...props} />}
               />
 
               <Route
-                path={`${match.url}/activities`}
-                render={props => <Activities {...props} />}
+                path={`${match.url}/practicas`}
+                render={(props) => <Activities {...props} />}
               />
               <Route
-                path={`${match.url}/evaluations`}
-                render={props => <Evaluations {...props} />}
+                path={`${match.url}/evaluaciones`}
+                render={(props) => <Evaluations {...props} />}
               />
               <Redirect to="/error" />
             </Switch>
@@ -84,9 +70,4 @@ const mapStateToProps = ({ menu }) => {
   return { containerClassnames };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    {}
-  )(App)
-);
+export default withRouter(connect(mapStateToProps, {})(App));

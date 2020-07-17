@@ -15,16 +15,16 @@ const MenuComunicaciones = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
-        path={`${match.url}/formal`}
-        render={props => <Formales {...props} />}
+        path={`${match.url}/formales`}
+        render={(props) => <Formales {...props} />}
       />
       <Route
-        path={`${match.url}/forum`}
-        render={props => <Foro {...props} />}
+        path={`${match.url}/foro`}
+        render={(props) => <Foro {...props} />}
       />
       <Route
-        path={`${match.url}/messages`}
-        render={props => <Mensajeria {...props} />}
+        path={`${match.url}/mensajeria`}
+        render={(props) => <Mensajeria {...props} />}
       />
       <Redirect to="/error" />
     </Switch>

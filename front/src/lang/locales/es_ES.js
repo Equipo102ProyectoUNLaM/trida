@@ -50,7 +50,7 @@ module.exports = {
   'menu.communications': 'Comunicaciones',
   'menu.content': 'Contenidos',
   'menu.corrections': 'Correcciones',
-  'menu.virtual-classes': 'Clases Virtuales',
+  'menu.clases-virtuales': 'Clases Virtuales',
   'menu.activities': 'Prácticas',
   'menu.evaluations': 'Evaluaciones',
   'menu.forum': 'Foro',
@@ -58,13 +58,20 @@ module.exports = {
   'menu.formal': 'Comunicaciones Formales',
   'menu.my-contents': 'Mis Contenidos',
   'menu.my-corrections': 'Mis Correcciones',
-  'menu.my-classes': 'Mis Clases',
+  'menu.mis-clases': 'Mis Clases',
+  'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas',
   'menu.my-evaluations': 'Mis Evaluaciones',
+  'menu.evaluaciones': 'Evaluaciones',
+  'menu.agregar': 'Agregar Evaluación',
+  'menu.detalle-evaluacion': 'Detalle de Evaluación',
+  'menu.mis-instituciones': 'Mis Instituciones',
+  'menu.mis-cursos': 'Mis Cursos',
+  'menu.mis-materias': 'Mis Materias',
 
   /* 04.Error  */
-  'pages.error-title': 'Vaya, parece que ha ocurrido un error!',
+  'pages.error-title': 'Ups, parece que ha ocurrido un error!',
   'pages.error-code': 'Código de error',
   'pages.go-back-home': 'Regresar a Inicio',
 
@@ -83,7 +90,7 @@ module.exports = {
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
 
-  /* 07.Institution Selection */
+  /* 07.Institution */
   'institution.selection': '¿A qué institución desea acceder?',
 
   /* 08.Course Selection */

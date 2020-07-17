@@ -29,14 +29,18 @@ class HeaderDeModulo extends Component {
       match,
       breadcrumb,
       buttonType,
+      text,
     } = this.props;
     return (
       <Row>
         <Colxx xxs="12">
           <div className="mb-2">
-            <h1>
-              <IntlMessages id={heading} />
-            </h1>
+            {heading && (
+              <h1>
+                <IntlMessages id={heading} />
+              </h1>
+            )}
+            {text && <h1>{text}</h1>}
             {breadcrumb && <Breadcrumb match={match} />}
             <>
               {buttonText && (
