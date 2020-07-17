@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   Breadcrumb,
   BreadcrumbItem,
+  Button,
 } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
@@ -31,6 +32,7 @@ import { MobileMenuIcon, MenuIcon } from '../../components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
+import { firestore } from 'helpers/Firebase';
 
 class TopNav extends Component {
   constructor(props) {
@@ -38,13 +40,19 @@ class TopNav extends Component {
     var institution = JSON.parse(localStorage.getItem('institution'));
     var course = JSON.parse(localStorage.getItem('course'));
     var subject = JSON.parse(localStorage.getItem('subject'));
+    var userName = localStorage.getItem('user_name');
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
-      institution: institution,
-      course: course,
-      subject: subject,
+      institution,
+      course,
+      subject,
+      userName,
     };
+  }
+
+  componentDidMount() {
+    this.getUserName(localStorage.getItem('user_id'));
   }
 
   handleChangeLocale = (locale, direction) => {
@@ -148,6 +156,10 @@ class TopNav extends Component {
     });
   };
 
+  goHome = () => {
+    this.props.history.push('app/home');
+  };
+
   toggleFullScreen = () => {
     const isInFullScreen = this.isInFullScreen();
 
@@ -201,6 +213,19 @@ class TopNav extends Component {
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
+  async getUserName(userId) {
+    try {
+      const userRef = firestore.doc(`users/${userId}`);
+      var userDoc = await userRef.get();
+      const { name } = userDoc.data();
+      this.setState({
+        userName: name,
+      });
+    } catch (err) {
+      console.log('Error getting users document', err);
+    }
+  }
+
   render() {
     const { containerClassnames, menuClickCount, user } = this.props;
     const { messages } = this.props.intl;
@@ -228,13 +253,13 @@ class TopNav extends Component {
           <div className="d-inline-block">
             <Breadcrumb className="nomargin">
               <BreadcrumbItem>
-                <a href="/course-selection/institution">
+                <a href="/seleccion-curso/institution">
                   {this.state.institution.name}
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <a
-                  href={`/course-selection/course/${this.state.institution.id}`}
+                  href={`/seleccion-curso/course/${this.state.institution.id}`}
                 >
                   {this.state.course.name}
                 </a>
@@ -244,11 +269,15 @@ class TopNav extends Component {
           </div>
         </div>
 
-        <a className="navbar-logo" href="/">
+        <a className="navbar-logo" href="/app/home">
           <span className="logo d-none d-xs-block" />
           <span className="logo-mobile d-block d-xs-none" />
         </a>
         <div className="navbar-right">
+          <NavLink
+            className="header-icons glyph-icon simple-icon-home"
+            to="/app/home"
+          />
           {isDarkSwitchActive && <TopnavDarkSwitch />}
 
           <div className="header-icons d-inline-block align-middle">
@@ -268,12 +297,12 @@ class TopNav extends Component {
             </button>
           </div>
           <div className="user d-inline-block">
-            <UncontrolledDropdown className="dropdown-menu-right">
+            <UncontrolledDropdown className="dropdown-menu-user">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">{user}</span>
-                <span>
-                  <img alt="Profile" src="/assets/img/user.png" />
-                </span>
+                <span className="name mr-1">{this.state.userName}</span>
+              </DropdownToggle>
+              <DropdownToggle className="p-0" color="empty">
+                <div className="header-icons glyph-icon simple-icon-user" />
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>

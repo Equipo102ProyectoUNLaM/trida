@@ -2,8 +2,7 @@ import React from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from 'rc-switch';
 import { createUUID } from 'helpers/Utils';
-import { firestore } from 'helpers/Firebase';
-import { NotificationManager } from 'components/common/react-notifications';
+import { addDocument } from 'helpers/Firebase-db';
 
 class FormClase extends React.Component {
   constructor() {
@@ -23,37 +22,16 @@ class FormClase extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
-
-    firestore
-      .collection('clases')
-      .add({
-        nombre: this.state.nombre,
-        fecha: this.state.fecha,
-        descripcion: this.state.descripcion,
-        idSala: this.state.idSala,
-      })
-      .then(function () {
-        NotificationManager.success(
-          'Clase agregada!',
-          'La clase fue agregada exitosamente',
-          3000,
-          null,
-          null,
-          ''
-        );
-      })
-      .catch(function (error) {
-        NotificationManager.error(
-          'Error al agregar la clase',
-          error,
-          3000,
-          null,
-          null,
-          ''
-        );
-      });
+    const obj = {
+      nombre: this.state.nombre,
+      fecha: this.state.fecha,
+      descripcion: this.state.descripcion,
+      idSala: this.state.idSala,
+      idMateria: JSON.parse(localStorage.getItem('subject')),
+    };
+    await addDocument('clases', obj, 'Clase');
 
     this.props.onClaseAgregada();
   };

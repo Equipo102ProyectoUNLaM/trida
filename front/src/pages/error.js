@@ -1,16 +1,15 @@
-import React, { Component, Fragment } from "react";
-import { Row, Card, CardTitle,Button } from "reactstrap";
-import { NavLink } from "react-router-dom";
-import { Colxx } from "../components/common/CustomBootstrap";
-import IntlMessages from "../helpers/IntlMessages";
-
+import React, { Component, Fragment } from 'react';
+import { Row, Card, CardTitle, Button } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { Colxx } from '../components/common/CustomBootstrap';
+import IntlMessages from '../helpers/IntlMessages';
 
 class Error extends Component {
   componentDidMount() {
-    document.body.classList.add("background");
+    document.body.classList.add('background');
   }
   componentWillUnmount() {
-    document.body.classList.remove("background");
+    document.body.classList.remove('background');
   }
   render() {
     return (
@@ -22,8 +21,7 @@ class Error extends Component {
               <Colxx xxs="12" md="10" className="mx-auto my-auto">
                 <Card className="auth-card">
                   <div className="position-relative image-side ">
-                    <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
-                    <p className="white mb-0">Yes, it is indeed!</p>
+                    <p className="text-white h2">třída</p>
                   </div>
                   <div className="form-side">
                     <NavLink to={`/`} className="white">

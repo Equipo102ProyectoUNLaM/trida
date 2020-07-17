@@ -1,4 +1,4 @@
-/* Main Style 
+/* Main Style
 
 Table of Contents
 
@@ -605,7 +605,6 @@ button {
   font-size: 0.8rem;
   padding: 0.75rem 1.3rem 0.6rem 1.3rem;
   transition: background-color box-shadow 0.1s linear;
-  margin-bottom: 1rem !important;
 }
 
 .btn-right {
@@ -653,6 +652,14 @@ button {
     color: $button-text-color;
     background-color: darken($theme-color-1, 8%);
     border-color: darken($theme-color-1, 8%);
+  }
+}
+
+.button-group {
+  justify-content: flex-end;
+
+  .button {
+    margin: 0 0.2rem;
   }
 }
 
@@ -1709,6 +1716,7 @@ nav .nomargin {
   .navbar-right {
     flex-basis: 40%;
     text-align: right;
+    font-size: 1.3rem;
 
     .user {
       margin-right: $main-margin;
@@ -2840,12 +2848,39 @@ nav .nomargin {
     }
   }
 
+  .card-eval-body {
+    padding: 1rem 1.25rem .25rem 1.25rem;
+
+    @include respond-below(xs) {
+      padding: 1.25rem;
+    }
+
+    &.sm {
+      padding: 1.25rem 1.75rem;
+    }
+  }
+
+  .card-inicio {
+    width: 10rem !important;
+    .card{
+    width: 10rem !important;
+    padding: 1rem 1.25rem .25rem 1.25rem;
+    margin: 0.8rem !important;}
+  }
+
   .card-title {
     margin-bottom: 1rem;
     @include respond-below(sm) {
       margin-bottom: 1.25rem;
     }
   }
+}
+
+.tab-card {
+  border: initial;
+  background: $foreground-color;
+  width: 20rem !important;
+  margin: 0.8rem;
 }
 
 .card-title {
@@ -4070,7 +4105,7 @@ select.form-control:not([size]):not([multiple]) {
       &:after {
         top: 0 !important;
       }
-  
+
     }
   }
 
@@ -5031,6 +5066,14 @@ input:-webkit-autofill {
   @include respond-below(sm) {
     padding: 0.5rem 0.5rem;
   }
+
+  &.active {
+    color: $theme-color-1;
+  }
+}
+
+.form-nav-link {
+  padding: 0 !important;
 
   &.active {
     color: $theme-color-1;
@@ -6220,6 +6263,7 @@ input:-webkit-autofill {
   padding: 5px;
   cursor: pointer;
   color: $theme-color-red;
+  margin-right: 0.5rem;
 }
 
 .edit-action-icon{
@@ -6227,6 +6271,30 @@ input:-webkit-autofill {
   padding: 5px;
   cursor: pointer;
   color: $primary-color;
+  margin-right: 0.5rem;
+}
+
+.set-date-action-icon{
+  font-size: 1.2rem;
+  padding: 5px;
+  cursor: pointer;
+  color: $primary-color;
+
+  &.relative {
+    position: relative;
+  }
+}
+
+.agregar-ejercicios-action-icon{
+  display: flex;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: $primary-color;
+
+  .icon-text{
+    font-size: 1.3rem;
+    margin-left: 0.5rem;
+  }
 }
 
 .chart-container {
@@ -7389,6 +7457,14 @@ i.large-icon {
     border-radius: $border-radius-rounded;
   }
 
+  .dropdown-menu-calendar {
+    padding: 0.8rem;
+  }
+
+  .react-datepicker {
+    border: #ffffff !important;
+  }
+
   .btn.default {
     border-radius: $border-radius;
   }
@@ -7489,8 +7565,17 @@ i.large-icon {
   }
 
   .dropdown-menu-right {
+    display: flex !important;
     right: initial !important;
     left: 0 !important;
+  }
+
+  .dropdown-menu-user {
+    display: flex !important;
+
+    .dropdown {
+      display: flex !important;
+    }
   }
 
   .dropdown-menu-left {
@@ -8316,6 +8401,7 @@ i.large-icon {
       .user {
         margin-left: $main-margin;
         margin-right: 0;
+        display: flex;
 
         @include respond-below(xl) {
           margin-left: $main-margin-lg;
@@ -8344,6 +8430,12 @@ i.large-icon {
         @include respond-below(xs) {
           margin-left: 0;
         }
+
+        .glyph-icon
+        {display: flex;
+        font-size: 1.3rem;
+        cursor: pointer;
+        color: $primary-color;}
       }
 
       #notificationButton {
