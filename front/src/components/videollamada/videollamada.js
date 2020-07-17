@@ -117,12 +117,7 @@ const Videollamada = ({
       >
         {shareButtonText}
       </Button>{' '}
-      <Button
-        className="btn-right"
-        color="primary"
-        size="lg"
-        onClick={abrirPizarron}
-      >
+      <Button className="btn" color="primary" size="lg" onClick={abrirPizarron}>
         {abrirPizarronTxt}
       </Button>{' '}
       <div id={parentNode}></div>
