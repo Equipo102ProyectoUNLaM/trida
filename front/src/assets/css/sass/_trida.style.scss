@@ -608,6 +608,18 @@ button {
   margin-bottom: 1rem !important;
 }
 
+.btn-right {
+  border-radius: 50px;
+  outline: initial !important;
+  box-shadow: none !important;
+  box-shadow: initial !important;
+  font-size: 0.8rem;
+  padding: 0.75rem 1.3rem 0.6rem 1.3rem;
+  transition: background-color box-shadow 0.1s linear;
+  margin-bottom: 1rem !important;
+  margin-left: 39em;
+}
+
 .btn-shadow {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15), 0 1px 3px 1px rgba(0, 0, 0, 0.15) !important;
   transition: background-color box-shadow 0.1s linear;

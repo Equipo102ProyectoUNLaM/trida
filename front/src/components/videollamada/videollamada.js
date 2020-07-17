@@ -23,6 +23,7 @@ const Videollamada = ({
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
+  const abrirPizarronTxt = 'Abrir pizarrón';
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -35,6 +36,10 @@ const Videollamada = ({
     if (jitsi) {
       jitsi.executeCommand('toggleShareScreen');
     }
+  };
+
+  const abrirPizarron = () => {
+    window.open('/app/virtual-classes/board');
   };
 
   useEffect(() => {
@@ -110,6 +115,14 @@ const Videollamada = ({
         onClick={toggleShareScreen}
       >
         {shareButtonText}
+      </Button>{' '}
+      <Button
+        className="btn-right"
+        color="primary"
+        size="lg"
+        onClick={abrirPizarron}
+      >
+        {abrirPizarronTxt}
       </Button>{' '}
       <div id={parentNode}></div>
     </Fragment>
