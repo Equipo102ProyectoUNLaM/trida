@@ -107,12 +107,7 @@ const PaginaVideollamada = ({ idSala }) => {
                 />
               </div>
             </FormGroup>
-            <Button
-              color="primary"
-              size="lg"
-              //onClick={handleClick}
-              type="submit"
-            >
+            <Button color="primary" size="lg" type="submit">
               Iniciar
             </Button>
           </Form>

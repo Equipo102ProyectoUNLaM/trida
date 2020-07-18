@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Card, Row } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
@@ -10,10 +10,6 @@ import { firestore } from 'helpers/Firebase';
 import 'react-datepicker/dist/react-datepicker.css';
 
 class DataListView extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleClick = (date) => {
     if (date) {
       const fecha = date.format('YYYY-MM-DD');
@@ -30,6 +26,10 @@ class DataListView extends React.Component {
     }
   };
 
+  handleClickDelete = () => {
+    this.props.onDelete(this.props.id);
+  };
+
   render() {
     const {
       id,
@@ -39,7 +39,6 @@ class DataListView extends React.Component {
       isSelect,
       collect,
       onEditItem,
-      onDeleteItem,
       navTo,
     } = this.props;
     return (
@@ -66,7 +65,7 @@ class DataListView extends React.Component {
                   />
                   <div
                     className="glyph-icon simple-icon-trash delete-action-icon"
-                    onClick={onDeleteItem}
+                    onClick={this.handleClickDelete}
                   />
                   <Calendario
                     handleClick={this.handleClick}

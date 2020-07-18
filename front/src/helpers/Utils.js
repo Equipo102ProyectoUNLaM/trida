@@ -1,5 +1,7 @@
 import { defaultDirection } from '../constants/defaultValues';
 
+export const isEmpty = (obj) => !obj || Object.keys(obj).length === 0;
+
 export const mapOrder = (array, order, key) => {
   array.sort(function (a, b) {
     var A = a[key],
@@ -70,4 +72,12 @@ export const createUUID = () => {
 
 export const createRandomString = () => {
   return Math.random().toString(36).slice(-8);
+};
+
+export const toDateTime = (secs) => {
+  var t = new Date(1970, 0, 1);
+  t.setSeconds(secs);
+  const formattedDate =
+    t.getDate() + '-' + (t.getMonth() + 1) + '-' + t.getFullYear();
+  return formattedDate;
 };

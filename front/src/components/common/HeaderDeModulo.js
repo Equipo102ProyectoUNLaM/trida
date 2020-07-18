@@ -28,15 +28,18 @@ class HeaderDeModulo extends Component {
       buttonText,
       match,
       breadcrumb,
-      buttonType,
+      text,
     } = this.props;
     return (
       <Row>
         <Colxx xxs="12">
           <div className="mb-2">
-            <h1>
-              <IntlMessages id={heading} />
-            </h1>
+            {heading && (
+              <h1>
+                <IntlMessages id={heading} />
+              </h1>
+            )}
+            {text && <h1>{text}</h1>}
             {breadcrumb && <Breadcrumb match={match} />}
             <>
               {buttonText && (
@@ -44,7 +47,6 @@ class HeaderDeModulo extends Component {
                   <Button
                     color="primary"
                     size="lg"
-                    type={buttonType ? buttonType : 'button'}
                     className="top-right-button"
                     onClick={toggleModal ? () => toggleModal() : null}
                   >

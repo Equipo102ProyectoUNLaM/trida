@@ -1,48 +1,37 @@
 import React, { Component, Fragment } from 'react';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { Row } from 'reactstrap';
-import { capitalize } from 'underscore.string';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
-import { getDocument } from 'helpers/Firebase-db';
 
-export default class DetalleEvaluacion extends Component {
+export default class AgregarEvaluacion extends Component {
   constructor(props) {
     super(props);
-    const { evaluacionId } = this.props.match.params;
+
+    const { id } = JSON.parse(localStorage.getItem('subject'));
 
     this.state = {
-      evaluacionId,
+      evaluacionId: '',
       nombre: '',
       fecha: '',
       descripcion: '',
       isLoading: true,
+      idMateria: id,
     };
   }
 
   componentDidMount() {
-    this.getDoc();
-  }
-
-  getDoc = async () => {
-    const docObj = await getDocument(`evaluaciones/${this.state.evaluacionId}`);
-    const { id, data } = docObj;
-    const { nombre, fecha, descripcion } = data;
     this.setState({
-      evaluacionId: id,
-      nombre,
-      fecha,
-      descripcion,
       isLoading: false,
     });
-  };
+  }
 
-  onEvaluacionEditada = () => {
-    this.props.history.push('/app/evaluaciones');
+  onEvaluacionAgregada = () => {
+    this.props.history.push(`/app/evaluaciones`);
   };
 
   render() {
-    const { nombre, isLoading } = this.state;
+    const { isLoading } = this.state;
     const { match } = this.props;
     return isLoading ? (
       <div className="loading" />
@@ -51,14 +40,16 @@ export default class DetalleEvaluacion extends Component {
         <Row>
           <Colxx xxs="12">
             <HeaderDeModulo
-              text={capitalize(nombre)}
+              text="Agregar Evaluación"
               match={match}
               breadcrumb
             />
             <FormEvaluacion
               idEval={this.state.evaluacionId}
               itemsEval={this.state}
-              onEvaluacionEditada={this.onEvaluacionEditada}
+              onEvaluacionAgregada={this.onEvaluacionAgregada}
+              onCancel={this.onEvaluacionAgregada}
+              idMateria={this.state.idMateria}
             />{' '}
           </Colxx>
         </Row>

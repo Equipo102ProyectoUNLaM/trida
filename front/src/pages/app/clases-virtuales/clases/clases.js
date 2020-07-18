@@ -5,7 +5,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormClase from './form-clase';
-import { firestore } from 'helpers/Firebase';
+import { getCollection } from 'helpers/Firebase-db';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase.jpeg`;
 
@@ -17,40 +17,26 @@ class Clase extends Component {
   constructor(props) {
     super(props);
 
+    const { id } = JSON.parse(localStorage.getItem('subject'));
+
     this.state = {
       items: [],
       modalOpen: false,
       selectedItems: [],
       isLoading: true,
+      idMateria: id,
     };
   }
 
-  getClases = async () => {
-    const arrayDeObjetos = [];
-    const clasesRef = firestore.collection('clases');
-    try {
-      var allClasesSnapShot = await clasesRef.get();
-      allClasesSnapShot.forEach((doc) => {
-        const docId = doc.id;
-        const { nombre, fecha, descripcion } = doc.data();
-        const obj = {
-          id: docId,
-          nombre: nombre,
-          descripcion: descripcion,
-          fecha: fecha,
-          imagen: imagenClase,
-        };
-        arrayDeObjetos.push(obj);
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(arrayDeObjetos);
-    }
+  getClases = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('clases', [
+      { field: 'idMateria', operator: '==', id: materiaId },
+    ]);
+    this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
-    this.getClases();
+    this.getClases(this.state.idMateria);
   }
 
   toggleModal = () => {
@@ -61,7 +47,7 @@ class Clase extends Component {
 
   onClaseAgregada = () => {
     this.toggleModal();
-    this.getClases();
+    this.getClases(this.state.idMateria);
   };
 
   dataListRenderer(arrayDeObjetos) {
@@ -80,7 +66,7 @@ class Clase extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.my-classes"
+            heading="menu.mis-clases"
             toggleModal={this.toggleModal}
             buttonText="classes.add"
           />
@@ -100,9 +86,10 @@ class Clase extends Component {
                 <ListaConImagen
                   key={clase.id}
                   item={clase}
+                  imagen={imagenClase}
                   isSelect={this.state.selectedItems.includes(clase.id)}
                   collect={collect}
-                  navTo={`/app/virtual-classes/my-classes/class-detail/${clase.id}`}
+                  navTo={`/app/clases-virtuales/mis-clases/detalle-clase/${clase.id}`}
                 />
               );
             })}{' '}

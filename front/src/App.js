@@ -80,7 +80,7 @@ class App extends Component {
               <Router>
                 <Switch>
                   <AuthRoute
-                    path="/course-selection"
+                    path="/seleccion-curso"
                     authUser={loginUser}
                     component={ViewCourse}
                   />
