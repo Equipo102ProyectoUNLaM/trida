@@ -10,6 +10,7 @@ import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-
 import Dropzone from '../../../containers/forms/Dropzone';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import { NotificationManager } from '../../../components/common/react-notifications';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -21,6 +22,8 @@ class Contenidos extends Component {
       canSubmitFiles: true, //boton inhabilitado
       dropZone: [],
       subjectId: subject.id,
+      modalRenameOpen: false,
+      repeatedFiles: [],
     };
     this.listFolderItems = this.listFolderItems.bind(this);
     this.dropZoneRef = React.createRef();
@@ -216,7 +219,6 @@ class Contenidos extends Component {
         return state;
       });
     }
-    console.log(files);
     this.handleDeleteFile(files);
   };
 
@@ -233,7 +235,6 @@ class Contenidos extends Component {
         .then(() => {
           // File deleted successfully
           this.setState((state) => {
-            console.log(state.files);
             const newFiles = [];
             state.files.map((file) => {
               if (file.key !== f) {
@@ -272,15 +273,15 @@ class Contenidos extends Component {
     window.open(file.url, '_blank'); //to open new page
   };
 
-  handleOnChange(event) {
+  async submitFiles(event) {
     this.setState((state) => ({
       isLoading: true,
     }));
     var subject = JSON.parse(localStorage.getItem('subject'));
     var cant = this.state.dropZone.length;
+
     for (const file of this.state.dropZone) {
       //Obtenemos la referencia a la materia
-      console.log(file);
       var listRef = storage.ref(
         `${subject.id}/${file.fullPath ? file.fullPath : file.name}`
       );
@@ -302,6 +303,27 @@ class Contenidos extends Component {
     }
   }
 
+  async validateDuplicatedFiles(event) {
+    var repeatedFiles = [];
+    this.state.dropZone.map((file) => {
+      var result = this.state.files.filter(
+        (x) => x.key === (file.fullPath ? file.fullPath : file.name)
+      );
+      if (result.length != 0) repeatedFiles.push(result.shift());
+    });
+    if (repeatedFiles.length != 0) {
+      this.setState((state) => {
+        state.modalRenameOpen = true;
+      });
+    } else this.submitFiles(event);
+  }
+
+  toggleDeleteModal = (id) => {
+    this.setState({
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
   updateFilesList() {
     NotificationManager.success(
       'Tus archivos han sido cargados correctamente',
@@ -320,10 +342,13 @@ class Contenidos extends Component {
   }
 
   callbackFunction = (childData, dropZone) => {
-    this.setState((state) => ({
-      canSubmitFiles: childData,
-      dropZone: dropZone ? state.dropZone.concat(dropZone) : state.dropZone,
-    }));
+    this.setState((state) => {
+      state.canSubmitFiles = childData;
+      state.dropZone = dropZone
+        ? state.dropZone.concat(dropZone)
+        : state.dropZone;
+      return state;
+    });
   };
 
   callbackDeleteFunction = (file) => {
@@ -336,7 +361,7 @@ class Contenidos extends Component {
   };
 
   render() {
-    const { isLoading, canSubmitFiles } = this.state;
+    const { isLoading, canSubmitFiles, modalRenameOpen } = this.state;
     return (
       <Fragment>
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
@@ -360,7 +385,7 @@ class Contenidos extends Component {
           color="primary"
           disabled={canSubmitFiles}
           className="mb-2"
-          onClick={this.handleOnChange.bind(this)}
+          onClick={this.validateDuplicatedFiles.bind(this)}
         >
           <IntlMessages id="contenido.agregar" />
         </Button>
@@ -380,6 +405,18 @@ class Contenidos extends Component {
             onDownloadFile={this.handleDownloadFile}
           />
         </div>
+
+        {modalRenameOpen && (
+          <ModalConfirmacion
+            texto="Los siguientes archivos ya se encuentran cargados, ¿Desea reemplazarlos?"
+            titulo="Archivos existentes"
+            buttonPrimary="Aceptar"
+            buttonSecondary="Conservar todos"
+            toggle={this.renameFiles}
+            isOpen={modalRenameOpen}
+            onConfirm={this.submitFiles.bind(this)}
+          />
+        )}
       </Fragment>
     );
   }
