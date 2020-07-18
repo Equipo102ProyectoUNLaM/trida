@@ -4,7 +4,7 @@ import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import { deleteDocument, getCollection } from 'helpers/Firebase-db';
+import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 
 function collect(props) {
   return { data: props.data };
@@ -29,6 +29,7 @@ class Evaluaciones extends Component {
   getEvaluaciones = async (materiaId) => {
     const arrayDeObjetos = await getCollection('evaluaciones', [
       { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
     ]);
     this.dataListRenderer(arrayDeObjetos);
   };
@@ -69,7 +70,7 @@ class Evaluaciones extends Component {
   };
 
   borrarEvaluacion = async () => {
-    await deleteDocument('evaluaciones', this.state.evalId, 'Evaluación');
+    await logicDeleteDocument('evaluaciones', this.state.evalId, 'Evaluación');
     this.setState({
       evalId: '',
     });
