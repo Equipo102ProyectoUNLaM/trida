@@ -27,12 +27,9 @@ class Evaluaciones extends Component {
   }
 
   getEvaluaciones = async (materiaId) => {
-    const arrayDeObjetos = await getCollection(
-      'evaluaciones',
-      'idMateria',
-      '==',
-      materiaId
-    );
+    const arrayDeObjetos = await getCollection('evaluaciones', [
+      { field: 'idMateria', operator: '==', id: materiaId },
+    ]);
     this.dataListRenderer(arrayDeObjetos);
   };
 

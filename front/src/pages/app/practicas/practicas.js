@@ -6,8 +6,9 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
-import { getCollection, deleteDocument } from 'helpers/Firebase-db';
+import { deleteDocument, getCollection } from 'helpers/Firebase-db';
 import { toDateTime } from 'helpers/Utils';
+import { firestore } from 'helpers/Firebase';
 
 function collect(props) {
   return { data: props.data };
@@ -16,6 +17,8 @@ function collect(props) {
 class Practica extends Component {
   constructor(props) {
     super(props);
+
+    const { id } = JSON.parse(localStorage.getItem('subject'));
 
     this.state = {
       items: [],
@@ -26,25 +29,24 @@ class Practica extends Component {
       isLoading: true,
       idItemSelected: null,
       practicaId: '',
+      idMateria: id,
     };
   }
 
-  getPracticas = async () => {
-    const date = new Date().toISOString().slice(0, 10);
-    const arrayDeObjetos = await getCollection(
-      'practicas',
-      'fechaLanzada',
-      '>',
-      date,
-      'fechaLanzada',
-      'asc'
-    );
-    console.log(arrayDeObjetos);
+  getPracticas = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('practicas', [
+      {
+        field: 'fechaLanzada',
+        operator: '>',
+        id: new Date().toISOString().slice(0, 10),
+      },
+      { field: 'idMateria', operator: '==', id: materiaId },
+    ]);
     this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   }
 
   toggleCreateModal = () => {
@@ -55,7 +57,7 @@ class Practica extends Component {
 
   onPracticaAgregada = () => {
     this.toggleCreateModal();
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   };
 
   toggleEditModal = (id) => {
@@ -67,7 +69,7 @@ class Practica extends Component {
 
   onPracticaEditada = () => {
     this.toggleEditModal();
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   };
 
   toggleDeleteModal = (id) => {
@@ -97,7 +99,7 @@ class Practica extends Component {
 
   onPracticaBorrada = () => {
     this.toggleDeleteModal();
-    this.getPracticas();
+    this.getPracticas(this.state.idMateria);
   };
 
   dataListRenderer(arrayDeObjetos) {
@@ -120,7 +122,6 @@ class Practica extends Component {
       isLoading,
       items,
     } = this.state;
-
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -141,19 +142,18 @@ class Practica extends Component {
               onPracticaOperacion={this.onPracticaAgregada}
               textConfirm="Agregar"
               operationType="add"
+              idMateria={this.state.idMateria}
             />
           </ModalGrande>
           <Row>
             {items.map((practica) => {
-              const fechaPublicada = toDateTime(
-                practica.data.fechaPublicada.seconds
-              );
+              const fechaPub = toDateTime(practica.data.fechaPublicada.seconds);
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
                   title={practica.data.nombre}
-                  text1={'Fecha de publicación: ' + fechaPublicada}
+                  text1={'Fecha de publicación: ' + fechaPub}
                   text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
