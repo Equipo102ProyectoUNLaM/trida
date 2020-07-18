@@ -50,6 +50,8 @@ class FormPractica extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     if (this.props.operationType === 'add') {
+      const { id } = JSON.parse(localStorage.getItem('subject'));
+
       const obj = {
         nombre: this.state.nombre,
         fechaLanzada: this.state.fechaLanzada,
@@ -57,8 +59,8 @@ class FormPractica extends React.Component {
         duracion: this.state.duracion,
         fechaVencimiento: this.state.fechaVencimiento,
         fechaPublicada: new Date(),
-        activo: false,
-        idMateria: JSON.parse(localStorage.getItem('subject')),
+        activo: true,
+        idMateria: id,
       };
       await addDocument('practicas', obj, 'Práctica');
     } else {

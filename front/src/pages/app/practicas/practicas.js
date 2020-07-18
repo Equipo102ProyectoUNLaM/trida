@@ -6,8 +6,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
-import { logicDeleteDocument } from 'helpers/Firebase-db';
-import { firestore } from 'helpers/Firebase';
+import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 
 function collect(props) {
   return { data: props.data };
@@ -33,36 +32,16 @@ class Practica extends Component {
   }
 
   getPracticas = async (materiaId) => {
-    const arrayDeObjetos = [];
-    const actividadesRef = firestore
-      .collection('practicas')
-      .where('fechaLanzada', '>', new Date().toISOString().slice(0, 10))
-      .where('idMateria', '==', materiaId)
-      .where('activo', '==', true);
-    try {
-      var allActivitiesSnapShot = await actividadesRef.get();
-      allActivitiesSnapShot.forEach((doc) => {
-        const docId = doc.id;
-        const {
-          nombre,
-          fechaLanzada,
-          fechaVencimiento,
-          descripcion,
-        } = doc.data();
-        const obj = {
-          id: docId,
-          name: nombre,
-          description: descripcion,
-          startDate: fechaLanzada,
-          dueDate: fechaVencimiento,
-        };
-        arrayDeObjetos.push(obj);
-      });
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(arrayDeObjetos);
-    }
+    const arrayDeObjetos = await getCollection('practicas', [
+      {
+        field: 'fechaLanzada',
+        operator: '>',
+        id: new Date().toISOString().slice(0, 10),
+      },
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ]);
+    this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
@@ -142,7 +121,6 @@ class Practica extends Component {
       isLoading,
       items,
     } = this.state;
-
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -172,9 +150,9 @@ class Practica extends Component {
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
-                  title={practica.name}
-                  text1={'Fecha de publicación: ' + practica.startDate}
-                  text2={'Fecha de entrega: ' + practica.dueDate}
+                  title={practica.data.nombre}
+                  text1={'Fecha de publicación: ' + practica.data.fechaLanzada}
+                  text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}
                   onDelete={this.onDelete}

@@ -3,27 +3,22 @@ import { NotificationManager } from 'components/common/react-notifications';
 
 // trae una colección
 // parámetro: colección obligatora
-// tiene parámetros opcionales para realizar un WHERE (campo a filtrar, operador y id a comparar)
-// tiene parámetros opcionales para realizar un ORDER BY (campo a ordenar y condición de ordenamiento), atado al WHERE
+// tiene parámetros opcionales para realizar un WHERE:
+//    array de objetos con campo a filtrar, operador y id a comparar, se puede agregar cualquier cantidad
+// tiene parámetros opcionales para realizar un ORDER BY:
+//    recibe un objeto con el campo a ordenar y condición de ordenamiento
 // devuelve un array de los documentos de la colección formateados en un objeto
 // con id y data (objeto con los datos del documento)
-export async function getCollection(
-  collection,
-  field,
-  operator,
-  id,
-  order,
-  orderCond
-) {
+export async function getCollection(collection, filterBy, orderBy) {
   const arrayDeObjetos = [];
   let collectionRef = firestore.collection(collection);
-  if (arguments.length > 1 && arguments.length <= 4) {
+
+  (filterBy || []).forEach(({ field, operator, id }) => {
     collectionRef = collectionRef.where(field, operator, id);
-  }
-  if (arguments.length > 4) {
-    collectionRef = collectionRef
-      .where(field, operator, id)
-      .orderBy(order, orderCond);
+  });
+
+  if (orderBy) {
+    collectionRef = collectionRef.orderBy(orderBy.order, orderBy.orderCond);
   }
 
   try {
