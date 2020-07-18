@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, Row } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
@@ -6,9 +6,7 @@ import { Colxx } from '../../components/common/CustomBootstrap';
 import { NavLink } from 'react-router-dom';
 import Calendario from 'components/common/Calendario';
 import { injectIntl } from 'react-intl';
-import { firestore } from 'helpers/Firebase';
 import { editDocument } from 'helpers/Firebase-db';
-import 'react-datepicker/dist/react-datepicker.css';
 
 class DataListView extends React.Component {
   handleClick = async (date) => {

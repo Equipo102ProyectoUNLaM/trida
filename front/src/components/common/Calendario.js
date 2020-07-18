@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { DropdownMenu, Button, ModalFooter, ModalHeader } from 'reactstrap';
 import { injectIntl } from 'react-intl';
+import 'react-datepicker/dist/react-datepicker.css';
 
 class Calendario extends React.Component {
   constructor(props, context) {
