@@ -25,13 +25,15 @@ export default class DetalleClase extends Component {
 
     const docObj = await getDocument(`clases/${claseId}`);
     const { data } = docObj;
-    const { nombre, fecha, descripcion, idSala } = data;
+    const { nombre, fecha, descripcion, idSala, idMateria, contenidos } = data;
     this.setState({
       claseId,
       nombre,
       fecha,
       descripcion,
       idSala,
+      idMateria,
+      contenidos,
       isLoading: false,
     });
   };
@@ -41,7 +43,14 @@ export default class DetalleClase extends Component {
   }
 
   render() {
-    const { nombre, idSala, isLoading } = this.state;
+    const {
+      nombre,
+      idSala,
+      isLoading,
+      idMateria,
+      contenidos,
+      claseId,
+    } = this.state;
     const { match } = this.props;
     return isLoading ? (
       <div className="loading" />
@@ -56,7 +65,12 @@ export default class DetalleClase extends Component {
             />
           </Colxx>
         </Row>
-        <TabsDeClase idSala={idSala} />
+        <TabsDeClase
+          contenidos={contenidos}
+          idMateria={idMateria}
+          idSala={idSala}
+          idClase={claseId}
+        />
       </Fragment>
     );
   }
