@@ -6,9 +6,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
-import { deleteDocument, getCollection } from 'helpers/Firebase-db';
-import { toDateTime } from 'helpers/Utils';
-import { firestore } from 'helpers/Firebase';
+import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 
 function collect(props) {
   return { data: props.data };
@@ -41,6 +39,7 @@ class Practica extends Component {
         id: new Date().toISOString().slice(0, 10),
       },
       { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
     ]);
     this.dataListRenderer(arrayDeObjetos);
   };
@@ -86,7 +85,7 @@ class Practica extends Component {
   };
 
   deletePractice = async () => {
-    await deleteDocument('practicas', this.state.practicaId, 'Práctica');
+    await logicDeleteDocument('practicas', this.state.practicaId, 'Práctica');
     this.setState({
       evalId: '',
     });
@@ -147,13 +146,12 @@ class Practica extends Component {
           </ModalGrande>
           <Row>
             {items.map((practica) => {
-              const fechaPub = toDateTime(practica.data.fechaPublicada.seconds);
               return (
                 <DataListView
                   key={practica.id + 'dataList'}
                   id={practica.id}
                   title={practica.data.nombre}
-                  text1={'Fecha de publicación: ' + fechaPub}
+                  text1={'Fecha de publicación: ' + practica.data.fechaLanzada}
                   text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={this.toggleEditModal}

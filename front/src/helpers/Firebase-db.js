@@ -114,3 +114,21 @@ export const deleteDocument = async (collection, document, message) => {
     );
   }
 };
+
+export const logicDeleteDocument = async (collection, docId, message) => {
+  var ref = firestore.collection(collection).doc(docId);
+  try {
+    ref.set({ activo: false }, { merge: true });
+  } catch (err) {
+    console.log('Error borrando documentos', err);
+  } finally {
+    NotificationManager.success(
+      `${message} borrada exitosamente`,
+      `${message} borrada!`,
+      3000,
+      null,
+      null,
+      ''
+    );
+  }
+};

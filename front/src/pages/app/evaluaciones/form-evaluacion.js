@@ -59,6 +59,7 @@ class FormEvaluacion extends React.Component {
       fecha: this.state.fecha,
       descripcion: this.state.descripcion,
       idMateria: this.props.idMateria,
+      activo: true,
     };
     await addDocument('evaluaciones', obj, 'Evaluación');
 
