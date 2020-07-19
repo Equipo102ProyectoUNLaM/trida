@@ -12,9 +12,11 @@ import {
   Button,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+import { editDocument } from 'helpers/Firebase-db';
 
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
+import Calendario from './common/Calendario';
 
 class CardTabs extends Component {
   constructor(props) {
@@ -49,6 +51,13 @@ class CardTabs extends Component {
 
   handleClickDelete = () => {
     this.props.onDelete(this.props.item.id);
+  };
+
+  handleClickChangeDate = async (date) => {
+    if (date) {
+      const obj = { fecha: date.format('YYYY-MM-DD') };
+      await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
+    }
   };
 
   render() {
@@ -101,14 +110,21 @@ class CardTabs extends Component {
                       <Colxx sm="12">
                         <CardBody>
                           <CardTitle className="mb-4">{data.nombre}</CardTitle>
-                          {item.description && (
-                            <p className="mb-4">{data.description}</p>
+                          {data.descripcion && (
+                            <p className="mb-4">{data.descripcion}</p>
                           )}
-                          {!item.description && (
+                          {!data.descripcion && (
                             <p className="mb-4">Sin descripción</p>
                           )}
-                          {item.fecha && <p className="mb-4">{data.fecha}</p>}
-                          {!item.fecha && <p className="mb-4">Sin fecha</p>}
+                          <Row className="dropdown-calendar">
+                            <Calendario
+                              handleClick={this.handleClickChangeDate}
+                              text="Modificar fecha de evaluación"
+                              evalCalendar={true}
+                            />
+                            {data.fecha && <p className="mb-4">{data.fecha}</p>}
+                            {!data.fecha && <p className="mb-4">Sin fecha</p>}
+                          </Row>
                           <Row className="button-group">
                             <Button
                               outline

@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { DropdownMenu, Button, ModalFooter, ModalHeader } from 'reactstrap';
 import { injectIntl } from 'react-intl';
+import 'react-datepicker/dist/react-datepicker.css';
 
 class Calendario extends React.Component {
   constructor(props, context) {
@@ -37,11 +38,15 @@ class Calendario extends React.Component {
   };
 
   render() {
-    const { text } = this.props;
-
+    const { text, evalCalendar } = this.props;
+    const classText = evalCalendar ? '-eval' : '';
     return (
       <div
-        className="glyph-icon simple-icon-calendar set-date-action-icon relative"
+        className={
+          'glyph-icon simple-icon-calendar set-date-action-icon' +
+          classText +
+          ' relative'
+        }
         onClick={this.handleClick}
       >
         <DropdownMenu

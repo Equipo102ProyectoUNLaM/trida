@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, Row } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
@@ -6,23 +6,15 @@ import { Colxx } from '../../components/common/CustomBootstrap';
 import { NavLink } from 'react-router-dom';
 import Calendario from 'components/common/Calendario';
 import { injectIntl } from 'react-intl';
-import { firestore } from 'helpers/Firebase';
-import 'react-datepicker/dist/react-datepicker.css';
+import { editDocument } from 'helpers/Firebase-db';
 
 class DataListView extends React.Component {
-  handleClick = (date) => {
+  handleClick = async (date) => {
     if (date) {
-      const fecha = date.format('YYYY-MM-DD');
-      var ref = firestore.collection('practicas').doc(this.props.id);
-      // solo  modifica el campo con la nueva fecha de vencimiento
-      ref.set(
-        {
-          fechaVencimiento: fecha,
-        },
-        { merge: true }
-      );
-
-      return;
+      const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
+      if (date) {
+        await editDocument('practicas', this.props.id, obj, 'Práctica');
+      }
     }
   };
 
@@ -70,6 +62,7 @@ class DataListView extends React.Component {
                   <Calendario
                     handleClick={this.handleClick}
                     text="Modificar fecha de entrega"
+                    evalCalendar={false}
                   />
                 </Row>
               </div>

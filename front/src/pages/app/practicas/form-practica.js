@@ -51,7 +51,6 @@ class FormPractica extends React.Component {
     event.preventDefault();
     if (this.props.operationType === 'add') {
       const { id } = JSON.parse(localStorage.getItem('subject'));
-
       const obj = {
         nombre: this.state.nombre,
         fechaLanzada: this.state.fechaLanzada,
