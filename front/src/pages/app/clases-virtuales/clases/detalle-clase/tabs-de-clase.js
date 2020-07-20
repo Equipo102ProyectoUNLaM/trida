@@ -10,6 +10,9 @@ import {
   TabContent,
   TabPane,
   Button,
+  CustomInput,
+  FormGroup,
+  Label,
 } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
 import DataListView from 'containers/pages/DataListView';
@@ -20,6 +23,9 @@ import { storage } from 'helpers/Firebase';
 import { getDocument, editDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import ModalGrande from 'containers/pages/ModalGrande';
+import { Separator } from 'components/common/CustomBootstrap';
+import Moment from 'moment';
+import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -31,6 +37,8 @@ class TabsDeClase extends Component {
       activeFirstTab: '1',
       activeSecondTab: '1',
       modalContenidosOpen: false,
+      files: [],
+      isLoading: false,
     };
   }
 
@@ -50,10 +58,93 @@ class TabsDeClase extends Component {
   }
 
   toggleModalContenidos = () => {
-    this.setState({
-      modalContenidosOpen: !this.state.modalContenidosOpen,
-    });
+    this.setState(
+      {
+        modalContenidosOpen: !this.state.modalContenidosOpen,
+        isLoading: true,
+      },
+      () => {
+        if (this.state.modalContenidosOpen) this.dataListRenderer();
+      }
+    );
   };
+
+  async dataListRenderer() {
+    var array = [];
+    try {
+      console.log(array);
+      //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
+      var listRef = storage.ref(this.props.idMateria);
+      // Obtenemos las referencias de carpetas y archivos
+      await listRef.listAll().then(async (result) => {
+        //Carpetas
+        for (const folderRef of result.prefixes) {
+          //Listamos archivos de cada carpeta
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            this.props.idMateria
+          );
+          array = array.concat(subFolderElements);
+        }
+        //Archivos
+        for (const res of result.items) {
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(this.props.idMateria + '/', ''),
+                modified: Moment(metadata.updated),
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
+          });
+        }
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      console.log(array);
+      this.setState({
+        files: array,
+        isLoading: false,
+      });
+    }
+  }
+
+  async listFolderItems(ref, subjectId) {
+    var array = [];
+    try {
+      await ref.listAll().then(async (result) => {
+        //Carpetas
+        for (const folderRef of result.prefixes) {
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            subjectId
+          );
+          array = array.concat(subFolderElements);
+        }
+        //Archivos
+        for (const res of result.items) {
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(subjectId + '/', ''),
+                modified: Moment(metadata.updated),
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
+          });
+        }
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      return array;
+    }
+  }
 
   onDelete = async (ref) => {
     var gsReference = storage.refFromURL(ref);
@@ -73,28 +164,9 @@ class TabsDeClase extends Component {
     }
   };
 
-  getContenidos = async () => {
-    var storageRef = await storage.ref();
-    var storageMateria = storageRef.child(this.props.idMateria);
-    storageMateria
-      .listAll()
-      .then(function (res) {
-        res.prefixes.forEach(function (folderRef) {
-          // All the prefixes under listRef.
-          // You may call listAll() recursively on them.
-        });
-        res.items.forEach(function (itemRef) {
-          // All the items under listRef.
-        });
-      })
-      .catch(function (error) {
-        // Uh-oh, an error occurred!
-      });
-  };
-
   render() {
     const { idSala, contenidos, idClase } = this.props;
-    const { modalContenidosOpen } = this.state;
+    const { modalContenidosOpen, isLoading, files } = this.state;
 
     return (
       <Row lg="12">
@@ -222,7 +294,42 @@ class TabsDeClase extends Component {
                                   toggleModal={this.toggleModalContenidos}
                                   text="Asociar Contenidos"
                                 >
-                                  Lista de contenidos de matereia
+                                  {isLoading ? (
+                                    <div className="loading" />
+                                  ) : (
+                                    <>
+                                      {files.map((file) => {
+                                        console.log(file);
+                                        return (
+                                          <Row key={file.key}>
+                                            <FormGroup>
+                                              <div>
+                                                <CustomInput
+                                                  id={file.key}
+                                                  type="checkbox"
+                                                  name={file}
+                                                  label={
+                                                    <Label>{file.key}</Label>
+                                                  }
+                                                  //checked={options.microfono}
+                                                  //onChange={handleChange}
+                                                />
+                                              </div>
+                                            </FormGroup>
+                                          </Row>
+                                        );
+                                      })}
+                                      <Separator className="mb-5" />
+                                      <Row className="button-group">
+                                        <Button
+                                          onClick={this.toggleModalContenidos}
+                                          className="btn"
+                                        >
+                                          Asociar Contenidos
+                                        </Button>
+                                      </Row>
+                                    </>
+                                  )}
                                 </ModalGrande>
                               )}
                             </>
