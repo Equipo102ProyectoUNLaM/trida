@@ -41,9 +41,8 @@ class Contenidos extends Component {
   async dataListRenderer() {
     var array = [];
     try {
-      var subject = JSON.parse(localStorage.getItem('subject'));
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      var listRef = storage.ref(subject.id);
+      var listRef = storage.ref(this.state.subjectId);
       // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
         //Carpetas
@@ -51,7 +50,7 @@ class Contenidos extends Component {
           //Listamos archivos de cada carpeta
           var subFolderElements = await this.listFolderItems(
             folderRef,
-            subject.id
+            this.state.subjectId
           );
           array = array.concat(subFolderElements);
         }
@@ -60,7 +59,7 @@ class Contenidos extends Component {
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
-                key: metadata.fullPath.replace(subject.id + '/', ''),
+                key: metadata.fullPath.replace(this.state.subjectId + '/', ''),
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
@@ -278,7 +277,6 @@ class Contenidos extends Component {
       isLoading: true,
       modalRenameOpen: false,
     }));
-    var subject = JSON.parse(localStorage.getItem('subject'));
     var cant = this.state.dropZone.length;
 
     for (const file of this.state.dropZone) {
@@ -288,7 +286,7 @@ class Contenidos extends Component {
         var pos = name.lastIndexOf('.');
         name = name.substring(0, pos) + '- Copia.' + name.substring(pos + 1);
       }
-      var listRef = storage.ref(`${subject.id}/${name}`);
+      var listRef = storage.ref(`${this.state.subjectId}/${name}`);
       const task = listRef.put(file);
       task.on(
         'state_changed',
@@ -336,18 +334,6 @@ class Contenidos extends Component {
       modalRenameOpen: !state.modalRenameOpen,
       isLoading: true,
     }));
-    // var newArray = this.state.dropZone;
-    // for(const file of this.state.repeatedFiles){
-    //   var newFile = file;
-    //   newFile.renameFile(file.name.concat(" - Copia"));
-    //   const index = this.state.dropZone.findIndex(element => element.name == file.name );
-    //   newArray[index] = newFile;
-    // }
-    // this.setState((state)=>({
-    //   dropZone: newArray,
-    //   renameFiles: []
-    // }));
-    // console.log(this.state.dropZone);
     this.submitFiles(true);
   };
 
