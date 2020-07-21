@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@glidejs/glide": "^3.3.0",
+    "@google-cloud/storage": "^5.1.2",
     "@mizchi/excalidraw": "^1.0.8",
     "axios": "^0.18.0",
     "chart.js": "2.7.2",

@@ -10,6 +10,7 @@ import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-
 import Dropzone from '../../../containers/forms/Dropzone';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import { NotificationManager } from '../../../components/common/react-notifications';
+import {} from 'helpers/Firebase-db';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -61,6 +62,7 @@ class Contenidos extends Component {
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
+                fullPathOrigin: metadata.fullPath,
               };
               array.push(obj);
             });
@@ -74,6 +76,7 @@ class Contenidos extends Component {
         files: array,
         isLoading: false,
       }));
+      console.log(this.state.files);
     }
   }
 
@@ -98,6 +101,7 @@ class Contenidos extends Component {
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
+                fullPathOrigin: metadata.fullPath,
               };
               array.push(obj);
             });
@@ -173,16 +177,29 @@ class Contenidos extends Component {
       return state;
     });
   };
-  handleRenameFile = (oldKey, newKey) => {
+
+  handleRenameFile = async (oldKey, newKey) => {
     this.setState((state) => {
       const newFiles = [];
       state.files.map((file) => {
         if (file.key === oldKey) {
+          console.log(file);
           newFiles.push({
             ...file,
             key: newKey,
             modified: +Moment(),
+            fullPathDestiny: file.fullPathOrigin.replace(oldKey, newKey),
           });
+          const lastFile = newFiles.slice(-1);
+          //await storage.bucket(bucketName).file(lastFile[0].fullPathOrigin).move(lastFile[0].fullPathDestiny);
+
+          //this.moveFile(lastFile[0].fullPathOrigin, lastFile[0].fullPathDestiny).catch(console.error);
+
+          const result = this.moveFirebaseFile(
+            lastFile[0].fullPathOrigin,
+            lastFile[0].fullPathDestiny
+          );
+          console.log(result);
         } else {
           newFiles.push(file);
         }
@@ -191,6 +208,69 @@ class Contenidos extends Component {
       return state;
     });
   };
+
+  async moveFile(srcFilename, destFilename) {
+    const { Storage } = require('@google-cloud/storage');
+    const bucketName = 'trida-7f28f.appspot.com';
+    // Moves the file within the bucket
+    const storageBucket = new Storage();
+    await storageBucket.bucket(bucketName).file(srcFilename).move(destFilename);
+
+    console.log(
+      `gs://${bucketName}/${srcFilename} moved to gs://${bucketName}/${destFilename}.`
+    );
+  }
+
+  /**
+   * Moves a file in firebase storage from its current location to the destination
+   * returns the status object for the moved file.
+   * @param {String} currentPath The path to the existing file from storage root
+   * @param {String} destinationPath The desired pathe for the existing file after storage
+   */
+  async moveFirebaseFile(currentPath, destinationPath) {
+    let oldRef = storage.ref().child(currentPath);
+
+    oldRef.getDownloadURL().then((url) => {
+      fetch(url, { mode: 'no-cors' }).then((htmlReturn) => {
+        let fileArray = new Uint8Array();
+        const reader = htmlReturn.body.getReader();
+
+        //get the reader that reads the readable stream of data
+        reader
+          .read()
+          .then(function appendStreamChunk({ done, value }) {
+            //If the reader doesn't return "done = true" append the chunk that was returned to us
+            // rinse and repeat until it is done.
+            if (value) {
+              fileArray = this.mergeTypedArrays(fileArray, value);
+            }
+            if (done) {
+              console.log(fileArray);
+              return fileArray;
+            } else {
+              // "Readout not complete, reading next chunk"
+              return reader.read().then(appendStreamChunk);
+            }
+          })
+          .then((file) => {
+            //Write the file to the new storage place
+            let status = storage.ref().child(destinationPath).put(file);
+            //Remove the old reference
+            oldRef.delete();
+
+            return status;
+          });
+      });
+    });
+  }
+
+  async mergeTypedArrays(a, b) {
+    var c = new a.constructor(a.length + b.length);
+    c.set(a);
+    c.set(b, a.length);
+
+    return c;
+  }
 
   handleDeleteFolder = (folderKeys) => {
     var files = [];
