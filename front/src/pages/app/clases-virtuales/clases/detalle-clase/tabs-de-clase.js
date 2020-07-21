@@ -26,6 +26,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import { Separator } from 'components/common/CustomBootstrap';
 import Moment from 'moment';
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
+import ModalAsociarContenidos from './modal-asociar-contenidos';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -164,6 +165,10 @@ class TabsDeClase extends Component {
     }
   };
 
+  handleFileChecked = () => {
+    console.log('test');
+  };
+
   render() {
     const { idSala, contenidos, idClase } = this.props;
     const { modalContenidosOpen, isLoading, files } = this.state;
@@ -294,60 +299,52 @@ class TabsDeClase extends Component {
                                   toggleModal={this.toggleModalContenidos}
                                   text="Asociar Contenidos"
                                 >
-                                  {isLoading ? (
-                                    <div className="loading" />
-                                  ) : (
-                                    <>
-                                      {files.map((file) => {
-                                        console.log(file);
-                                        return (
-                                          <Row key={file.key}>
-                                            <FormGroup>
-                                              <div>
-                                                <CustomInput
-                                                  id={file.key}
-                                                  type="checkbox"
-                                                  name={file}
-                                                  label={
-                                                    <Label>{file.key}</Label>
-                                                  }
-                                                  //checked={options.microfono}
-                                                  //onChange={handleChange}
-                                                />
-                                              </div>
-                                            </FormGroup>
-                                          </Row>
-                                        );
-                                      })}
-                                      <Separator className="mb-5" />
-                                      <Row className="button-group">
-                                        <Button
-                                          onClick={this.toggleModalContenidos}
-                                          className="btn"
-                                        >
-                                          Asociar Contenidos
-                                        </Button>
-                                      </Row>
-                                    </>
-                                  )}
+                                  <ModalAsociarContenidos
+                                    files={files}
+                                    contenidos={contenidos}
+                                    isLoading={isLoading}
+                                  />
                                 </ModalGrande>
                               )}
                             </>
                           ) : (
-                            <Row>
-                              {contenidos.map((contenido) => {
-                                var gsReference = storage.refFromURL(contenido);
-                                return (
-                                  <DataListView
-                                    key={contenido}
-                                    id={contenido}
-                                    title={gsReference.name}
-                                    onDelete={this.onDelete}
-                                    navTo="#"
+                            <>
+                              <Row>
+                                {contenidos.map((contenido) => {
+                                  var gsReference = storage.refFromURL(
+                                    contenido
+                                  );
+                                  return (
+                                    <DataListView
+                                      key={contenido}
+                                      id={contenido}
+                                      title={gsReference.name}
+                                      onDelete={this.onDelete}
+                                      navTo="#"
+                                    />
+                                  );
+                                })}{' '}
+                              </Row>
+                              <Button
+                                onClick={this.toggleModalContenidos}
+                                className="btn"
+                              >
+                                Asociar Contenidos
+                              </Button>
+                              {modalContenidosOpen && (
+                                <ModalGrande
+                                  modalOpen={modalContenidosOpen}
+                                  toggleModal={this.toggleModalContenidos}
+                                  text="Asociar Contenidos"
+                                >
+                                  <ModalAsociarContenidos
+                                    files={files}
+                                    contenidos={contenidos}
+                                    isLoading={isLoading}
                                   />
-                                );
-                              })}{' '}
-                            </Row>
+                                </ModalGrande>
+                              )}
+                            </>
                           )}
                         </CardBody>
                       </Colxx>
