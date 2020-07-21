@@ -273,18 +273,22 @@ class Contenidos extends Component {
     window.open(file.url, '_blank'); //to open new page
   };
 
-  async submitFiles(event) {
+  async submitFiles(rename = false) {
     this.setState((state) => ({
       isLoading: true,
+      modalRenameOpen: false,
     }));
     var subject = JSON.parse(localStorage.getItem('subject'));
     var cant = this.state.dropZone.length;
 
     for (const file of this.state.dropZone) {
       //Obtenemos la referencia a la materia
-      var listRef = storage.ref(
-        `${subject.id}/${file.fullPath ? file.fullPath : file.name}`
-      );
+      var name = file.fullPath ? file.fullPath : file.name;
+      if (rename && this.state.repeatedFiles.includes(name)) {
+        var pos = name.lastIndexOf('.');
+        name = name.substring(0, pos) + '- Copia.' + name.substring(pos + 1);
+      }
+      var listRef = storage.ref(`${subject.id}/${name}`);
       const task = listRef.put(file);
       task.on(
         'state_changed',
@@ -303,25 +307,48 @@ class Contenidos extends Component {
     }
   }
 
-  async validateDuplicatedFiles(event) {
-    var repeatedFiles = [];
-    this.state.dropZone.map((file) => {
-      var result = this.state.files.filter(
-        (x) => x.key === (file.fullPath ? file.fullPath : file.name)
-      );
-      if (result.length != 0) repeatedFiles.push(result.shift());
-    });
-    if (repeatedFiles.length != 0) {
-      this.setState((state) => {
-        state.modalRenameOpen = true;
+  validateDuplicatedFiles(event) {
+    try {
+      var repeatedFiles = [];
+      this.setState((state) => ({
+        isLoading: true,
+      }));
+      this.state.dropZone.map((file) => {
+        var result = this.state.files.filter(
+          (x) => x.key === (file.fullPath ? file.fullPath : file.name)
+        );
+        if (result.length != 0) repeatedFiles.push(result.shift().key);
       });
-    } else this.submitFiles(event);
+      if (repeatedFiles.length != 0) {
+        this.setState((state) => ({
+          modalRenameOpen: true,
+          repeatedFiles: repeatedFiles,
+          isLoading: false,
+        }));
+      } else this.submitFiles(event);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  toggleDeleteModal = (id) => {
-    this.setState({
-      modalDeleteOpen: !this.state.modalDeleteOpen,
-    });
+  renameFiles = (id) => {
+    this.setState((state) => ({
+      modalRenameOpen: !state.modalRenameOpen,
+      isLoading: true,
+    }));
+    // var newArray = this.state.dropZone;
+    // for(const file of this.state.repeatedFiles){
+    //   var newFile = file;
+    //   newFile.renameFile(file.name.concat(" - Copia"));
+    //   const index = this.state.dropZone.findIndex(element => element.name == file.name );
+    //   newArray[index] = newFile;
+    // }
+    // this.setState((state)=>({
+    //   dropZone: newArray,
+    //   renameFiles: []
+    // }));
+    // console.log(this.state.dropZone);
+    this.submitFiles(true);
   };
 
   updateFilesList() {
@@ -335,6 +362,7 @@ class Contenidos extends Component {
     );
     this.setState((state) => ({
       dropZone: [],
+      renameFiles: [],
       isLoading: true,
       canSubmitFiles: true,
     }));
@@ -357,11 +385,17 @@ class Contenidos extends Component {
         return value.name != file.name;
       }),
       canSubmitFiles: state.dropZone.length != 0,
+      repeatedFiles: [],
     }));
   };
 
   render() {
-    const { isLoading, canSubmitFiles, modalRenameOpen } = this.state;
+    const {
+      isLoading,
+      canSubmitFiles,
+      modalRenameOpen,
+      repeatedFiles,
+    } = this.state;
     return (
       <Fragment>
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
@@ -408,7 +442,11 @@ class Contenidos extends Component {
 
         {modalRenameOpen && (
           <ModalConfirmacion
-            texto="Los siguientes archivos ya se encuentran cargados, ¿Desea reemplazarlos?"
+            texto={
+              'Los siguientes archivos ya se encuentran cargados: ' +
+              repeatedFiles.map((txt) => txt + ' ') +
+              '¿Desea reemplazarlos?'
+            }
             titulo="Archivos existentes"
             buttonPrimary="Aceptar"
             buttonSecondary="Conservar todos"
