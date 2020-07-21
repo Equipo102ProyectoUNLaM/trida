@@ -1,7 +1,7 @@
 import React from 'react';
 import { Separator } from 'components/common/CustomBootstrap';
 import { Row, Button, CustomInput, FormGroup, Label } from 'reactstrap';
-import contenidos from 'pages/app/contenidos/contenidos';
+import { editDocument } from 'helpers/Firebase-db';
 
 class ModalAsociarContenidos extends React.Component {
   constructor(props) {
@@ -34,18 +34,53 @@ class ModalAsociarContenidos extends React.Component {
   };
 
   handleFileChecked = (event) => {
-    console.log(event.target.name);
+    let selectedFiles = [];
+    if (this.state.nombresContenidos) {
+      selectedFiles = [...this.state.nombresContenidos];
+    }
+
+    const estaSeleccionado = selectedFiles.some(
+      (archivo) => archivo === event.target.name
+    );
+    if (estaSeleccionado) {
+      selectedFiles = selectedFiles.filter(
+        (archivo) => archivo !== event.target.name
+      );
+    } else {
+      selectedFiles = [...selectedFiles, event.target.name];
+    }
+
+    this.setState({
+      nombresContenidos: selectedFiles,
+    });
+  };
+
+  editContenidos = async () => {
+    const contenidos = this.state.nombresContenidos.map(
+      (nombre) =>
+        'gs://trida-7f28f.appspot.com/' + this.props.idMateria + '/' + nombre
+    );
+
+    await editDocument(
+      'clases',
+      this.props.idClase,
+      { contenidos },
+      'Contenido'
+    );
+    this.props.toggleModalContenidos();
+    this.props.updateContenidos();
   };
 
   render() {
     const { toggleModalContenidos, isLoading, files } = this.props;
     return isLoading ? (
-      <div className="loading" />
+      <Row className="mb-5">
+        <div className="loading" />
+      </Row>
     ) : (
       <>
         {files.map((file) => {
           const isSelected = this.isFileSelected(file.key);
-          console.log(this.props.contenidos, file, isSelected);
 
           return (
             <Row key={file.key}>
@@ -66,8 +101,21 @@ class ModalAsociarContenidos extends React.Component {
         })}
         <Separator className="mb-5" />
         <Row className="button-group">
-          <Button onClick={toggleModalContenidos} className="btn">
+          <Button
+            onClick={this.editContenidos}
+            className="button"
+            color="primary"
+            size="lg"
+          >
             Asociar Contenidos
+          </Button>
+          <Button
+            onClick={toggleModalContenidos}
+            className="button"
+            color="primary"
+            size="lg"
+          >
+            Cancelar
           </Button>
         </Row>
       </>

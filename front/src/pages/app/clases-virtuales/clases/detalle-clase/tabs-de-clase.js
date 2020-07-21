@@ -10,9 +10,6 @@ import {
   TabContent,
   TabPane,
   Button,
-  CustomInput,
-  FormGroup,
-  Label,
 } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
 import DataListView from 'containers/pages/DataListView';
@@ -23,10 +20,10 @@ import { storage } from 'helpers/Firebase';
 import { getDocument, editDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import ModalGrande from 'containers/pages/ModalGrande';
-import { Separator } from 'components/common/CustomBootstrap';
 import Moment from 'moment';
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -38,8 +35,10 @@ class TabsDeClase extends Component {
       activeFirstTab: '1',
       activeSecondTab: '1',
       modalContenidosOpen: false,
+      modalDeleteOpen: false,
       files: [],
       isLoading: false,
+      contenidoRef: '',
     };
   }
 
@@ -73,7 +72,6 @@ class TabsDeClase extends Component {
   async dataListRenderer() {
     var array = [];
     try {
-      console.log(array);
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
       var listRef = storage.ref(this.props.idMateria);
       // Obtenemos las referencias de carpetas y archivos
@@ -105,7 +103,6 @@ class TabsDeClase extends Component {
     } catch (err) {
       console.log('Error getting documents', err);
     } finally {
-      console.log(array);
       this.setState({
         files: array,
         isLoading: false,
@@ -147,13 +144,26 @@ class TabsDeClase extends Component {
     }
   }
 
-  onDelete = async (ref) => {
-    var gsReference = storage.refFromURL(ref);
+  toggleDeleteModal = () => {
+    this.setState({
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
+  onDelete = (ref) => {
+    this.setState({
+      contenidoRef: ref,
+    });
+    this.toggleDeleteModal();
+  };
+
+  unlinkContenido = async () => {
     try {
-      await gsReference.delete();
       var obj = await getDocument(`clases/${this.props.idClase}`);
       const { data } = obj;
-      var arrayFiltrado = data.contenidos.filter((element) => element !== ref);
+      var arrayFiltrado = data.contenidos.filter(
+        (element) => element !== this.state.contenidoRef
+      );
       await editDocument(
         'clases',
         this.props.idClase,
@@ -163,6 +173,8 @@ class TabsDeClase extends Component {
     } catch (err) {
       console.log('Error', err);
     }
+    this.toggleDeleteModal();
+    this.props.updateContenidos();
   };
 
   handleFileChecked = () => {
@@ -170,8 +182,19 @@ class TabsDeClase extends Component {
   };
 
   render() {
-    const { idSala, contenidos, idClase } = this.props;
-    const { modalContenidosOpen, isLoading, files } = this.state;
+    const {
+      idSala,
+      contenidos,
+      idClase,
+      idMateria,
+      updateContenidos,
+    } = this.props;
+    const {
+      modalContenidosOpen,
+      isLoading,
+      files,
+      modalDeleteOpen,
+    } = this.state;
 
     return (
       <Row lg="12">
@@ -283,68 +306,62 @@ class TabsDeClase extends Component {
                             Contenidos Asociados
                           </CardTitle>
                           {isEmpty(contenidos) ? (
-                            <>
-                              <p className="mb-4">
-                                No hay contenidos asociados
-                              </p>
-                              <Button
-                                onClick={this.toggleModalContenidos}
-                                className="btn"
-                              >
-                                Asociar Contenidos
-                              </Button>
-                              {modalContenidosOpen && (
-                                <ModalGrande
-                                  modalOpen={modalContenidosOpen}
-                                  toggleModal={this.toggleModalContenidos}
-                                  text="Asociar Contenidos"
-                                >
-                                  <ModalAsociarContenidos
-                                    files={files}
-                                    contenidos={contenidos}
-                                    isLoading={isLoading}
-                                  />
-                                </ModalGrande>
-                              )}
-                            </>
+                            <p className="mb-4">No hay contenidos asociados</p>
                           ) : (
-                            <>
-                              <Row>
-                                {contenidos.map((contenido) => {
-                                  var gsReference = storage.refFromURL(
-                                    contenido
-                                  );
-                                  return (
-                                    <DataListView
-                                      key={contenido}
-                                      id={contenido}
-                                      title={gsReference.name}
-                                      onDelete={this.onDelete}
-                                      navTo="#"
-                                    />
-                                  );
-                                })}{' '}
-                              </Row>
-                              <Button
-                                onClick={this.toggleModalContenidos}
-                                className="btn"
-                              >
-                                Asociar Contenidos
-                              </Button>
-                              {modalContenidosOpen && (
-                                <ModalGrande
-                                  modalOpen={modalContenidosOpen}
-                                  toggleModal={this.toggleModalContenidos}
-                                  text="Asociar Contenidos"
-                                >
-                                  <ModalAsociarContenidos
-                                    files={files}
-                                    contenidos={contenidos}
-                                    isLoading={isLoading}
+                            <Row>
+                              {contenidos.map((contenido) => {
+                                var gsReference = storage.refFromURL(contenido);
+                                return (
+                                  <DataListView
+                                    key={contenido}
+                                    id={contenido}
+                                    title={gsReference.name}
+                                    onDelete={this.onDelete}
+                                    navTo="#"
                                   />
-                                </ModalGrande>
-                              )}
-                            </>
+                                );
+                              })}{' '}
+                            </Row>
+                          )}
+                          {modalDeleteOpen && (
+                            <ModalConfirmacion
+                              texto="¿Está seguro de que desea quitar el contenido?"
+                              titulo="Desvincular Contenido"
+                              buttonPrimary="Aceptar"
+                              buttonSecondary="Cancelar"
+                              toggle={this.toggleDeleteModal}
+                              isOpen={modalDeleteOpen}
+                              onConfirm={this.unlinkContenido}
+                            />
+                          )}
+                          <Row className="button-group">
+                            <Button
+                              onClick={this.toggleModalContenidos}
+                              color="primary"
+                              size="lg"
+                              className="button"
+                            >
+                              Asociar Contenidos
+                            </Button>
+                          </Row>
+                          {modalContenidosOpen && (
+                            <ModalGrande
+                              modalOpen={modalContenidosOpen}
+                              toggleModal={this.toggleModalContenidos}
+                              text="Asociar Contenidos"
+                            >
+                              <ModalAsociarContenidos
+                                files={files}
+                                contenidos={contenidos}
+                                isLoading={isLoading}
+                                updateContenidos={updateContenidos}
+                                idClase={idClase}
+                                idMateria={idMateria}
+                                toggleModalContenidos={
+                                  this.toggleModalContenidos
+                                }
+                              />
+                            </ModalGrande>
                           )}
                         </CardBody>
                       </Colxx>
