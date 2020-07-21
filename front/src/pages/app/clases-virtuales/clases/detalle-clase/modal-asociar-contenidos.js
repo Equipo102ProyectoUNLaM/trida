@@ -1,7 +1,15 @@
 import React from 'react';
 import { Separator } from 'components/common/CustomBootstrap';
-import { Row, Button, CustomInput, FormGroup, Label } from 'reactstrap';
+import {
+  Row,
+  Button,
+  CustomInput,
+  FormGroup,
+  Label,
+  ModalBody,
+} from 'reactstrap';
 import { editDocument } from 'helpers/Firebase-db';
+import { isEmpty } from 'helpers/Utils';
 
 class ModalAsociarContenidos extends React.Component {
   constructor(props) {
@@ -27,21 +35,16 @@ class ModalAsociarContenidos extends React.Component {
   }
 
   isFileSelected = (file) => {
-    if (this.state.nombresContenidos) {
-      return this.state.nombresContenidos.some((archivo) => archivo === file);
-    }
-    return false;
+    return this.state.nombresContenidos.some((archivo) => archivo === file);
   };
 
   handleFileChecked = (event) => {
-    let selectedFiles = [];
-    if (this.state.nombresContenidos) {
-      selectedFiles = [...this.state.nombresContenidos];
-    }
+    let selectedFiles = [...this.state.nombresContenidos];
 
     const estaSeleccionado = selectedFiles.some(
       (archivo) => archivo === event.target.name
     );
+
     if (estaSeleccionado) {
       selectedFiles = selectedFiles.filter(
         (archivo) => archivo !== event.target.name
@@ -74,41 +77,47 @@ class ModalAsociarContenidos extends React.Component {
   render() {
     const { toggleModalContenidos, isLoading, files } = this.props;
     return isLoading ? (
-      <Row className="mb-5">
+      <ModalBody>
         <div className="loading" />
-      </Row>
+      </ModalBody>
     ) : (
       <>
-        {files.map((file) => {
-          const isSelected = this.isFileSelected(file.key);
+        {isEmpty(files) ? (
+          <p className="mb-4">No hay contenidos en la materia</p>
+        ) : (
+          files.map((file) => {
+            const isSelected = this.isFileSelected(file.key);
 
-          return (
-            <Row key={file.key}>
-              <FormGroup>
-                <div>
-                  <CustomInput
-                    id={file.key}
-                    type="checkbox"
-                    name={file.key}
-                    label={<Label>{file.key}</Label>}
-                    checked={isSelected}
-                    onChange={this.handleFileChecked}
-                  />
-                </div>
-              </FormGroup>
-            </Row>
-          );
-        })}
+            return (
+              <Row key={file.key}>
+                <FormGroup>
+                  <div>
+                    <CustomInput
+                      id={file.key}
+                      type="checkbox"
+                      name={file.key}
+                      label={<Label>{file.key}</Label>}
+                      checked={isSelected}
+                      onChange={this.handleFileChecked}
+                    />
+                  </div>
+                </FormGroup>
+              </Row>
+            );
+          })
+        )}
         <Separator className="mb-5" />
         <Row className="button-group">
-          <Button
-            onClick={this.editContenidos}
-            className="button"
-            color="primary"
-            size="lg"
-          >
-            Asociar Contenidos
-          </Button>
+          {!isEmpty(files) && (
+            <Button
+              onClick={this.editContenidos}
+              className="button"
+              color="primary"
+              size="lg"
+            >
+              Asociar Contenidos
+            </Button>
+          )}
           <Button
             onClick={toggleModalContenidos}
             className="button"

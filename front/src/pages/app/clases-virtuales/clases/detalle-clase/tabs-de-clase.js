@@ -21,7 +21,6 @@ import { getDocument, editDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
-import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
@@ -29,10 +28,9 @@ class TabsDeClase extends Component {
   constructor(props) {
     super(props);
 
-    this.toggleFirstTab = this.toggleFirstTab.bind(this);
     this.toggleSecondTab = this.toggleSecondTab.bind(this);
+
     this.state = {
-      activeFirstTab: '1',
       activeSecondTab: '1',
       modalContenidosOpen: false,
       modalDeleteOpen: false,
@@ -42,13 +40,16 @@ class TabsDeClase extends Component {
     };
   }
 
-  toggleFirstTab(tab) {
-    if (this.state.activeTab !== tab) {
+  componentDidMount() {
+    const { hash } = this.props.history.location;
+
+    if (hash) {
       this.setState({
-        activeFirstTab: tab,
+        activeSecondTab: hash.split('')[1],
       });
     }
   }
+
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -177,10 +178,6 @@ class TabsDeClase extends Component {
     this.props.updateContenidos();
   };
 
-  handleFileChecked = () => {
-    console.log('test');
-  };
-
   render() {
     const {
       idSala,
@@ -206,7 +203,7 @@ class TabsDeClase extends Component {
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
                     <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#1"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '1',
@@ -221,7 +218,7 @@ class TabsDeClase extends Component {
                     </NavItem>
                     <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#2"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '2',
@@ -236,7 +233,7 @@ class TabsDeClase extends Component {
                     </NavItem>
                     <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#3"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '3',
@@ -251,7 +248,7 @@ class TabsDeClase extends Component {
                     </NavItem>
                     <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#4"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '4',
@@ -266,7 +263,7 @@ class TabsDeClase extends Component {
                     </NavItem>
                     <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#5"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '5',
