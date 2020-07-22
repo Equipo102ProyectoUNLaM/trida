@@ -197,7 +197,7 @@ class Contenidos extends Component {
           //this.moveFile(lastFile[0].fullPathOrigin, lastFile[0].fullPathDestiny).catch(console.error);
 
           const result = this.moveFirebaseFile(
-            lastFile[0].fullPathOrigin,
+            file.url,
             lastFile[0].fullPathDestiny
           );
           console.log(result);
@@ -228,41 +228,46 @@ class Contenidos extends Component {
    * @param {String} currentPath The path to the existing file from storage root
    * @param {String} destinationPath The desired pathe for the existing file after storage
    */
-  async moveFirebaseFile(currentPath, destinationPath) {
-    let oldRef = storage.ref().child(currentPath);
+  async moveFirebaseFile(currentFileUrl, destinationPath) {
+    try {
+      storage
+        .ref(`${currentFileUrl}`)
+        .getDownloadURL()
+        .then((url) => {
+          fetch(url).then((htmlReturn) => {
+            let fileArray = new Uint8Array();
+            const reader = htmlReturn.body.getReader();
 
-    oldRef.getDownloadURL().then((url) => {
-      fetch(url, { mode: 'no-cors' }).then((htmlReturn) => {
-        let fileArray = new Uint8Array();
-        const reader = htmlReturn.body.getReader();
+            //get the reader that reads the readable stream of data
+            reader
+              .read()
+              .then(function appendStreamChunk({ done, value }) {
+                //If the reader doesn't return "done = true" append the chunk that was returned to us
+                // rinse and repeat until it is done.
+                if (value) {
+                  fileArray = this.mergeTypedArrays(fileArray, value);
+                }
+                if (done) {
+                  console.log(fileArray);
+                  return fileArray;
+                } else {
+                  // "Readout not complete, reading next chunk"
+                  return reader.read().then(appendStreamChunk);
+                }
+              })
+              .then((file) => {
+                //Write the file to the new storage place
+                let status = storage.ref().child(destinationPath).put(file);
+                //Remove the old reference
+                currentFileUrl.delete();
 
-        //get the reader that reads the readable stream of data
-        reader
-          .read()
-          .then(function appendStreamChunk({ done, value }) {
-            //If the reader doesn't return "done = true" append the chunk that was returned to us
-            // rinse and repeat until it is done.
-            if (value) {
-              fileArray = this.mergeTypedArrays(fileArray, value);
-            }
-            if (done) {
-              console.log(fileArray);
-              return fileArray;
-            } else {
-              // "Readout not complete, reading next chunk"
-              return reader.read().then(appendStreamChunk);
-            }
-          })
-          .then((file) => {
-            //Write the file to the new storage place
-            let status = storage.ref().child(destinationPath).put(file);
-            //Remove the old reference
-            oldRef.delete();
-
-            return status;
+                return status;
+              });
           });
-      });
-    });
+        });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async mergeTypedArrays(a, b) {
