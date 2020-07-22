@@ -17,21 +17,26 @@ class Clase extends Component {
   constructor(props) {
     super(props);
 
+    const { id } = JSON.parse(localStorage.getItem('subject'));
+
     this.state = {
       items: [],
       modalOpen: false,
       selectedItems: [],
       isLoading: true,
+      idMateria: id,
     };
   }
 
-  getClases = async () => {
-    const arrayDeObjetos = await getCollection('clases');
+  getClases = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('clases', [
+      { field: 'idMateria', operator: '==', id: materiaId },
+    ]);
     this.dataListRenderer(arrayDeObjetos);
   };
 
   componentDidMount() {
-    this.getClases();
+    this.getClases(this.state.idMateria);
   }
 
   toggleModal = () => {
@@ -42,7 +47,7 @@ class Clase extends Component {
 
   onClaseAgregada = () => {
     this.toggleModal();
-    this.getClases();
+    this.getClases(this.state.idMateria);
   };
 
   dataListRenderer(arrayDeObjetos) {

@@ -48,7 +48,6 @@ class HeaderDeModulo extends Component {
                   <Button
                     color="primary"
                     size="lg"
-                    type={buttonType ? buttonType : 'button'}
                     className="top-right-button"
                     onClick={toggleModal ? () => toggleModal() : null}
                   >

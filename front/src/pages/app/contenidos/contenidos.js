@@ -10,7 +10,7 @@ import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-
 import Dropzone from '../../../containers/forms/Dropzone';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import { NotificationManager } from '../../../components/common/react-notifications';
-import {} from 'helpers/Firebase-db';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -22,6 +22,8 @@ class Contenidos extends Component {
       canSubmitFiles: true, //boton inhabilitado
       dropZone: [],
       subjectId: subject.id,
+      modalRenameOpen: false,
+      repeatedFiles: [],
     };
     this.listFolderItems = this.listFolderItems.bind(this);
     this.dropZoneRef = React.createRef();
@@ -39,9 +41,8 @@ class Contenidos extends Component {
   async dataListRenderer() {
     var array = [];
     try {
-      var subject = JSON.parse(localStorage.getItem('subject'));
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      var listRef = storage.ref(subject.id);
+      var listRef = storage.ref(this.state.subjectId);
       // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
         //Carpetas
@@ -49,7 +50,7 @@ class Contenidos extends Component {
           //Listamos archivos de cada carpeta
           var subFolderElements = await this.listFolderItems(
             folderRef,
-            subject.id
+            this.state.subjectId
           );
           array = array.concat(subFolderElements);
         }
@@ -58,7 +59,7 @@ class Contenidos extends Component {
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
-                key: metadata.fullPath.replace(subject.id + '/', ''),
+                key: metadata.fullPath.replace(this.state.subjectId + '/', ''),
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
@@ -296,7 +297,6 @@ class Contenidos extends Component {
         return state;
       });
     }
-    console.log(files);
     this.handleDeleteFile(files);
   };
 
@@ -313,7 +313,6 @@ class Contenidos extends Component {
         .then(() => {
           // File deleted successfully
           this.setState((state) => {
-            console.log(state.files);
             const newFiles = [];
             state.files.map((file) => {
               if (file.key !== f) {
@@ -352,18 +351,21 @@ class Contenidos extends Component {
     window.open(file.url, '_blank'); //to open new page
   };
 
-  handleOnChange(event) {
+  async submitFiles(rename = false) {
     this.setState((state) => ({
       isLoading: true,
+      modalRenameOpen: false,
     }));
-    var subject = JSON.parse(localStorage.getItem('subject'));
     var cant = this.state.dropZone.length;
+
     for (const file of this.state.dropZone) {
       //Obtenemos la referencia a la materia
-      console.log(file);
-      var listRef = storage.ref(
-        `${subject.id}/${file.fullPath ? file.fullPath : file.name}`
-      );
+      var name = file.fullPath ? file.fullPath : file.name;
+      if (rename && this.state.repeatedFiles.includes(name)) {
+        var pos = name.lastIndexOf('.');
+        name = name.substring(0, pos) + '- Copia.' + name.substring(pos + 1);
+      }
+      var listRef = storage.ref(`${this.state.subjectId}/${name}`);
       const task = listRef.put(file);
       task.on(
         'state_changed',
@@ -382,6 +384,38 @@ class Contenidos extends Component {
     }
   }
 
+  validateDuplicatedFiles(event) {
+    try {
+      var repeatedFiles = [];
+      this.setState((state) => ({
+        isLoading: true,
+      }));
+      this.state.dropZone.map((file) => {
+        var result = this.state.files.filter(
+          (x) => x.key === (file.fullPath ? file.fullPath : file.name)
+        );
+        if (result.length != 0) repeatedFiles.push(result.shift().key);
+      });
+      if (repeatedFiles.length != 0) {
+        this.setState((state) => ({
+          modalRenameOpen: true,
+          repeatedFiles: repeatedFiles,
+          isLoading: false,
+        }));
+      } else this.submitFiles(event);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  renameFiles = (id) => {
+    this.setState((state) => ({
+      modalRenameOpen: !state.modalRenameOpen,
+      isLoading: true,
+    }));
+    this.submitFiles(true);
+  };
+
   updateFilesList() {
     NotificationManager.success(
       'Tus archivos han sido cargados correctamente',
@@ -393,6 +427,7 @@ class Contenidos extends Component {
     );
     this.setState((state) => ({
       dropZone: [],
+      renameFiles: [],
       isLoading: true,
       canSubmitFiles: true,
     }));
@@ -400,10 +435,13 @@ class Contenidos extends Component {
   }
 
   callbackFunction = (childData, dropZone) => {
-    this.setState((state) => ({
-      canSubmitFiles: childData,
-      dropZone: dropZone ? state.dropZone.concat(dropZone) : state.dropZone,
-    }));
+    this.setState((state) => {
+      state.canSubmitFiles = childData;
+      state.dropZone = dropZone
+        ? state.dropZone.concat(dropZone)
+        : state.dropZone;
+      return state;
+    });
   };
 
   callbackDeleteFunction = (file) => {
@@ -412,11 +450,17 @@ class Contenidos extends Component {
         return value.name != file.name;
       }),
       canSubmitFiles: state.dropZone.length != 0,
+      repeatedFiles: [],
     }));
   };
 
   render() {
-    const { isLoading, canSubmitFiles } = this.state;
+    const {
+      isLoading,
+      canSubmitFiles,
+      modalRenameOpen,
+      repeatedFiles,
+    } = this.state;
     return (
       <Fragment>
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
@@ -440,7 +484,7 @@ class Contenidos extends Component {
           color="primary"
           disabled={canSubmitFiles}
           className="mb-2"
-          onClick={this.handleOnChange.bind(this)}
+          onClick={this.validateDuplicatedFiles.bind(this)}
         >
           <IntlMessages id="contenido.agregar" />
         </Button>
@@ -460,6 +504,22 @@ class Contenidos extends Component {
             onDownloadFile={this.handleDownloadFile}
           />
         </div>
+
+        {modalRenameOpen && (
+          <ModalConfirmacion
+            texto={
+              'Los siguientes archivos ya se encuentran cargados: ' +
+              repeatedFiles.map((txt) => txt + ' ') +
+              '¿Desea reemplazarlos?'
+            }
+            titulo="Archivos existentes"
+            buttonPrimary="Aceptar"
+            buttonSecondary="Conservar todos"
+            toggle={this.renameFiles}
+            isOpen={modalRenameOpen}
+            onConfirm={this.submitFiles.bind(this)}
+          />
+        )}
       </Fragment>
     );
   }

@@ -22,9 +22,9 @@ export default class Inicio extends Component {
     };
   }
 
-  componentDidMount() {
-    this.getInstituciones();
-  }
+  // componentDidMount() {
+  //   this.getInstituciones();
+  // }
 
   getInstituciones = async () => {
     const array = [];
