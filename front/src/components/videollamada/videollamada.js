@@ -24,7 +24,7 @@ const Videollamada = ({
     'Compartir pantalla'
   );
   const abrirPizarronTxt = 'Abrir pizarrón';
-  const pizarronURI = '/app/clases-virtuales/pizarron';
+  const pizarronURI = '/app/clases-virtuales/compartir-pizarron';
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
