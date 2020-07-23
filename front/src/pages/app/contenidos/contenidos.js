@@ -197,7 +197,7 @@ class Contenidos extends Component {
           //this.moveFile(lastFile[0].fullPathOrigin, lastFile[0].fullPathDestiny).catch(console.error);
 
           const result = this.moveFirebaseFile(
-            file.url,
+            lastFile[0].fullPathOrigin,
             lastFile[0].fullPathDestiny
           );
           console.log(result);
@@ -234,8 +234,18 @@ class Contenidos extends Component {
         .ref(`${currentFileUrl}`)
         .getDownloadURL()
         .then((url) => {
-          fetch(url).then((htmlReturn) => {
+          fetch(url, {
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'text/plain',
+              'Access-Control-Allow-Credentials': 'true',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Headers': 'Content-Type, Accept, Origin',
+              'Access-Control-Allow-Methods': 'GET,DELETE,POST,PUT',
+            },
+          }).then((htmlReturn) => {
             let fileArray = new Uint8Array();
+            console.log(htmlReturn);
             const reader = htmlReturn.body.getReader();
 
             //get the reader that reads the readable stream of data
