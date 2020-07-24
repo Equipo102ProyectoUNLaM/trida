@@ -9,10 +9,6 @@ const MyClasses = React.lazy(() =>
   import(/* webpackChunkName: "pages-profile" */ './clases')
 );
 
-const PizarronCompartido = React.lazy(() =>
-  import(/* webpackChunkName: "second" */ './pizarron-compartido')
-);
-
 const VirtualClassesMenu = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
@@ -24,10 +20,6 @@ const VirtualClassesMenu = ({ match }) => (
       <Route
         path={`${match.url}/pizarron`}
         render={(props) => <Board {...props} />}
-      />
-      <Route
-        path={`${match.url}/pizarron-compartido`}
-        component={PizarronCompartido}
       />
       <Redirect to="/error" />
     </Switch>
