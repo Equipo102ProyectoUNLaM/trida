@@ -1,16 +1,19 @@
-import React from "react";
-import Excalidraw from "excalidraw";
- 
-import "excalidraw/dist/excalidraw.min.css";
- 
+import React from 'react';
+import Excalidraw from 'excalidraw';
+import { Button, Row } from 'reactstrap';
+
+import 'excalidraw/dist/excalidraw.min.css';
+const abrirPizarronTxt = 'Abrir pizarrón en una nueva ventana';
+const pizarronURI = '/pizarron';
+
 class Pizarron extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       width: 0,
-      height: 800
-    }
+      height: 800,
+    };
 
     this.boardParentEl = React.createRef();
   }
@@ -20,7 +23,14 @@ class Pizarron extends React.Component {
   }
 
   getParentDimensions = () => {
-    if(this.boardParentEl.current) {
+    if (this.props.fullscreen) {
+      return this.setState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    if (this.boardParentEl.current) {
       this.setState({
         width: this.boardParentEl.current.clientWidth,
         height: this.boardParentEl.current.clientHeight,
@@ -29,29 +39,49 @@ class Pizarron extends React.Component {
   };
 
   onChange = (elements, state) => {
-    console.log("Elements :", elements, "State : ", state);
+    console.log('Elements :', elements, 'State : ', state);
   };
- 
+
   onUsernameChange = (username) => {
-    console.log("current username", username);
+    console.log('current username', username);
+  };
+
+  abrirPizarron = () => {
+    const strWindowFeatures = 'location=yes, scrollbars=yes, status=yes';
+    window.open(pizarronURI, '_blank', strWindowFeatures);
   };
 
   render() {
     const { width, height } = this.state;
-    const options = { zenModeEnabled: false, viewBackgroundColor: "#ffffff" };
+    const { fullscreen } = this.props;
+    const options = { zenModeEnabled: false, viewBackgroundColor: '#ffffff' };
 
     return (
-      <div className="board" ref={this.boardParentEl}>
-        <Excalidraw
-          width={width}
-          height={height}
-          onResize={this.getParentDimensions}
-          onChange={this.onChange}
-          options={options}
-          user={{ name: "Excalidraw User" }}
-          onUsernameChange={this.onUsernameChange}
-        />
-      </div>
+      <>
+        {!fullscreen && (
+          <Row className="button-group open-in-new-window-row">
+            <Button
+              className="button"
+              color="primary"
+              size="lg"
+              onClick={this.abrirPizarron}
+            >
+              {abrirPizarronTxt}
+            </Button>
+          </Row>
+        )}
+        <div className="board" ref={this.boardParentEl}>
+          <Excalidraw
+            width={width}
+            height={height}
+            onResize={this.getParentDimensions}
+            onChange={this.onChange}
+            options={options}
+            user={{ name: 'Excalidraw User' }}
+            onUsernameChange={this.onUsernameChange}
+          />
+        </div>
+      </>
     );
   }
 }

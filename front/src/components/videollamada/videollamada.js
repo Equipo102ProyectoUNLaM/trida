@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
-import { Button } from 'reactstrap';
+import { Button, Row } from 'reactstrap';
 
 /* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
@@ -24,7 +24,7 @@ const Videollamada = ({
     'Compartir pantalla'
   );
   const abrirPizarronTxt = 'Abrir pizarrón';
-  const pizarronURI = '/app/clases-virtuales/pizarron';
+  const pizarronURI = '/pizarron';
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -40,7 +40,8 @@ const Videollamada = ({
   };
 
   const abrirPizarron = () => {
-    window.open(pizarronURI);
+    const strWindowFeatures = 'location=yes, scrollbars=yes, status=yes';
+    window.open(pizarronURI, '_blank', strWindowFeatures);
   };
 
   useEffect(() => {
@@ -109,17 +110,24 @@ const Videollamada = ({
   }, [jitsi, userName, password, subject]);
   return (
     <Fragment>
-      <Button
-        className="btn"
-        color="primary"
-        size="lg"
-        onClick={toggleShareScreen}
-      >
-        {shareButtonText}
-      </Button>{' '}
-      <Button className="btn" color="primary" size="lg" onClick={abrirPizarron}>
-        {abrirPizarronTxt}
-      </Button>{' '}
+      <Row className="button-group mb-3 mr-3">
+        <Button
+          className="button"
+          color="primary"
+          size="lg"
+          onClick={toggleShareScreen}
+        >
+          {shareButtonText}
+        </Button>{' '}
+        <Button
+          className="button"
+          color="primary"
+          size="lg"
+          onClick={abrirPizarron}
+        >
+          {abrirPizarronTxt}
+        </Button>
+      </Row>
       <div id={parentNode}></div>
     </Fragment>
   );
