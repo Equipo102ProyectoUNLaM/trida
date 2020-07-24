@@ -23,6 +23,7 @@ class Contenidos extends Component {
       dropZone: [],
       subjectId: subject.id,
       modalRenameOpen: false,
+      selectedFolder: '',
       repeatedFiles: [],
     };
     this.listFolderItems = this.listFolderItems.bind(this);
@@ -42,24 +43,45 @@ class Contenidos extends Component {
     var array = [];
     try {
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      var listRef = storage.ref(this.state.subjectId);
+      var listRef = storage.ref(this.state.subjectId + '/contenidos');
       // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
         //Carpetas
         for (const folderRef of result.prefixes) {
           //Listamos archivos de cada carpeta
+          console.log(
+            folderRef.fullPath.replace(
+              this.state.subjectId + '/contenidos/',
+              ''
+            ) + '/'
+          );
+
           var subFolderElements = await this.listFolderItems(
             folderRef,
             this.state.subjectId
           );
-          array = array.concat(subFolderElements);
+          array = array.concat(
+            [
+              {
+                key:
+                  folderRef.fullPath.replace(
+                    this.state.subjectId + '/contenidos/',
+                    ''
+                  ) + '/',
+              },
+            ],
+            subFolderElements
+          );
         }
         //Archivos
         for (const res of result.items) {
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
-                key: metadata.fullPath.replace(this.state.subjectId + '/', ''),
+                key: metadata.fullPath.replace(
+                  this.state.subjectId + '/contenidos/',
+                  ''
+                ),
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
@@ -85,18 +107,35 @@ class Contenidos extends Component {
       await ref.listAll().then(async (result) => {
         //Carpetas
         for (const folderRef of result.prefixes) {
+          console.log(
+            folderRef.fullPath.replace(
+              this.state.subjectId + '/contenidos/',
+              ''
+            ) + '/'
+          );
           var subFolderElements = await this.listFolderItems(
             folderRef,
             subjectId
           );
-          array = array.concat(subFolderElements);
+          array = array.concat(
+            [
+              {
+                key:
+                  folderRef.fullPath.replace(
+                    this.state.subjectId + '/contenidos/',
+                    ''
+                  ) + '/',
+              },
+            ],
+            subFolderElements
+          );
         }
         //Archivos
         for (const res of result.items) {
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
-                key: metadata.fullPath.replace(subjectId + '/', ''),
+                key: metadata.fullPath.replace(subjectId + '/contenidos/', ''),
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
@@ -122,75 +161,8 @@ class Contenidos extends Component {
       ]);
       return state;
     });
-  };
-  handleCreateFiles = (files, prefix) => {
     this.setState((state) => {
-      const newFiles = files.map((file) => {
-        let newKey = prefix;
-        if (
-          prefix !== '' &&
-          prefix.substring(prefix.length - 1, prefix.length) !== '/'
-        ) {
-          newKey += '/';
-        }
-        newKey += file.name;
-        return {
-          key: newKey,
-          size: file.size,
-          modified: +Moment(),
-        };
-      });
-
-      const uniqueNewFiles = [];
-      newFiles.map((newFile) => {
-        let exists = false;
-        state.files.map((existingFile) => {
-          if (existingFile.key === newFile.key) {
-            exists = true;
-          }
-        });
-        if (!exists) {
-          uniqueNewFiles.push(newFile);
-        }
-      });
-      state.files = state.files.concat(uniqueNewFiles);
-      return state;
-    });
-  };
-  handleRenameFolder = (oldKey, newKey) => {
-    this.setState((state) => {
-      const newFiles = [];
-      state.files.map((file) => {
-        if (file.key.substr(0, oldKey.length) === oldKey) {
-          newFiles.push({
-            ...file,
-            key: file.key.replace(oldKey, newKey),
-            modified: +Moment(),
-          });
-        } else {
-          newFiles.push(file);
-        }
-      });
-      state.files = newFiles;
-      return state;
-    });
-  };
-  handleRenameFile = (oldKey, newKey) => {
-    this.setState((state) => {
-      const newFiles = [];
-      state.files.map((file) => {
-        if (file.key === oldKey) {
-          newFiles.push({
-            ...file,
-            key: newKey,
-            modified: +Moment(),
-          });
-        } else {
-          newFiles.push(file);
-        }
-      });
-      state.files = newFiles;
-      return state;
+      state.selectedFolder = key;
     });
   };
 
@@ -228,7 +200,7 @@ class Contenidos extends Component {
     }));
     var cant = filesKey.length;
     for (const f of filesKey) {
-      var fileRef = storage.ref(`${this.state.subjectId}/${f}`);
+      var fileRef = storage.ref(`${this.state.subjectId}/contenidos/${f}`);
       fileRef
         .delete()
         .then(() => {
@@ -267,9 +239,18 @@ class Contenidos extends Component {
     }));
   }
 
-  handleDownloadFile = (fileKey) => {
-    var file = this.state.files.find((i) => i.key == fileKey);
-    window.open(file.url, '_blank'); //to open new page
+  handleSelectFolder = (folderKey) => {
+    //Al crear una nueva carpeta, la marco como seleccionada
+    this.setState((state) => {
+      state.selectedFolder = folderKey.key;
+    });
+  };
+
+  handleDownloadFile = (fileKeys) => {
+    fileKeys.forEach((fileKey) => {
+      var file = this.state.files.find((i) => i.key == fileKey);
+      window.open(file.url, '_blank'); //to open new page
+    });
   };
 
   async submitFiles(rename = false) {
@@ -282,11 +263,19 @@ class Contenidos extends Component {
     for (const file of this.state.dropZone) {
       //Obtenemos la referencia a la materia
       var name = file.fullPath ? file.fullPath : file.name;
-      if (rename && this.state.repeatedFiles.includes(name)) {
+      if (
+        rename &&
+        this.state.repeatedFiles.includes(this.state.selectedFolder + name)
+      ) {
         var pos = name.lastIndexOf('.');
         name = name.substring(0, pos) + '- Copia.' + name.substring(pos + 1);
       }
-      var listRef = storage.ref(`${this.state.subjectId}/${name}`);
+
+      //Si seleccionó una carpeta, lo guardo en esa carpeta
+      var listRef = storage.ref(
+        `${this.state.subjectId}/contenidos/${this.state.selectedFolder}${name}`
+      );
+
       const task = listRef.put(file);
       task.on(
         'state_changed',
@@ -307,23 +296,36 @@ class Contenidos extends Component {
 
   validateDuplicatedFiles(event) {
     try {
-      var repeatedFiles = [];
-      this.setState((state) => ({
-        isLoading: true,
-      }));
-      this.state.dropZone.map((file) => {
-        var result = this.state.files.filter(
-          (x) => x.key === (file.fullPath ? file.fullPath : file.name)
-        );
-        if (result.length != 0) repeatedFiles.push(result.shift().key);
-      });
-      if (repeatedFiles.length != 0) {
-        this.setState((state) => ({
-          modalRenameOpen: true,
-          repeatedFiles: repeatedFiles,
-          isLoading: false,
-        }));
-      } else this.submitFiles(event);
+      //Verifico si hay alguna carpeta seleccionada
+      var noFolder = !document.getElementsByClassName('folder selected').length;
+
+      this.setState(
+        (prevState) => ({
+          selectedFolder: noFolder ? '' : prevState.selectedFolder,
+          isLoading: true,
+        }),
+        () => {
+          var repeatedFiles = [];
+          //Busco repetidos en la carpeta seleccionada (En el caso de haberlo hecho, sino en el raiz)
+          this.state.dropZone.map((file) => {
+            var result = this.state.files.filter(
+              (x) =>
+                x.key ===
+                (this.state.selectedFolder
+                  ? this.state.selectedFolder + file.name
+                  : file.name)
+            );
+            if (result.length != 0) repeatedFiles.push(result.shift().key);
+          });
+          if (repeatedFiles.length != 0) {
+            this.setState((state) => ({
+              modalRenameOpen: true,
+              repeatedFiles: repeatedFiles,
+              isLoading: false,
+            }));
+          } else this.submitFiles(event);
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -414,13 +416,9 @@ class Contenidos extends Component {
             files={this.state.files}
             icons={Icons.FontAwesome(4)}
             detailRenderer={() => null}
+            onSelectFolder={this.handleSelectFolder}
             onCreateFolder={this.handleCreateFolder}
-            onCreateFiles={this.handleCreateFiles}
             onDeleteFolder={this.handleDeleteFolder}
-            onMoveFolder={this.handleRenameFolder}
-            onMoveFile={this.handleRenameFile}
-            onRenameFolder={this.handleRenameFolder}
-            onRenameFile={this.handleRenameFile}
             onDeleteFile={this.handleDeleteFile}
             onDownloadFile={this.handleDownloadFile}
           />
