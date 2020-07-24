@@ -61,15 +61,13 @@ class ModalAsociarContenidos extends React.Component {
   editContenidos = async () => {
     const contenidos = this.state.nombresContenidos.map(
       (nombre) =>
-        'gs://trida-7f28f.appspot.com/' + this.props.idMateria + '/' + nombre
+        'gs://trida-7f28f.appspot.com/' +
+        this.props.idMateria +
+        '/contenidos/' +
+        nombre
     );
 
-    await editDocument(
-      'clases',
-      this.props.idClase,
-      { contenidos },
-      'Contenido'
-    );
+    await editDocument('clases', this.props.idClase, { contenidos }, 'Clase');
     this.props.toggleModalContenidos();
     this.props.updateContenidos();
   };

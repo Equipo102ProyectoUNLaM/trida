@@ -74,7 +74,7 @@ class TabsDeClase extends Component {
     var array = [];
     try {
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      var listRef = storage.ref(this.props.idMateria);
+      var listRef = storage.ref(this.props.idMateria + '/contenidos');
       // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
         //Carpetas
@@ -91,7 +91,10 @@ class TabsDeClase extends Component {
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
-                key: metadata.fullPath.replace(this.props.idMateria + '/', ''),
+                key: metadata.fullPath.replace(
+                  this.props.idMateria + '/contenidos/',
+                  ''
+                ),
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
@@ -169,7 +172,7 @@ class TabsDeClase extends Component {
         'clases',
         this.props.idClase,
         { contenidos: arrayFiltrado },
-        'Contenido'
+        'Clase'
       );
     } catch (err) {
       console.log('Error', err);
