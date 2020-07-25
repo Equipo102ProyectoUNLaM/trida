@@ -48,14 +48,6 @@ class Contenidos extends Component {
       await listRef.listAll().then(async (result) => {
         //Carpetas
         for (const folderRef of result.prefixes) {
-          //Listamos archivos de cada carpeta
-          console.log(
-            folderRef.fullPath.replace(
-              this.state.subjectId + '/contenidos/',
-              ''
-            ) + '/'
-          );
-
           var subFolderElements = await this.listFolderItems(
             folderRef,
             this.state.subjectId
@@ -107,12 +99,6 @@ class Contenidos extends Component {
       await ref.listAll().then(async (result) => {
         //Carpetas
         for (const folderRef of result.prefixes) {
-          console.log(
-            folderRef.fullPath.replace(
-              this.state.subjectId + '/contenidos/',
-              ''
-            ) + '/'
-          );
           var subFolderElements = await this.listFolderItems(
             folderRef,
             subjectId

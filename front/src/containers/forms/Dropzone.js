@@ -10,7 +10,8 @@ var dropzoneConfig = {
   thumbnailHeight: 160,
   maxFilesize: 2,
   uploadMultiple: true,
-  dictDefaultMessage: 'Arrastre sus archivos, o haga click para agregar',
+  dictDefaultMessage:
+    'Arrastre sus archivos, o haga click para agregar. Luego seleccione la carpeta en la que desea cargarlos.',
   previewTemplate: ReactDOMServer.renderToStaticMarkup(
     <div className="dz-preview dz-file-preview mb-3">
       <div className="d-flex flex-row ">
