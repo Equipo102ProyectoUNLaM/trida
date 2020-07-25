@@ -88,6 +88,8 @@ module.exports = {
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
+  'pizarron.abrir-pizarron': 'Abrir pizarrón',
+  'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
 
   /* 07.Institution */
   'institution.selection': '¿A qué institución desea acceder?',

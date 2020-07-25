@@ -1,6 +1,8 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
 import { Button, Row } from 'reactstrap';
+import IntlMessages from 'helpers/IntlMessages';
+import { injectIntl } from 'react-intl';
 
 /* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
@@ -125,7 +127,7 @@ const Videollamada = ({
           size="lg"
           onClick={abrirPizarron}
         >
-          {abrirPizarronTxt}
+          <IntlMessages id="pizarron.abrir-pizarron" />
         </Button>
       </Row>
       <div id={parentNode}></div>
@@ -133,4 +135,4 @@ const Videollamada = ({
   );
 };
 
-export default Videollamada;
+export default injectIntl(Videollamada);

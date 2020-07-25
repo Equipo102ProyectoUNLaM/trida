@@ -1,9 +1,10 @@
 import React from 'react';
 import Excalidraw from 'excalidraw';
 import { Button, Row } from 'reactstrap';
+import IntlMessages from 'helpers/IntlMessages';
+import { injectIntl } from 'react-intl';
 
 import 'excalidraw/dist/excalidraw.min.css';
-const abrirPizarronTxt = 'Abrir pizarrón en una nueva ventana';
 const pizarronURI = '/pizarron';
 
 class Pizarron extends React.Component {
@@ -66,7 +67,7 @@ class Pizarron extends React.Component {
               size="lg"
               onClick={this.abrirPizarron}
             >
-              {abrirPizarronTxt}
+              <IntlMessages id="pizarron.abrir-nueva-ventana" />
             </Button>
           </Row>
         )}
@@ -85,4 +86,4 @@ class Pizarron extends React.Component {
     );
   }
 }
-export default Pizarron;
+export default injectIntl(Pizarron);
