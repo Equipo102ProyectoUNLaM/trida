@@ -40,11 +40,11 @@ class Pizarron extends React.Component {
   };
 
   onChange = (elements, state) => {
-    console.log('Elements :', elements, 'State : ', state);
+    return;
   };
 
   onUsernameChange = (username) => {
-    console.log('current username', username);
+    return;
   };
 
   abrirPizarron = () => {
