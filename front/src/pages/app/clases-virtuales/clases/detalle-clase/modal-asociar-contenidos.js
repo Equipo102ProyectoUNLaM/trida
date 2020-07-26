@@ -66,7 +66,6 @@ class ModalAsociarContenidos extends React.Component {
         '/contenidos/' +
         nombre
     );
-
     await editDocument('clases', this.props.idClase, { contenidos }, 'Clase');
     this.props.toggleModalContenidos();
     this.props.updateContenidos();

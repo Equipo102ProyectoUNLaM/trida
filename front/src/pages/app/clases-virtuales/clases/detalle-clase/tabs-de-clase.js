@@ -35,8 +35,9 @@ class TabsDeClase extends Component {
       modalContenidosOpen: false,
       modalDeleteOpen: false,
       files: [],
-      isLoading: false,
+      isLoading: true,
       contenidoRef: '',
+      propsContenidos: [],
     };
   }
 
@@ -48,6 +49,8 @@ class TabsDeClase extends Component {
         activeSecondTab: hash.split('')[1],
       });
     }
+
+    this.dataListRenderer();
   }
 
   toggleSecondTab(tab) {
@@ -59,15 +62,9 @@ class TabsDeClase extends Component {
   }
 
   toggleModalContenidos = () => {
-    this.setState(
-      {
-        modalContenidosOpen: !this.state.modalContenidosOpen,
-        isLoading: true,
-      },
-      () => {
-        if (this.state.modalContenidosOpen) this.dataListRenderer();
-      }
-    );
+    this.setState({
+      modalContenidosOpen: !this.state.modalContenidosOpen,
+    });
   };
 
   async dataListRenderer() {
@@ -109,8 +106,8 @@ class TabsDeClase extends Component {
     } finally {
       this.setState({
         files: array,
-        isLoading: false,
       });
+      await this.matchFilesWithContents();
     }
   }
 
@@ -147,6 +144,43 @@ class TabsDeClase extends Component {
       return array;
     }
   }
+
+  matchFilesWithContents = async () => {
+    let storageFiles = [...this.state.files];
+
+    if (this.props.contenidos) {
+      const propsContenidos = this.props.contenidos.map((contenido) => {
+        const paths = contenido.split('/');
+        return paths[paths.length - 1];
+      });
+
+      const updatedContents = propsContenidos.filter((nombre) => {
+        const foundFile = storageFiles.find((file) => nombre === file.key);
+        if (!isEmpty(foundFile)) {
+          return foundFile.key;
+        }
+      });
+
+      const contenidos = updatedContents.map(
+        (nombre) =>
+          'gs://trida-7f28f.appspot.com/' +
+          this.props.idMateria +
+          '/contenidos/' +
+          nombre
+      );
+
+      this.setState(
+        {
+          propsContenidos: contenidos,
+          isLoading: false,
+        },
+        async () =>
+          await editDocument('clases', this.props.idClase, {
+            contenidos: contenidos,
+          })
+      );
+    }
+  };
 
   toggleDeleteModal = () => {
     this.setState({
@@ -194,6 +228,7 @@ class TabsDeClase extends Component {
       isLoading,
       files,
       modalDeleteOpen,
+      propsContenidos,
     } = this.state;
 
     return (
@@ -305,24 +340,30 @@ class TabsDeClase extends Component {
                           <CardTitle className="mb-4">
                             Contenidos Asociados
                           </CardTitle>
-                          {isEmpty(contenidos) ? (
-                            <p className="mb-4">No hay contenidos asociados</p>
-                          ) : (
-                            <Row>
-                              {contenidos.map((contenido) => {
-                                var gsReference = storage.refFromURL(contenido);
-                                return (
-                                  <DataListView
-                                    key={contenido}
-                                    id={contenido}
-                                    title={gsReference.name}
-                                    onDelete={this.onDelete}
-                                    navTo="#"
-                                  />
-                                );
-                              })}{' '}
-                            </Row>
-                          )}
+                          {isLoading && <div className="cover-spin" />}
+                          {!isLoading &&
+                            (isEmpty(propsContenidos) ? (
+                              <p className="mb-4">
+                                No hay contenidos asociados
+                              </p>
+                            ) : (
+                              <Row>
+                                {propsContenidos.map((contenido) => {
+                                  var gsReference = storage.refFromURL(
+                                    contenido
+                                  );
+                                  return (
+                                    <DataListView
+                                      key={contenido}
+                                      id={contenido}
+                                      title={gsReference.name}
+                                      onDelete={this.onDelete}
+                                      navTo="#"
+                                    />
+                                  );
+                                })}{' '}
+                              </Row>
+                            ))}
                           {modalDeleteOpen && (
                             <ModalConfirmacion
                               texto="¿Está seguro de que desea quitar el contenido?"
