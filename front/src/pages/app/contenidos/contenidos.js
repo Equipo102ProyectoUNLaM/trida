@@ -186,28 +186,31 @@ class Contenidos extends Component {
     }));
     var cant = filesKey.length;
     for (const f of filesKey) {
-      var fileRef = storage.ref(`${this.state.subjectId}/contenidos/${f}`);
-      fileRef
-        .delete()
-        .then(() => {
-          // File deleted successfully
-          this.setState((state) => {
-            const newFiles = [];
-            state.files.map((file) => {
-              if (file.key !== f) {
-                newFiles.push(file);
-              }
+      if (f.slice(-1) != '/') {
+        //Si es carpeta no hago nada
+        var fileRef = storage.ref(`${this.state.subjectId}/contenidos/${f}`);
+        fileRef
+          .delete()
+          .then(() => {
+            // File deleted successfully
+            this.setState((state) => {
+              const newFiles = [];
+              state.files.map((file) => {
+                if (file.key !== f) {
+                  newFiles.push(file);
+                }
+              });
+              state.files = newFiles;
+              return state;
             });
-            state.files = newFiles;
-            return state;
+          })
+          .catch(function (error) {
+            // Uh-oh, an error occurred!
+            console.log('Error deleting documents', error);
           });
-          cant = cant - 1;
-          if (cant === 0) this.showDeleteMessage();
-        })
-        .catch(function (error) {
-          // Uh-oh, an error occurred!
-          console.log('Error deleting documents', error);
-        });
+      }
+      cant = cant - 1;
+      if (cant === 0) this.showDeleteMessage();
     }
   };
 
