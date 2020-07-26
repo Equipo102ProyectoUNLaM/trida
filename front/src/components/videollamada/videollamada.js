@@ -25,7 +25,6 @@ const Videollamada = ({
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
-  const abrirPizarronTxt = 'Abrir pizarrón';
   const pizarronURI = '/pizarron';
 
   const setElementHeight = () => {
