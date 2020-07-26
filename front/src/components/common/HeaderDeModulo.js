@@ -48,7 +48,7 @@ class HeaderDeModulo extends Component {
                     color="primary"
                     size="lg"
                     className="top-right-button"
-                    onClick={() => toggleModal()}
+                    onClick={toggleModal ? () => toggleModal() : null}
                   >
                     <IntlMessages id={buttonText} />
                   </Button>
