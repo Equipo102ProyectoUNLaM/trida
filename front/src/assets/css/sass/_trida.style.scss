@@ -1217,6 +1217,16 @@ button {
   margin-bottom: 2rem !important;
 }
 
+.mb-3
+{
+  margin-bottom: 1rem !important;
+}
+
+.mr-3
+{
+  margin-right: 0.01rem !important;
+}
+
 .float-none-xs {
   @include respond-below(xs) {
     float: initial !important;
@@ -8978,7 +8988,11 @@ footer.page-footer {
   .encrypted-icon, .github-corner {
     display: none !important;
   }
+}
 
+.open-in-new-window-row {
+  margin-top: -20px;
+  margin-bottom: 20px;
 }
 
 .board {

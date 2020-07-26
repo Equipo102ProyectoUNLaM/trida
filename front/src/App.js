@@ -29,6 +29,9 @@ const ViewUser = React.lazy(() =>
 const ViewError = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './pages/error')
 );
+const ViewPizarron = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ './pages/window-pizarron')
+);
 
 const AuthRoute = ({ component: Component, authUser, ...rest }) => {
   return (
@@ -87,6 +90,10 @@ class App extends Component {
                   <Route
                     path="/app"
                     render={(props) => <ViewApp {...props} />}
+                  />
+                  <Route
+                    path="/pizarron"
+                    render={(props) => <ViewPizarron {...props} />}
                   />
                   <Route
                     path="/user"
