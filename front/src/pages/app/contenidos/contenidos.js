@@ -206,7 +206,7 @@ class Contenidos extends Component {
 
       this.setState((state) => {
         const newFiles = [];
-        state.files.map((file) => {
+        state.files.forEach((file) => {
           if (file.key.substr(0, folder.length) !== folder) {
             newFiles.push(file);
           }
@@ -219,13 +219,13 @@ class Contenidos extends Component {
   };
 
   handleDeleteFile = (filesKey) => {
-    if (filesKey.length == 0) return;
+    if (filesKey.length === 0) return;
     this.setState((state) => ({
       isLoading: true,
     }));
     var cant = filesKey.length;
     for (const f of filesKey) {
-      if (f.slice(-1) != '/') {
+      if (f.slice(-1) !== '/') {
         //Si es carpeta no hago nada
         var fileRef = storage.ref(`${this.state.subjectId}/contenidos/${f}`);
         fileRef
@@ -234,7 +234,8 @@ class Contenidos extends Component {
             // File deleted successfully
             this.setState((state) => {
               const newFiles = [];
-              state.files.map((file) => {
+
+              state.files.forEach((file) => {
                 if (file.key !== f) {
                   newFiles.push(file);
                 }
@@ -276,7 +277,7 @@ class Contenidos extends Component {
 
   handleDownloadFile = (fileKeys) => {
     fileKeys.forEach((fileKey) => {
-      var file = this.state.files.find((i) => i.key == fileKey);
+      var file = this.state.files.find((i) => i.key === fileKey);
       window.open(file.url, '_blank'); //to open new page
     });
   };
@@ -335,7 +336,7 @@ class Contenidos extends Component {
         () => {
           var repeatedFiles = [];
           //Busco repetidos en la carpeta seleccionada (En el caso de haberlo hecho, sino en el raiz)
-          this.state.dropZone.map((file) => {
+          this.state.dropZone.forEach((file) => {
             var result = this.state.files.filter(
               (x) =>
                 x.key ===
@@ -343,9 +344,10 @@ class Contenidos extends Component {
                   ? this.state.selectedFolder + file.name
                   : file.name)
             );
-            if (result.length != 0) repeatedFiles.push(result.shift().key);
+            if (result.length !== 0) repeatedFiles.push(result.shift().key);
           });
-          if (repeatedFiles.length != 0) {
+
+          if (repeatedFiles.length !== 0) {
             this.setState((state) => ({
               modalRenameOpen: true,
               repeatedFiles: repeatedFiles,
@@ -399,9 +401,9 @@ class Contenidos extends Component {
   callbackDeleteFunction = (file) => {
     this.setState((state) => ({
       dropZone: state.dropZone.filter(function (value, index, arr) {
-        return value.name != file.name;
+        return value.name !== file.name;
       }),
-      canSubmitFiles: state.dropZone.length != 0,
+      canSubmitFiles: state.dropZone.length !== 0,
       repeatedFiles: [],
     }));
   };
