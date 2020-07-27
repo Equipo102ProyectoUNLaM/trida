@@ -12,6 +12,7 @@ Tabla de Contenidos
 07.Institution Selection
 08.Course Selection
 09.Prácticas
+11.Mensajes
 */
 
 module.exports = {
@@ -106,4 +107,7 @@ module.exports = {
 
   /* 10.Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',
+
+  /* 11.Mensajes */
+  'mensajes.enviar': 'ENVIAR MENSAJE',
 };
