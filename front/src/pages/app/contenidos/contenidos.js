@@ -289,7 +289,7 @@ class Contenidos extends Component {
     }));
     var cant = this.state.dropZone.length;
 
-    for (const file of this.state.dropZone) {
+    this.state.dropZone.forEach((file) => {
       //Obtenemos la referencia a la materia
       var name = file.fullPath ? file.fullPath : file.name;
       if (
@@ -313,14 +313,14 @@ class Contenidos extends Component {
           console.error(error.message);
         },
         () => {
-          cant = cant - 1;
+          cant--;
           //Elimino de dropzone los archivos ya subidos
           var buttonRemove = document.getElementById('buttonRemove');
           if (buttonRemove) buttonRemove.click();
           if (cant === 0) this.updateFilesList();
         }
       );
-    }
+    });
   }
 
   validateDuplicatedFiles(event) {
