@@ -12,6 +12,7 @@ Tabla de Contenidos
 07.Institution Selection
 08.Course Selection
 09.Prácticas
+10.Contenidos
 */
 
 module.exports = {
@@ -107,5 +108,5 @@ module.exports = {
   'evaluacion.agregar': 'AGREGAR EVALUACIÓN',
 
   /* 10.Contenidos */
-  'contenido.agregar': 'AGREGAR CONTENIDO',
+  'contenido.agregar': 'Subir archivos',
 };

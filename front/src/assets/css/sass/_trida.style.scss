@@ -9045,3 +9045,40 @@ footer.page-footer {
   margin: auto;
   cursor: pointer;
 }
+#cover-spin {
+  background-color: rgba(255,255,255,0.7);
+  z-index: 1050;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@-webkit-keyframes spin {
+from {-webkit-transform:rotate(0deg);}
+to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+from {transform:rotate(0deg);}
+to {transform:rotate(360deg);}
+}
+
+#cover-spin::after {
+  content:'';
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba($theme-color-1, 0.2);
+  border-radius: 50%;
+  border-top-color: $theme-color-1;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+  left: calc(50% - 15px);
+  top: calc(50% - 15px);
+  position: fixed;
+  z-index: 1;
+}
