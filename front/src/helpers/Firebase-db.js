@@ -58,24 +58,59 @@ export const addDocument = async (collection, object, message) => {
     .collection(collection)
     .add(object)
     .then(function () {
-      NotificationManager.success(
-        `${message} agregada exitosamente`,
-        `${message} agregada!`,
-        3000,
-        null,
-        null,
-        ''
-      );
+      if (message) {
+        NotificationManager.success(
+          `${message} agregada exitosamente`,
+          `${message} agregada!`,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
     })
     .catch(function (error) {
-      NotificationManager.error(
-        `Error al agregar ${message}`,
-        error,
-        3000,
-        null,
-        null,
-        ''
-      );
+      if (message) {
+        NotificationManager.error(
+          `Error al agregar ${message}`,
+          error,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+    });
+};
+
+export const addDocumentWithId = async (collection, id, object, message) => {
+  firestore
+    .collection(collection)
+    .doc(id)
+    .set(object)
+    .then(function () {
+      if (message) {
+        NotificationManager.success(
+          `${message} agregada exitosamente`,
+          `${message} agregada!`,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+    })
+    .catch(function (error) {
+      if (message) {
+        NotificationManager.error(
+          `Error al agregar ${message}`,
+          error,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
     });
 };
 

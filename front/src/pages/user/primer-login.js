@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Row,
   Card,
@@ -13,22 +14,43 @@ import {
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
+import { editDocument } from 'helpers/Firebase-db';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { loginSchema } from './validations';
 
 class PrimerLogin extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      nombre: '',
+      apellido: '',
+      telefono: 0,
+      foto: '',
+    };
   }
 
-  onUserSubmit = (values) => {
+  onUserSubmit = async () => {
+    const { nombre, apellido, telefono, foto } = this.state;
     if (!this.props.loading) {
-      if (values.email !== '' && values.password !== '' && values.name !== '') {
-        this.props.registerUser(values, this.props.history);
+      if (nombre !== '' && apellido !== '') {
+        const obj = {
+          nombre,
+          apellido,
+          telefono,
+          foto,
+          primerLogin: false,
+        };
+        await editDocument(
+          'usuarios',
+          this.props.loginUser,
+          obj,
+          'Información'
+        );
+        this.props.history.push('/');
       } else {
-        enviarNotificacionError('Complete todos los campos', 'Error');
+        enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
     }
   };
@@ -39,14 +61,16 @@ class PrimerLogin extends Component {
     }
   }
 
+  handleChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
+
   setSelectedFile = (event) => {
-    console.log(file);
+    console.log('file');
   };
 
   render() {
-    //const { password, email, name } = this.state;
-    //const initialValues = {email, password, name};
-
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -58,18 +82,18 @@ class PrimerLogin extends Component {
               <CardTitle className="mb-4">
                 <IntlMessages id="user.complete-datos" />
               </CardTitle>
-              <Formik
-                //initialValues={initialValues}
-                onSubmit={this.onUserSubmit}
-                validationSchema={loginSchema}
-              >
+              <Formik onSubmit={this.onUserSubmit}>
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <FormGroup className="form-group has-float-label">
                       <Label>
                         <IntlMessages id="user.nombre" />
                       </Label>
-                      <Field className="form-control" name="nombre" />
+                      <Field
+                        className="form-control"
+                        name="nombre"
+                        onChange={this.handleChange}
+                      />
                       {errors.nombre && touched.nombre && (
                         <div className="invalid-feedback d-block">
                           {errors.nombre}
@@ -80,7 +104,11 @@ class PrimerLogin extends Component {
                       <Label>
                         <IntlMessages id="user.apellido" />
                       </Label>
-                      <Field className="form-control" name="apellido" />
+                      <Field
+                        className="form-control"
+                        name="apellido"
+                        onChange={this.handleChange}
+                      />
                       {errors.apellido && touched.apellido && (
                         <div className="invalid-feedback d-block">
                           {errors.apellido}
@@ -91,7 +119,11 @@ class PrimerLogin extends Component {
                       <Label>
                         <IntlMessages id="user.telefono" />
                       </Label>
-                      <Field className="form-control" name="telefono" />
+                      <Field
+                        className="form-control"
+                        name="telefono"
+                        onChange={this.handleChange}
+                      />
                       {errors.telefono && touched.telefono && (
                         <div className="invalid-feedback d-block">
                           El teléfono debe ser un número
@@ -110,7 +142,7 @@ class PrimerLogin extends Component {
                           <input
                             onChange={this.setSelectedFile}
                             type="file"
-                            name="customFoto"
+                            name="foto"
                             id="upload-photo"
                           />
                         </div>
@@ -145,4 +177,10 @@ class PrimerLogin extends Component {
   }
 }
 
-export default PrimerLogin;
+const mapStateToProps = ({ authUser }) => {
+  const { user: loginUser } = authUser;
+
+  return { loginUser };
+};
+
+export default connect(mapStateToProps)(PrimerLogin);

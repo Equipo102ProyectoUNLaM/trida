@@ -1,5 +1,6 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { auth, functions } from '../../helpers/Firebase';
+import { auth, firestore } from 'helpers/Firebase';
+import { addDocumentWithId } from 'helpers/Firebase-db';
 import {
   LOGIN_USER,
   REGISTER_USER,
@@ -18,6 +19,7 @@ import {
   resetPasswordSuccess,
   resetPasswordError,
 } from './actions';
+import { addDocument } from 'helpers/Firebase-db';
 
 export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
@@ -51,27 +53,46 @@ export function* watchRegisterUser() {
   yield takeEvery(REGISTER_USER, registerWithEmailPassword);
 }
 
-const registerWithEmailPasswordAsync = async (email, password, name) => {
-  /* createUser = functions.httpsCallable('createUser');
-    createUser({mail: email, pass: password, name: name})
-    .then(authUser => authUser)
-    .catch(error => error); */
+const registerWithEmailPasswordAsync = async (email, password) =>
+  await auth
+    .createUserWithEmailAndPassword(email, password)
+    .then((authUser) => authUser)
+    .catch((error) => error);
+
+const addRegisteredUserToDB = async (registerUser, email) => {
+  const userObj = {
+    id: registerUser.user.uid,
+    mail: email,
+    nombre: '',
+    apellido: '',
+    telefono: '',
+    foto: '',
+    primerLogin: true,
+    contraseñaAutogenerada: false,
+    instituciones: [],
+    rol: 1,
+  };
+  try {
+    await addDocumentWithId('usuarios', registerUser.user.uid, userObj);
+  } catch (error) {
+    put(registerUserError(error));
+  } finally {
+    console.log('registrado');
+  }
 };
-/*await functions.httpsCallable('createUser')
-    .then(authUser => authUser)
-    .catch(error => error);*/
 
 function* registerWithEmailPassword({ payload }) {
-  const { email, password, name } = payload.user;
+  const { email, password } = payload.user;
   const { history } = payload;
   try {
     const registerUser = yield call(
       registerWithEmailPasswordAsync,
       email,
-      password,
-      name
+      password
     );
     if (!registerUser.message) {
+      // ver acá, tiene que esperar
+      yield call(addRegisteredUserToDB, registerUser, email);
       localStorage.setItem('user_id', registerUser.user.uid);
       yield put(registerUserSuccess(registerUser));
       history.push('/');

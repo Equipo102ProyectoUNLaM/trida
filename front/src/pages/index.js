@@ -22,7 +22,7 @@ class Main extends Component {
   }
 
   getUserData = async () => {
-    const datos = await getDocument(`users/${this.props.loginUser}`);
+    const datos = await getDocument(`usuarios/${this.props.loginUser}`);
     const { data } = datos;
 
     this.setState({
