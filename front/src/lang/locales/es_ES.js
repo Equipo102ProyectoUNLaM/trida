@@ -20,11 +20,12 @@ module.exports = {
   /* 02.Inicio de sesión de usuario, cierre de sesión, registro */
   'usuario.login-title': 'Iniciar sesión',
   'user.register': 'Registro',
-  'user.forgot-password': 'Reinicie su contraseña',
-  'user.confirmar-password': 'Confirme su contraseña',
+  'user.forgot-password': 'Reiniciá tu contraseña',
+  'user.confirmar-password': 'Confirmá tu contraseña',
   'user.email': 'Email',
   'user.password': 'Contraseña',
   'user.forgot-password-question': '¿Contraseña olvidada?',
+  'user.cambie-password': 'Cambiá tu contraseña',
   'user.fullname': 'Nombre completo',
   'user.nombre': 'Nombre',
   'user.apellido': 'Apellido',
@@ -35,7 +36,7 @@ module.exports = {
   'user.reset-password-button': 'REINICIAR',
   'user.buy': 'COMPRAR',
   'user.username': 'Nombre de Usuario',
-  'user.complete-datos': 'Complete sus datos',
+  'user.complete-datos': 'Completá tus datos',
   'user.enviar-datos': 'Enviar',
 
   /* 03.Menú */

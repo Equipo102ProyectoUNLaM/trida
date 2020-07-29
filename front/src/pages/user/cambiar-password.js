@@ -1,25 +1,21 @@
 import React, { Component } from 'react';
-import {
-  Row,
-  Card,
-  CardTitle,
-  Label,
-  Button,
-  FormGroup,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-} from 'reactstrap';
+import { Row, Card, CardTitle, Label, Button, FormGroup } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { NotificationManager } from 'components/common/react-notifications';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
+import { passwordSchema } from './validations';
 
-class PrimerLogin extends Component {
+class CambiarPassword extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      password: '',
+      confirmPassword: '',
+    };
   }
 
   onUserSubmit = (values) => {
@@ -57,19 +53,9 @@ class PrimerLogin extends Component {
     console.log(file);
   };
 
-  validatePassword = (value) => {
-    let error;
-    if (!value) {
-      error = 'Por favor, ingrese su password';
-    } else if (value.length < 4) {
-      error = 'El password debe ser mayor a 3 caracteres';
-    }
-    return error;
-  };
-
   render() {
-    //const { password, email, name } = this.state;
-    //const initialValues = {email, password, name};
+    const { password, confirmPassword } = this.state;
+    const initialValues = { password, confirmPassword };
 
     return (
       <Row className="h-100">
@@ -80,11 +66,12 @@ class PrimerLogin extends Component {
                 <span className="logo-single" />
               </NavLink>
               <CardTitle className="mb-4">
-                <IntlMessages id="user.complete-datos" />
+                <IntlMessages id="user.cambie-password" />
               </CardTitle>
               <Formik
-                //initialValues={initialValues}
+                initialValues={initialValues}
                 onSubmit={this.onUserSubmit}
+                validationSchema={passwordSchema}
               >
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
@@ -96,7 +83,6 @@ class PrimerLogin extends Component {
                         className="form-control"
                         type="password"
                         name="password"
-                        validate={this.validatePassword}
                       />
                       {errors.password && touched.password && (
                         <div className="invalid-feedback d-block">
@@ -111,12 +97,11 @@ class PrimerLogin extends Component {
                       <Field
                         className="form-control"
                         type="password"
-                        name="confirm-password"
-                        validate={this.validatePassword}
+                        name="confirmPassword"
                       />
-                      {errors.password && touched.password && (
+                      {errors.confirmPassword && touched.confirmPassword && (
                         <div className="invalid-feedback d-block">
-                          {errors.password}
+                          {errors.confirmPassword}
                         </div>
                       )}
                     </FormGroup>
@@ -149,4 +134,4 @@ class PrimerLogin extends Component {
   }
 }
 
-export default PrimerLogin;
+export default CambiarPassword;

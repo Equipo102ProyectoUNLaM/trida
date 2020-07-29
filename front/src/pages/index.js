@@ -13,6 +13,7 @@ class Main extends Component {
     this.state = {
       isLoading: true,
       primerLogin: true,
+      cambiarPassword: true,
     };
   }
 
@@ -26,16 +27,20 @@ class Main extends Component {
 
     this.setState({
       primerLogin: data.primerLogin,
+      cambiarPassword: data.cambiarPassword,
       isLoading: false,
     });
   };
 
   render() {
-    const { primerLogin, isLoading } = this.state;
-    console.log(primerLogin);
+    const { primerLogin, cambiarPassword, isLoading } = this.state;
 
     if (isLoading) {
       return <div className="loading" />;
+    }
+
+    if (cambiarPassword) {
+      return <Redirect to="/user/cambiar-password" />;
     }
 
     if (primerLogin) {
