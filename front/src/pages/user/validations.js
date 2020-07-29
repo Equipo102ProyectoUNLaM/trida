@@ -15,3 +15,9 @@ export const passwordSchema = Yup.object().shape({
       ),
     }),
 });
+
+export const loginSchema = Yup.object().shape({
+  nombre: Yup.string().required('Este campo es requerido'),
+  apellido: Yup.string().required('Este campo es requerido'),
+  telefono: Yup.number(),
+});

@@ -12,10 +12,11 @@ import {
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
-import { NotificationManager } from 'components/common/react-notifications';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
+import { loginSchema } from './validations';
 
 class PrimerLogin extends Component {
   constructor(props) {
@@ -27,33 +28,18 @@ class PrimerLogin extends Component {
       if (values.email !== '' && values.password !== '' && values.name !== '') {
         this.props.registerUser(values, this.props.history);
       } else {
-        NotificationManager.error(
-          'Complete todos los campos',
-          'Error',
-          4000,
-          null,
-          null,
-          ''
-        );
+        enviarNotificacionError('Complete todos los campos', 'Error');
       }
     }
   };
 
   componentDidUpdate() {
     if (this.props.error) {
-      NotificationManager.error(
-        this.props.error,
-        'Error en el registro',
-        4000,
-        null,
-        null,
-        ''
-      );
+      enviarNotificacionError('Error en el registro', this.props.error);
     }
   }
 
   setSelectedFile = (event) => {
-    var file = document.getElementById('upload-photo');
     console.log(file);
   };
 
@@ -75,6 +61,7 @@ class PrimerLogin extends Component {
               <Formik
                 //initialValues={initialValues}
                 onSubmit={this.onUserSubmit}
+                validationSchema={loginSchema}
               >
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
@@ -82,19 +69,34 @@ class PrimerLogin extends Component {
                       <Label>
                         <IntlMessages id="user.nombre" />
                       </Label>
-                      <Field className="form-control" name="name" />
+                      <Field className="form-control" name="nombre" />
+                      {errors.nombre && touched.nombre && (
+                        <div className="invalid-feedback d-block">
+                          {errors.nombre}
+                        </div>
+                      )}
                     </FormGroup>
                     <FormGroup className="form-group has-float-label">
                       <Label>
                         <IntlMessages id="user.apellido" />
                       </Label>
                       <Field className="form-control" name="apellido" />
+                      {errors.apellido && touched.apellido && (
+                        <div className="invalid-feedback d-block">
+                          {errors.apellido}
+                        </div>
+                      )}
                     </FormGroup>
                     <FormGroup className="form-group has-float-label">
                       <Label>
                         <IntlMessages id="user.telefono" />
                       </Label>
                       <Field className="form-control" name="telefono" />
+                      {errors.telefono && touched.telefono && (
+                        <div className="invalid-feedback d-block">
+                          El teléfono debe ser un número
+                        </div>
+                      )}
                     </FormGroup>
                     <FormGroup className="form-group">
                       <InputGroup>
@@ -108,7 +110,7 @@ class PrimerLogin extends Component {
                           <input
                             onChange={this.setSelectedFile}
                             type="file"
-                            name="customFile"
+                            name="customFoto"
                             id="upload-photo"
                           />
                         </div>
