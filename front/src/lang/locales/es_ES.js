@@ -38,6 +38,7 @@ module.exports = {
   'user.username': 'Nombre de Usuario',
   'user.complete-datos': 'Completá tus datos',
   'user.enviar-datos': 'Enviar',
+  'user.mail-invitado': 'Email invitado',
 
   /* 03.Menú */
   'menu.app': 'Inicio',
