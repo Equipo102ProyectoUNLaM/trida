@@ -27,6 +27,7 @@ class Contenidos extends Component {
       repeatedFiles: [],
     };
     this.listFolderItems = this.listFolderItems.bind(this);
+    this.submitFiles = this.submitFiles.bind(this);
     this.dropZoneRef = React.createRef();
   }
 
@@ -40,19 +41,22 @@ class Contenidos extends Component {
   }
 
   async dataListRenderer() {
-    var array = [];
+    var arrayFolder = [];
+    var arrayFiles = [];
     try {
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
       var listRef = storage.ref(this.state.subjectId + '/contenidos');
       // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
         //Carpetas
-        for (const folderRef of result.prefixes) {
+        var ctrFolder = 0;
+        result.prefixes.forEach(async (folderRef) => {
+          ctrFolder++;
           var subFolderElements = await this.listFolderItems(
             folderRef,
             this.state.subjectId
           );
-          array = array.concat(
+          arrayFolder = arrayFolder.concat(
             [
               {
                 key:
@@ -64,9 +68,18 @@ class Contenidos extends Component {
             ],
             subFolderElements
           );
-        }
+          if (ctrFolder === result.prefixes.length) {
+            this.setState((state) => ({
+              files: state.files.concat(arrayFolder),
+            }));
+            arrayFolder = [];
+          }
+        });
+
         //Archivos
-        for (const res of result.items) {
+        var ctrFiles = 0;
+        result.items.forEach(async (res) => {
+          ctrFiles++;
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
@@ -78,32 +91,42 @@ class Contenidos extends Component {
                 size: metadata.size,
                 url: url,
               };
-              array.push(obj);
+
+              arrayFiles.push(obj);
+
+              if (ctrFiles === result.items.length) {
+                this.setState((state) => ({
+                  files: state.files.concat(arrayFiles),
+                }));
+                arrayFiles = [];
+              }
             });
           });
-        }
+        });
       });
     } catch (err) {
       console.log('Error getting documents', err);
     } finally {
       this.setState((state) => ({
-        files: array,
         isLoading: false,
       }));
     }
   }
 
   async listFolderItems(ref, subjectId) {
-    var array = [];
+    var arrayFolder = [];
+    var arrayFiles = [];
     try {
       await ref.listAll().then(async (result) => {
         //Carpetas
-        for (const folderRef of result.prefixes) {
+        var ctrFolder = 0;
+        result.prefixes.forEach(async (folderRef) => {
+          ctrFolder++;
           var subFolderElements = await this.listFolderItems(
             folderRef,
             subjectId
           );
-          array = array.concat(
+          arrayFolder = arrayFolder.concat(
             [
               {
                 key:
@@ -115,9 +138,19 @@ class Contenidos extends Component {
             ],
             subFolderElements
           );
-        }
+
+          if (ctrFolder === result.prefixes.length) {
+            this.setState((state) => ({
+              files: state.files.concat(arrayFolder),
+            }));
+            arrayFolder = [];
+          }
+        });
+
         //Archivos
-        for (const res of result.items) {
+        var ctrFiles = 0;
+        result.items.forEach(async (res) => {
+          ctrFiles++;
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               var obj = {
@@ -126,15 +159,21 @@ class Contenidos extends Component {
                 size: metadata.size,
                 url: url,
               };
-              array.push(obj);
+              arrayFiles.push(obj);
+              if (ctrFiles === result.items.length) {
+                this.setState((state) => ({
+                  files: state.files.concat(arrayFiles),
+                }));
+                arrayFiles = [];
+              }
             });
           });
-        }
+        });
       });
     } catch (err) {
       console.log('Error getting documents', err);
     } finally {
-      return array;
+      return arrayFolder.concat(arrayFiles);
     }
   }
 
@@ -231,9 +270,9 @@ class Contenidos extends Component {
 
   handleSelectFolder = (folderKey) => {
     //Al crear una nueva carpeta, la marco como seleccionada
-    this.setState((state) => {
-      state.selectedFolder = folderKey.key;
-    });
+    this.setState((state) => ({
+      selectedFolder: folderKey.key,
+    }));
   };
 
   handleDownloadFile = (fileKeys) => {
@@ -250,7 +289,7 @@ class Contenidos extends Component {
     }));
     var cant = this.state.dropZone.length;
 
-    for (const file of this.state.dropZone) {
+    this.state.dropZone.forEach((file) => {
       //Obtenemos la referencia a la materia
       var name = file.fullPath ? file.fullPath : file.name;
       if (
@@ -274,14 +313,14 @@ class Contenidos extends Component {
           console.error(error.message);
         },
         () => {
-          cant = cant - 1;
+          cant--;
           //Elimino de dropzone los archivos ya subidos
           var buttonRemove = document.getElementById('buttonRemove');
           if (buttonRemove) buttonRemove.click();
           if (cant === 0) this.updateFilesList();
         }
       );
-    }
+    });
   }
 
   validateDuplicatedFiles(event) {
@@ -314,7 +353,7 @@ class Contenidos extends Component {
               repeatedFiles: repeatedFiles,
               isLoading: false,
             }));
-          } else this.submitFiles(event);
+          } else this.submitFiles();
         }
       );
     } catch (error) {
@@ -341,6 +380,7 @@ class Contenidos extends Component {
     );
     this.setState((state) => ({
       dropZone: [],
+      files: [],
       renameFiles: [],
       isLoading: true,
       canSubmitFiles: true,
@@ -427,7 +467,9 @@ class Contenidos extends Component {
             buttonSecondary="Conservar todos"
             toggle={this.renameFiles}
             isOpen={modalRenameOpen}
-            onConfirm={this.submitFiles.bind(this)}
+            onConfirm={() => {
+              this.submitFiles();
+            }}
           />
         )}
       </Fragment>
