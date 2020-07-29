@@ -1,58 +1,58 @@
-import React, { Component } from "react";
-import { Row, Card, CardTitle, Label, FormGroup, Button } from "reactstrap";
-import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import { NotificationManager } from "../../components/common/react-notifications";
-import { Formik, Form, Field } from "formik";
+import { NotificationManager } from '../../components/common/react-notifications';
+import { Formik, Form, Field } from 'formik';
 
-import { loginUser, menuSetClassNames } from "redux/actions";
-import { Colxx } from "../../components/common/CustomBootstrap";
-import IntlMessages from "../../helpers/IntlMessages";
+import { loginUser, menuSetClassNames } from 'redux/actions';
+import { Colxx } from '../../components/common/CustomBootstrap';
+import IntlMessages from '../../helpers/IntlMessages';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
     };
   }
 
   onUserLogin = (values) => {
     if (!this.props.loading) {
-      if (values.email !== "" && values.password !== "") {
+      if (values.email !== '' && values.password !== '') {
         this.props.loginUser(values, this.props.history);
-        this.props.menuSetClassNames('menu-sub-hidden')
+        this.props.menuSetClassNames('menu-sub-hidden');
       }
     }
-  }
+  };
 
   validateEmail = (value) => {
     let error;
     if (!value) {
-      error = "Por favor, ingrese su mail";
+      error = 'Por favor, ingrese su mail';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-      error = "Dirección de mail inválida";
+      error = 'Dirección de mail inválida';
     }
     return error;
-  }
+  };
 
   validatePassword = (value) => {
     let error;
     if (!value) {
-      error = "Por favor, ingrese su password";
+      error = 'Por favor, ingrese su password';
     } else if (value.length < 4) {
-      error = "El password debe ser mayor a 3 caracteres";
+      error = 'El password debe ser mayor a 3 caracteres';
     }
     return error;
-  }
+  };
 
   componentDidUpdate() {
     if (this.props.error) {
       NotificationManager.warning(
         this.props.error,
-        "Error de Login",
+        'Error de Login',
         3000,
         null,
         null,
@@ -63,7 +63,7 @@ class Login extends Component {
 
   render() {
     const { password, email } = this.state;
-    const initialValues = {email,password};
+    const initialValues = { email, password };
 
     return (
       <Row className="h-100">
@@ -74,7 +74,7 @@ class Login extends Component {
               <p className="white mb-0">
                 Ingrese sus datos para acceder.
                 <br />
-                Si usted es docente, por favor{" "}
+                Si usted es docente, por favor{' '}
                 <NavLink to={`/user/register`} className="btn-link">
                   regístrese
                 </NavLink>
@@ -89,9 +89,7 @@ class Login extends Component {
                 <IntlMessages id="usuario.login-title" />
               </CardTitle>
 
-              <Formik
-                initialValues={initialValues}
-                onSubmit={this.onUserLogin}>
+              <Formik initialValues={initialValues} onSubmit={this.onUserLogin}>
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <FormGroup className="form-group has-float-label">
@@ -131,7 +129,9 @@ class Login extends Component {
                       </NavLink>
                       <Button
                         color="primary"
-                        className={`btn-shadow btn-multiple-state ${this.props.loading ? "show-spinner" : ""}`}
+                        className={`btn-shadow btn-multiple-state ${
+                          this.props.loading ? 'show-spinner' : ''
+                        }`}
                         size="lg"
                       >
                         <span className="spinner d-inline-block">
@@ -139,7 +139,9 @@ class Login extends Component {
                           <span className="bounce2" />
                           <span className="bounce3" />
                         </span>
-                        <span className="label"><IntlMessages id="user.login-button" /></span>
+                        <span className="label">
+                          <IntlMessages id="user.login-button" />
+                        </span>
                       </Button>
                     </div>
                   </Form>
@@ -158,10 +160,7 @@ const mapStateToProps = ({ authUser }) => {
   return { user, loading, error };
 };
 
-export default connect(
-  mapStateToProps,
-  {
-    loginUser,
-    menuSetClassNames
-  }
-)(Login);
+export default connect(mapStateToProps, {
+  loginUser,
+  menuSetClassNames,
+})(Login);

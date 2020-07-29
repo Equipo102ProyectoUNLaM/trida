@@ -14,6 +14,12 @@ const ForgotPassword = React.lazy(() =>
 const ResetPassword = React.lazy(() =>
   import(/* webpackChunkName: "user-reset-password" */ './reset-password')
 );
+const PrimerLogin = React.lazy(() =>
+  import(/* webpackChunkName: "user-primer-login" */ './primer-login')
+);
+const CambiarPassword = React.lazy(() =>
+  import(/* webpackChunkName: "user-cambiar-password" */ './cambiar-password')
+);
 
 const User = ({ match }) => {
   return (
@@ -23,19 +29,27 @@ const User = ({ match }) => {
           <Redirect exact from={`${match.url}/`} to={`${match.url}/login`} />
           <Route
             path={`${match.url}/login`}
-            render={props => <Login {...props} />}
+            render={(props) => <Login {...props} />}
           />
           <Route
             path={`${match.url}/register`}
-            render={props => <Register {...props} />}
+            render={(props) => <Register {...props} />}
           />
           <Route
             path={`${match.url}/forgot-password`}
-            render={props => <ForgotPassword {...props} />}
+            render={(props) => <ForgotPassword {...props} />}
           />
           <Route
             path={`${match.url}/reset-password`}
-            render={props => <ResetPassword {...props} />}
+            render={(props) => <ResetPassword {...props} />}
+          />
+          <Route
+            path={`${match.url}/primer-login`}
+            render={(props) => <PrimerLogin {...props} />}
+          />
+          <Route
+            path={`${match.url}/cambiar-password`}
+            render={(props) => <CambiarPassword {...props} />}
           />
           <Redirect to="/error" />
         </Switch>
