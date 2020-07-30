@@ -3,10 +3,11 @@ import { Row, Card, CardTitle, Label, Button, FormGroup } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { NotificationManager } from 'components/common/react-notifications';
-
+import { resetPassword } from 'redux/actions';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { passwordSchema } from './validations';
+import { connect } from 'react-redux';
 
 class CambiarPassword extends Component {
   constructor(props) {
@@ -18,15 +19,23 @@ class CambiarPassword extends Component {
     };
   }
 
-  onUserSubmit = (values) => {
+  onUserSubmit = () => {
     if (!this.props.loading) {
-      if (values.email !== '' && values.password !== '' && values.name !== '') {
-        this.props.registerUser(values, this.props.history);
+      const params = new URLSearchParams(this.props.location.search);
+      const oobCode = params.get('oobCode');
+      if (oobCode) {
+        if (values.newPassword !== '') {
+          this.props.resetPassword({
+            newPassword: this.state.password,
+            resetPasswordCode: oobCode,
+            history: this.props.history,
+          });
+        }
       } else {
-        NotificationManager.error(
-          'Complete todos los campos',
-          'Error',
-          4000,
+        NotificationManager.warning(
+          'Please check your email url.',
+          'Reset Password Error',
+          3000,
           null,
           null,
           ''
@@ -48,9 +57,9 @@ class CambiarPassword extends Component {
     }
   }
 
-  setSelectedFile = (event) => {
-    var file = document.getElementById('upload-photo');
-    console.log(file);
+  handleChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -83,6 +92,7 @@ class CambiarPassword extends Component {
                         className="form-control"
                         type="password"
                         name="password"
+                        onChange={this.handleChange}
                       />
                       {errors.password && touched.password && (
                         <div className="invalid-feedback d-block">
@@ -98,6 +108,7 @@ class CambiarPassword extends Component {
                         className="form-control"
                         type="password"
                         name="confirmPassword"
+                        onChange={this.handleChange}
                       />
                       {errors.confirmPassword && touched.confirmPassword && (
                         <div className="invalid-feedback d-block">
@@ -134,4 +145,11 @@ class CambiarPassword extends Component {
   }
 }
 
-export default CambiarPassword;
+const mapStateToProps = ({ authUser }) => {
+  const { newPassword, resetPasswordCode, loading, error } = authUser;
+  return { newPassword, resetPasswordCode, loading, error };
+};
+
+export default connect(mapStateToProps, {
+  resetPassword,
+})(CambiarPassword);

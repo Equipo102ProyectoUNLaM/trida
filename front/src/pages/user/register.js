@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { registerUser } from 'redux/actions';
 import { Formik, Form, Field } from 'formik';
 import { NotificationManager } from 'components/common/react-notifications';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
@@ -15,35 +16,36 @@ class Register extends Component {
     this.state = {
       email: '',
       password: '',
+      isInvited: false,
     };
   }
-  onUserRegister = (values) => {
+  onUserRegister = () => {
+    const userObj = {
+      email: this.state.email,
+      password: this.state.password,
+      isInvited: this.state.isInvited,
+    };
     if (!this.props.loading) {
-      if (values.email !== '' && values.password !== '') {
-        this.props.registerUser(values, this.props.history);
+      if (this.state.email !== '' && this.state.password !== '') {
+        this.props.registerUser(userObj, this.props.history);
       } else {
-        console.log('aca');
+        enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
     }
   };
 
   componentDidUpdate() {
     if (this.props.error) {
-      NotificationManager.error(
-        this.props.error,
-        'Error en el registro',
-        4000,
-        null,
-        null,
-        ''
-      );
+      enviarNotificacionError('Error en el registro', 'Error');
     }
   }
 
-  render() {
-    const { password, email, name } = this.state;
-    const initialValues = { email, password, name };
+  handleChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
 
+  render() {
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -66,10 +68,7 @@ class Register extends Component {
               <CardTitle className="mb-4">
                 <IntlMessages id="user.register" />
               </CardTitle>
-              <Formik
-                initialValues={initialValues}
-                onSubmit={this.onUserRegister}
-              >
+              <Formik onSubmit={this.onUserRegister}>
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <FormGroup className="form-group has-float-label">
@@ -80,6 +79,7 @@ class Register extends Component {
                         className="form-control"
                         name="email"
                         validate={this.validateEmail}
+                        onChange={this.handleChange}
                       />
                       {errors.email && touched.email && (
                         <div className="invalid-feedback d-block">
@@ -95,6 +95,7 @@ class Register extends Component {
                         className="form-control"
                         type="password"
                         name="password"
+                        onChange={this.handleChange}
                         validate={this.validatePassword}
                       />
                       {errors.password && touched.password && (

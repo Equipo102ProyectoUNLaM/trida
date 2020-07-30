@@ -11,6 +11,7 @@ import TagsInput from 'react-tagsinput';
 import IntlMessages from 'helpers/IntlMessages';
 import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import { registerUser } from 'redux/actions';
+import { connect } from 'react-redux';
 import 'react-tagsinput/react-tagsinput.css';
 
 class ModalEnviarInvitacion extends React.Component {
@@ -24,10 +25,15 @@ class ModalEnviarInvitacion extends React.Component {
   }
 
   onConfirm = () => {
+    console.log(this.state.tags[0]);
+    const userObj = {
+      email: this.state.tags[0],
+      password: '123456',
+      isInvited: true,
+    };
     //agarrar los mails de los tags, autogenerar contraseña para cada uno
     // crear usuarios con todo vacío menos el curso del cual se lo esta invitando y mandar mail de invitación
-    //this.props.registerUser(values, this.props.history);
-    console.log(this.state.tags);
+    this.props.registerUser(userObj, this.props.history);
     this.props.toggle();
     enviarNotificacionExitosa(
       'Invitación enviada exitosamente',
@@ -75,6 +81,6 @@ class ModalEnviarInvitacion extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, {
+export default connect(null, {
   registerUser,
 })(ModalEnviarInvitacion);

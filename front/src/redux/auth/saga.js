@@ -59,7 +59,7 @@ const registerWithEmailPasswordAsync = async (email, password) =>
     .then((authUser) => authUser)
     .catch((error) => error);
 
-const addRegisteredUserToDB = async (registerUser, email) => {
+const addRegisteredUserToDB = async (registerUser, email, isInvited) => {
   const userObj = {
     id: registerUser.user.uid,
     mail: email,
@@ -68,7 +68,7 @@ const addRegisteredUserToDB = async (registerUser, email) => {
     telefono: '',
     foto: '',
     primerLogin: true,
-    contraseñaAutogenerada: false,
+    cambiarPassword: isInvited,
     instituciones: [],
     rol: 1,
   };
@@ -76,13 +76,12 @@ const addRegisteredUserToDB = async (registerUser, email) => {
     await addDocumentWithId('usuarios', registerUser.user.uid, userObj);
   } catch (error) {
     put(registerUserError(error));
-  } finally {
-    console.log('registrado');
   }
 };
 
 function* registerWithEmailPassword({ payload }) {
-  const { email, password } = payload.user;
+  console.log(payload);
+  const { email, password, isInvited } = payload.user;
   const { history } = payload;
   try {
     const registerUser = yield call(
@@ -90,12 +89,15 @@ function* registerWithEmailPassword({ payload }) {
       email,
       password
     );
+
     if (!registerUser.message) {
       // ver acá, tiene que esperar
-      yield call(addRegisteredUserToDB, registerUser, email);
-      localStorage.setItem('user_id', registerUser.user.uid);
+      yield call(addRegisteredUserToDB, registerUser, email, isInvited);
+      if (!isInvited) {
+        history.push('/');
+        localStorage.setItem('user_id', registerUser.user.uid);
+      }
       yield put(registerUserSuccess(registerUser));
-      history.push('/');
     } else {
       yield put(registerUserError(registerUser.message));
     }
