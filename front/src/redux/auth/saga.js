@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { auth, firestore } from 'helpers/Firebase';
+import { auth, firestore, functions } from 'helpers/Firebase';
 import { addDocumentWithId } from 'helpers/Firebase-db';
 import {
   LOGIN_USER,
@@ -20,6 +20,7 @@ import {
   resetPasswordError,
 } from './actions';
 import { addDocument } from 'helpers/Firebase-db';
+import { changeLocale } from 'redux/settings/actions';
 
 export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
@@ -68,7 +69,7 @@ const addRegisteredUserToDB = async (registerUser, email, isInvited) => {
     telefono: '',
     foto: '',
     primerLogin: true,
-    cambiarPassword: isInvited,
+    cambiarPassword: false,
     instituciones: [],
     rol: 1,
   };
@@ -79,8 +80,31 @@ const addRegisteredUserToDB = async (registerUser, email, isInvited) => {
   }
 };
 
+const sendInvitationEmail = async (email) => {
+  /* const req = { query: { dest: email } };
+  const sendMail = functions.httpsCallable('sendMail'); //send email function
+  sendMail(req)
+    .then(function (result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data.text;
+    })
+    .catch(function (error) {
+      // Getting the Error details.
+      var code = error.code;
+      var message = error.message;
+      var details = error.details;
+      console.log(error);
+    });
+ 
+
+  fetch('http://localhost:5001/trida-7f28f/us-central1/sendMail?dest=' + email)
+    .then((response) => response.text())
+    .then((text) => {
+      alert(text);
+    }); */
+};
+
 function* registerWithEmailPassword({ payload }) {
-  console.log(payload);
   const { email, password, isInvited } = payload.user;
   const { history } = payload;
   try {
@@ -89,13 +113,16 @@ function* registerWithEmailPassword({ payload }) {
       email,
       password
     );
-
     if (!registerUser.message) {
       // ver acá, tiene que esperar
       yield call(addRegisteredUserToDB, registerUser, email, isInvited);
       if (!isInvited) {
         history.push('/');
         localStorage.setItem('user_id', registerUser.user.uid);
+      } else {
+        const userObj = { payload: { forgotUserMail: { email: email } } };
+        yield call(forgotPassword, userObj);
+        yield call(sendInvitationEmail, email);
       }
       yield put(registerUserSuccess(registerUser));
     } else {

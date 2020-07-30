@@ -24,7 +24,7 @@ class CambiarPassword extends Component {
       const params = new URLSearchParams(this.props.location.search);
       const oobCode = params.get('oobCode');
       if (oobCode) {
-        if (values.newPassword !== '') {
+        if (this.state.password !== '') {
           this.props.resetPassword({
             newPassword: this.state.password,
             resetPasswordCode: oobCode,

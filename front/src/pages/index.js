@@ -24,7 +24,6 @@ class Main extends Component {
   getUserData = async () => {
     const datos = await getDocument(`usuarios/${this.props.loginUser}`);
     const { data } = datos;
-    console.log(data);
     this.setState({
       cambiarPassword: data.cambiarPassword,
       primerLogin: data.primerLogin,

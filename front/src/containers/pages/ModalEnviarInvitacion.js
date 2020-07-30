@@ -13,6 +13,7 @@ import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import { registerUser } from 'redux/actions';
 import { connect } from 'react-redux';
 import 'react-tagsinput/react-tagsinput.css';
+import { getDocument } from 'helpers/Firebase-db';
 
 class ModalEnviarInvitacion extends React.Component {
   constructor(props) {
@@ -21,11 +22,51 @@ class ModalEnviarInvitacion extends React.Component {
     this.state = {
       modalInvitacionOpen: false,
       tags: [],
+      userId: localStorage.getItem('user_id'),
+      items: [],
+      isLoading: true,
+      isEmpty: false,
     };
   }
 
-  onConfirm = () => {
-    console.log(this.state.tags[0]);
+  componentDidMount() {
+    this.getInstitucionesDeUsuario(this.state.userId);
+  }
+
+  getInstitucionesDeUsuario = async (userId) => {
+    const array = [];
+    try {
+      const userRef = await getDocument(`usuarios/${userId}`);
+      const { data } = userRef;
+      const { instituciones } = data;
+      if (!instituciones) return;
+      for (const inst of instituciones) {
+        const institutionRef = await getDocument(`${inst.institucion_id.path}`);
+        const { data } = institutionRef;
+        const { nombre, niveles } = data;
+        const obj = {
+          id: inst.institucion_id.id,
+          name: nombre,
+          tags: niveles,
+        };
+        array.push(obj);
+      }
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.dataListRenderer(array);
+    }
+  };
+
+  dataListRenderer(array) {
+    this.setState({
+      items: array,
+      isLoading: false,
+      isEmpty: array.length === 0 ? true : false,
+    });
+  }
+
+  onConfirm = async () => {
     const userObj = {
       email: this.state.tags[0],
       password: '123456',
@@ -33,7 +74,16 @@ class ModalEnviarInvitacion extends React.Component {
     };
     //agarrar los mails de los tags, autogenerar contraseña para cada uno
     // crear usuarios con todo vacío menos el curso del cual se lo esta invitando y mandar mail de invitación
-    this.props.registerUser(userObj, this.props.history);
+    try {
+      await this.props.registerUser(userObj, this.props.history);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.registroExitoso();
+    }
+  };
+
+  registroExitoso = async () => {
     this.props.toggle();
     enviarNotificacionExitosa(
       'Invitación enviada exitosamente',
@@ -47,6 +97,7 @@ class ModalEnviarInvitacion extends React.Component {
 
   render() {
     const { isOpen, toggle } = this.props;
+
     return (
       <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>Enviar Invitación</ModalHeader>
