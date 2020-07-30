@@ -106,4 +106,8 @@ module.exports = {
 
   /* 10.Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',
+
+  /* 11. Mensajeria */
+  'messages.new': 'CREAR NUEVO MENSAJE',
+  'messages.receiver': 'Destinatario',
 };
