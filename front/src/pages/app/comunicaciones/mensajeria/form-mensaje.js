@@ -5,7 +5,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import { Row } from 'reactstrap';
 import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
-import { getCurrentTime } from 'helpers/Utils';
+import { getFechaHoraActual } from 'helpers/Utils';
 
 var datos = [];
 
@@ -49,12 +49,6 @@ class FormMensaje extends Component {
     this.setState({ [name]: value });
   };
 
-  getFechaHoraActual() {
-    const day = new Date().toISOString().slice(0, 10);
-    const hour = getCurrentTime();
-    return day + ' ' + hour;
-  }
-
   componentWillUnmount() {
     datos = [];
   }
@@ -79,7 +73,7 @@ class FormMensaje extends Component {
       formal: false,
       general: false,
       idMateria: this.state.idMateria,
-      fechaHoraEnvio: this.getFechaHoraActual(),
+      fechaHoraEnvio: getFechaHoraActual(),
     };
     //guardar msj en bd
     await addDocument('mensajes', msg, 'Mensaje');

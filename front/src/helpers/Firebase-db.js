@@ -1,5 +1,6 @@
 import { firestore } from './Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
+import { getFechaHoraActual } from 'helpers/Utils';
 
 // trae una colección
 // parámetro: colección obligatora
@@ -54,6 +55,15 @@ export const getDocument = async (docRef) => {
 // agrega un documento
 // parámetros: colección, objeto a agregar y reemplazo para mostrar en la notificación
 export const addDocument = async (collection, object, message) => {
+  const userId = localStorage.getItem('user_id');
+
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+
   firestore
     .collection(collection)
     .add(object)
@@ -82,6 +92,11 @@ export const addDocument = async (collection, object, message) => {
 // edita un documento
 // parámetros: colección, id del documento, objeto a editar y reemplazo para mostrar en la notificación
 export const editDocument = async (collection, docId, obj, message) => {
+  obj = {
+    ...obj,
+    fecha_edicion: getFechaHoraActual(),
+  };
+
   var ref = firestore.collection(collection).doc(docId);
   ref.set(obj, { merge: true });
 
