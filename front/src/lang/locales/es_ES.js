@@ -12,6 +12,7 @@ Tabla de Contenidos
 07.Institution Selection
 08.Course Selection
 09.Prácticas
+10.Contenidos
 */
 
 module.exports = {
@@ -88,6 +89,8 @@ module.exports = {
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
+  'pizarron.abrir-pizarron': 'Abrir pizarrón',
+  'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
 
   /* 07.Institution */
   'institution.selection': '¿A qué institución desea acceder?',
@@ -105,9 +108,12 @@ module.exports = {
   'evaluacion.agregar': 'AGREGAR EVALUACIÓN',
 
   /* 10.Contenidos */
-  'contenido.agregar': 'AGREGAR CONTENIDO',
 
+  'contenido.agregar': 'AGREGAR CONTENIDO',
+  'contenido.agregar': 'Subir archivos',
+  
   /* 11. Mensajeria */
   'messages.new': 'CREAR NUEVO MENSAJE',
   'messages.receiver': 'Destinatario',
+
 };

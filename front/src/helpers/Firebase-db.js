@@ -100,14 +100,16 @@ export const editDocument = async (collection, docId, obj, message) => {
   var ref = firestore.collection(collection).doc(docId);
   ref.set(obj, { merge: true });
 
-  NotificationManager.success(
-    `${message} editada exitosamente`,
-    `${message} editada!`,
-    3000,
-    null,
-    null,
-    ''
-  );
+  if (message) {
+    NotificationManager.success(
+      `${message} editada exitosamente`,
+      `${message} editada!`,
+      3000,
+      null,
+      null,
+      ''
+    );
+  }
 };
 
 // borra un documento

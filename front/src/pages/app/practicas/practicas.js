@@ -158,6 +158,7 @@ class Practica extends Component {
                   onDelete={this.onDelete}
                   navTo="#"
                   collect={collect}
+                  calendario={true}
                 />
               );
             })}{' '}

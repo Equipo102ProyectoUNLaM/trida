@@ -32,6 +32,7 @@ class DataListView extends React.Component {
       collect,
       onEditItem,
       navTo,
+      calendario,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -45,25 +46,33 @@ class DataListView extends React.Component {
               <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
                 <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                   <p className="list-item-heading mb-1 truncate">{title}</p>
-                  <p className="mb-1 text-small w-15 w-sm-100">{text1}</p>
-                  <p className="mb-1 text-small w-15 w-sm-100">{text2}</p>
+                  {text1 && (
+                    <p className="mb-1 text-small w-15 w-sm-100">{text1}</p>
+                  )}
+                  {text2 && (
+                    <p className="mb-1 text-small w-15 w-sm-100">{text2}</p>
+                  )}
                 </div>
               </NavLink>
               <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
                 <Row>
-                  <div
-                    className="glyph-icon simple-icon-pencil edit-action-icon"
-                    onClick={() => onEditItem(id)}
-                  />
+                  {onEditItem && (
+                    <div
+                      className="glyph-icon simple-icon-pencil edit-action-icon"
+                      onClick={() => onEditItem(id)}
+                    />
+                  )}
                   <div
                     className="glyph-icon simple-icon-trash delete-action-icon"
                     onClick={this.handleClickDelete}
                   />
-                  <Calendario
-                    handleClick={this.handleClick}
-                    text="Modificar fecha de entrega"
-                    evalCalendar={false}
-                  />
+                  {calendario && (
+                    <Calendario
+                      handleClick={this.handleClick}
+                      text="Modificar fecha de entrega"
+                      evalCalendar={false}
+                    />
+                  )}
                 </Row>
               </div>
             </div>

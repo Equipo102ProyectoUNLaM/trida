@@ -1217,6 +1217,16 @@ button {
   margin-bottom: 2rem !important;
 }
 
+.mb-3
+{
+  margin-bottom: 1rem !important;
+}
+
+.mr-3
+{
+  margin-right: 0.01rem !important;
+}
+
 .float-none-xs {
   @include respond-below(xs) {
     float: initial !important;
@@ -6676,6 +6686,34 @@ input:-webkit-autofill {
   }
 }
 
+.cover-spin {
+  background-color: rgba(255,255,255,0.7);
+  z-index: 1050;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+  
+.cover-spin::after {
+    content:'';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba($theme-color-1, 0.2);
+    border-radius: 50%;
+    border-top-color: $theme-color-1;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    left: calc(50% - 15px);
+    top: calc(50% - 15px);
+    position: fixed;
+    z-index: 1;
+}
+
 /* 36.Context Menu */
 .react-contextmenu {
   box-shadow: initial;
@@ -8978,7 +9016,11 @@ footer.page-footer {
   .encrypted-icon, .github-corner {
     display: none !important;
   }
+}
 
+.open-in-new-window-row {
+  margin-top: -20px;
+  margin-bottom: 20px;
 }
 
 .board {
@@ -9002,6 +9044,44 @@ footer.page-footer {
 .subject{
   margin: auto;
   cursor: pointer;
+}
+
+#cover-spin {
+  background-color: rgba(255,255,255,0.7);
+  z-index: 1050;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@-webkit-keyframes spin {
+from {-webkit-transform:rotate(0deg);}
+to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+from {transform:rotate(0deg);}
+to {transform:rotate(360deg);}
+}
+
+#cover-spin::after {
+  content:'';
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba($theme-color-1, 0.2);
+  border-radius: 50%;
+  border-top-color: $theme-color-1;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+  left: calc(50% - 15px);
+  top: calc(50% - 15px);
+  position: fixed;
+  z-index: 1;
 }
 
 .asunto-msj {
