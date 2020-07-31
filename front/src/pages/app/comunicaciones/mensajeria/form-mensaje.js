@@ -107,7 +107,6 @@ class FormMensaje extends Component {
       });
 
       i++;
-      console.log(datos);
     }
 
     this.setState({
@@ -140,7 +139,7 @@ class FormMensaje extends Component {
           </Colxx>
         </Row>
 
-        <FormGroup className="mb-3 ">
+        <FormGroup className="mb-3 asunto-msj ">
           <Label>Asunto</Label>
           <Input
             name="asunto"
