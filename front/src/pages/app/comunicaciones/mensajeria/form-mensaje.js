@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
-import Switch from 'rc-switch';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from '../../../../helpers/IntlMessages';

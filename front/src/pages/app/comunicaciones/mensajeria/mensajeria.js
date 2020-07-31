@@ -1,10 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { Row } from 'reactstrap';
-import IntlMessages from '../../../../helpers/IntlMessages';
-import {
-  Colxx,
-  Separator,
-} from '../../../../components/common/CustomBootstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormMensaje from './form-mensaje';
@@ -25,7 +19,7 @@ export default class Mensajeria extends Component {
 
   onMensajeEnviado = () => {
     this.toggleModal();
-    //this.getMensajes(this.state.idUser);
+    //this.getMensajes(this.state.idUser); => Acá se deberìa hacer un render de los msjs enviados/recibidos del usuario
   };
 
   toggleModal = () => {
