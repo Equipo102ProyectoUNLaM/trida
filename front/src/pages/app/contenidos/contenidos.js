@@ -3,7 +3,12 @@ import { Row, Card, CardBody, Button } from 'reactstrap';
 import IntlMessages from '../../../helpers/IntlMessages';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import FileBrowser, { Icons } from 'react-keyed-file-browser';
+import FileBrowser, {
+  Icons,
+  FileRenderers,
+  FolderRenderers,
+  FilterRenderers,
+} from 'react-keyed-file-browser';
 import { storage } from 'helpers/Firebase';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
@@ -11,6 +16,12 @@ import Dropzone from '../../../containers/forms/Dropzone';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import { NotificationManager } from '../../../components/common/react-notifications';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import { DefaultAction } from 'constants/fileBrowser/actions';
+import { DefaultFilter } from 'constants/fileBrowser/filters';
+import {
+  DefaultConfirmDeletion,
+  MultipleConfirmDeletion,
+} from 'constants/fileBrowser/confirmations';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -270,6 +281,7 @@ class Contenidos extends Component {
 
   handleSelectFolder = (folderKey) => {
     //Al crear una nueva carpeta, la marco como seleccionada
+    if (!folderKey) return;
     this.setState((state) => ({
       selectedFolder: folderKey.key,
     }));
@@ -452,6 +464,11 @@ class Contenidos extends Component {
             onDeleteFolder={this.handleDeleteFolder}
             onDeleteFile={this.handleDeleteFile}
             onDownloadFile={this.handleDownloadFile}
+            actionRenderer={DefaultAction}
+            filterRenderer={DefaultFilter}
+            confirmDeletionRenderer={DefaultConfirmDeletion}
+            confirmMultipleDeletionRenderer={MultipleConfirmDeletion}
+            noFilesMessage="Sin archivos."
           />
         </div>
 
