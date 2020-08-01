@@ -11,9 +11,62 @@ import {
   TabPane,
 } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
-
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
+import DataTablePagination from 'components/datatable-pagination';
+import ReactTable from 'react-table';
+
+const dataReceiveTableColumns = [
+  {
+    Header: 'Fecha',
+    accessor: 'fecha_creacion',
+    // eslint-disable-next-line react/display-name
+    Cell: (props) => <p className="list-item-heading">{props.value}</p>,
+  },
+  {
+    Header: 'Remitente',
+    accessor: 'emisor',
+    // eslint-disable-next-line react/display-name
+    Cell: (props) => <p className="text-muted">{props.value}</p>,
+  },
+  {
+    Header: 'Asunto',
+    accessor: 'asunto',
+    // eslint-disable-next-line react/display-name
+    Cell: (props) => <p className="text-muted">{props.value}</p>,
+  },
+  // {
+  //   header: '',
+  //   id: 'click-me-button',
+  //   render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
+  // }
+];
+
+const dataSentTableColumns = [
+  {
+    Header: 'Fecha',
+    accessor: 'fecha_creacion',
+    // eslint-disable-next-line react/display-name
+    Cell: (props) => <p className="list-item-heading">{props.value}</p>,
+  },
+  {
+    Header: 'Destinatario',
+    accessor: 'receptor',
+    // eslint-disable-next-line react/display-name
+    Cell: (props) => <p className="text-muted">{props.value}</p>,
+  },
+  {
+    Header: 'Asunto',
+    accessor: 'asunto',
+    // eslint-disable-next-line react/display-name
+    Cell: (props) => <p className="text-muted">{props.value}</p>,
+  },
+  // {
+  //   header: '',
+  //   id: 'click-me-button',
+  //   render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
+  // }
+];
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -27,6 +80,8 @@ class TabsDeClase extends Component {
     };
   }
 
+  componentDidMount() {}
+
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -34,6 +89,7 @@ class TabsDeClase extends Component {
       });
     }
   }
+
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -41,130 +97,108 @@ class TabsDeClase extends Component {
       });
     }
   }
+
   render() {
-    const { idSala } = this.props;
+    const { itemsSent, itemsReceive, clickOnRow } = this.props;
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
-          <Row lg="12">
-            <Colxx xxs="12" xs="12" lg="12">
-              <Card className="mb-4">
-                <CardHeader className="pl-0 pr-0">
-                  <Nav tabs className=" card-header-tabs  ml-0 mr-0">
-                    <NavItem className="w-25 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '1',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('1');
+          <Card className="mb-4">
+            <CardHeader className="pl-0 pr-0">
+              <Nav tabs className=" card-header-tabs  ml-0 mr-0">
+                <NavItem className="w-50 text-center">
+                  <NavLink
+                    to="#"
+                    location={{}}
+                    className={classnames({
+                      active: this.state.activeSecondTab === '1',
+                      'nav-link': true,
+                    })}
+                    onClick={() => {
+                      this.toggleSecondTab('1');
+                    }}
+                  >
+                    Mensajes Recibidos
+                  </NavLink>
+                </NavItem>
+                <NavItem className="w-50 text-center">
+                  <NavLink
+                    to="#"
+                    location={{}}
+                    className={classnames({
+                      active: this.state.activeSecondTab === '2',
+                      'nav-link': true,
+                    })}
+                    onClick={() => {
+                      this.toggleSecondTab('2');
+                    }}
+                  >
+                    Mensajes Enviados
+                  </NavLink>
+                </NavItem>
+              </Nav>
+            </CardHeader>
+            <TabContent activeTab={this.state.activeSecondTab}>
+              <TabPane tabId="1">
+                <Row>
+                  <Colxx sm="12" lg="12">
+                    <CardBody>
+                      <ReactTable
+                        data={itemsReceive}
+                        paginationMaxSize={3}
+                        columns={dataReceiveTableColumns}
+                        defaultPageSize={5}
+                        showPageJump={true}
+                        showPageSizeOptions={true}
+                        PaginationComponent={DataTablePagination}
+                        className={'react-table-fixed-height'}
+                        getTrGroupProps={(rowInfo) => {
+                          if (rowInfo !== undefined) {
+                            return {
+                              onClick: () => {
+                                {
+                                  clickOnRow(rowInfo);
+                                }
+                              },
+                            };
+                          }
                         }}
-                      >
-                        Aula Virtual
-                      </NavLink>
-                    </NavItem>
-                    <NavItem className="w-25 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '2',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('2');
+                      />
+                    </CardBody>
+                  </Colxx>
+                </Row>
+              </TabPane>
+              <TabPane tabId="2">
+                <Row>
+                  <Colxx sm="12" lg="12">
+                    <CardBody>
+                      <ReactTable
+                        data={itemsSent}
+                        paginationMaxSize={3}
+                        columns={dataSentTableColumns}
+                        defaultPageSize={5}
+                        showPageJump={true}
+                        showPageSizeOptions={true}
+                        PaginationComponent={DataTablePagination}
+                        className={'react-table-fixed-height'}
+                        getTrGroupProps={(rowInfo) => {
+                          if (rowInfo !== undefined) {
+                            return {
+                              onClick: () => {
+                                {
+                                  clickOnRow(rowInfo);
+                                }
+                              },
+                            };
+                          }
                         }}
-                      >
-                        Preguntas
-                      </NavLink>
-                    </NavItem>
-                    <NavItem className="w-25 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '3',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('3');
-                        }}
-                      >
-                        Respuestas
-                      </NavLink>
-                    </NavItem>
-                    <NavItem className="w-25 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '4',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('4');
-                        }}
-                      >
-                        Asistencia
-                      </NavLink>
-                    </NavItem>
-                  </Nav>
-                </CardHeader>
-
-                <TabContent activeTab={this.state.activeSecondTab}>
-                  <TabPane tabId="1">
-                    <Row>
-                      <Colxx sm="12" lg="12">
-                        {/* <CardBody>
-                          {!idSala ? (
-                            <CardTitle className="mb-4">
-                              No hay videollamada asociada
-                            </CardTitle>
-                          ) : (
-                            <PaginaVideollamada idSala={idSala} />
-                          )}
-                        </CardBody> */}
-                      </Colxx>
-                    </Row>
-                  </TabPane>
-                  <TabPane tabId="2">
-                    <Row>
-                      <Colxx sm="12" lg="12">
-                        <CardBody>
-                          <CardTitle className="mb-4">
-                            Crear preguntas
-                          </CardTitle>
-                        </CardBody>
-                      </Colxx>
-                    </Row>
-                  </TabPane>
-                  <TabPane tabId="3">
-                    <Row>
-                      <Colxx sm="12" lg="12">
-                        <CardBody>
-                          <CardTitle className="mb-4">
-                            Resultados de preguntas
-                          </CardTitle>
-                        </CardBody>
-                      </Colxx>
-                    </Row>
-                  </TabPane>
-                  <TabPane tabId="4">
-                    <Row>
-                      <Colxx sm="12" lg="12">
-                        <CardBody>
-                          <CardTitle className="mb-4">Asistencia</CardTitle>
-                        </CardBody>
-                      </Colxx>
-                    </Row>
-                  </TabPane>
-                </TabContent>
-              </Card>
-            </Colxx>
-          </Row>
+                      />
+                    </CardBody>
+                  </Colxx>
+                </Row>
+              </TabPane>
+            </TabContent>
+          </Card>
         </Colxx>
       </Row>
     );
