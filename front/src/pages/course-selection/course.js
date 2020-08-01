@@ -3,6 +3,7 @@ import { Collapse, Button, Row, Card, CardBody, Jumbotron } from 'reactstrap';
 import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
+import { getCourses, getInstituciones } from 'helpers/Firebase-user';
 import { firestore } from 'helpers/Firebase';
 
 const HOME_URL = '/app/home';
@@ -10,9 +11,11 @@ const HOME_URL = '/app/home';
 class Course extends Component {
   constructor(props) {
     super(props);
+    const userId = localStorage.getItem('user_id');
     this.state = {
       items: [],
       isLoading: true,
+      userId,
     };
   }
 
@@ -22,7 +25,10 @@ class Course extends Component {
 
   getCourses = async () => {
     const { institutionId } = this.props.match.params;
-    const user_courses = await this.getUserCourses(institutionId);
+    const user_courses = await this.getUserCourses(
+      institutionId,
+      this.state.userId
+    );
     this.dataListRender(user_courses);
   };
 
@@ -33,53 +39,14 @@ class Course extends Component {
     });
   }
 
-  async getUserCourses(institutionId) {
-    var userId = localStorage.getItem('user_id');
-    var array = [];
+  async getUserCourses(institutionId, userId) {
+    let array = [];
     try {
-      const userRef = firestore.doc(`users/${userId}`);
-      var userDoc = await userRef.get();
-      const { instituciones } = userDoc.data(); //Traigo las instituciones del usuario
-      console.log(instituciones);
-      var instf = instituciones.filter(
-        (i) => i.institucion_id.id === institutionId
-      ); //Busco la que seleccionó anteriormente
-      for (const c of instf[0].cursos) {
-        //Itero en sus cursos, me traigo toda la info del documento
-        const courseRef = firestore.doc(`${c.curso_id.path}`);
-        var courseDoc = await courseRef.get();
-        const { nombre } = courseDoc.data();
-        var subjects_with_data = await this.renderSubjects(c.materias); //Busco las materias que tiene asignadas
-        const obj = {
-          id: c.curso_id.id,
-          subjects: subjects_with_data,
-          name: nombre,
-        };
-        array.push(obj); //Armo el array con la info del curso y las materias
-      }
-      return array;
+      array = await getCourses(institutionId, userId);
     } catch (err) {
       console.log('Error getting documents', err);
-    }
-  }
-
-  async renderSubjects(materiasIds) {
-    const array = [];
-    try {
-      for (const m of materiasIds) {
-        //Busco los documentos de las materias y me traigo la info
-        const matRef = firestore.doc(`${m.path}`);
-        var matDoc = await matRef.get();
-        const { nombre } = matDoc.data();
-        const obj = {
-          id: m.id,
-          name: nombre,
-        };
-        array.push(obj);
-      }
+    } finally {
       return array;
-    } catch (err) {
-      console.log('Error getting documents', err);
     }
   }
 

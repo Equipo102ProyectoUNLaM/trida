@@ -32,7 +32,7 @@ import { MobileMenuIcon, MenuIcon } from '../../components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
-import { firestore } from 'helpers/Firebase';
+import { getUserName } from 'helpers/Firebase-user';
 
 class TopNav extends Component {
   constructor(props) {
@@ -215,9 +215,7 @@ class TopNav extends Component {
 
   async getUserName(userId) {
     try {
-      const userRef = firestore.doc(`users/${userId}`);
-      var userDoc = await userRef.get();
-      const { name } = userDoc.data();
+      const name = await getUserName(userId);
       this.setState({
         userName: name,
       });

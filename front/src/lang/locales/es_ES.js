@@ -38,7 +38,11 @@ module.exports = {
   'user.username': 'Nombre de Usuario',
   'user.complete-datos': 'Completá tus datos',
   'user.enviar-datos': 'Enviar',
-  'user.mail-invitado': 'Email invitado',
+  'user.mail-invitado': 'Email invitado *',
+  'user.seleccion-institucion':
+    '¿A qué institución querés invitar al usuario? *',
+  'user.seleccion-curso': '¿A qué curso querés invitar al usuario?',
+  'user.seleccion-materia': '¿A qué materia querés invitar al usuario?',
 
   /* 03.Menú */
   'menu.app': 'Inicio',

@@ -7,7 +7,7 @@ import MediumCardListView from '../../containers/pages/MediumCardListView';
 import { firestore } from 'helpers/Firebase';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../redux/actions';
-import { getInstitucionesDeUsuario } from 'helpers/Firebase-user';
+import { getInstituciones } from 'helpers/Firebase-user';
 
 function collect(props) {
   return { data: props.data };
@@ -23,20 +23,21 @@ const mapStateToProps = ({ authUser }) => {
 class Institution extends Component {
   constructor(props) {
     super(props);
+    var userId = localStorage.getItem('user_id');
     this.state = {
       items: [],
       isLoading: true,
       isEmpty: false,
-      userId: localStorage.getItem('user_id'),
+      userId,
     };
   }
 
-  getInstituciones = async (userId) => {
+  getInstituciones = async () => {
     try {
-      const inst = await getInstitucionesDeUsuario(userId);
-      this.dataListRenderer(inst);
+      const items = await getInstituciones(this.state.userId);
+      this.dataListRenderer(items);
     } catch (err) {
-      console.log('Error', err);
+      console.log('Error getting documents', err);
     }
   };
 
@@ -55,7 +56,7 @@ class Institution extends Component {
   };
 
   async componentDidMount() {
-    await this.getInstituciones(this.state.userId);
+    await this.getInstituciones();
   }
 
   handleLogout = () => {

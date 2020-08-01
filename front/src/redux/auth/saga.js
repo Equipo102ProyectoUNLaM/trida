@@ -1,6 +1,7 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { auth, firestore, functions } from 'helpers/Firebase';
 import { addDocumentWithId } from 'helpers/Firebase-db';
+import { asignarMateriasAUsuario } from 'helpers/Firebase-user';
 import {
   LOGIN_USER,
   REGISTER_USER,
@@ -82,8 +83,7 @@ const addRegisteredUserToDB = async (registerUser, email, isInvited) => {
 
 export const sendInvitationEmail = async (email) => {
   const req = { query: { dest: email } };
-  const sendMail = functions.httpsCallable('ping'); //send email function
-  console.log(sendMail);
+  const sendMail = functions.httpsCallable('sendMail'); //send email function
   sendMail(req)
     .then(function (result) {
       // Read result of the Cloud Function.
@@ -98,7 +98,14 @@ export const sendInvitationEmail = async (email) => {
 };
 
 function* registerWithEmailPassword({ payload }) {
-  const { email, password, isInvited } = payload.user;
+  const {
+    email,
+    password,
+    isInvited,
+    instId,
+    courseId,
+    subjectId,
+  } = payload.user;
   const { history } = payload;
   try {
     const registerUser = yield call(
@@ -116,6 +123,12 @@ function* registerWithEmailPassword({ payload }) {
         const userObj = { payload: { forgotUserMail: { email: email } } };
         yield call(forgotPassword, userObj);
         yield call(sendInvitationEmail, email);
+        asignarMateriasAUsuario(
+          instId,
+          courseId,
+          subjectId,
+          registerUser.user.uid
+        );
       }
       yield put(registerUserSuccess(registerUser));
     } else {
@@ -123,6 +136,7 @@ function* registerWithEmailPassword({ payload }) {
     }
   } catch (error) {
     yield put(registerUserError(error));
+    return error;
   }
 }
 

@@ -1130,6 +1130,17 @@ button {
     }
   }
 }
+.select__menu {
+  z-index: 4 !important;;
+}
+
+.select__menu-list {
+  z-index: 4 !important;
+}
+
+.select__option {
+  z-index: 4 !important;
+}
 
 /* 03.Widths-Spacing */
 .w-10 {
