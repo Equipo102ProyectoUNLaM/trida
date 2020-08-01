@@ -13,7 +13,7 @@ import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import { registerUser } from 'redux/actions';
 import { connect } from 'react-redux';
 import 'react-tagsinput/react-tagsinput.css';
-import { getDocument } from 'helpers/Firebase-db';
+import { getInstitucionesDeUsuario } from 'helpers/Firebase-user';
 
 class ModalEnviarInvitacion extends React.Component {
   constructor(props) {
@@ -24,37 +24,22 @@ class ModalEnviarInvitacion extends React.Component {
       tags: [],
       userId: localStorage.getItem('user_id'),
       items: [],
+      arrayCursos: [],
       isLoading: true,
       isEmpty: false,
     };
   }
 
   componentDidMount() {
-    this.getInstitucionesDeUsuario(this.state.userId);
+    this.getInstituciones(this.state.userId);
   }
 
-  getInstitucionesDeUsuario = async (userId) => {
-    const array = [];
+  /*getInstituciones = async (userId) => {
     try {
-      const userRef = await getDocument(`usuarios/${userId}`);
-      const { data } = userRef;
-      const { instituciones } = data;
-      if (!instituciones) return;
-      for (const inst of instituciones) {
-        const institutionRef = await getDocument(`${inst.institucion_id.path}`);
-        const { data } = institutionRef;
-        const { nombre, niveles } = data;
-        const obj = {
-          id: inst.institucion_id.id,
-          name: nombre,
-          tags: niveles,
-        };
-        array.push(obj);
-      }
+      const inst = await getInstitucionesDeUsuario(userId);
+      this.dataListRenderer(inst);
     } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(array);
+      console.log('Error', err);
     }
   };
 
@@ -62,9 +47,57 @@ class ModalEnviarInvitacion extends React.Component {
     this.setState({
       items: array,
       isLoading: false,
-      isEmpty: array.length === 0 ? true : false,
+      isEmpty: !array.length,
     });
   }
+
+  async getUserCourses(institutionId) {
+    var array = [];
+    try {
+      const userRef = firestore.doc(`users/${userId}`);
+      var userDoc = await userRef.get();
+      const { instituciones } = userDoc.data(); //Traigo las instituciones del usuario
+      var instf = instituciones.filter(
+        (i) => i.institucion_id.id === institutionId
+      ); //Busco la que seleccionó anteriormente
+      for (const c of instf[0].cursos) {
+        //Itero en sus cursos, me traigo toda la info del documento
+        const courseRef = firestore.doc(`${c.curso_id.path}`);
+        var courseDoc = await courseRef.get();
+        const { nombre } = courseDoc.data();
+        var subjects_with_data = await this.renderSubjects(c.materias); //Busco las materias que tiene asignadas
+        const obj = {
+          id: c.curso_id.id,
+          subjects: subjects_with_data,
+          name: nombre,
+        };
+        array.push(obj); //Armo el array con la info del curso y las materias
+      }
+      return array;
+    } catch (err) {
+      console.log('Error getting documents', err);
+    }
+  }
+
+  async renderSubjects(materiasIds) {
+    const array = [];
+    try {
+      for (const m of materiasIds) {
+        //Busco los documentos de las materias y me traigo la info
+        const matRef = firestore.doc(`${m.path}`);
+        var matDoc = await matRef.get();
+        const { nombre } = matDoc.data();
+        const obj = {
+          id: m.id,
+          name: nombre,
+        };
+        array.push(obj);
+      }
+      return array;
+    } catch (err) {
+      console.log('Error getting documents', err);
+    }
+  }*/
 
   onConfirm = async () => {
     const userObj = {
@@ -97,7 +130,7 @@ class ModalEnviarInvitacion extends React.Component {
 
   render() {
     const { isOpen, toggle } = this.props;
-
+    console.log(this.state.items);
     return (
       <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>Enviar Invitación</ModalHeader>

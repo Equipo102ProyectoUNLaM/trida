@@ -4,6 +4,7 @@ import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { firestore } from 'helpers/Firebase';
 import CardInicio from 'components/cards-inicio';
+import { sendInvitationEmail } from 'redux/auth/saga';
 
 export default class Inicio extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ export default class Inicio extends Component {
 
   componentDidMount() {
     this.getInstituciones();
+    sendInvitationEmail('juli.foglia@gmail.com');
   }
 
   getInstituciones = async () => {

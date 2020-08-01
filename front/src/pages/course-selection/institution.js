@@ -7,6 +7,7 @@ import MediumCardListView from '../../containers/pages/MediumCardListView';
 import { firestore } from 'helpers/Firebase';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../redux/actions';
+import { getInstitucionesDeUsuario } from 'helpers/Firebase-user';
 
 function collect(props) {
   return { data: props.data };
@@ -26,32 +27,16 @@ class Institution extends Component {
       items: [],
       isLoading: true,
       isEmpty: false,
+      userId: localStorage.getItem('user_id'),
     };
   }
 
-  getInstituciones = async () => {
-    const array = [];
-    var userId = localStorage.getItem('user_id');
+  getInstituciones = async (userId) => {
     try {
-      const userRef = firestore.doc(`users/${userId}`);
-      var userDoc = await userRef.get();
-      const { instituciones } = userDoc.data();
-      if (!instituciones) return;
-      for (const inst of instituciones) {
-        const institutionRef = firestore.doc(`${inst.institucion_id.path}`);
-        var institutionDoc = await institutionRef.get();
-        const { nombre, niveles } = institutionDoc.data();
-        const obj = {
-          id: inst.institucion_id.id,
-          name: nombre,
-          tags: niveles,
-        };
-        array.push(obj);
-      }
+      const inst = await getInstitucionesDeUsuario(userId);
+      this.dataListRenderer(inst);
     } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(array);
+      console.log('Error', err);
     }
   };
 
@@ -70,7 +55,7 @@ class Institution extends Component {
   };
 
   async componentDidMount() {
-    await this.getInstituciones();
+    await this.getInstituciones(this.state.userId);
   }
 
   handleLogout = () => {

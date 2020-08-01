@@ -40,6 +40,7 @@ class Course extends Component {
       const userRef = firestore.doc(`users/${userId}`);
       var userDoc = await userRef.get();
       const { instituciones } = userDoc.data(); //Traigo las instituciones del usuario
+      console.log(instituciones);
       var instf = instituciones.filter(
         (i) => i.institucion_id.id === institutionId
       ); //Busco la que seleccionó anteriormente

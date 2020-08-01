@@ -80,9 +80,10 @@ const addRegisteredUserToDB = async (registerUser, email, isInvited) => {
   }
 };
 
-const sendInvitationEmail = async (email) => {
-  /* const req = { query: { dest: email } };
-  const sendMail = functions.httpsCallable('sendMail'); //send email function
+export const sendInvitationEmail = async (email) => {
+  const req = { query: { dest: email } };
+  const sendMail = functions.httpsCallable('ping'); //send email function
+  console.log(sendMail);
   sendMail(req)
     .then(function (result) {
       // Read result of the Cloud Function.
@@ -93,15 +94,7 @@ const sendInvitationEmail = async (email) => {
       var code = error.code;
       var message = error.message;
       var details = error.details;
-      console.log(error);
     });
- 
-
-  fetch('http://localhost:5001/trida-7f28f/us-central1/sendMail?dest=' + email)
-    .then((response) => response.text())
-    .then((text) => {
-      alert(text);
-    }); */
 };
 
 function* registerWithEmailPassword({ payload }) {
