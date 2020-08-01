@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
-import IntlMessages from '../../../../helpers/IntlMessages';
+import IntlMessages from 'helpers/IntlMessages';
 import { Row } from 'reactstrap';
 import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
 import { getFechaHoraActual } from 'helpers/Utils';
@@ -108,7 +108,7 @@ class FormMensaje extends Component {
   };
 
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, selectedOptions, asunto, textoMensaje } = this.state;
     const { toggleModal } = this.props;
 
     return isLoading ? (
@@ -125,7 +125,7 @@ class FormMensaje extends Component {
               classNamePrefix="react-select"
               isMulti
               name="form-field-name"
-              value={this.state.selectedOptions}
+              value={selectedOptions}
               onChange={this.handleChangeMulti}
               options={datos}
             />
@@ -134,11 +134,7 @@ class FormMensaje extends Component {
 
         <FormGroup className="mb-3 asunto-msj ">
           <Label>Asunto</Label>
-          <Input
-            name="asunto"
-            onChange={this.handleChange}
-            value={this.state.asunto}
-          />
+          <Input name="asunto" onChange={this.handleChange} value={asunto} />
         </FormGroup>
 
         <FormGroup className="mb-3">
@@ -147,7 +143,7 @@ class FormMensaje extends Component {
             name="textoMensaje"
             type="textarea"
             onChange={this.handleChange}
-            value={this.state.textoMensaje}
+            value={textoMensaje}
           />
         </FormGroup>
 
