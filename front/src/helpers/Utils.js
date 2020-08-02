@@ -32,7 +32,12 @@ export const getDateWithFormat = () => {
 
 export const getCurrentTime = () => {
   const now = new Date();
-  return now.getHours() + ':' + now.getMinutes();
+  const hours = now.getHours();
+  const minuts = now.getMinutes();
+  const hoursFormatted = hours.toString().length === 1 ? '0' + hours : hours;
+  const minutsFormatted =
+    minuts.toString().length === 1 ? '0' + minuts : minuts;
+  return hoursFormatted + ':' + minutsFormatted;
 };
 
 export const getFechaHoraActual = () => {

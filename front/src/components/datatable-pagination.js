@@ -125,7 +125,7 @@ export default class DataTablePagination extends Component {
         <div className="text-center">
           {showPageJump && (
             <div className="float-left pt-2">
-              <span>Page </span>
+              <span>Página </span>
               <UncontrolledDropdown className="d-inline-block">
                 <DropdownToggle caret color="outline-primary" size="xs">
                   {this.state.page + 1}
@@ -134,7 +134,7 @@ export default class DataTablePagination extends Component {
                   {this.renderPageJump()}
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <span> of </span>
+              <span> de </span>
               {pages}
             </div>
           )}
@@ -174,7 +174,7 @@ export default class DataTablePagination extends Component {
           </Pagination>
           {showPageSizeOptions && (
             <div className="float-right pt-2">
-              <span className="text-muted text-small mr-1">Items </span>
+              <span className="text-muted text-small mr-1">Mensajes </span>
               <UncontrolledDropdown className="d-inline-block">
                 <DropdownToggle caret color="outline-primary" size="xs">
                   {this.state.pageSize}
