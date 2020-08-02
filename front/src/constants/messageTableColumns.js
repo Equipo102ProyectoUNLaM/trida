@@ -19,11 +19,6 @@ export const dataReceiveTableColumns = [
     // eslint-disable-next-line react/display-name
     Cell: (props) => <p className="text-muted">{props.value}</p>,
   },
-  // {
-  //   header: '',
-  //   id: 'click-me-button',
-  //   render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
-  // }
 ];
 
 export const dataSentTableColumns = [
@@ -35,7 +30,7 @@ export const dataSentTableColumns = [
   },
   {
     Header: 'Destinatario',
-    accessor: 'receptor',
+    accessor: 'destinatario',
     // eslint-disable-next-line react/display-name
     Cell: (props) => <p className="text-muted">{props.value}</p>,
   },
@@ -45,9 +40,4 @@ export const dataSentTableColumns = [
     // eslint-disable-next-line react/display-name
     Cell: (props) => <p className="text-muted">{props.value}</p>,
   },
-  // {
-  //   header: '',
-  //   id: 'click-me-button',
-  //   render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
-  // }
 ];

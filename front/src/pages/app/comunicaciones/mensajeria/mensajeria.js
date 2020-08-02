@@ -58,7 +58,7 @@ class Mensajeria extends Component {
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
-      destinatario: elem.data.receptor,
+      destinatario: elem.data.receptor.map((elem) => elem.nombre),
     }));
     this.setState({
       itemsSent: arrayDeData,
@@ -71,7 +71,7 @@ class Mensajeria extends Component {
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
-      remitente: elem.data.emisor,
+      remitente: elem.data.emisor.map((elem) => elem.nombre),
     }));
     this.setState({
       itemsReceive: arrayDeData,
@@ -106,7 +106,15 @@ class Mensajeria extends Component {
   };
 
   render() {
-    const { isLoading, itemsSent, itemsReceive, modalEnviarOpen } = this.state;
+    const {
+      isLoading,
+      itemsSent,
+      itemsReceive,
+      modalEnviarOpen,
+      contenidoMensaje,
+      asuntoMensaje,
+      modalMessageOpen,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -134,12 +142,12 @@ class Mensajeria extends Component {
           />
           {this.state.modalMessageOpen && (
             <ModalConfirmacion
-              texto={this.state.contenidoMensaje}
-              titulo={this.state.asuntoMensaje}
+              texto={contenidoMensaje}
+              titulo={asuntoMensaje}
               buttonPrimary="Responder"
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}
-              isOpen={this.state.modalMessageOpen}
+              isOpen={modalMessageOpen}
             />
           )}
         </div>
