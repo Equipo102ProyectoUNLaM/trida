@@ -84,7 +84,6 @@ export const addDocument = async (collection, object, message) => {
 };
 
 export const addDocumentWithId = async (collection, id, object, message) => {
-  console.log('estoy en add doc id');
   firestore
     .collection(collection)
     .doc(id)

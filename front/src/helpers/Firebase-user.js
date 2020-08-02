@@ -92,23 +92,78 @@ export const asignarMateriasAUsuario = async (
   subjectId,
   userId
 ) => {
-  const instRef = firestore.doc(`/instituciones/${institutionId}`);
-  const courseRef = firestore.doc(
-    `/instituciones/${institutionId}/cursos/${courseId}`
-  );
-  const subjectRef = firestore.doc(
-    `/instituciones/${institutionId}/cursos/${courseId}/materias/${subjectId}`
-  );
+  let instRef = '',
+    courseRef = [],
+    subjectRef = [],
+    cursosObj = [];
+
+  instRef = firestore.doc(`/instituciones/${institutionId}`);
+
+  if (courseId) {
+    courseRef = [
+      firestore.doc(`/instituciones/${institutionId}/cursos/${courseId}`),
+    ];
+    if (subjectId) {
+      subjectRef = [
+        firestore.doc(
+          `/instituciones/${institutionId}/cursos/${courseId}/materias/${subjectId}`
+        ),
+      ];
+      cursosObj.push({ curso_id: courseRef, materias: subjectRef });
+    } else {
+      // traer todas las materias del curso
+      const matRef = firestore
+        .doc(`/instituciones/${institutionId}/cursos/${courseId}`)
+        .collection('materias');
+      const mat = await matRef.get();
+      mat.forEach((mat) => {
+        const materiaRef = firestore.doc(
+          `/instituciones/${institutionId}/cursos/${courseId}/materias/${mat.id}`
+        );
+        subjectRef.push(materiaRef);
+      });
+
+      cursosObj.push({ curso_id: courseRef, materias: subjectRef });
+    }
+  } else {
+    // traer todos los cursos de la inst y todas las materias de los cursos
+    const cursoRef = firestore
+      .doc(`/instituciones/${institutionId}`)
+      .collection('cursos');
+    const cursos = await cursoRef.get();
+    console.log(cursos);
+    console.log(await cursos.data());
+    for (const curso of cursos) {
+      const arrayMaterias = [];
+      const materiaRef = firestore
+        .doc(`/instituciones/${institutionId}/cursos/${curso.id}`)
+        .collection('materias');
+      const materias = await materiaRef.get();
+
+      materias.forEach((mat) => {
+        const materiaRefDoc = firestore.doc(
+          `/instituciones/${institutionId}/cursos/${courseId}/materias/${mat.id}`
+        );
+        arrayMaterias.push(materiaRefDoc);
+      });
+
+      const cursoRef = firestore.doc(
+        `/instituciones/${institutionId}/cursos/${curso.id}`
+      );
+
+      const cursoObj = {
+        curso_id: cursoRef,
+        materias: arrayMaterias,
+      };
+
+      cursosObj.push(cursoObj);
+    }
+  }
 
   const instObj = [
     {
       institucion_id: instRef,
-      cursos: [
-        {
-          curso_id: courseRef,
-          materias: [subjectRef],
-        },
-      ],
+      cursos: cursosObj,
     },
   ];
 
