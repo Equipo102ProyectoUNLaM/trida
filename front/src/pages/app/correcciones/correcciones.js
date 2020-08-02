@@ -71,6 +71,13 @@ class Correcciones extends Component {
     }
   }
 
+  handleDownloadFile = (fileKeys) => {
+    fileKeys.forEach((fileKey) => {
+      const file = this.state.files.find((i) => i.key === fileKey);
+      window.open(file.url, '_blank'); //to open new page
+    });
+  };
+
   render() {
     const { isLoading, files } = this.state;
     return (
@@ -91,6 +98,7 @@ class Correcciones extends Component {
             files={files}
             icons={Icons.FontAwesome(4)}
             detailRenderer={() => null}
+            onDownloadFile={this.handleDownloadFile}
           />
         </div>
       </Fragment>
