@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import TabsDeMensajeria from './tabs-de-mensajeria';
 import { getCollection } from 'helpers/Firebase-db';
-import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import Mensajes from './mensajes';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { injectIntl } from 'react-intl';
+import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import ModalGrande from 'containers/pages/ModalGrande';
+import FormMensaje from './form-mensaje';
 
 class Mensajeria extends Component {
   constructor(props) {
@@ -21,6 +23,7 @@ class Mensajeria extends Component {
       isLoading: true,
       asuntoMensaje: '',
       contenidoMensaje: '',
+      modalEnviarOpen: false,
     };
   }
 
@@ -86,8 +89,19 @@ class Mensajeria extends Component {
     alert('delete');
   };
 
+  onMensajeEnviado = () => {
+    this.toggleModal();
+    this.getMensajes();
+  };
+
+  toggleModal = () => {
+    this.setState({
+      modalEnviarOpen: !this.state.modalEnviarOpen,
+    });
+  };
+
   render() {
-    const { isLoading, itemsSent, itemsReceive } = this.state;
+    const { isLoading, itemsSent, itemsReceive, modalEnviarOpen } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -95,9 +109,19 @@ class Mensajeria extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.messages"
-            // toggleModal={this.onAdd}
-            buttonText="mensajes.enviar"
+            toggleModal={this.toggleModal}
+            buttonText="messages.new"
           />
+          <ModalGrande
+            modalEnviarOpen={modalEnviarOpen}
+            toggleModal={this.toggleModal}
+            modalHeader="messages.new"
+          >
+            <FormMensaje
+              toggleModal={this.toggleModal}
+              onMensajeEnviado={this.onMensajeEnviado}
+            />
+          </ModalGrande>
           <TabsDeMensajeria
             clickOnRow={this.clickOnRow}
             itemsSent={itemsSent}

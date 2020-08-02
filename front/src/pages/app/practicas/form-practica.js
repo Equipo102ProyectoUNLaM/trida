@@ -60,7 +60,13 @@ class FormPractica extends React.Component {
         activo: true,
         idMateria: id,
       };
-      await addDocument('practicas', obj, 'Práctica');
+      await addDocument(
+        'practicas',
+        obj,
+        'Práctica agregada',
+        'Práctica agregada exitosamente',
+        'Error al agregar la práctica'
+      );
     } else {
       const obj = {
         nombre: this.state.nombre,

@@ -111,6 +111,7 @@ module.exports = {
   /* 10.Contenidos */
   'contenido.agregar': 'Subir archivos',
 
-  /* 11.Mensajes */
-  'mensajes.enviar': 'ENVIAR MENSAJE',
+  /* 11. Mensajeria */
+  'messages.new': 'CREAR NUEVO MENSAJE',
+  'messages.receiver': 'Destinatario',
 };

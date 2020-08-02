@@ -9045,6 +9045,7 @@ footer.page-footer {
   margin: auto;
   cursor: pointer;
 }
+
 #cover-spin {
   background-color: rgba(255,255,255,0.7);
   z-index: 1050;
@@ -9081,4 +9082,8 @@ to {transform:rotate(360deg);}
   top: calc(50% - 15px);
   position: fixed;
   z-index: 1;
+}
+
+.asunto-msj {
+  padding-top: 1rem;
 }
