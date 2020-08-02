@@ -83,10 +83,10 @@ class Mensajeria extends Component {
   };
 
   getNameOfReceivers = (arrayDeData) => {
-    arrayDeData.forEach(async (elem) => {
-      elem.destinatarios.forEach(async (dest) => {
-        return await getUsernameById(dest);
-      });
+    arrayDeData.forEach(async (mensaje) => {
+      mensaje.destinatarios.map(async (destinatario) => ({
+        destinatario: await getUsernameById(destinatario),
+      }));
     });
 
     return arrayDeData;
