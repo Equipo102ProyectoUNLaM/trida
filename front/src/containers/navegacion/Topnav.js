@@ -7,13 +7,11 @@ import {
   DropdownMenu,
   Breadcrumb,
   BreadcrumbItem,
-  Button,
 } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import IntlMessages from '../../helpers/IntlMessages';
 import {
   setContainerClassnames,
   clickOnMobileMenu,
@@ -24,7 +22,6 @@ import {
 import {
   menuHiddenBreakpoint,
   searchPath,
-  localeOptions,
   isDarkSwitchActive,
 } from '../../constants/defaultValues';
 
@@ -227,8 +224,7 @@ class TopNav extends Component {
   }
 
   render() {
-    const { containerClassnames, menuClickCount, user } = this.props;
-    const { messages } = this.props.intl;
+    const { containerClassnames, menuClickCount } = this.props;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">

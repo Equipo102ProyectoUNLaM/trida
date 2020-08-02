@@ -5,7 +5,6 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Row } from 'reactstrap';
 import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
-import { getFechaHoraActual } from 'helpers/Utils';
 
 var datos = [];
 
