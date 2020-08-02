@@ -6,6 +6,7 @@ import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormMensaje from './form-mensaje';
+import { getDocument, getUsernameById } from 'helpers/Firebase-db';
 
 class Mensajeria extends Component {
   constructor(props) {
@@ -58,8 +59,10 @@ class Mensajeria extends Component {
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
-      destinatario: elem.data.receptor.map((elem) => elem.id),
+      destinatarios: elem.data.receptor,
     }));
+    arrayDeData = this.getNameOfReceivers(arrayDeData);
+
     this.setState({
       itemsSent: arrayDeData,
     });
@@ -79,8 +82,17 @@ class Mensajeria extends Component {
     });
   };
 
+  getNameOfReceivers = (arrayDeData) => {
+    arrayDeData.forEach(async (elem) => {
+      elem.destinatarios.forEach(async (dest) => {
+        return await getUsernameById(dest);
+      });
+    });
+
+    return arrayDeData;
+  };
+
   clickOnRow = (rowInfo) => {
-    console.log(rowInfo.original);
     this.setState({
       asuntoMensaje: rowInfo.original.asunto,
       contenidoMensaje: rowInfo.original.contenido,

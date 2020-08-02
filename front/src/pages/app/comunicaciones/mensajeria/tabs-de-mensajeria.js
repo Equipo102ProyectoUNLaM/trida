@@ -107,7 +107,6 @@ class TabsDeClase extends Component {
                           if (rowInfo !== undefined) {
                             return {
                               onClick: (e, handleOriginal) => {
-                                console.log('It was in this row:', rowInfo);
                                 clickOnRow(rowInfo);
                               },
                             };
@@ -135,7 +134,6 @@ class TabsDeClase extends Component {
                           if (rowInfo !== undefined) {
                             return {
                               onClick: (e, handleOriginal) => {
-                                console.log('It was in this row:', rowInfo);
                                 clickOnRow(rowInfo);
                               },
                             };

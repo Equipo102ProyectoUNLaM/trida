@@ -30,7 +30,7 @@ export const dataSentTableColumns = [
   },
   {
     Header: 'Destinatario',
-    accessor: 'destinatario',
+    accessor: 'destinatarios',
     // eslint-disable-next-line react/display-name
     Cell: (props) => <p className="text-muted">{props.value}</p>,
   },
