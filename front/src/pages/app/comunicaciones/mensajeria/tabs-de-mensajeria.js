@@ -16,7 +16,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import DataTablePagination from 'components/datatable-pagination';
 import ReactTable from 'react-table';
 
-const dataReceiveTableColumns = [
+const dataTableColumns = [
   {
     Header: 'Fecha',
     accessor: 'fecha_creacion',
@@ -25,32 +25,6 @@ const dataReceiveTableColumns = [
   },
   {
     Header: 'Remitente',
-    accessor: 'emisor',
-    // eslint-disable-next-line react/display-name
-    Cell: (props) => <p className="text-muted">{props.value}</p>,
-  },
-  {
-    Header: 'Asunto',
-    accessor: 'asunto',
-    // eslint-disable-next-line react/display-name
-    Cell: (props) => <p className="text-muted">{props.value}</p>,
-  },
-  // {
-  //   header: '',
-  //   id: 'click-me-button',
-  //   render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
-  // }
-];
-
-const dataSentTableColumns = [
-  {
-    Header: 'Fecha',
-    accessor: 'fecha_creacion',
-    // eslint-disable-next-line react/display-name
-    Cell: (props) => <p className="list-item-heading">{props.value}</p>,
-  },
-  {
-    Header: 'Destinatario',
     accessor: 'receptor',
     // eslint-disable-next-line react/display-name
     Cell: (props) => <p className="text-muted">{props.value}</p>,
@@ -146,19 +120,18 @@ class TabsDeClase extends Component {
                       <ReactTable
                         data={itemsReceive}
                         paginationMaxSize={3}
-                        columns={dataReceiveTableColumns}
+                        columns={dataTableColumns}
                         defaultPageSize={5}
                         showPageJump={true}
                         showPageSizeOptions={true}
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
-                        getTrGroupProps={(rowInfo) => {
+                        getTrGroupProps={(state, rowInfo, column, instance) => {
                           if (rowInfo !== undefined) {
                             return {
-                              onClick: () => {
-                                {
-                                  clickOnRow(rowInfo);
-                                }
+                              onClick: (e, handleOriginal) => {
+                                console.log('It was in this row:', rowInfo);
+                                clickOnRow(rowInfo);
                               },
                             };
                           }
@@ -175,19 +148,18 @@ class TabsDeClase extends Component {
                       <ReactTable
                         data={itemsSent}
                         paginationMaxSize={3}
-                        columns={dataSentTableColumns}
+                        columns={dataTableColumns}
                         defaultPageSize={5}
-                        showPageJump={true}
-                        showPageSizeOptions={true}
+                        showPageJump={false}
+                        showPageSizeOptions={false}
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
-                        getTrGroupProps={(rowInfo) => {
+                        getTrGroupProps={(state, rowInfo, column, instance) => {
                           if (rowInfo !== undefined) {
                             return {
-                              onClick: () => {
-                                {
-                                  clickOnRow(rowInfo);
-                                }
+                              onClick: (e, handleOriginal) => {
+                                console.log('It was in this row:', rowInfo);
+                                clickOnRow(rowInfo);
                               },
                             };
                           }

@@ -29,7 +29,7 @@ class Mensajeria extends Component {
 
   getMensajes = async () => {
     const mensajesEnviados = await getCollection('mensajes', [
-      { field: 'emisor', operator: '==', id: this.state.usuarioId },
+      { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
       { field: 'idMateria', operator: '==', id: this.state.materiaId },
       { field: 'general', operator: '==', id: false },
       { field: 'formal', operator: '==', id: false },
@@ -38,7 +38,7 @@ class Mensajeria extends Component {
 
     const mensajesRecibidos = await getCollection('mensajes', [
       {
-        field: 'receptor',
+        field: 'receptor.id',
         operator: 'array-contains',
         id: this.state.usuarioId,
       },
@@ -81,12 +81,12 @@ class Mensajeria extends Component {
   };
 
   clickOnRow = (rowInfo) => {
+    console.log(rowInfo.original);
     this.setState({
       modalMessageOpen: true,
-      asuntoMensaje: rowInfo.asunto,
-      contenidoMensaje: rowInfo.contenido,
+      asuntoMensaje: rowInfo.original.asunto,
+      contenidoMensaje: rowInfo.original.contenido,
     });
-    alert('delete');
   };
 
   onMensajeEnviado = () => {
@@ -113,7 +113,7 @@ class Mensajeria extends Component {
             buttonText="messages.new"
           />
           <ModalGrande
-            modalEnviarOpen={modalEnviarOpen}
+            modalOpen={modalEnviarOpen}
             toggleModal={this.toggleModal}
             modalHeader="messages.new"
           >
