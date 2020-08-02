@@ -56,10 +56,9 @@ class FormMensaje extends Component {
     event.preventDefault();
 
     //Convierto el array de seleccionados al formato { id, nombre }
-    const receptores = this.state.selectedOptions.map(({ value, label }) => ({
-      id: value,
-      nombre: label,
-    }));
+    const receptores = this.state.selectedOptions.map(
+      ({ value, label }) => value
+    );
 
     const msg = {
       emisor: {
@@ -95,13 +94,15 @@ class FormMensaje extends Component {
     for (const user of users) {
       const docObj = await getDocument(`users/${user}`);
       let i = 0;
-      const nombre = docObj.data.name;
-      // Armo el array que va a alimentar el Select
-      datos.push({
-        label: nombre,
-        value: user,
-        key: i,
-      });
+      if (docObj.data.id != this.state.idUser) {
+        const nombre = docObj.data.name;
+        // Armo el array que va a alimentar el Select
+        datos.push({
+          label: nombre,
+          value: user,
+          key: i,
+        });
+      }
 
       i++;
     }

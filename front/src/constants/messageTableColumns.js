@@ -9,7 +9,7 @@ export const dataReceiveTableColumns = [
   },
   {
     Header: 'Remitente',
-    accessor: 'receptor',
+    accessor: 'remitente',
     // eslint-disable-next-line react/display-name
     Cell: (props) => <p className="text-muted">{props.value}</p>,
   },

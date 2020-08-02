@@ -37,7 +37,7 @@ class Mensajeria extends Component {
 
     const mensajesRecibidos = await getCollection('mensajes', [
       {
-        field: 'receptor.id',
+        field: 'receptor',
         operator: 'array-contains',
         id: this.state.usuarioId,
       },
@@ -58,7 +58,7 @@ class Mensajeria extends Component {
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
-      destinatario: elem.data.receptor.map((elem) => elem.nombre),
+      destinatario: elem.data.receptor.map((elem) => elem.id),
     }));
     this.setState({
       itemsSent: arrayDeData,
@@ -71,7 +71,7 @@ class Mensajeria extends Component {
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
-      remitente: elem.data.emisor.map((elem) => elem.nombre),
+      remitente: elem.data.emisor.nombre,
     }));
     this.setState({
       itemsReceive: arrayDeData,
