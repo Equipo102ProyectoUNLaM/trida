@@ -54,7 +54,13 @@ export const getDocument = async (docRef) => {
 
 // agrega un documento
 // parámetros: colección, objeto a agregar y reemplazo para mostrar en la notificación
-export const addDocument = async (collection, object, message) => {
+export const addDocument = async (
+  collection,
+  object,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
   const userId = localStorage.getItem('user_id');
 
   object = {
@@ -69,8 +75,8 @@ export const addDocument = async (collection, object, message) => {
     .add(object)
     .then(function () {
       NotificationManager.success(
-        `${message} agregada exitosamente`,
-        `${message} agregada!`,
+        `${mensajeSecundario}`,
+        `${mensajePrincipal}!`,
         3000,
         null,
         null,
@@ -78,14 +84,7 @@ export const addDocument = async (collection, object, message) => {
       );
     })
     .catch(function (error) {
-      NotificationManager.error(
-        `Error al agregar ${message}`,
-        error,
-        3000,
-        null,
-        null,
-        ''
-      );
+      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
     });
 };
 

@@ -76,7 +76,13 @@ class FormMensaje extends Component {
       fechaHoraEnvio: getFechaHoraActual(),
     };
     //guardar msj en bd
-    await addDocument('mensajes', msg, 'Mensaje');
+    await addDocument(
+      'mensajes',
+      msg,
+      'Mensaje enviado',
+      'Mensaje enviado exitosamente',
+      'Error al enviar el mensaje'
+    );
 
     this.props.onMensajeEnviado();
   };

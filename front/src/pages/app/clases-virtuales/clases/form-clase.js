@@ -36,7 +36,13 @@ class FormClase extends React.Component {
       idMateria: id,
       contenidos: [],
     };
-    await addDocument('clases', obj, 'Clase');
+    await addDocument(
+      'clases',
+      obj,
+      'Clase agregada',
+      'Clase agregada exitosamente',
+      'Error al agregar la clase'
+    );
 
     this.props.onClaseAgregada();
   };
