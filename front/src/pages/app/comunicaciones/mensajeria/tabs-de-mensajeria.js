@@ -3,7 +3,6 @@ import {
   Row,
   Card,
   CardBody,
-  CardTitle,
   CardHeader,
   Nav,
   NavItem,
@@ -15,32 +14,10 @@ import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import DataTablePagination from 'components/datatable-pagination';
 import ReactTable from 'react-table';
-
-const dataTableColumns = [
-  {
-    Header: 'Fecha',
-    accessor: 'fecha_creacion',
-    // eslint-disable-next-line react/display-name
-    Cell: (props) => <p className="list-item-heading">{props.value}</p>,
-  },
-  {
-    Header: 'Remitente',
-    accessor: 'receptor',
-    // eslint-disable-next-line react/display-name
-    Cell: (props) => <p className="text-muted">{props.value}</p>,
-  },
-  {
-    Header: 'Asunto',
-    accessor: 'asunto',
-    // eslint-disable-next-line react/display-name
-    Cell: (props) => <p className="text-muted">{props.value}</p>,
-  },
-  // {
-  //   header: '',
-  //   id: 'click-me-button',
-  //   render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
-  // }
-];
+import {
+  dataSentTableColumns,
+  dataReceiveTableColumns,
+} from 'constants/messageTableColumns';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -120,7 +97,7 @@ class TabsDeClase extends Component {
                       <ReactTable
                         data={itemsReceive}
                         paginationMaxSize={3}
-                        columns={dataTableColumns}
+                        columns={dataReceiveTableColumns}
                         defaultPageSize={5}
                         showPageJump={true}
                         showPageSizeOptions={true}
@@ -148,10 +125,10 @@ class TabsDeClase extends Component {
                       <ReactTable
                         data={itemsSent}
                         paginationMaxSize={3}
-                        columns={dataTableColumns}
+                        columns={dataSentTableColumns}
                         defaultPageSize={5}
-                        showPageJump={false}
-                        showPageSizeOptions={false}
+                        showPageJump={true}
+                        showPageSizeOptions={true}
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
                         getTrGroupProps={(state, rowInfo, column, instance) => {

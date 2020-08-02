@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import TabsDeMensajeria from './tabs-de-mensajeria';
 import { getCollection } from 'helpers/Firebase-db';
-import Mensajes from './mensajes';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
@@ -83,10 +82,10 @@ class Mensajeria extends Component {
   clickOnRow = (rowInfo) => {
     console.log(rowInfo.original);
     this.setState({
-      modalMessageOpen: true,
       asuntoMensaje: rowInfo.original.asunto,
       contenidoMensaje: rowInfo.original.contenido,
     });
+    this.toggleDetailModal();
   };
 
   onMensajeEnviado = () => {
@@ -97,6 +96,12 @@ class Mensajeria extends Component {
   toggleModal = () => {
     this.setState({
       modalEnviarOpen: !this.state.modalEnviarOpen,
+    });
+  };
+
+  toggleDetailModal = () => {
+    this.setState({
+      modalMessageOpen: !this.state.modalMessageOpen,
     });
   };
 
@@ -133,9 +138,8 @@ class Mensajeria extends Component {
               titulo={this.state.asuntoMensaje}
               buttonPrimary="Responder"
               buttonSecondary="Cerrar"
-              toggle={this.toggleDeleteModal}
+              toggle={this.toggleDetailModal}
               isOpen={this.state.modalMessageOpen}
-              onConfirm={this.deletePractice}
             />
           )}
         </div>
