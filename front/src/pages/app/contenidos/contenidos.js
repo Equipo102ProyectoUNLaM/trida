@@ -3,12 +3,7 @@ import { Row, Card, CardBody, Button } from 'reactstrap';
 import IntlMessages from '../../../helpers/IntlMessages';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import FileBrowser, {
-  Icons,
-  FileRenderers,
-  FolderRenderers,
-  FilterRenderers,
-} from 'react-keyed-file-browser';
+import FileBrowser, { Icons } from 'react-keyed-file-browser';
 import { storage } from 'helpers/Firebase';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
@@ -22,6 +17,7 @@ import {
   DefaultConfirmDeletion,
   MultipleConfirmDeletion,
 } from 'constants/fileBrowser/confirmations';
+import { TableFile } from 'constants/fileBrowser/files';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -468,6 +464,7 @@ class Contenidos extends Component {
             filterRenderer={DefaultFilter}
             confirmDeletionRenderer={DefaultConfirmDeletion}
             confirmMultipleDeletionRenderer={MultipleConfirmDeletion}
+            //fileRenderer = {TableFile}
             noFilesMessage="Sin archivos."
           />
         </div>
