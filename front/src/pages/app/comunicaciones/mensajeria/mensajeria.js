@@ -34,7 +34,7 @@ class Mensajeria extends Component {
       { field: 'general', operator: '==', id: false },
       { field: 'formal', operator: '==', id: false },
     ]);
-    this.dataMessageSentRenderer(mensajesEnviados);
+    await this.dataMessageSentRenderer(mensajesEnviados);
 
     const mensajesRecibidos = await getCollection('mensajes', [
       {
@@ -53,7 +53,7 @@ class Mensajeria extends Component {
     this.getMensajes();
   }
 
-  dataMessageSentRenderer = (arrayDeObjetos) => {
+  dataMessageSentRenderer = async (arrayDeObjetos) => {
     let arrayDeData = arrayDeObjetos.map((elem) => ({
       id: elem.id,
       asunto: elem.data.asunto,
@@ -61,8 +61,7 @@ class Mensajeria extends Component {
       fecha_creacion: elem.data.fecha_creacion,
       destinatarios: elem.data.receptor,
     }));
-    arrayDeData = this.getNameOfReceivers(arrayDeData);
-
+    arrayDeData = await this.getNameOfReceivers(arrayDeData);
     this.setState({
       itemsSent: arrayDeData,
     });
@@ -82,13 +81,13 @@ class Mensajeria extends Component {
     });
   };
 
-  getNameOfReceivers = (arrayDeData) => {
-    arrayDeData.forEach(async (mensaje) => {
-      mensaje.destinatarios.map(async (destinatario) => ({
-        destinatario: await getUsernameById(destinatario),
-      }));
+  getNameOfReceivers = async (arrayDeData) => {
+    arrayDeData.forEach(async (mensaje, indexM) => {
+      mensaje.destinatarios.forEach(async (destinatario, indexD) => {
+        let name = await getUsernameById(destinatario);
+        arrayDeData[indexM].destinatarios[indexD] = name;
+      });
     });
-
     return arrayDeData;
   };
 
