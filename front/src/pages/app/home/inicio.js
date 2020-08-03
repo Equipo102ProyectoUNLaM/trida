@@ -3,15 +3,13 @@ import { Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import CardInicio from 'components/cards-inicio';
-import { sendInvitationEmail } from 'redux/auth/saga';
 import { getCourses, getInstituciones } from 'helpers/Firebase-user';
+import { connect } from 'react-redux';
 
-export default class Inicio extends Component {
+class Inicio extends Component {
   constructor(props) {
     super(props);
-    var userId = localStorage.getItem('user_id');
     this.state = {
-      userId,
       instRef: [],
       items: [],
       isLoading: true,
@@ -31,7 +29,7 @@ export default class Inicio extends Component {
 
   getInstituciones = async () => {
     try {
-      const items = await getInstituciones(this.state.userId);
+      const items = await getInstituciones(this.props.user);
       this.dataListRenderer(items);
     } catch (err) {
       console.log('Error getting documents', err);
@@ -47,7 +45,7 @@ export default class Inicio extends Component {
       subjects: [],
       instId: institutionId,
     });
-    this.getUserCourses(institutionId, this.state.userId);
+    this.getUserCourses(institutionId, this.props.user);
   };
 
   showSubjects = (courseId) => {
@@ -180,3 +178,13 @@ export default class Inicio extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
+export default connect(mapStateToProps)(Inicio);

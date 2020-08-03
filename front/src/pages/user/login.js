@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -22,7 +22,7 @@ class Login extends Component {
   onUserLogin = (values) => {
     if (!this.props.loading) {
       if (values.email !== '' && values.password !== '') {
-        this.props.loginUser(values, this.props.history);
+        this.props.loginUser(values.email, values.password);
         this.props.menuSetClassNames('menu-sub-hidden');
       }
     }
@@ -48,8 +48,12 @@ class Login extends Component {
     return error;
   };
 
-  componentDidUpdate() {
-    if (this.props.error) {
+  componentDidUpdate(prevProps) {
+    if (this.props.user !== prevProps.user) {
+      this.props.history.push('/');
+    }
+
+    if (!prevProps.error && this.props.error) {
       NotificationManager.warning(
         this.props.error,
         'Error de Login',
@@ -154,6 +158,7 @@ class Login extends Component {
     );
   }
 }
+
 const mapStateToProps = ({ authUser }) => {
   //TODO call function to get user data
   const { user, loading, error } = authUser;
@@ -163,4 +168,4 @@ const mapStateToProps = ({ authUser }) => {
 export default connect(mapStateToProps, {
   loginUser,
   menuSetClassNames,
-})(Login);
+})(withRouter(Login));

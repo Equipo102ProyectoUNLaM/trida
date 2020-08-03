@@ -30,7 +30,6 @@ class ModalEnviarInvitacion extends React.Component {
     this.state = {
       modalInvitacionOpen: false,
       tags: [],
-      userId: localStorage.getItem('user_id'),
       items: [],
       isLoading: true,
       showCourses: false,
@@ -49,7 +48,7 @@ class ModalEnviarInvitacion extends React.Component {
   }
 
   componentDidMount() {
-    this.getInstituciones(this.state.userId);
+    this.getInstituciones(this.props.user);
   }
 
   getInstituciones = async (userId) => {
@@ -109,7 +108,7 @@ class ModalEnviarInvitacion extends React.Component {
       subjects: [],
       instId: institutionId,
     });
-    this.getUserCourses(institutionId, this.state.userId);
+    this.getUserCourses(institutionId, this.props.user);
   };
 
   showSubjects = (courseId) => {
@@ -131,23 +130,29 @@ class ModalEnviarInvitacion extends React.Component {
   };
 
   onConfirm = async () => {
-    const userObj = {
-      email: this.state.tags[0],
-      password: '123456',
-      isInvited: true,
-      instId: this.state.selectedOption.key,
-      courseId: this.state.selectedCourse.key,
-      subjectId: this.state.selectedSubject.key,
-    };
-    //agarrar los mails de los tags, autogenerar contraseña para cada uno
-    try {
-      await this.props.registerUser(userObj, this.props.history);
-      // validar que no haya error de registro
-      this.registroExitoso();
-    } catch (error) {
-      enviarNotificacionError('Hubo un error al enviar la invitación', 'Error');
-      this.props.toggle();
+    const { tags } = this.state;
+    console.log(tags);
+    for (const tag in tags) {
+      const userObj = {
+        email: tags[tag],
+        password: '123456',
+        isInvited: true,
+        instId: this.state.selectedOption.key,
+        courseId: this.state.selectedCourse.key,
+        subjectId: this.state.selectedSubject.key,
+      };
+      //agarrar los mails de los tags, autogenerar contraseña para cada uno
+      try {
+        await this.props.registerUser(userObj);
+        // validar que no haya error de registro
+      } catch (error) {
+        enviarNotificacionError(
+          'Hubo un error al enviar la invitación',
+          'Error'
+        );
+      }
     }
+    this.registroExitoso();
   };
 
   registroExitoso = async () => {
@@ -289,6 +294,14 @@ class ModalEnviarInvitacion extends React.Component {
   }
 }
 
-export default connect(null, {
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
+export default connect(mapStateToProps, {
   registerUser,
 })(ModalEnviarInvitacion);

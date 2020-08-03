@@ -13,28 +13,20 @@ function collect(props) {
   return { data: props.data };
 }
 
-const mapStateToProps = ({ authUser }) => {
-  const { user } = authUser;
-  return {
-    user,
-  };
-};
-
 class Institution extends Component {
   constructor(props) {
     super(props);
-    var userId = localStorage.getItem('user_id');
+
     this.state = {
       items: [],
       isLoading: true,
       isEmpty: false,
-      userId,
     };
   }
 
   getInstituciones = async () => {
     try {
-      const items = await getInstituciones(this.state.userId);
+      const items = await getInstituciones(this.props.user);
       this.dataListRenderer(items);
     } catch (err) {
       console.log('Error getting documents', err);
@@ -45,7 +37,7 @@ class Institution extends Component {
     this.setState({
       items: array,
       isLoading: false,
-      isEmpty: array.length === 0 ? true : false,
+      isEmpty: !array.length,
     });
   }
 
@@ -123,6 +115,15 @@ class Institution extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
 export default withRouter(
   connect(mapStateToProps, {
     logoutUser,

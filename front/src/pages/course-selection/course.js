@@ -3,19 +3,17 @@ import { Collapse, Button, Row, Card, CardBody, Jumbotron } from 'reactstrap';
 import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
-import { getCourses, getInstituciones } from 'helpers/Firebase-user';
-import { firestore } from 'helpers/Firebase';
+import { getCourses } from 'helpers/Firebase-user';
+import { connect } from 'react-redux';
 
 const HOME_URL = '/app/home';
 
 class Course extends Component {
   constructor(props) {
     super(props);
-    const userId = localStorage.getItem('user_id');
     this.state = {
       items: [],
       isLoading: true,
-      userId,
     };
   }
 
@@ -27,7 +25,7 @@ class Course extends Component {
     const { institutionId } = this.props.match.params;
     const user_courses = await this.getUserCourses(
       institutionId,
-      this.state.userId
+      this.props.user
     );
     this.dataListRender(user_courses);
   };
@@ -122,4 +120,13 @@ class Course extends Component {
     );
   }
 }
-export default withRouter(Course);
+
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
+export default connect(mapStateToProps)(withRouter(Course));

@@ -52,7 +52,13 @@ class TopNav extends Component {
   }
 
   componentDidMount() {
-    this.getUserName(localStorage.getItem('user_id'));
+    this.getUserName();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.user && !this.props.user) {
+      this.props.history.push('/user/login');
+    }
   }
 
   handleChangeLocale = (locale, direction) => {
@@ -185,13 +191,14 @@ class TopNav extends Component {
         document.msExitFullscreen();
       }
     }
+
     this.setState({
       isInFullScreen: !isInFullScreen,
     });
   };
 
   handleLogout = () => {
-    this.props.logoutUser(this.props.history);
+    this.props.logoutUser();
   };
 
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
@@ -213,9 +220,9 @@ class TopNav extends Component {
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
-  async getUserName(userId) {
+  async getUserName() {
     try {
-      const name = await getUserName(userId);
+      const name = await getUserName(this.props.user);
       this.setState({
         userName: name,
       });
