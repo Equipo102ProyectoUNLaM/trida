@@ -5,7 +5,7 @@ export const dataReceiveTableColumns = [
     Header: 'Fecha',
     accessor: 'fecha_creacion',
     // eslint-disable-next-line react/display-name
-    Cell: (props) => <p className="list-item-heading">{props.value}</p>,
+    Cell: (props) => <p className="text-muted">{props.value}</p>,
   },
   {
     Header: 'Remitente',
