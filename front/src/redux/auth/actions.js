@@ -102,52 +102,28 @@ export const registerUserError = (message) => ({
   payload: { message },
 });
 
-export const addRegisteredUserToDB = async (dispatch, registerUser, email) => {
-  const userObj = {
-    id: registerUser.user.uid,
-    mail: email,
-    nombre: '',
-    apellido: '',
-    telefono: '',
-    foto: '',
-    primerLogin: true,
-    cambiarPassword: false,
-    instituciones: [],
-    rol: 1,
-  };
-
-  try {
-    await addDocumentWithId('usuarios', userObj.id, userObj);
-  } catch (error) {
-    dispatch(registerUserError(error));
-  }
-};
-
 export const registerUser = (user) => async (dispatch) => {
   const { email, password, isInvited, instId, courseId, subjectId } = user;
 
   dispatch(registerUserStart());
 
   try {
-    const registerUser = await auth.createUserWithEmailAndPassword(
-      email,
-      password
-    );
+    let registerUser = '';
+    const user = functions.httpsCallable('user');
 
-    if (!registerUser.message) {
-      await addRegisteredUserToDB(dispatch, registerUser, email);
+    const userAuth = await user({ email, password });
+    const { data } = userAuth;
 
+    if (data) {
+      const { uid } = data;
       if (isInvited) {
-        const userObj = { payload: { forgotUserMail: { email: email } } };
-        await forgotPassword(userObj);
         await sendInvitationEmail(email);
+        await auth.sendPasswordResetEmail(email);
 
-        await asignarMateriasAUsuario(
-          instId,
-          courseId,
-          subjectId,
-          registerUser.user.uid
+        const asignarMateriasAction = functions.httpsCallable(
+          'asignarMaterias'
         );
+        return await asignarMateriasAction(instId, courseId, subjectId, uid);
       }
 
       dispatch(registerUserSuccess(registerUser));
@@ -161,18 +137,13 @@ export const registerUser = (user) => async (dispatch) => {
 };
 
 export const sendInvitationEmail = async (email) => {
-  const req = { query: { dest: email } };
   const sendMail = functions.httpsCallable('sendMail'); //send email function
-  sendMail(req)
+  sendMail(email)
     .then(function (result) {
-      // Read result of the Cloud Function.
-      var sanitizedMessage = result.data.text;
+      console.log(result);
     })
     .catch(function (error) {
-      // Getting the Error details.
-      var code = error.code;
-      var message = error.message;
-      var details = error.details;
+      console.log(error);
     });
 };
 

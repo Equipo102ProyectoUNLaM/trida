@@ -89,8 +89,7 @@ export const getCourses = async (institutionId, userId) => {
 export const asignarMateriasAUsuario = async (
   institutionId,
   courseId,
-  subjectId,
-  userId
+  subjectId
 ) => {
   let instRef = '',
     courseRef = [],
@@ -131,8 +130,6 @@ export const asignarMateriasAUsuario = async (
       .doc(`/instituciones/${institutionId}`)
       .collection('cursos');
     const cursos = await cursoRef.get();
-    console.log(cursos);
-    console.log(await cursos.data());
     for (const curso of cursos) {
       const arrayMaterias = [];
       const materiaRef = firestore
@@ -167,5 +164,5 @@ export const asignarMateriasAUsuario = async (
     },
   ];
 
-  await editDocument('usuarios', userId, { instituciones: instObj });
+  return instObj;
 };

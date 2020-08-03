@@ -29,7 +29,7 @@ class ModalEnviarInvitacion extends React.Component {
 
     this.state = {
       modalInvitacionOpen: false,
-      tags: [],
+      tags: ['juli.foglia@gmail.com', 'julityson@hotmail.com'],
       items: [],
       isLoading: true,
       showCourses: false,
@@ -44,6 +44,7 @@ class ModalEnviarInvitacion extends React.Component {
       selectedCourse: '',
       selectedOption: '',
       selectedSubject: '',
+      userId: '',
     };
   }
 
@@ -131,7 +132,6 @@ class ModalEnviarInvitacion extends React.Component {
 
   onConfirm = async () => {
     const { tags } = this.state;
-    console.log(tags);
     for (const tag in tags) {
       const userObj = {
         email: tags[tag],
