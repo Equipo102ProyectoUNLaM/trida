@@ -17,7 +17,6 @@ import {
   DefaultConfirmDeletion,
   MultipleConfirmDeletion,
 } from 'constants/fileBrowser/confirmations';
-import { TableFile } from 'constants/fileBrowser/files';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -464,7 +463,6 @@ class Contenidos extends Component {
             filterRenderer={DefaultFilter}
             confirmDeletionRenderer={DefaultConfirmDeletion}
             confirmMultipleDeletionRenderer={MultipleConfirmDeletion}
-            //fileRenderer = {TableFile}
             noFilesMessage="Sin archivos."
           />
         </div>
