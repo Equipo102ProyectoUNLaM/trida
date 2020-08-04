@@ -49,6 +49,7 @@ Table of Contents
 44.Rtl
 45.Board
 46.Course Selection
+47.Contenidos
 
 */
 
@@ -9081,4 +9082,50 @@ to {transform:rotate(360deg);}
   top: calc(50% - 15px);
   position: fixed;
   z-index: 1;
+}
+
+// 47 Contenidos
+
+tr.folder{
+  th { color: transparent; }
+  th:after {
+    content: "Archivo";
+    color: black; /* set color to original text color */
+    margin-left: -15px;
+    /* margin-left equals length of text we're replacing */
+  }
+
+  th.modified { color: transparent; }
+  th.modified:after {
+        content: "Modificado";
+        color: black; /* set color to original text color */
+        margin-left: -30px;
+        /* margin-left equals length of text we're replacing */
+    }
+
+  th.size { color: transparent; }
+  th.size:after {
+        content: "Tamaño";
+        color: black; /* set color to original text color */
+        margin-left: -30px;
+        /* margin-left equals length of text we're replacing */
+    }
+}
+
+.delete-button{
+  margin-bottom: 1rem !important;
+    margin-left: 0.5rem;
+}
+
+.col-inline{
+  display: flex;
+}
+
+.card-delete-message{
+  padding-top: 1rem;
+}
+
+.center{
+  margin-bottom: 0.5rem !important;
+  margin-top: 0.5rem !important;
 }
