@@ -114,10 +114,8 @@ export const registerUser = (user) => async (dispatch) => {
   try {
     let registerUser = '';
     const user = functions.httpsCallable('user');
-
     const userAuth = await user({ email, password });
     const { data } = userAuth;
-
     if (data) {
       const { uid } = data;
       if (isInvited) {
@@ -138,13 +136,11 @@ export const registerUser = (user) => async (dispatch) => {
       }
 
       dispatch(registerUserSuccess(registerUser));
-      enviarNotificacionExitosa('Registro exitoso', 'Usuario registrado!');
     } else {
       dispatch(registerUserError(registerUser.message));
     }
   } catch (error) {
-    dispatch(registerUserError(error));
-    return error;
+    return dispatch(registerUserError(error.message));
   }
 };
 

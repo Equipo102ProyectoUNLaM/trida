@@ -30,14 +30,21 @@ class Register extends Component {
     if (!this.props.loading) {
       if (this.state.email !== '' && this.state.password !== '') {
         this.props.registerUser(userObj, this.props.history);
-        enviarNotificacionExitosa('Registro exitoso', 'Usuario registrado!');
       } else {
         enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
     }
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (this.props.user !== prevProps.user) {
+      enviarNotificacionExitosa(
+        'Usuario registrado con éxito',
+        'Registro exitoso'
+      );
+      this.props.history.push('/user/login');
+    }
+
     if (this.props.error) {
       enviarNotificacionError('Error en el registro', 'Error');
     }

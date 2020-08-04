@@ -87,7 +87,6 @@ export default (state = INIT_STATE, action) => {
       return {
         ...state,
         loading: false,
-        user: '',
         error: action.payload.message,
       };
 

@@ -18,6 +18,7 @@ import { registerUser } from 'redux/actions';
 import { connect } from 'react-redux';
 import 'react-tagsinput/react-tagsinput.css';
 import { getInstituciones, getCourses } from 'helpers/Firebase-user';
+import { isEmpty } from 'helpers/Utils';
 
 class ModalEnviarInvitacion extends React.Component {
   constructor(props) {
@@ -46,6 +47,13 @@ class ModalEnviarInvitacion extends React.Component {
 
   componentDidMount() {
     this.getInstituciones(this.props.user);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.error && this.props.error) {
+      enviarNotificacionError(this.props.error, 'Error de registro');
+      this.setState({ isLoading: false });
+    }
   }
 
   getInstituciones = async (userId) => {
@@ -142,6 +150,9 @@ class ModalEnviarInvitacion extends React.Component {
         this.setState({ isLoading: true });
         await this.props.registerUser(userObj);
         // validar que no haya error de registro
+        if (isEmpty(this.props.error)) {
+          this.registroExitoso();
+        }
       } catch (error) {
         enviarNotificacionError(
           'Hubo un error al enviar la invitación',
@@ -149,7 +160,6 @@ class ModalEnviarInvitacion extends React.Component {
         );
       }
     }
-    this.registroExitoso();
   };
 
   registroExitoso = async () => {
@@ -295,10 +305,11 @@ class ModalEnviarInvitacion extends React.Component {
 }
 
 const mapStateToProps = ({ authUser }) => {
-  const { user } = authUser;
+  const { user, error } = authUser;
 
   return {
     user,
+    error,
   };
 };
 
