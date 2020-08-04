@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Input,
   ModalFooter,
@@ -61,7 +62,14 @@ class FormEvaluacion extends React.Component {
       idMateria: this.props.idMateria,
       activo: true,
     };
-    await addDocument('evaluaciones', obj, 'Evaluación');
+    await addDocument(
+      'evaluaciones',
+      obj,
+      this.props.user,
+      'Evaluación agregada',
+      'Evaluación agregada exitosamente',
+      'Error al agregar la evaluación'
+    );
 
     this.props.onEvaluacionAgregada();
   };
@@ -177,4 +185,9 @@ class FormEvaluacion extends React.Component {
   }
 }
 
-export default FormEvaluacion;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(FormEvaluacion);

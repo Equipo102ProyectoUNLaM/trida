@@ -1,5 +1,6 @@
 import { firestore } from './Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
+import { getFechaHoraActual } from 'helpers/Utils';
 
 // trae una colección
 // parámetro: colección obligatora
@@ -53,15 +54,29 @@ export const getDocument = async (docRef) => {
 
 // agrega un documento
 // parámetros: colección, objeto a agregar y reemplazo para mostrar en la notificación
-export const addDocument = async (collection, object, message) => {
+export const addDocument = async (
+  collection,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+
   firestore
     .collection(collection)
     .add(object)
     .then(function () {
-      if (message) {
+      if (mensajePrincipal) {
         NotificationManager.success(
-          `${message} agregada exitosamente`,
-          `${message} agregada!`,
+          `${mensajeSecundario}`,
+          `${mensajePrincipal}`,
           3000,
           null,
           null,
@@ -70,9 +85,9 @@ export const addDocument = async (collection, object, message) => {
       }
     })
     .catch(function (error) {
-      if (message) {
+      if (mensajePrincipal) {
         NotificationManager.error(
-          `Error al agregar ${message}`,
+          `${mensajeError}`,
           error,
           3000,
           null,
@@ -111,12 +126,28 @@ export const addDocumentWithId = async (collection, id, object, message) => {
           ''
         );
       }
+      NotificationManager.success(
+        `${message}`,
+        `${message}!`,
+        3000,
+        null,
+        null,
+        ''
+      );
+    })
+    .catch(function (error) {
+      NotificationManager.error(`${message}`, error, 3000, null, null, '');
     });
 };
 
 // edita un documento
 // parámetros: colección, id del documento, objeto a editar y reemplazo para mostrar en la notificación
 export const editDocument = async (collection, docId, obj, message) => {
+  obj = {
+    ...obj,
+    fecha_edicion: getFechaHoraActual(),
+  };
+
   var ref = firestore.collection(collection).doc(docId);
   ref.set(obj, { merge: true });
 

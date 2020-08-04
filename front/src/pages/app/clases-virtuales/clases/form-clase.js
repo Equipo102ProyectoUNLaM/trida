@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from 'rc-switch';
 import { createUUID } from 'helpers/Utils';
@@ -36,7 +37,14 @@ class FormClase extends React.Component {
       idMateria: id,
       contenidos: [],
     };
-    await addDocument('clases', obj, 'Clase');
+    await addDocument(
+      'clases',
+      obj,
+      this.props.user,
+      'Clase agregada',
+      'Clase agregada exitosamente',
+      'Error al agregar la clase'
+    );
 
     this.props.onClaseAgregada();
   };
@@ -114,4 +122,9 @@ class FormClase extends React.Component {
   }
 }
 
-export default FormClase;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(FormClase);
