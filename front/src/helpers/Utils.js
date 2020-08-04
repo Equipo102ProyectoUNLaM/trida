@@ -35,6 +35,12 @@ export const getCurrentTime = () => {
   return now.getHours() + ':' + now.getMinutes();
 };
 
+export const getFechaHoraActual = () => {
+  const day = new Date().toISOString().slice(0, 10);
+  const hour = getCurrentTime();
+  return day + ' ' + hour;
+};
+
 export const getDirection = () => {
   let direction = defaultDirection;
   if (localStorage.getItem('direction')) {

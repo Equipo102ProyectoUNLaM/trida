@@ -9,32 +9,50 @@ import {
   NavItem,
   TabContent,
   TabPane,
+  Button,
 } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
-
+import DataListView from 'containers/pages/DataListView';
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import PaginaVideollamada from './pagina-videollamada';
+import { storage } from 'helpers/Firebase';
+import { getDocument, editDocument } from 'helpers/Firebase-db';
+import { isEmpty } from 'helpers/Utils';
+import ModalGrande from 'containers/pages/ModalGrande';
+import Moment from 'moment';
+import ModalAsociarContenidos from './modal-asociar-contenidos';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
 class TabsDeClase extends Component {
   constructor(props) {
     super(props);
 
-    this.toggleFirstTab = this.toggleFirstTab.bind(this);
     this.toggleSecondTab = this.toggleSecondTab.bind(this);
+
     this.state = {
-      activeFirstTab: '1',
       activeSecondTab: '1',
+      modalContenidosOpen: false,
+      modalDeleteOpen: false,
+      files: [],
+      isLoading: true,
+      contenidoRef: '',
+      propsContenidos: [],
     };
   }
 
-  toggleFirstTab(tab) {
-    if (this.state.activeTab !== tab) {
+  componentDidMount() {
+    const { hash } = this.props.history.location;
+
+    if (hash) {
       this.setState({
-        activeFirstTab: tab,
+        activeSecondTab: hash.split('')[1],
       });
     }
+
+    this.dataListRenderer();
   }
+
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -42,8 +60,177 @@ class TabsDeClase extends Component {
       });
     }
   }
+
+  toggleModalContenidos = () => {
+    this.setState({
+      modalContenidosOpen: !this.state.modalContenidosOpen,
+    });
+  };
+
+  async dataListRenderer() {
+    var array = [];
+    try {
+      //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
+      var listRef = storage.ref(this.props.idMateria + '/contenidos');
+      // Obtenemos las referencias de carpetas y archivos
+      await listRef.listAll().then(async (result) => {
+        //Carpetas
+        for (const folderRef of result.prefixes) {
+          //Listamos archivos de cada carpeta
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            this.props.idMateria
+          );
+          array = array.concat(subFolderElements);
+        }
+        //Archivos
+        for (const res of result.items) {
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(
+                  this.props.idMateria + '/contenidos/',
+                  ''
+                ),
+                modified: Moment(metadata.updated),
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
+          });
+        }
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.setState({
+        files: array,
+      });
+      await this.matchFilesWithContents();
+    }
+  }
+
+  async listFolderItems(ref, subjectId) {
+    var array = [];
+    try {
+      await ref.listAll().then(async (result) => {
+        //Carpetas
+        for (const folderRef of result.prefixes) {
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            subjectId
+          );
+          array = array.concat(subFolderElements);
+        }
+        //Archivos
+        for (const res of result.items) {
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(subjectId + '/', ''),
+                modified: Moment(metadata.updated),
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
+          });
+        }
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      return array;
+    }
+  }
+
+  matchFilesWithContents = async () => {
+    let storageFiles = [...this.state.files];
+
+    if (this.props.contenidos) {
+      const propsContenidos = this.props.contenidos.map((contenido) => {
+        const paths = contenido.split('/');
+        return paths[paths.length - 1];
+      });
+
+      const updatedContents = propsContenidos.filter((nombre) => {
+        const foundFile = storageFiles.find((file) => nombre === file.key);
+        if (!isEmpty(foundFile)) {
+          return foundFile.key;
+        }
+      });
+
+      const contenidos = updatedContents.map(
+        (nombre) =>
+          'gs://trida-7f28f.appspot.com/' +
+          this.props.idMateria +
+          '/contenidos/' +
+          nombre
+      );
+
+      this.setState(
+        {
+          propsContenidos: contenidos,
+          isLoading: false,
+        },
+        async () =>
+          await editDocument('clases', this.props.idClase, {
+            contenidos: contenidos,
+          })
+      );
+    }
+  };
+
+  toggleDeleteModal = () => {
+    this.setState({
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
+  onDelete = (ref) => {
+    this.setState({
+      contenidoRef: ref,
+    });
+    this.toggleDeleteModal();
+  };
+
+  unlinkContenido = async () => {
+    try {
+      var obj = await getDocument(`clases/${this.props.idClase}`);
+      const { data } = obj;
+      var arrayFiltrado = data.contenidos.filter(
+        (element) => element !== this.state.contenidoRef
+      );
+      await editDocument(
+        'clases',
+        this.props.idClase,
+        { contenidos: arrayFiltrado },
+        'Clase'
+      );
+    } catch (err) {
+      console.log('Error', err);
+    }
+    this.toggleDeleteModal();
+    this.props.updateContenidos();
+  };
+
   render() {
-    const { idSala } = this.props;
+    const {
+      idSala,
+      contenidos,
+      idClase,
+      idMateria,
+      updateContenidos,
+    } = this.props;
+    const {
+      modalContenidosOpen,
+      isLoading,
+      files,
+      modalDeleteOpen,
+      propsContenidos,
+    } = this.state;
+
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
@@ -52,9 +239,9 @@ class TabsDeClase extends Component {
               <Card className="mb-4">
                 <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
-                    <NavItem className="w-25 text-center">
+                    <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#1"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '1',
@@ -67,9 +254,9 @@ class TabsDeClase extends Component {
                         Aula Virtual
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-25 text-center">
+                    <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#2"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '2',
@@ -79,12 +266,12 @@ class TabsDeClase extends Component {
                           this.toggleSecondTab('2');
                         }}
                       >
-                        Preguntas
+                        Contenidos
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-25 text-center">
+                    <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#3"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '3',
@@ -94,12 +281,12 @@ class TabsDeClase extends Component {
                           this.toggleSecondTab('3');
                         }}
                       >
-                        Respuestas
+                        Preguntas
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-25 text-center">
+                    <NavItem className="w-20 text-center">
                       <NavLink
-                        to="#"
+                        to="#4"
                         location={{}}
                         className={classnames({
                           active: this.state.activeSecondTab === '4',
@@ -107,6 +294,21 @@ class TabsDeClase extends Component {
                         })}
                         onClick={() => {
                           this.toggleSecondTab('4');
+                        }}
+                      >
+                        Respuestas
+                      </NavLink>
+                    </NavItem>
+                    <NavItem className="w-20 text-center">
+                      <NavLink
+                        to="#5"
+                        location={{}}
+                        className={classnames({
+                          active: this.state.activeSecondTab === '5',
+                          'nav-link': true,
+                        })}
+                        onClick={() => {
+                          this.toggleSecondTab('5');
                         }}
                       >
                         Asistencia
@@ -136,13 +338,88 @@ class TabsDeClase extends Component {
                       <Colxx sm="12" lg="12">
                         <CardBody>
                           <CardTitle className="mb-4">
+                            Contenidos Asociados
+                          </CardTitle>
+                          {isLoading && <div className="cover-spin" />}
+                          {!isLoading &&
+                            (isEmpty(propsContenidos) ? (
+                              <p className="mb-4">
+                                No hay contenidos asociados
+                              </p>
+                            ) : (
+                              <Row>
+                                {propsContenidos.map((contenido) => {
+                                  var gsReference = storage.refFromURL(
+                                    contenido
+                                  );
+                                  return (
+                                    <DataListView
+                                      key={contenido}
+                                      id={contenido}
+                                      title={gsReference.name}
+                                      onDelete={this.onDelete}
+                                      navTo="#"
+                                    />
+                                  );
+                                })}{' '}
+                              </Row>
+                            ))}
+                          {modalDeleteOpen && (
+                            <ModalConfirmacion
+                              texto="¿Está seguro de que desea quitar el contenido?"
+                              titulo="Desvincular Contenido"
+                              buttonPrimary="Aceptar"
+                              buttonSecondary="Cancelar"
+                              toggle={this.toggleDeleteModal}
+                              isOpen={modalDeleteOpen}
+                              onConfirm={this.unlinkContenido}
+                            />
+                          )}
+                          <Row className="button-group">
+                            <Button
+                              onClick={this.toggleModalContenidos}
+                              color="primary"
+                              size="lg"
+                              className="button"
+                            >
+                              Asociar Contenidos
+                            </Button>
+                          </Row>
+                          {modalContenidosOpen && (
+                            <ModalGrande
+                              modalOpen={modalContenidosOpen}
+                              toggleModal={this.toggleModalContenidos}
+                              text="Asociar Contenidos"
+                            >
+                              <ModalAsociarContenidos
+                                files={files}
+                                contenidos={contenidos}
+                                isLoading={isLoading}
+                                updateContenidos={updateContenidos}
+                                idClase={idClase}
+                                idMateria={idMateria}
+                                toggleModalContenidos={
+                                  this.toggleModalContenidos
+                                }
+                              />
+                            </ModalGrande>
+                          )}
+                        </CardBody>
+                      </Colxx>
+                    </Row>
+                  </TabPane>
+                  <TabPane tabId="3">
+                    <Row>
+                      <Colxx sm="12" lg="12">
+                        <CardBody>
+                          <CardTitle className="mb-4">
                             Crear preguntas
                           </CardTitle>
                         </CardBody>
                       </Colxx>
                     </Row>
                   </TabPane>
-                  <TabPane tabId="3">
+                  <TabPane tabId="4">
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
@@ -153,7 +430,7 @@ class TabsDeClase extends Component {
                       </Colxx>
                     </Row>
                   </TabPane>
-                  <TabPane tabId="4">
+                  <TabPane tabId="5">
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>

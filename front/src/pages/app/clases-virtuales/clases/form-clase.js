@@ -3,6 +3,8 @@ import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from 'rc-switch';
 import { createUUID } from 'helpers/Utils';
 import { addDocument } from 'helpers/Firebase-db';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
 
 class FormClase extends React.Component {
   constructor() {
@@ -32,8 +34,15 @@ class FormClase extends React.Component {
       descripcion: this.state.descripcion,
       idSala: this.state.idSala,
       idMateria: id,
+      contenidos: [],
     };
-    await addDocument('clases', obj, 'Clase');
+    await addDocument(
+      'clases',
+      obj,
+      'Clase agregada',
+      'Clase agregada exitosamente',
+      'Error al agregar la clase'
+    );
 
     this.props.onClaseAgregada();
   };
@@ -46,7 +55,8 @@ class FormClase extends React.Component {
       () => {
         if (this.state.switchVideollamada) {
           const uuid = createUUID();
-          this.setState({ idSala: uuid });
+          const encriptada = CryptoJS.AES.encrypt(uuid, secretKey).toString();
+          this.setState({ idSala: encriptada });
         }
       }
     );

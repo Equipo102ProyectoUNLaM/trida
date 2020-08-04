@@ -89,6 +89,8 @@ module.exports = {
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
+  'pizarron.abrir-pizarron': 'Abrir pizarrón',
+  'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
 
   /* 07.Institution */
   'institution.selection': '¿A qué institución desea acceder?',
@@ -106,5 +108,10 @@ module.exports = {
   'evaluacion.agregar': 'AGREGAR EVALUACIÓN',
 
   /* 10.Contenidos */
-  'contenido.agregar': 'Subir archivos',
+
+  'contenido.agregar': 'AGREGAR CONTENIDO',
+
+  /* 11. Mensajeria */
+  'messages.new': 'CREAR NUEVO MENSAJE',
+  'messages.receiver': 'Destinatario',
 };

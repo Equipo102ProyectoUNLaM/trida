@@ -61,7 +61,13 @@ class FormEvaluacion extends React.Component {
       idMateria: this.props.idMateria,
       activo: true,
     };
-    await addDocument('evaluaciones', obj, 'Evaluación');
+    await addDocument(
+      'evaluaciones',
+      obj,
+      'Evaluación agregada',
+      'Evaluación agregada exitosamente',
+      'Error al agregar la evaluación'
+    );
 
     this.props.onEvaluacionAgregada();
   };
