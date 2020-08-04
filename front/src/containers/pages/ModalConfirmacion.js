@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Row,
+} from 'reactstrap';
 
 export default class ModalConfirmacion extends Component {
   render() {
@@ -11,10 +18,16 @@ export default class ModalConfirmacion extends Component {
       toggle,
       isOpen,
       onConfirm,
+      fecha,
+      esEnviado,
+      usuarios,
     } = this.props;
     return (
       <Modal isOpen={isOpen} toggle={toggle}>
-        <ModalHeader toggle={toggle}>{titulo}</ModalHeader>
+        <ModalHeader toggle={toggle}>
+          <Row className="title">{titulo}</Row>
+          {fecha && <Row className="text-muted small"> {fecha}</Row>}
+        </ModalHeader>
         <ModalBody>{texto}</ModalBody>
         <ModalFooter>
           {buttonPrimary && (

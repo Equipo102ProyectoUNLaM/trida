@@ -23,6 +23,9 @@ class Mensajeria extends Component {
       isLoading: true,
       asuntoMensaje: '',
       contenidoMensaje: '',
+      fechaMensaje: '',
+      botonDetalle: 'Responder',
+      usuariosMail: '',
       modalEnviarOpen: false,
     };
   }
@@ -92,9 +95,20 @@ class Mensajeria extends Component {
   };
 
   clickOnRow = (rowInfo) => {
+    let botonMensaje = 'Responder';
+    let usuarios = null;
+    if (rowInfo.original.destinatarios) {
+      botonMensaje = 'Reenviar';
+      usuarios = rowInfo.original.destinatarios;
+    } else {
+      usuarios = rowInfo.original.remitente;
+    }
     this.setState({
       asuntoMensaje: rowInfo.original.asunto,
       contenidoMensaje: rowInfo.original.contenido,
+      fechaMensaje: rowInfo.original.fecha_creacion,
+      botonDetalle: botonMensaje,
+      usuariosMail: usuarios,
     });
     this.toggleDetailModal();
   };
@@ -125,6 +139,9 @@ class Mensajeria extends Component {
       contenidoMensaje,
       asuntoMensaje,
       modalMessageOpen,
+      fechaMensaje,
+      botonDetalle,
+      usuariosMail,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -155,7 +172,9 @@ class Mensajeria extends Component {
             <ModalConfirmacion
               texto={contenidoMensaje}
               titulo={asuntoMensaje}
-              buttonPrimary="Responder"
+              fecha={fechaMensaje}
+              usuarios={usuariosMail}
+              buttonPrimary={botonDetalle}
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}
               isOpen={modalMessageOpen}

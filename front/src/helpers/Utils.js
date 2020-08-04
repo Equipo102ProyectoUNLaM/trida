@@ -27,7 +27,7 @@ export const getDateWithFormat = () => {
   if (mm < 10) {
     mm = '0' + mm;
   }
-  return dd + '.' + mm + '.' + yyyy;
+  return dd + '/' + mm + '/' + yyyy;
 };
 
 export const getCurrentTime = () => {
@@ -41,9 +41,9 @@ export const getCurrentTime = () => {
 };
 
 export const getFechaHoraActual = () => {
-  const day = new Date().toISOString().slice(0, 10);
+  const day = getDateWithFormat();
   const hour = getCurrentTime();
-  return day + ' ' + hour;
+  return day + ' - ' + hour;
 };
 
 export const getDirection = () => {

@@ -129,10 +129,12 @@ class FormMensaje extends Component {
               className="react-select"
               classNamePrefix="react-select"
               isMulti
+              placeholder="Seleccione los destinatarios"
               name="form-field-name"
               value={selectedOptions}
               onChange={this.handleChangeMulti}
               options={datos}
+              required
             />
           </Colxx>
         </Row>
@@ -154,7 +156,7 @@ class FormMensaje extends Component {
 
         <ModalFooter>
           <Button color="primary" type="submit">
-            Agregar
+            Enviar
           </Button>
           <Button color="secondary" onClick={toggleModal}>
             Cancelar
