@@ -21,7 +21,7 @@ import {
 class Contenidos extends Component {
   constructor(props) {
     super(props);
-    var subject = JSON.parse(localStorage.getItem('subject'));
+    const subject = JSON.parse(localStorage.getItem('subject'));
     this.state = {
       files: [],
       isLoading: true,
@@ -47,18 +47,18 @@ class Contenidos extends Component {
   }
 
   async dataListRenderer() {
-    var arrayFolder = [];
-    var arrayFiles = [];
+    let arrayFolder = [];
+    let arrayFiles = [];
     try {
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      var listRef = storage.ref(this.state.subjectId + '/contenidos');
+      const listRef = storage.ref(this.state.subjectId + '/contenidos');
       // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
         //Carpetas
-        var ctrFolder = 0;
+        let ctrFolder = 0;
         result.prefixes.forEach(async (folderRef) => {
           ctrFolder++;
-          var subFolderElements = await this.listFolderItems(
+          let subFolderElements = await this.listFolderItems(
             folderRef,
             this.state.subjectId
           );
@@ -83,12 +83,12 @@ class Contenidos extends Component {
         });
 
         //Archivos
-        var ctrFiles = 0;
+        let ctrFiles = 0;
         result.items.forEach(async (res) => {
           ctrFiles++;
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
-              var obj = {
+              let obj = {
                 key: metadata.fullPath.replace(
                   this.state.subjectId + '/contenidos/',
                   ''
@@ -120,15 +120,15 @@ class Contenidos extends Component {
   }
 
   async listFolderItems(ref, subjectId) {
-    var arrayFolder = [];
-    var arrayFiles = [];
+    let arrayFolder = [];
+    let arrayFiles = [];
     try {
       await ref.listAll().then(async (result) => {
         //Carpetas
-        var ctrFolder = 0;
+        let ctrFolder = 0;
         result.prefixes.forEach(async (folderRef) => {
           ctrFolder++;
-          var subFolderElements = await this.listFolderItems(
+          let subFolderElements = await this.listFolderItems(
             folderRef,
             subjectId
           );
@@ -154,12 +154,12 @@ class Contenidos extends Component {
         });
 
         //Archivos
-        var ctrFiles = 0;
+        let ctrFiles = 0;
         result.items.forEach(async (res) => {
           ctrFiles++;
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
-              var obj = {
+              let obj = {
                 key: metadata.fullPath.replace(subjectId + '/contenidos/', ''),
                 modified: Moment(metadata.updated),
                 size: metadata.size,
@@ -198,7 +198,7 @@ class Contenidos extends Component {
   };
 
   handleDeleteFolder = (folderKeys) => {
-    var files = [];
+    let files = [];
     for (const folder of folderKeys) {
       files = files.concat(
         this.state.files
@@ -229,11 +229,11 @@ class Contenidos extends Component {
     this.setState((state) => ({
       isLoading: true,
     }));
-    var cant = filesKey.length;
+    let cant = filesKey.length;
     for (const f of filesKey) {
       if (f.slice(-1) !== '/') {
         //Si es carpeta no hago nada
-        var fileRef = storage.ref(`${this.state.subjectId}/contenidos/${f}`);
+        const fileRef = storage.ref(`${this.state.subjectId}/contenidos/${f}`);
         fileRef
           .delete()
           .then(() => {
@@ -284,7 +284,7 @@ class Contenidos extends Component {
 
   handleDownloadFile = (fileKeys) => {
     fileKeys.forEach((fileKey) => {
-      var file = this.state.files.find((i) => i.key === fileKey);
+      const file = this.state.files.find((i) => i.key === fileKey);
       window.open(file.url, '_blank'); //to open new page
     });
   };
@@ -294,21 +294,21 @@ class Contenidos extends Component {
       isLoading: true,
       modalRenameOpen: false,
     }));
-    var cant = this.state.dropZone.length;
+    let cant = this.state.dropZone.length;
 
     this.state.dropZone.forEach((file) => {
       //Obtenemos la referencia a la materia
-      var name = file.fullPath ? file.fullPath : file.name;
+      let name = file.fullPath ? file.fullPath : file.name;
       if (
         rename &&
         this.state.repeatedFiles.includes(this.state.selectedFolder + name)
       ) {
-        var pos = name.lastIndexOf('.');
+        const pos = name.lastIndexOf('.');
         name = name.substring(0, pos) + '- Copia.' + name.substring(pos + 1);
       }
 
       //Si seleccionó una carpeta, lo guardo en esa carpeta
-      var listRef = storage.ref(
+      const listRef = storage.ref(
         `${this.state.subjectId}/contenidos/${this.state.selectedFolder}${name}`
       );
 
@@ -322,7 +322,7 @@ class Contenidos extends Component {
         () => {
           cant--;
           //Elimino de dropzone los archivos ya subidos
-          var buttonRemove = document.getElementById('buttonRemove');
+          let buttonRemove = document.getElementById('buttonRemove');
           if (buttonRemove) buttonRemove.click();
           if (cant === 0) this.updateFilesList();
         }
@@ -333,7 +333,7 @@ class Contenidos extends Component {
   validateDuplicatedFiles(event) {
     try {
       //Verifico si hay alguna carpeta seleccionada
-      var noFolder = !document.getElementsByClassName('folder selected').length;
+      let noFolder = !document.getElementsByClassName('folder selected').length;
 
       this.setState(
         (prevState) => ({
@@ -341,10 +341,10 @@ class Contenidos extends Component {
           isLoading: true,
         }),
         () => {
-          var repeatedFiles = [];
+          let repeatedFiles = [];
           //Busco repetidos en la carpeta seleccionada (En el caso de haberlo hecho, sino en el raiz)
           this.state.dropZone.forEach((file) => {
-            var result = this.state.files.filter(
+            let result = this.state.files.filter(
               (x) =>
                 x.key ===
                 (this.state.selectedFolder

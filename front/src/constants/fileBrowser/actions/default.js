@@ -63,7 +63,7 @@ const Actions = (props) => {
       if (isFolder && canCreateFolder && !nameFilter) {
         actions.push(
           <li key="action-add-folder">
-            <a onClick={onCreateFolder} href="#" role="button">
+            <a onClick={onCreateFolder} href="/" role="button">
               {icons.Folder}
               &nbsp;Crear Subcarpeta
             </a>
@@ -82,7 +82,7 @@ const Actions = (props) => {
       ) {
         actions.push(
           <li key="action-rename">
-            <a onClick={onRenameFile} href="#" role="button">
+            <a onClick={onRenameFile} href="/" role="button">
               {icons.Rename}
               &nbsp;Renombrar
             </a>
@@ -91,7 +91,7 @@ const Actions = (props) => {
       } else if (!itemsWithoutKeyDerived && isFolder && canRenameFolder) {
         actions.push(
           <li key="action-rename">
-            <a onClick={onRenameFolder} href="#" role="button">
+            <a onClick={onRenameFolder} href="/" role="button">
               {icons.Rename}
               &nbsp;Renombrar
             </a>
@@ -102,7 +102,7 @@ const Actions = (props) => {
       if (!itemsWithoutKeyDerived && !isFolder && canDeleteFile) {
         actions.push(
           <li key="action-delete">
-            <a onClick={onDeleteFile} href="#" role="button">
+            <a onClick={onDeleteFile} href="/" role="button">
               {icons.Delete}
               &nbsp;Eliminar
             </a>
@@ -111,7 +111,7 @@ const Actions = (props) => {
       } else if (!itemsWithoutKeyDerived && isFolder && canDeleteFolder) {
         actions.push(
           <li key="action-delete">
-            <a onClick={onDeleteFolder} href="#" role="button">
+            <a onClick={onDeleteFolder} href="/" role="button">
               {icons.Delete}
               &nbsp;Eliminar
             </a>
@@ -122,7 +122,7 @@ const Actions = (props) => {
       if (!isFolder && canDownloadFile) {
         actions.push(
           <li key="action-download">
-            <a onClick={onDownloadFile} href="#" role="button">
+            <a onClick={onDownloadFile} href="/" role="button">
               {icons.Download}
               &nbsp;Descargar
             </a>
@@ -141,7 +141,7 @@ const Actions = (props) => {
     if (canCreateFolder && !nameFilter) {
       actions.push(
         <li key="action-add-folder">
-          <a onClick={onCreateFolder} href="#" role="button">
+          <a onClick={onCreateFolder} href="/" role="button">
             {icons.Folder}
             &nbsp;Crear Carpeta
           </a>
