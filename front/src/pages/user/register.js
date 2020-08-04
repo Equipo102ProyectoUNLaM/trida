@@ -4,8 +4,10 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from 'redux/actions';
 import { Formik, Form, Field } from 'formik';
-import { NotificationManager } from 'components/common/react-notifications';
-import { enviarNotificacionError } from 'helpers/Utils-ui';
+import {
+  enviarNotificacionError,
+  enviarNotificacionExitosa,
+} from 'helpers/Utils-ui';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
@@ -28,6 +30,7 @@ class Register extends Component {
     if (!this.props.loading) {
       if (this.state.email !== '' && this.state.password !== '') {
         this.props.registerUser(userObj, this.props.history);
+        enviarNotificacionExitosa('Registro exitoso', 'Usuario registrado!');
       } else {
         enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }

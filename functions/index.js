@@ -1,10 +1,11 @@
+/* eslint-disable no-loop-func */
+/* eslint-disable no-await-in-loop */
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const cors = require('cors')({origin: true});
 admin.initializeApp(functions.config().firebase);
-//const asignarMateriasAUsuario = require('../front/src/helpers/Firebase-user');
 
 /* healthcheck endpoint */
 exports.ping = functions.https.onRequest((request, response) => {
@@ -67,89 +68,100 @@ exports.user = functions.https.onCall((data) => {
     });
 });
 
-exports.asignarFuncion = async (data) => {
-  const { instId, courseId, subjectId } = data;
+const getSubCollectionRef = (doc, collection) => {
+  return admin.firestore().doc(doc).collection(collection);
+};
+
+const getSubCollectionIds = async (ref) => {
+  let array = [];
+  const items = await ref.get();
+  items.forEach((doc) => {
+    array.push(doc.id);
+  });
+  return array;
+};
+
+const getDocRef = (doc) => {
+  return admin.firestore().doc(doc);
+};
+
+
+exports.asignarFuncion = async ({ instId, courseId, subjectId }) => {
   let instRef = '',
   courseRef = [],
   subjectRef = [],
   cursosObj = [];
 
-instRef = admin.firestore().doc(`/instituciones/${instId}`);
+  let referenciaAInst = `/instituciones/${instId}`;
+  instRef = getDocRef(referenciaAInst);
 
-if (courseId) {
-  courseRef = [
-    admin.firestore().doc(`/instituciones/${instId}/cursos/${courseId}`),
-  ];
-  if (subjectId) {
-    subjectRef = [
-      admin.firestore().doc(
-        `/instituciones/${instId}/cursos/${courseId}/materias/${subjectId}`
-      ),
-    ];
-    cursosObj.push({ curso_id: courseRef, materias: subjectRef });
+  // si se seleccionó curso, busco las materias
+  if (courseId) {
+    let referenciaACurso = `${referenciaAInst}/cursos/${courseId}`;
+    courseRef = getDocRef(referenciaACurso);
+
+    // si se seleccionó materia, busco las referencias y armo el objeto cursos
+    if (subjectId) {
+      subjectRef = [getDocRef(`${referenciaACurso}/materias/${subjectId}`)];
+      cursosObj.push({ curso_id: courseRef, materias: subjectRef });
+    } else {
+      // si no se seleccionó materia, busco las materias del curso y voy armando el objeto cursos
+      const matRef = await getSubCollectionRef(referenciaACurso, 'materias');
+
+      const mat = await matRef.get();
+      mat.forEach((materia) => {
+        const materiaRef = admin.firestore().doc(
+          `${referenciaACurso}/materias/${materia.id}`
+        );
+        subjectRef.push(materiaRef);
+      });
+
+      cursosObj.push({ curso_id: courseRef, materias: subjectRef });
+    }
   } else {
-    // traer todas las materias del curso
-    const matRef = admin.firestore()
-      .doc(`/instituciones/${instId}/cursos/${courseId}`)
-      .collection('materias');
-    const mat = await matRef.get();
-    mat.forEach((mat) => {
-      const materiaRef = admin.firestore().doc(
-        `/instituciones/${instId}/cursos/${courseId}/materias/${mat.id}`
-      );
-      subjectRef.push(materiaRef);
-    });
+    // si no se seleccionó curso, traigo todos los cursos de la institución y para curso las materias
+    const cursosRef = await getSubCollectionRef(referenciaAInst, 'cursos');
+    console.log(cursosRef);
+    const arrayCursos = await getSubCollectionIds(cursosRef);
 
-    cursosObj.push({ curso_id: courseRef, materias: subjectRef });
+    for (const curso of arrayCursos) {
+      let arrayMaterias = [];
+      const refACurso = `${referenciaAInst}/cursos/${curso}`;
+      const materiaRef = getSubCollectionRef(refACurso, 'materias');
+      const materias = await materiaRef.get();
+
+      materias.forEach((mat) => {
+        const materiaRef = admin.firestore().doc(
+          `${refACurso}/materias/${mat.id}`
+        );
+        arrayMaterias.push(materiaRef);
+      });
+      const cursoRef = await getDocRef(refACurso);
+
+      const cursoObj = {
+        curso_id: cursoRef,
+        materias: arrayMaterias,
+      };
+
+      cursosObj.push(cursoObj);
+    }
   }
-} else {
-  // traer todos los cursos de la inst y todas las materias de los cursos
-  const cursoRef = admin.firestore()
-    .doc(`/instituciones/${instId}`)
-    .collection('cursos');
-  const cursos = await cursoRef.get();
- 
-  for (const curso of cursos) {
-    const arrayMaterias = [];
-    const materiaRef = admin.firestore()
-      .doc(`/instituciones/${instId}/cursos/${curso.id}`)
-      .collection('materias');
-    const materias = materiaRef.get();
 
-    materias.forEach((mat) => {
-      const materiaRefDoc = admin.firestore().doc(
-        `/instituciones/${instId}/cursos/${courseId}/materias/${mat.id}`
-      );
-      arrayMaterias.push(materiaRefDoc);
-    });
+  // armo el objeto final de instituciones del usuario
+  const instObj = [
+    {
+      institucion_id: instRef,
+      cursos: cursosObj,
+    },
+  ];
 
-    const cursoRef = admin.firestore().doc(
-      `/instituciones/${instId}/cursos/${curso.id}`
-    );
-
-    const cursoObj = {
-      curso_id: cursoRef,
-      materias: arrayMaterias,
-    };
-
-    cursosObj.push(cursoObj);
-  }
-}
-
-const instObj = [
-  {
-    institucion_id: instRef,
-    cursos: cursosObj,
-  },
-];
-
-return instObj;
+  return instObj;
 }
 
 exports.asignarMaterias = functions.https.onCall(async (data)=> {
-
   try {
     const instObj = await this.asignarFuncion(data);
+    console.log(instObj.cursos);
     await admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set( { instituciones: instObj }, { merge: true });

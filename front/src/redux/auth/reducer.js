@@ -2,6 +2,7 @@ import {
   LOGIN_USER_START,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
+  SET_LOGIN_USER,
   REGISTER_USER_START,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
@@ -76,8 +77,11 @@ export default (state = INIT_STATE, action) => {
         error: action.payload.message,
       };
 
+    case SET_LOGIN_USER:
+      return { ...state, user: action.payload.uid };
+
     case REGISTER_USER_SUCCESS:
-      return { ...state, loading: false, user: action.payload.uid, error: '' };
+      return { ...state, loading: false, error: '' };
 
     case REGISTER_USER_ERROR:
       return {

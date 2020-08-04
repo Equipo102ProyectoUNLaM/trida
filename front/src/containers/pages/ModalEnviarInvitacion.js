@@ -17,11 +17,7 @@ import {
 import { registerUser } from 'redux/actions';
 import { connect } from 'react-redux';
 import 'react-tagsinput/react-tagsinput.css';
-import {
-  getInstituciones,
-  getCourses,
-  asignarMateriasAUsuario,
-} from 'helpers/Firebase-user';
+import { getInstituciones, getCourses } from 'helpers/Firebase-user';
 
 class ModalEnviarInvitacion extends React.Component {
   constructor(props) {
@@ -29,7 +25,7 @@ class ModalEnviarInvitacion extends React.Component {
 
     this.state = {
       modalInvitacionOpen: false,
-      tags: ['juli.foglia@gmail.com', 'julityson@hotmail.com'],
+      tags: [],
       items: [],
       isLoading: true,
       showCourses: false,
@@ -143,6 +139,7 @@ class ModalEnviarInvitacion extends React.Component {
       };
       //agarrar los mails de los tags, autogenerar contraseña para cada uno
       try {
+        this.setState({ isLoading: true });
         await this.props.registerUser(userObj);
         // validar que no haya error de registro
       } catch (error) {
@@ -156,6 +153,7 @@ class ModalEnviarInvitacion extends React.Component {
   };
 
   registroExitoso = async () => {
+    this.setState({ isLoading: false });
     this.props.toggle();
     enviarNotificacionExitosa(
       'Invitación enviada exitosamente',
@@ -216,6 +214,7 @@ class ModalEnviarInvitacion extends React.Component {
       selectedCourse,
       subjectOptions,
       selectedSubject,
+      isLoading,
     } = this.state;
     return (
       <Modal isOpen={isOpen} toggle={toggle}>
@@ -289,6 +288,7 @@ class ModalEnviarInvitacion extends React.Component {
             Cancelar
           </Button>
         </ModalFooter>
+        {isLoading && <div className="cover-spin" />}
       </Modal>
     );
   }

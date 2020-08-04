@@ -2,6 +2,7 @@ import {
   LOGIN_USER_START,
   LOGIN_USER_SUCCESS,
   LOGOUT_USER,
+  SET_LOGIN_USER,
   REGISTER_USER_START,
   REGISTER_USER_SUCCESS,
   LOGIN_USER_ERROR,
@@ -15,9 +16,7 @@ import {
 } from '../actions';
 
 import { auth, functions } from 'helpers/Firebase';
-import { addDocumentWithId } from 'helpers/Firebase-db';
-import { asignarMateriasAUsuario } from 'helpers/Firebase-user';
-import { createRandomString } from 'helpers/Utils';
+import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -97,6 +96,11 @@ export const registerUserSuccess = (user) => ({
   payload: { user },
 });
 
+export const setLoginUser = (user) => ({
+  type: SET_LOGIN_USER,
+  payload: { user },
+});
+
 export const registerUserError = (message) => ({
   type: REGISTER_USER_ERROR,
   payload: { message },
@@ -123,10 +127,18 @@ export const registerUser = (user) => async (dispatch) => {
         const asignarMateriasAction = functions.httpsCallable(
           'asignarMaterias'
         );
-        return await asignarMateriasAction(instId, courseId, subjectId, uid);
+        await asignarMateriasAction({
+          instId,
+          courseId,
+          subjectId,
+          uid,
+        });
+      } else {
+        dispatch(setLoginUser(registerUser));
       }
 
       dispatch(registerUserSuccess(registerUser));
+      enviarNotificacionExitosa('Registro exitoso', 'Usuario registrado!');
     } else {
       dispatch(registerUserError(registerUser.message));
     }
@@ -137,14 +149,10 @@ export const registerUser = (user) => async (dispatch) => {
 };
 
 export const sendInvitationEmail = async (email) => {
-  const sendMail = functions.httpsCallable('sendMail'); //send email function
-  sendMail(email)
-    .then(function (result) {
-      console.log(result);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  const sendMail = functions.httpsCallable('sendMail');
+  sendMail(email).catch(function (error) {
+    console.log(error);
+  });
 };
 
 export const logout = () => async (dispatch) => {
