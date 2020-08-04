@@ -52,7 +52,7 @@ exports.register = functions.auth.user().onCreate((data)=> {
       primerLogin: true,
       cambiarPassword: false,
       instituciones: [],
-      rol: 1,
+      rol: 1, // validar el rol alumno cuando se incluya
     }
 
     return admin.firestore().collection('usuarios')

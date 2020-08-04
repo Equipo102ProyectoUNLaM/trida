@@ -6406,6 +6406,11 @@ input:-webkit-autofill {
   position: relative;
 }
 
+.with-tooltip {
+  width: 90% !important;
+  margin-left: 1rem !important;
+}
+
 .has-float-label label::after,
 .has-float-label > span::after {
   background: $foreground-color !important;
@@ -9086,4 +9091,9 @@ footer.page-footer {
 .tip-text {
   color: rgba(33, 33, 33, 0.7);
   font-size: 90%;
+}
+
+.tooltip-question {
+  margin: 0.5rem !important;
+  color: $theme-color-2;
 }

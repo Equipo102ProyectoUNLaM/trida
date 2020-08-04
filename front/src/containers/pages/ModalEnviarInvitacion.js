@@ -6,10 +6,12 @@ import {
   ModalBody,
   ModalFooter,
   Form,
+  Row,
 } from 'reactstrap';
 import Select from 'react-select';
 import TagsInput from 'react-tagsinput';
 import IntlMessages from 'helpers/IntlMessages';
+import TooltipItem from 'components/common/TooltipItem';
 import {
   enviarNotificacionExitosa,
   enviarNotificacionError,
@@ -19,6 +21,7 @@ import { connect } from 'react-redux';
 import 'react-tagsinput/react-tagsinput.css';
 import { getInstituciones, getCourses } from 'helpers/Firebase-user';
 import { isEmpty } from 'helpers/Utils';
+import { toolTipInst, toolTipMails } from 'constants/texts';
 
 class ModalEnviarInvitacion extends React.Component {
   constructor(props) {
@@ -230,63 +233,69 @@ class ModalEnviarInvitacion extends React.Component {
       <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>Enviar Invitación</ModalHeader>
         <ModalBody>
-          <div className="form-group has-float-label">
-            <Select
-              className="react-select"
-              classNamePrefix="select"
-              isClearable={true}
-              name="institucion"
-              options={instOptions}
-              value={selectedOption}
-              onChange={this.handleInstChange}
-            />
-            <IntlMessages id="user.seleccion-institucion" />
-          </div>
-          {showCourses && (
-            <div className="form-group has-float-label">
+          <Row>
+            <div className="form-group has-float-label with-tooltip">
               <Select
                 className="react-select"
                 classNamePrefix="select"
                 isClearable={true}
-                name="curso"
-                options={courseOptions}
-                value={selectedCourse}
-                onChange={this.handleCourseChange}
-                isDisabled={false}
+                name="institucion"
+                options={instOptions}
+                value={selectedOption}
+                onChange={this.handleInstChange}
               />
-              <IntlMessages id="user.seleccion-curso" />
+              <IntlMessages id="user.seleccion-institucion" />
             </div>
+            <TooltipItem body={toolTipInst} id="inst" />
+          </Row>
+          {showCourses && (
+            <Row>
+              <div className="form-group has-float-label with-tooltip">
+                <Select
+                  className="react-select"
+                  classNamePrefix="select"
+                  isClearable={true}
+                  name="curso"
+                  options={courseOptions}
+                  value={selectedCourse}
+                  onChange={this.handleCourseChange}
+                  isDisabled={false}
+                />
+                <IntlMessages id="user.seleccion-curso" />
+              </div>
+            </Row>
           )}
           {showSubjects && (
-            <div className="form-group has-float-label">
-              <Select
-                className="react-select"
-                classNamePrefix="select"
-                isClearable={true}
-                name="materia"
-                options={subjectOptions}
-                value={selectedSubject}
-                onChange={this.handleSubjectChange}
-                isDisabled={false}
-              />
-              <IntlMessages id="user.seleccion-materia" />
-            </div>
+            <Row>
+              <div className="form-group has-float-label with-tooltip">
+                <Select
+                  className="react-select"
+                  classNamePrefix="select"
+                  isClearable={true}
+                  name="materia"
+                  options={subjectOptions}
+                  value={selectedSubject}
+                  onChange={this.handleSubjectChange}
+                  isDisabled={false}
+                />
+                <IntlMessages id="user.seleccion-materia" />
+              </div>
+            </Row>
           )}
-          <p className="tip-text">
-            Ingresá el email del usuario al que querés invitar. <br /> Presioná
-            &quot;Enter&quot; por cada mail que ingreses.
-          </p>
           <Form>
-            <div className="form-group has-float-label">
-              <TagsInput
-                value={this.state.tags}
-                onChange={this.handleTagChange}
-                inputProps={{
-                  placeholder: '',
-                }}
-              />
-              <IntlMessages id="user.mail-invitado" />
-            </div>
+            <Row>
+              <div className="form-group has-float-label with-tooltip">
+                <TagsInput
+                  value={this.state.tags}
+                  onChange={this.handleTagChange}
+                  inputProps={{
+                    placeholder: '',
+                  }}
+                />
+                <IntlMessages id="user.mail-invitado" />
+              </div>
+              <TooltipItem body={toolTipMails} id="mails" />
+            </Row>
           </Form>
           <p className="tip-text">* campos requeridos</p>
         </ModalBody>
