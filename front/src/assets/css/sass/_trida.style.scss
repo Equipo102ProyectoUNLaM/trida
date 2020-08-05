@@ -50,6 +50,7 @@ Table of Contents
 45.Board
 46.Course Selection
 47.Contenidos
+48.Correcciones
 
 */
 
@@ -9128,4 +9129,18 @@ tr.folder{
 .center{
   margin-bottom: 0.5rem !important;
   margin-top: 0.5rem !important;
+}
+
+//48 Correcciones
+
+div.demo-mount-nested-editable, .rendered-react-keyed-file-browser{
+  display: flex;
+}
+
+div.rendered-file-browser{
+  padding-right: 3rem;
+}
+
+.item-detail{
+  padding-top: 2rem;
 }

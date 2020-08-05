@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Alert, Card, Row, CardBody } from 'reactstrap';
-import { Colxx } from '../../../components/common/CustomBootstrap';
 
 class Detail extends React.Component {
   static propTypes = {
@@ -21,34 +19,32 @@ class Detail extends React.Component {
     this.props.close();
   };
 
+  probando = (event) => {
+    alert('Hola');
+    console.log('Hola');
+  };
+
   render() {
     let name = this.props.file.key.split('/');
     name = name.length ? name[name.length - 1] : '';
 
     return (
-      <form className="deleting">
-        <div>
-          <Row>
-            <Colxx className="card-delete-message" xxs="12">
-              <Card>
-                <CardBody className="col-inline">
-                  <Alert color="danger" className="rounded center">
-                    ¿Está seguro que desea eliminar el archivo seleccionado?
-                    Esta acción no podrá deshacerse
-                  </Alert>
-                  <Button
-                    color="danger"
-                    className="mb-2 delete-button center"
-                    type="submit"
-                  >
-                    Eliminar
-                  </Button>
-                </CardBody>
-              </Card>
-            </Colxx>
-          </Row>
-        </div>
-      </form>
+      <div className="item-detail">
+        <h2>Item Detail</h2>
+        <dl>
+          <dt>Key</dt>
+          <dd>{this.props.file.key}</dd>
+
+          <dt>Name</dt>
+          <dd>{name}</dd>
+        </dl>
+        <a href="#" onClick={this.probando}>
+          Probando
+        </a>
+        <a href="#" onClick={this.handleCloseClick}>
+          Close
+        </a>
+      </div>
     );
   }
 }
