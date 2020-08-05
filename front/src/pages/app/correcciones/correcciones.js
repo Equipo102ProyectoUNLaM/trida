@@ -7,6 +7,13 @@ import { storage } from 'helpers/Firebase';
 import { injectIntl } from 'react-intl';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
+import CorreccionesDetailRenderer from './correccionesDetailRenderer';
+import { DefaultDetail } from 'constants/fileBrowser/details';
+import {
+  DefaultConfirmDeletion,
+  MultipleConfirmDeletion,
+} from 'constants/fileBrowser/confirmations';
+import { DefaultActionCorrecciones } from 'constants/fileBrowser/actions';
 
 class Correcciones extends Component {
   constructor(props) {
@@ -18,6 +25,8 @@ class Correcciones extends Component {
       isLoading: true,
       subjectId: subject.id,
     };
+
+    //this.onCorregir = this.onCorregir.bind(this);
   }
 
   async componentDidMount() {
@@ -71,6 +80,11 @@ class Correcciones extends Component {
     }
   }
 
+  onCorregirCorrecciones = () => {
+    alert('hola');
+    console.log('estoy en onCorregirCorrecciones');
+  };
+
   handleDownloadFile = (fileKeys) => {
     fileKeys.forEach((fileKey) => {
       const file = this.state.files.find((i) => i.key === fileKey);
@@ -85,7 +99,7 @@ class Correcciones extends Component {
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
 
         <Row>
-          <Colxx xxs="12">
+          <Colxx xxs="8">
             <h1>
               <IntlMessages id="menu.my-corrections" />
             </h1>
@@ -97,7 +111,11 @@ class Correcciones extends Component {
           <FileBrowser
             files={files}
             icons={Icons.FontAwesome(4)}
-            detailRenderer={() => null}
+            detailRenderer={DefaultDetail}
+            actionRenderer={DefaultActionCorrecciones}
+            onDeleteFile={() => null}
+            confirmDeletionRenderer={DefaultConfirmDeletion}
+            onRenameFile={this.onCorregirCorrecciones}
             onDownloadFile={this.handleDownloadFile}
           />
         </div>
