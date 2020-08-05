@@ -27,6 +27,7 @@ class Mensajeria extends Component {
       botonDetalle: 'Responder',
       usuariosMail: '',
       modalEnviarOpen: false,
+      esEnviado: false,
     };
   }
 
@@ -97,9 +98,11 @@ class Mensajeria extends Component {
   clickOnRow = (rowInfo) => {
     let botonMensaje = 'Responder';
     let usuarios = null;
+    let enviado = false;
     if (rowInfo.original.destinatarios) {
       botonMensaje = 'Reenviar';
       usuarios = rowInfo.original.destinatarios;
+      enviado = true;
     } else {
       usuarios = rowInfo.original.remitente;
     }
@@ -109,6 +112,7 @@ class Mensajeria extends Component {
       fechaMensaje: rowInfo.original.fecha_creacion,
       botonDetalle: botonMensaje,
       usuariosMail: usuarios,
+      esEnviado: enviado,
     });
     this.toggleDetailModal();
   };
@@ -142,6 +146,7 @@ class Mensajeria extends Component {
       fechaMensaje,
       botonDetalle,
       usuariosMail,
+      esEnviado,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -174,6 +179,7 @@ class Mensajeria extends Component {
               titulo={asuntoMensaje}
               fecha={fechaMensaje}
               usuarios={usuariosMail}
+              esEnviado={esEnviado}
               buttonPrimary={botonDetalle}
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}

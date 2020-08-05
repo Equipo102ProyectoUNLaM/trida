@@ -19,16 +19,30 @@ export default class ModalConfirmacion extends Component {
       isOpen,
       onConfirm,
       fecha,
-      esEnviado,
       usuarios,
+      esEnviado,
     } = this.props;
     return (
       <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>
           <Row className="title">{titulo}</Row>
-          {fecha && <Row className="text-muted small"> {fecha}</Row>}
+          {fecha && (
+            <Row className="text-muted small fecha-mensaje"> {fecha}</Row>
+          )}
         </ModalHeader>
-        <ModalBody>{texto}</ModalBody>
+        <ModalBody>
+          <Row>{texto}</Row>
+          {usuarios && esEnviado && (
+            <Row className="text-muted users-names">
+              Destinatarios: {usuarios}{' '}
+            </Row>
+          )}
+          {usuarios && !esEnviado && (
+            <Row className="text-muted users-names">
+              Enviado por: {usuarios}{' '}
+            </Row>
+          )}
+        </ModalBody>
         <ModalFooter>
           {buttonPrimary && (
             <Button color="primary" size="sm" onClick={onConfirm}>
