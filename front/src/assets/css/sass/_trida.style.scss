@@ -3530,6 +3530,11 @@ nav .nomargin {
   border-bottom: 1px solid $separator-color-light;
 }
 
+.ReactTable .rt-tr-group {
+  flex: 0 auto;
+  height: 3rem;
+}
+
 .ReactTable .list-item-heading {
   margin-bottom: 0;
 }
