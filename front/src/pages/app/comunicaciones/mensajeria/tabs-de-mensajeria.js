@@ -19,7 +19,7 @@ import {
   dataReceiveTableColumns,
 } from 'constants/messageTableColumns';
 
-class TabsDeClase extends Component {
+class TabsDeMensajeria extends Component {
   constructor(props) {
     super(props);
 
@@ -152,4 +152,4 @@ class TabsDeClase extends Component {
   }
 }
 
-export default withRouter(TabsDeClase);
+export default withRouter(TabsDeMensajeria);

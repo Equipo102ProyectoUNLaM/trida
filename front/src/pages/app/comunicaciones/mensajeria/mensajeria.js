@@ -89,7 +89,11 @@ class Mensajeria extends Component {
     arrayDeData.forEach(async (mensaje, indexM) => {
       mensaje.destinatarios.forEach(async (destinatario, indexD) => {
         let name = await getUsernameById(destinatario);
-        arrayDeData[indexM].destinatarios[indexD] = name;
+        if (arrayDeData[indexM].destinatarios.length - 1 > indexD) {
+          arrayDeData[indexM].destinatarios[indexD] = name + ', ';
+        } else {
+          arrayDeData[indexM].destinatarios[indexD] = name;
+        }
       });
     });
     return arrayDeData;
