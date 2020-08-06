@@ -38,6 +38,73 @@ export async function getCollection(collection, filterBy, orderBy) {
   }
 }
 
+// trae una colección con una subcoleccion
+// parámetro: colección obligatora
+// tiene parámetros opcionales para realizar un WHERE:
+//    array de objetos con campo a filtrar, operador y id a comparar, se puede agregar cualquier cantidad
+// tiene parámetros opcionales para realizar un ORDER BY:
+//    recibe un objeto con el campo a ordenar y condición de ordenamiento
+// devuelve un array de los documentos de la colección formateados en un objeto
+// con id y data (objeto con los datos del documento)
+export async function getCollectionWithSubCollections(
+  collection,
+  filterBy,
+  orderBy,
+  subCollection
+) {
+  const arrayDeObjetos = [];
+  let collectionRef = firestore.collection(collection);
+
+  (filterBy || []).forEach(({ field, operator, id }) => {
+    collectionRef = collectionRef.where(field, operator, id);
+  });
+
+  if (orderBy) {
+    collectionRef = collectionRef.orderBy(orderBy.order, orderBy.orderCond);
+  }
+
+  try {
+    var allClasesSnapShot = await collectionRef.get();
+    allClasesSnapShot.forEach(async (doc) => {
+      let docId = doc.id;
+      let obj = {
+        id: docId,
+        data: {
+          base: doc.data(),
+          subcollections: [],
+        },
+      };
+      arrayDeObjetos.push(obj);
+    });
+  } catch (err) {
+    console.log('Error getting documents', err);
+  }
+
+  for (const obj of arrayDeObjetos) {
+    let subCollectionRef = firestore
+      .collection(collection)
+      .doc(obj.id)
+      .collection(subCollection);
+    let arrayDeSubcolecciones = [];
+    try {
+      let subCollectionSnapshot = await subCollectionRef.get();
+      subCollectionSnapshot.forEach((doc) => {
+        let scolId = doc.id;
+        let scol = {
+          id: scolId,
+          data: doc.data(),
+        };
+        arrayDeSubcolecciones.push(scol);
+      });
+    } catch (err) {
+      console.log('Error getting subcollection documents', err);
+    }
+    obj.data.subcollections = arrayDeSubcolecciones;
+  }
+
+  return arrayDeObjetos;
+}
+
 // trae un documento en formato objeto (id + data (objeto con datos del documento))
 // parámetro: referencia al documento
 export const getDocument = async (docRef) => {
@@ -58,6 +125,62 @@ export const addDocument = async (collection, object, message) => {
     .collection(collection)
     .add(object)
     .then(function () {
+      NotificationManager.success(
+        `${message} agregada exitosamente`,
+        `${message} agregada!`,
+        3000,
+        null,
+        null,
+        ''
+      );
+    })
+    .catch(function (error) {
+      NotificationManager.error(
+        `Error al agregar ${message}`,
+        error,
+        3000,
+        null,
+        null,
+        ''
+      );
+    });
+};
+
+// agrega un documento con una subcoleccion
+// parámetros: colección, objeto a agregar (debe tener el parametro subcollection con "name" y "data") y reemplazo para mostrar en la notificación
+export const addDocumentWithSubcollection = async (
+  collection,
+  object,
+  message,
+  subCollection,
+  subCollectionMessage
+) => {
+  let objectSubcollectionData = object.subcollection.data;
+  let objectBaseData = object;
+  delete objectBaseData.subcollection;
+
+  firestore
+    .collection(collection)
+    .add(objectBaseData)
+    .then(function (docRef) {
+      for (const data of objectSubcollectionData) {
+        firestore
+          .collection(collection)
+          .doc(docRef.id)
+          .collection(subCollection)
+          .add(data)
+          .then(function () {})
+          .catch(function (error) {
+            NotificationManager.error(
+              `Error al agregar ${subCollectionMessage}`,
+              error,
+              3000,
+              null,
+              null,
+              ''
+            );
+          });
+      }
       NotificationManager.success(
         `${message} agregada exitosamente`,
         `${message} agregada!`,

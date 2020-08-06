@@ -4,7 +4,11 @@ import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
+import {
+  logicDeleteDocument,
+  getCollection,
+  getCollectionWithSubCollections,
+} from 'helpers/Firebase-db';
 
 function collect(props) {
   return { data: props.data };
@@ -27,10 +31,15 @@ class Evaluaciones extends Component {
   }
 
   getEvaluaciones = async (materiaId) => {
-    const arrayDeObjetos = await getCollection('evaluaciones', [
-      { field: 'idMateria', operator: '==', id: materiaId },
-      { field: 'activo', operator: '==', id: true },
-    ]);
+    const arrayDeObjetos = await getCollectionWithSubCollections(
+      'evaluaciones',
+      [
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'activo', operator: '==', id: true },
+      ],
+      false,
+      'ejercicios'
+    );
     this.dataListRenderer(arrayDeObjetos);
   };
 
@@ -78,6 +87,15 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
+  editarEjercicio = (tipo) => {
+    console.log(tipo);
+    if (tipo == 'opcion_multiple') {
+      this.props.history.push(`/app/evaluaciones/ejercicios/opcion-multiple`);
+    } else if (tipo == 'respuesta_libre') {
+      this.props.history.push(`/app/evaluaciones/ejercicios/respuesta-libre`);
+    }
+  };
+
   render() {
     const { modalDeleteOpen, items, isLoading } = this.state;
     return isLoading ? (
@@ -101,6 +119,7 @@ class Evaluaciones extends Component {
                   navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
+                  onEditarEjercicio={this.editarEjercicio}
                 />
               );
             })}{' '}

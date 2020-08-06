@@ -1,27 +1,50 @@
 import React from 'react';
 import {
+  Row,
   Input,
   ModalFooter,
   Button,
   FormGroup,
   Label,
   NavLink,
+  CustomInput,
 } from 'reactstrap';
-import { addDocument, editDocument } from 'helpers/Firebase-db';
+import Select from 'react-select';
+import {
+  addDocument,
+  editDocument,
+  getCollection,
+  addDocumentWithSubcollection,
+} from 'helpers/Firebase-db';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
 class FormEvaluacion extends React.Component {
   constructor() {
     super();
 
+    this.getEjercicios();
+
     this.state = {
       evaluacionId: '',
       nombre: '',
-      fecha: '',
+      fecha_finalizacion: '',
+      fecha_publicacion: '',
       descripcion: '',
       idMateria: '',
       modalEditOpen: false,
       modalAddOpen: false,
+      selectData: [],
+      ejerciciosSeleccionados: [
+        {
+          nombre: '',
+          tipo: '',
+        },
+      ],
+      ejercicioSeleccionado: {
+        nombre: '',
+        tipo: '',
+      },
+      inputs: ['input-0'],
     };
   }
 
@@ -47,21 +70,81 @@ class FormEvaluacion extends React.Component {
       this.setState({
         evaluacionId: this.props.idEval,
         nombre: this.props.itemsEval.nombre,
-        fecha: this.props.itemsEval.fecha,
+        fecha_finalizacion: this.props.itemsEval.fecha_finalizacion,
+        fecha_publicacion: this.props.itemsEval.fecha_publicacion,
         descripcion: this.props.itemsEval.descripcion,
       });
     }
   }
 
+  getEjercicios = async () => {
+    let arrayDeObjetos = await getCollection('ejercicios');
+    let datos = [];
+    for (const ej of arrayDeObjetos) {
+      const i = 0;
+      datos.push({
+        label: ej.data.nombre,
+        value: ej.data.tipo,
+        key: i,
+      });
+      i++;
+    }
+    this.setState({
+      selectData: datos,
+      ejercicios: arrayDeObjetos,
+    });
+  };
+
+  handleAddEjercicio = (e) => {
+    this.state.ejerciciosSeleccionados.push(this.state.ejercicioSeleccionado);
+    this.setState({
+      ejercicioSeleccionado: {
+        nombre: '',
+        tipo: '',
+      },
+    });
+  };
+
+  handleSelectChange = (e) => {
+    this.setState({
+      ejercicioSeleccionado: {
+        nombre: e.label,
+        tipo: e.value,
+      },
+    });
+    //this.state.ejercicioSeleccionado.nombre = e.label;
+    //this.state.ejercicioSeleccionado.tipo = e.value;
+  };
+
   onSubmit = async () => {
+    if (
+      this.state.ejerciciosSeleccionados[0].nombre == '' &&
+      this.state.ejerciciosSeleccionados[0].tipo == ''
+    ) {
+      let finalEjerciciosSeleccionados = [
+        ...this.state.ejerciciosSeleccionados,
+      ];
+      finalEjerciciosSeleccionados.splice(0, 1);
+      this.setState({ ejerciciosSeleccionados: finalEjerciciosSeleccionados });
+    }
     const obj = {
       nombre: this.state.nombre,
-      fecha: this.state.fecha,
+      fecha_finalizacion: this.state.fecha_finalizacion,
+      fecha_publicacion: this.state.fecha_publicacion,
       descripcion: this.state.descripcion,
       idMateria: this.props.idMateria,
       activo: true,
+      subcollection: {
+        data: this.state.ejerciciosSeleccionados,
+      },
     };
-    await addDocument('evaluaciones', obj, 'Evaluación');
+    await addDocumentWithSubcollection(
+      'evaluaciones',
+      obj,
+      'Evaluación',
+      'ejercicios',
+      'Ejercicios'
+    );
 
     this.props.onEvaluacionAgregada();
   };
@@ -69,7 +152,8 @@ class FormEvaluacion extends React.Component {
   onEdit = async () => {
     const obj = {
       nombre: this.state.nombre,
-      fecha: this.state.fecha,
+      fecha_finalizacion: this.state.fecha_finalizacion,
+      fecha_publicacion: this.state.fecha_publicacion,
       descripcion: this.state.descripcion,
     };
     await editDocument(
@@ -85,7 +169,12 @@ class FormEvaluacion extends React.Component {
 
   render() {
     const { onCancel } = this.props;
-    const { modalEditOpen, modalAddOpen } = this.state;
+    const {
+      modalEditOpen,
+      modalAddOpen,
+      ejercicios,
+      ejercicioSeleccionado,
+    } = this.state;
     return (
       <form>
         <FormGroup className="mb-3">
@@ -98,13 +187,24 @@ class FormEvaluacion extends React.Component {
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <Label>Fecha</Label>
+          <Label>Fecha de Finalización</Label>
           <Input
-            name="fecha"
+            name="fecha_finalizacion"
             type="date"
             placeholder="DD/MM/AAAA"
             onChange={this.handleChange}
-            value={this.state.fecha}
+            value={this.state.fecha_finalizacion}
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <Label>Fecha de Publicación</Label>
+          <Input
+            name="fecha_publicación"
+            type="date"
+            placeholder="DD/MM/AAAA"
+            onChange={this.handleChange}
+            value={this.state.fecha_publicacion}
           />
         </FormGroup>
 
@@ -118,18 +218,34 @@ class FormEvaluacion extends React.Component {
           />
         </FormGroup>
         <FormGroup className="mb-3">
-          {!this.props.idEval && (
-            <NavLink
-              className="form-nav-link" //onClick={} -> guardar y navegar a pantalla de detalle de clase, para agregar ejercicios
-            >
-              <div className="glyph-icon simple-icon-plus agregar-ejercicios-action-icon">
-                <p className="icon-text">Agregar ejercicios</p>
-              </div>
-            </NavLink>
-          )}
-          {this.props.idEval && (
-            <p>Acá se van a mostrar ejercicios asociados a esa eval</p>
-          )}
+          <div className="glyph-icon simple-icon-plus agregar-ejercicios-action-icon">
+            <p className="icon-text">Agregar ejercicios</p>
+          </div>
+          {this.state.ejerciciosSeleccionados.map((ejercicio, index) => (
+            <Row key={index} className="ejerciciosSelectRow">
+              <Select
+                className="react-select ejerciciosSelect"
+                classNamePrefix="react-select"
+                name="ejercicios-select-1"
+                value={this.state.selectData.find(
+                  (obj) => obj.value === ejercicio
+                )}
+                onChange={this.handleSelectChange}
+                options={this.state.selectData}
+              />
+
+              <Button
+                outline
+                onClick={this.handleAddEjercicio}
+                size="sm"
+                color="primary"
+                className="button"
+              >
+                {' '}
+                Agregar{' '}
+              </Button>
+            </Row>
+          ))}
         </FormGroup>
         <ModalFooter>
           {!this.props.idEval && (

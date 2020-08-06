@@ -2867,7 +2867,7 @@ nav .nomargin {
 .tab-card {
   border: initial;
   background: $foreground-color;
-  width: 20rem !important;
+  width: 60rem !important;
   margin: 0.8rem;
 }
 
@@ -9002,4 +9002,34 @@ footer.page-footer {
 .subject{
   margin: auto;
   cursor: pointer;
+}
+
+.ejerciciosItem {
+  width: 50%;
+  float: left;
+}
+
+.ejerciciosRow {
+  padding-bottom: 1%;
+  text-align: center;
+}
+
+.ejerciciosSelect {
+  width: 75%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.ejerciciosSelectRow {
+  padding-bottom: 2%;
+}
+
+.opcionMultipleRow {
+  padding-bottom: 2%;
+}
+
+.opcionMultipleInput {
+  width: 75%;
+  margin-left: 5%;
+  margin-right: 5%;
 }

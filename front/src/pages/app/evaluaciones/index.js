@@ -10,6 +10,8 @@ const DetalleEvaluacion = React.lazy(() =>
 const AgregarEvaluacion = React.lazy(() =>
   import('./detalle-evaluacion/agregar-evaluacion')
 );
+const OpcionMultiple = React.lazy(() => import('./ejercicios/opcion-multiple'));
+const RespuestaLibre = React.lazy(() => import('./ejercicios/respuesta-libre'));
 const MenuEvaluaciones = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
@@ -25,6 +27,14 @@ const MenuEvaluaciones = ({ match }) => (
       <Route
         path={`${match.url}/agregar`}
         render={(props) => <AgregarEvaluacion {...props} />}
+      />
+      <Route
+        path={`${match.url}/ejercicios/opcion-multiple`}
+        render={(props) => <OpcionMultiple {...props} />}
+      />
+      <Route
+        path={`${match.url}/ejercicios/respuesta-libre`}
+        render={(props) => <RespuestaLibre {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
