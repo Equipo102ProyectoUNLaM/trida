@@ -31,7 +31,7 @@ export default class ModalConfirmacion extends Component {
           )}
         </ModalHeader>
         <ModalBody>
-          <Row>{texto}</Row>
+          <Row className="break-word">{texto}</Row>
           {usuarios && esEnviado && (
             <Row className="text-muted users-names">
               Destinatarios: {usuarios}{' '}
