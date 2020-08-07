@@ -98,7 +98,7 @@ class TabsDeMensajeria extends Component {
                         data={itemsReceive}
                         paginationMaxSize={3}
                         columns={dataReceiveTableColumns}
-                        defaultPageSize={5}
+                        defaultPageSize={10}
                         showPageJump={true}
                         showPageSizeOptions={true}
                         PaginationComponent={DataTablePagination}
@@ -125,7 +125,7 @@ class TabsDeMensajeria extends Component {
                         data={itemsSent}
                         paginationMaxSize={3}
                         columns={dataSentTableColumns}
-                        defaultPageSize={5}
+                        defaultPageSize={10}
                         showPageJump={true}
                         showPageSizeOptions={true}
                         PaginationComponent={DataTablePagination}
