@@ -10,7 +10,15 @@ const Course = React.lazy(() =>
 );
 
 const FormInstitucion = React.lazy(() =>
-  import(/* webpackChunkName: "user-register" */ './form-institucion')
+  import(/* webpackChunkName: "user-register" */ './creacion/form-institucion')
+);
+
+const FormCurso = React.lazy(() =>
+  import(/* webpackChunkName: "user-register" */ './creacion/form-curso')
+);
+
+const FormMateria = React.lazy(() =>
+  import(/* webpackChunkName: "user-register" */ './creacion/form-materia')
 );
 
 const CourseSelectionMenu = ({ match }) => {
@@ -34,6 +42,16 @@ const CourseSelectionMenu = ({ match }) => {
           <Route
             path={`${match.url}/crear-institucion`}
             render={(props) => <FormInstitucion {...props} />}
+            exact
+          />
+          <Route
+            path={`${match.url}/crear-curso`}
+            render={(props) => <FormCurso {...props} />}
+            exact
+          />
+          <Route
+            path={`${match.url}/crear-materia`}
+            render={(props) => <FormMateria {...props} />}
             exact
           />
           <Redirect to="/error" />

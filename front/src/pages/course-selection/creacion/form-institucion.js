@@ -8,6 +8,7 @@ import {
   FormGroup,
   NavLink,
 } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import TIPOS_INSTITUCION from 'constants/tiposInstitucion';
@@ -52,6 +53,7 @@ class FormInstitucion extends Component {
 
   onUserSubmit = () => {
     console.log(this.state);
+    this.props.history.push('/seleccion-curso/crear-curso');
   };
 
   render() {
@@ -163,4 +165,4 @@ class FormInstitucion extends Component {
   }
 }
 
-export default FormInstitucion;
+export default withRouter(FormInstitucion);

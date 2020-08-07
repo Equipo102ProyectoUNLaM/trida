@@ -7,7 +7,7 @@ import MediumCardListView from 'containers/pages/MediumCardListView';
 import { connect } from 'react-redux';
 import { logoutUser } from 'redux/actions';
 import { getInstituciones } from 'helpers/Firebase-user';
-import CrearInstitucion from './crear-institucion';
+import CrearInstitucion from './creacion/crear-institucion';
 
 function collect(props) {
   return { data: props.data };
