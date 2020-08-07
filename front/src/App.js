@@ -13,6 +13,7 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
+import { AuthRoute } from 'components/rutas/auth-route';
 
 const ViewMain = React.lazy(() =>
   import(/* webpackChunkName: "views" */ './pages')
@@ -32,46 +33,6 @@ const ViewError = React.lazy(() =>
 const ViewPizarron = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './pages/window-pizarron')
 );
-
-const AuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        authUser ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/user/login',
-              state: { from: props.location },
-            }}
-          />
-        )
-      }
-    />
-  );
-};
-
-const NonAuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        !authUser ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { from: props.location },
-            }}
-          />
-        )
-      }
-    />
-  );
-};
 
 class App extends Component {
   constructor(props) {
@@ -117,10 +78,9 @@ class App extends Component {
                     authUser={loginUser}
                     component={ViewPizarron}
                   />
-                  <NonAuthRoute
+                  <Route
                     path="/user"
-                    component={ViewUser}
-                    authUser={loginUser}
+                    render={(props) => <ViewUser {...props} />}
                   />
                   <Route
                     path="/error"
