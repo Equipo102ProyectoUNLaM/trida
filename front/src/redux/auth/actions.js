@@ -16,7 +16,6 @@ import {
 } from '../actions';
 
 import { auth, functions } from 'helpers/Firebase';
-import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -167,7 +166,7 @@ export const forgotPassword = (email) => async (dispatch) => {
       dispatch(forgotPasswordError(forgotPasswordStatus.message));
     }
   } catch (error) {
-    dispatch(forgotPasswordError(error));
+    dispatch(forgotPasswordError(error.message));
   }
 };
 

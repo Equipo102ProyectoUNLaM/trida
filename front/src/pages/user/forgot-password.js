@@ -12,14 +12,14 @@ class ForgotPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'demo@trida.com.ar',
+      email: '',
     };
   }
 
   onForgotPassword = (values) => {
     if (!this.props.loading) {
       if (values.email !== '') {
-        this.props.forgotPassword(values, this.props.history);
+        this.props.forgotPassword(values.email, this.props.history);
       }
     }
   };

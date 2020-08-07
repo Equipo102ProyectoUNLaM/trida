@@ -91,7 +91,7 @@ export default (state = INIT_STATE, action) => {
       };
 
     case LOGOUT_USER:
-      return { ...state, user: null, error: '' };
+      return { ...state, user: '', error: '' };
 
     default:
       return { ...state };
