@@ -9155,3 +9155,8 @@ tr.folder{
 .break-word {
   word-break: break-word;
 }
+
+.ReactTable .rt-th, .ReactTable .rt-td {
+  padding-top: 10px !important;
+  padding-bottom: 0px !important;
+}
