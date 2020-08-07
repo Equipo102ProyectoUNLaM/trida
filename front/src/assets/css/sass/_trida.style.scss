@@ -651,6 +651,16 @@ button {
   }
 }
 
+.button-group-centered {
+  justify-content: center;
+  padding-left: 15px;
+  margin-top: 1rem;
+
+  .button {
+    margin: 0 0.2rem;
+  }
+}
+
 .check-button {
   cursor: default !important;
 }
@@ -9138,4 +9148,11 @@ to {transform:rotate(360deg);}
 
 .asunto-msj {
   padding-top: 1rem;
+}
+
+.aligned-vertically {
+  align-items: center;
+  display: flex;
+  padding: 0.5rem 0rem;
+  color: $theme-color-1;
 }

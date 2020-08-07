@@ -107,6 +107,7 @@ module.exports = {
 
   /* 07.Institution */
   'institution.selection': '¿A qué institución desea acceder?',
+  'institucion.complete-datos': 'Completá los datos de la institución',
 
   /* 08.Course Selection */
   'course.selection': '¿Qué materia desea gestionar?',
