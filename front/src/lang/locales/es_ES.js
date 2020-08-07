@@ -106,8 +106,13 @@ module.exports = {
   'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
 
   /* 07.Institution */
-  'institution.selection': '¿A qué institución desea acceder?',
-  'institucion.complete-datos': 'Completá los datos de la institución',
+  'institution.selection': '¿A qué Institución desea acceder?',
+  'institucion.complete-datos': 'Completá los datos de la Institución',
+  'institucion.nombre': 'Nombre de la Institución',
+  'institucion.telefono': 'Teléfono de la Institución',
+  'institucion.tipo': 'Tipo de Institución',
+  'institucion.niveles': 'Niveles educativos',
+  'institucion.crear': 'Crear Institución',
 
   /* 08.Course Selection */
   'course.selection': '¿Qué materia desea gestionar?',

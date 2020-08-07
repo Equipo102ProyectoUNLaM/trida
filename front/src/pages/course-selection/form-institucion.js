@@ -6,15 +6,12 @@ import {
   Label,
   Button,
   FormGroup,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
   NavLink,
 } from 'reactstrap';
+import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { logoutUser } from 'redux/actions';
+import TIPOS_INSTITUCION from 'constants/tiposInstitucion';
+import NIVELES from 'constants/niveles';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form, Field } from 'formik';
 
@@ -25,14 +22,45 @@ class FormInstitucion extends Component {
     this.state = {
       items: [],
       isEmpty: false,
+      institucionOptions: TIPOS_INSTITUCION,
+      nivelesOptions: NIVELES,
+      selectedInst: '',
+      selectedNiveles: [],
+      nombre: '',
+      telefono: 0,
     };
   }
 
-  handleLogout = () => {
-    this.props.logoutUser(this.props.history);
+  handleChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  handleInstChange = (selectedInst) => {
+    if (selectedInst) {
+      this.setState({ selectedInst });
+    } else {
+      this.setState({
+        selectedInst: '',
+      });
+    }
+  };
+
+  handleNivelesChange = (selectedNiveles) => {
+    this.setState({ selectedNiveles });
+  };
+
+  onUserSubmit = () => {
+    console.log(this.state);
   };
 
   render() {
+    const {
+      selectedInst,
+      institucionOptions,
+      selectedNiveles,
+      nivelesOptions,
+    } = this.state;
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -49,7 +77,7 @@ class FormInstitucion extends Component {
                   <Form className="av-tooltip tooltip-label-bottom">
                     <FormGroup className="form-group has-float-label">
                       <Label>
-                        <IntlMessages id="user.nombre" />
+                        <IntlMessages id="institucion.nombre" />
                       </Label>
                       <Field
                         className="form-control"
@@ -62,21 +90,20 @@ class FormInstitucion extends Component {
                         </div>
                       )}
                     </FormGroup>
-                    <FormGroup className="form-group has-float-label">
-                      <Label>
-                        <IntlMessages id="user.apellido" />
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="apellido"
-                        onChange={this.handleChange}
+                    <div className="form-group has-float-label">
+                      <Select
+                        className="react-select"
+                        classNamePrefix="select"
+                        isClearable={true}
+                        name="tipo"
+                        options={institucionOptions}
+                        value={selectedInst}
+                        onChange={this.handleInstChange}
+                        isDisabled={false}
+                        placeholder="Seleccionar..."
                       />
-                      {errors.apellido && touched.apellido && (
-                        <div className="invalid-feedback d-block">
-                          {errors.apellido}
-                        </div>
-                      )}
-                    </FormGroup>
+                      <IntlMessages id="institucion.tipo" />
+                    </div>
                     <FormGroup className="form-group has-float-label">
                       <Label>
                         <IntlMessages id="user.telefono" />
@@ -92,24 +119,21 @@ class FormInstitucion extends Component {
                         </div>
                       )}
                     </FormGroup>
-                    <FormGroup className="form-group">
-                      <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>Subir foto</InputGroupText>
-                        </InputGroupAddon>
-                        <div className="input-file">
-                          <label htmlFor="upload-photo">
-                            Seleccione su foto
-                          </label>
-                          <input
-                            onChange={this.setSelectedFile}
-                            type="file"
-                            name="foto"
-                            id="upload-photo"
-                          />
-                        </div>
-                      </InputGroup>
-                    </FormGroup>
+                    <div className="form-group has-float-label">
+                      <Select
+                        className="react-select"
+                        classNamePrefix="select"
+                        isClearable={true}
+                        name="niveles"
+                        options={nivelesOptions}
+                        value={selectedNiveles}
+                        onChange={this.handleNivelesChange}
+                        isDisabled={false}
+                        placeholder="Seleccionar..."
+                        isMulti
+                      />
+                      <IntlMessages id="institucion.niveles" />
+                    </div>
                     <Row className="button-group">
                       <Button
                         color="primary"
@@ -124,7 +148,7 @@ class FormInstitucion extends Component {
                           <span className="bounce3" />
                         </span>
                         <span className="label">
-                          <IntlMessages id="user.enviar-datos" />
+                          <IntlMessages id="institucion.crear" />
                         </span>
                       </Button>
                     </Row>
@@ -139,8 +163,4 @@ class FormInstitucion extends Component {
   }
 }
 
-export default withRouter(
-  connect(null, {
-    logoutUser,
-  })(FormInstitucion)
-);
+export default FormInstitucion;
