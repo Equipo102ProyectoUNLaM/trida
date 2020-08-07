@@ -148,11 +148,9 @@ class ModalEnviarInvitacion extends React.Component {
         courseId: this.state.selectedCourse.key,
         subjectId: this.state.selectedSubject.key,
       };
-      //agarrar los mails de los tags, autogenerar contraseña para cada uno
       try {
         this.setState({ isLoading: true });
         await this.props.registerUser(userObj);
-        // validar que no haya error de registro
         if (isEmpty(this.props.error)) {
           this.registroExitoso();
         }

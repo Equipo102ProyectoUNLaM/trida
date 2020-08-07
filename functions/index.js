@@ -61,10 +61,20 @@ exports.register = functions.auth.user().onCreate((data)=> {
     .then(doc => console.log('user added', doc))   
 });
 
+const authErrorMessage = (error) => {
+  switch (error) {
+    case 'The email address is already in use by another account.':
+      return 'Este correo ya está siendo usado por otro usuario.';
+    default:
+      return error;
+  }
+};
+
 exports.user = functions.https.onCall((data) => {
   return admin.auth().createUser(data)
     .catch((error) => {
-      throw new functions.https.HttpsError('internal', error.message)
+      const errorMessage = authErrorMessage(error.message);
+      throw new functions.https.HttpsError('internal', errorMessage)
     });
 });
 
@@ -161,7 +171,7 @@ exports.asignarFuncion = async ({ instId, courseId, subjectId }) => {
 exports.asignarMaterias = functions.https.onCall(async (data)=> {
   try {
     const instObj = await this.asignarFuncion(data);
-    console.log(instObj.cursos);
+    console.log(instObj);
     await admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set( { instituciones: instObj }, { merge: true });
