@@ -1,7 +1,9 @@
 import React, { Suspense, Component } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { Switch, Redirect, withRouter } from 'react-router-dom';
 import UserLayout from '../../layout/UserLayout';
+import { AuthRoute } from 'components/rutas/auth-route';
+import { NonAuthRoute } from 'components/rutas/non-auth-route';
 
 const Login = React.lazy(() =>
   import(/* webpackChunkName: "user-login" */ './login')
@@ -21,46 +23,6 @@ const PrimerLogin = React.lazy(() =>
 const CambiarPassword = React.lazy(() =>
   import(/* webpackChunkName: "user-cambiar-password" */ './cambiar-password')
 );
-
-const NonAuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        !authUser ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { from: props.location },
-            }}
-          />
-        )
-      }
-    />
-  );
-};
-
-const AuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        authUser ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/user/login',
-              state: { from: props.location },
-            }}
-          />
-        )
-      }
-    />
-  );
-};
 
 class User extends Component {
   render() {
