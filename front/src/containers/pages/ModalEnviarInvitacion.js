@@ -241,6 +241,7 @@ class ModalEnviarInvitacion extends React.Component {
                 options={instOptions}
                 value={selectedOption}
                 onChange={this.handleInstChange}
+                placeholder="Seleccionar institución..."
               />
               <IntlMessages id="user.seleccion-institucion" />
             </div>
@@ -258,6 +259,7 @@ class ModalEnviarInvitacion extends React.Component {
                   value={selectedCourse}
                   onChange={this.handleCourseChange}
                   isDisabled={false}
+                  placeholder="Seleccionar curso..."
                 />
                 <IntlMessages id="user.seleccion-curso" />
               </div>
@@ -275,6 +277,7 @@ class ModalEnviarInvitacion extends React.Component {
                   value={selectedSubject}
                   onChange={this.handleSubjectChange}
                   isDisabled={false}
+                  placeholder="Seleccionar materia..."
                 />
                 <IntlMessages id="user.seleccion-materia" />
               </div>
