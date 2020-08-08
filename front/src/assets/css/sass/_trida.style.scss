@@ -50,7 +50,7 @@ Table of Contents
 45.Board
 46.Course Selection
 47.Contenidos
-
+48. Mensajeria
 */
 
 /* 00.Variables and Imports */
@@ -3493,6 +3493,7 @@ nav .nomargin {
 /* 19.React Table */
 .ReactTable {
   border: initial;
+  text-align: center;
 
   .scrollbar-container {
     margin: initial;
@@ -3532,12 +3533,17 @@ nav .nomargin {
   padding-bottom: 10px;
   box-shadow: initial;
   border: initial;
-  text-align: left;
+  text-align: center;
   font-weight: 700;
 }
 
 .ReactTable .rt-tbody .rt-tr-group {
   border-bottom: 1px solid $separator-color-light;
+}
+
+.ReactTable .rt-tr-group {
+  flex: 0 auto;
+  height: 2.3rem;
 }
 
 .ReactTable .list-item-heading {
@@ -3551,11 +3557,13 @@ nav .nomargin {
 .ReactTable .rt-thead .rt-th.-sort-desc,
 .ReactTable .rt-thead .rt-td.-sort-desc {
   box-shadow: inset 0 -3px 0 0 $theme-color-1;
+  font-style: italic;
 }
 
 .ReactTable .rt-thead .rt-th.-sort-asc,
 .ReactTable .rt-thead .rt-td.-sort-asc {
   box-shadow: inset 0 3px 0 0 $theme-color-1;
+  font-style: italic;
 }
 
 /* 20.Alerts */
@@ -6156,7 +6164,7 @@ input:-webkit-autofill {
 }
 
 .ck.ck-toolbar {
-  background: !important;
+  background: transparent !important;
 }
 
 .RichEditor-root {
@@ -6739,7 +6747,7 @@ input:-webkit-autofill {
   width: 100%;
   height: 100%;
 }
-  
+
 .cover-spin::after {
     content:'';
     display: inline-block;
@@ -9187,6 +9195,18 @@ tr.folder{
   margin-top: 0.5rem !important;
 }
 
+// 48 Mensajeria
+.users-names {
+  padding-top: 2rem;
+}
+
+.fecha-mensaje {
+  padding-left: 0.25rem;
+}
+
+.break-word {
+  word-break: break-word;
+}
 
 .react-tagsinput-input {
   background: transparent;
@@ -9200,4 +9220,8 @@ tr.folder{
   outline: none;
   padding: 5px;
   width: 50% !important;
+}
+.ReactTable .rt-th, .ReactTable .rt-td {
+  padding-top: 10px !important;
+  padding-bottom: 0px !important;
 }
