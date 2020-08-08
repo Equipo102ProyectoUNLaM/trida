@@ -61,7 +61,7 @@ class CardTabs extends Component {
   };
 
   render() {
-    const { item, navTo } = this.props;
+    const { item } = this.props;
     const { data } = item;
     return (
       <Row>

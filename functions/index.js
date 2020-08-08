@@ -42,6 +42,5 @@ exports.register = functions.auth.user().onCreate((data)=> {
     return admin.firestore().collection('users')
     .doc(data.uid)
     .set(user)
-    .then(doc => console.log('user added', doc))   
+    .then(doc => console.log('user added', doc))
 })
-
