@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Row,
   Card,
@@ -12,6 +13,8 @@ import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form, Field } from 'formik';
+import { addToMateriasCollection } from 'helpers/Firebase-db';
+import { functions } from 'helpers/Firebase';
 
 class FormMateria extends Component {
   constructor(props) {
@@ -20,6 +23,7 @@ class FormMateria extends Component {
     this.state = {
       isEmpty: false,
       nombre: '',
+      isLoading: false,
     };
   }
 
@@ -28,13 +32,46 @@ class FormMateria extends Component {
     this.setState({ [name]: value });
   };
 
-  onUserSubmit = () => {
-    console.log(this.state);
+  onUserSubmit = async () => {
+    const { cursoId, instId } = this.props.location;
+    let { user } = this.props;
+    const obj = {
+      nombre: this.state.nombre,
+    };
+    const matRef = await addToMateriasCollection(
+      instId,
+      cursoId,
+      obj,
+      user,
+      'Materia agregada!',
+      'Materia agregada exitosamente',
+      'Error al agregar la materia'
+    );
+    let { id } = matRef;
+    localStorage.setItem('subject', JSON.stringify({ id, name: obj.nombre }));
+
+    try {
+      this.setState({ isLoading: true });
+      const asignarMateriasAction = functions.httpsCallable('asignarMaterias');
+      await asignarMateriasAction({
+        instId,
+        cursoId,
+        id,
+        user,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    this.setState({ isLoading: false });
     this.props.history.push('/app/home');
   };
 
   render() {
-    return (
+    const { isLoading } = this.state;
+
+    return isLoading ? (
+      <div className="cover-spin" />
+    ) : (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
@@ -93,4 +130,12 @@ class FormMateria extends Component {
   }
 }
 
-export default withRouter(FormMateria);
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(FormMateria));

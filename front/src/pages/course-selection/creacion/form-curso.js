@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Row,
   Card,
@@ -12,6 +13,7 @@ import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form, Field } from 'formik';
+import { addToSubCollection } from 'helpers/Firebase-db';
 
 class FormCurso extends Component {
   constructor(props) {
@@ -28,9 +30,30 @@ class FormCurso extends Component {
     this.setState({ [name]: value });
   };
 
-  onUserSubmit = () => {
-    console.log(this.state);
-    this.props.history.push('/seleccion-curso/crear-materia');
+  onUserSubmit = async () => {
+    const { instId } = this.props.location;
+    const obj = {
+      nombre: this.state.nombre,
+    };
+    const docRef = await addToSubCollection(
+      'instituciones',
+      instId,
+      'cursos',
+      obj,
+      this.props.user,
+      'Curso agregado!',
+      'Curso agregado exitosamente',
+      'Error al agregar el curso'
+    );
+    localStorage.setItem(
+      'course',
+      JSON.stringify({ id: docRef.id, name: obj.nombre })
+    );
+    this.props.history.push({
+      pathname: '/seleccion-curso/crear-materia',
+      cursoId: docRef.id,
+      instId,
+    });
   };
 
   render() {
@@ -94,4 +117,12 @@ class FormCurso extends Component {
   }
 }
 
-export default withRouter(FormCurso);
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(FormCurso));

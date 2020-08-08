@@ -54,7 +54,7 @@ export async function getCollection(collection, filterBy, orderBy) {
 // trae un documento en formato objeto (id + data (objeto con datos del documento))
 // parámetro: referencia al documento
 export const getDocument = async (docRef) => {
-  const ref = firestore.doc(docRef);
+  const ref = await firestore.doc(docRef);
   try {
     const refSnapShot = await ref.get();
     const docId = refSnapShot.id;
@@ -81,33 +81,107 @@ export const addDocument = async (
     creador: userId,
   };
 
-  firestore
-    .collection(collection)
-    .add(object)
-    .then(function () {
-      if (mensajePrincipal) {
-        NotificationManager.success(
-          `${mensajeSecundario}`,
-          `${mensajePrincipal}`,
-          3000,
-          null,
-          null,
-          ''
-        );
-      }
-    })
-    .catch(function (error) {
-      if (mensajePrincipal) {
-        NotificationManager.error(
-          `${mensajeError}`,
-          error,
-          3000,
-          null,
-          null,
-          ''
-        );
-      }
-    });
+  try {
+    const docRef = await firestore.collection(collection).add(object);
+    if (mensajePrincipal) {
+      NotificationManager.success(
+        `${mensajeSecundario}`,
+        `${mensajePrincipal}`,
+        3000,
+        null,
+        null,
+        ''
+      );
+    }
+    return docRef;
+  } catch (error) {
+    if (mensajePrincipal) {
+      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+    }
+  }
+};
+
+export const addToSubCollection = async (
+  collection,
+  doc,
+  subcollection,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+
+  try {
+    const docRef = await firestore
+      .collection(collection)
+      .doc(doc)
+      .collection(subcollection)
+      .add(object);
+    if (mensajePrincipal) {
+      NotificationManager.success(
+        `${mensajeSecundario}`,
+        `${mensajePrincipal}`,
+        3000,
+        null,
+        null,
+        ''
+      );
+    }
+    return docRef;
+  } catch (error) {
+    if (mensajePrincipal) {
+      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+    }
+  }
+};
+
+export const addToMateriasCollection = async (
+  docInst,
+  docCurso,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+
+  try {
+    const docRef = await firestore
+      .collection('instituciones')
+      .doc(docInst)
+      .collection('cursos')
+      .doc(docCurso)
+      .collection('materias')
+      .add(object);
+    if (mensajePrincipal) {
+      NotificationManager.success(
+        `${mensajeSecundario}`,
+        `${mensajePrincipal}`,
+        3000,
+        null,
+        null,
+        ''
+      );
+    }
+    return docRef;
+  } catch (error) {
+    if (mensajePrincipal) {
+      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+    }
+  }
 };
 
 export const addDocumentWithId = async (collection, id, object, message) => {

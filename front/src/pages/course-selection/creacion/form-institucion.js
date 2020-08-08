@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Row,
   Card,
@@ -14,6 +15,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import TIPOS_INSTITUCION from 'constants/tiposInstitucion';
 import NIVELES from 'constants/niveles';
 import IntlMessages from 'helpers/IntlMessages';
+import { addDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 
 class FormInstitucion extends Component {
@@ -51,9 +53,32 @@ class FormInstitucion extends Component {
     this.setState({ selectedNiveles });
   };
 
-  onUserSubmit = () => {
-    console.log(this.state);
-    this.props.history.push('/seleccion-curso/crear-curso');
+  onUserSubmit = async () => {
+    const nivelesState = [...this.state.selectedNiveles];
+    const nivelesArray = nivelesState.map((elem) => elem.value);
+
+    const obj = {
+      niveles: nivelesArray,
+      nombre: this.state.nombre,
+      telefono: this.state.telefono,
+      tipo: this.state.selectedInst.value,
+    };
+    const instRef = await addDocument(
+      'instituciones',
+      obj,
+      this.props.user,
+      'Institucion creada!',
+      'Institución creada con éxito',
+      'Error al crear la Institución'
+    );
+    localStorage.setItem(
+      'institution',
+      JSON.stringify({ id: instRef.id, name: obj.nombre })
+    );
+    this.props.history.push({
+      pathname: '/seleccion-curso/crear-curso',
+      instId: instRef.id,
+    });
   };
 
   render() {
@@ -165,4 +190,12 @@ class FormInstitucion extends Component {
   }
 }
 
-export default withRouter(FormInstitucion);
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(FormInstitucion));
