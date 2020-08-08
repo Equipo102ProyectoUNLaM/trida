@@ -19,7 +19,7 @@ class Mensajeria extends Component {
       itemsReceive: [],
       modalMessageOpen: false,
       materiaId: id,
-      usuarioId: localStorage.getItem('user_id'),
+      usuarioId: this.props.user,
       isLoading: true,
       asuntoMensaje: '',
       contenidoMensaje: '',
@@ -196,4 +196,9 @@ class Mensajeria extends Component {
   }
 }
 
-export default injectIntl(Mensajeria);
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(Mensajeria);
