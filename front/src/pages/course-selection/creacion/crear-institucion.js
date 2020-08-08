@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Card, CardBody, NavLink, Button } from 'reactstrap';
+import { Row, Button } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';

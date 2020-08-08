@@ -49,7 +49,6 @@ class FormMateria extends Component {
     );
     let { id } = matRef;
     localStorage.setItem('subject', JSON.stringify({ id, name: obj.nombre }));
-
     try {
       this.setState({ isLoading: true });
       const asignarMateriasAction = functions.httpsCallable('asignarMaterias');
@@ -57,7 +56,7 @@ class FormMateria extends Component {
         instId,
         cursoId,
         id,
-        user,
+        uid: user,
       });
     } catch (error) {
       console.log(error);

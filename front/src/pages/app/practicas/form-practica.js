@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
-import * as moment from 'moment';
 
 class FormPractica extends React.Component {
   constructor(props) {

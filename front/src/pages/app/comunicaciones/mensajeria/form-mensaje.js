@@ -97,7 +97,7 @@ class FormMensaje extends Component {
     const users = arrayDeObjetos[0].data.usuario_id;
     for (const user of users) {
       const docObj = await getDocument(`users/${user}`);
-      const i = 0;
+      let i = 0;
       const nombre = docObj.data.name;
       // Armo el array que va a alimentar el Select
       datos.push({

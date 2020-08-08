@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import { Row, Card, CardBody, Jumbotron, Button } from 'reactstrap';
+import { Row, Card, CardBody, Jumbotron } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';

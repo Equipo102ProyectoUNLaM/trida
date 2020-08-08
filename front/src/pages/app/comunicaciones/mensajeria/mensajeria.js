@@ -7,8 +7,6 @@ export default class Mensajeria extends Component {
   constructor(props) {
     super(props);
 
-    const { id } = JSON.parse(localStorage.getItem('subject'));
-
     this.state = {
       items: [],
       modalOpen: false,
@@ -29,7 +27,7 @@ export default class Mensajeria extends Component {
   };
 
   render() {
-    const { modalOpen, items, isLoading } = this.state;
+    const { modalOpen } = this.state;
     return (
       <Fragment>
         <HeaderDeModulo
