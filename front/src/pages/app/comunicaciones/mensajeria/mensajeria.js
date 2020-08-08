@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import TabsDeMensajeria from './tabs-de-mensajeria';
 import { getCollection } from 'helpers/Firebase-db';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormMensaje from './form-mensaje';
-import { getDocument, getUsernameById } from 'helpers/Firebase-db';
+import { getUsernameById } from 'helpers/Firebase-db';
 
 class Mensajeria extends Component {
   constructor(props) {
