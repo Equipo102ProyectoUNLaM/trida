@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 class Detail extends React.Component {
   static propTypes = {
@@ -24,8 +25,15 @@ class Detail extends React.Component {
       estado: '',
       fecha_entrega: '',
       fecha_vto_entrega: '',
+      modalRight: true,
     };
   }
+
+  toggleRight = () => {
+    this.setState((prevState) => ({
+      modalRight: !prevState.modalRight,
+    }));
+  };
 
   componentDidMount() {
     this.loadingOn();
@@ -35,6 +43,7 @@ class Detail extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.file.key !== this.props.file.key) {
       this.loadingOn();
+      this.toggleRight();
       this.setInitialState();
     }
   }
@@ -144,6 +153,39 @@ class Detail extends React.Component {
       <Fragment>
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
         <div className="item-detail">
+          <Modal
+            isOpen={this.state.modalRight}
+            toggle={this.toggleRight}
+            wrapClassName="modal-right"
+          >
+            <ModalHeader toggle={this.toggleRight}>
+              Detalle de la corrección
+            </ModalHeader>
+            <ModalBody>
+              <dl>
+                <dt>Nombre del archivo</dt>
+                <dd>{this.props.file.key}</dd>
+                {('props', console.log(this.props))}
+                <dt>Alumno </dt>
+                <dd>{alumno}</dd>
+                <dt>Estado </dt>
+                <dd>{estado}</dd>
+                <dt>Fecha Entrega </dt>
+                <dd>{fecha_entrega}</dd>
+                <dt>Fecha Vencimiento de la Entrega </dt>
+                <dd>{fecha_vto_entrega}</dd>
+              </dl>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.goToCorreccion}>
+                CORREGIR
+              </Button>{' '}
+              <Button color="secondary" onClick={this.toggleRight}>
+                SALIR
+              </Button>
+            </ModalFooter>
+          </Modal>
+          {/*           
           <h2>Detalle de la corrección</h2>
           <dl className="row-detail-correcciones">
             <dt>Nombre del archivo</dt>
@@ -166,6 +208,8 @@ class Detail extends React.Component {
               CORREGIR
             </a>
           </div>
+
+  */}
         </div>
       </Fragment>
     );

@@ -118,7 +118,7 @@ class Correcciones extends Component {
             files={files}
             icons={Icons.FontAwesome(4)}
             detailRenderer={DefaultDetail}
-            detailRendererProps={{ fullKey: files.fullKey }}
+            /*  detailRendererProps={{ fullKey: files.fullKey }} */
             actionRenderer={DefaultActionCorrecciones}
             onDownloadFile={this.handleDownloadFile}
           />
