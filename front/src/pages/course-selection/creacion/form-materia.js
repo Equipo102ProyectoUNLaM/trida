@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Row,
-  Card,
-  CardTitle,
-  Label,
-  Button,
-  FormGroup,
-  NavLink,
-} from 'reactstrap';
+import { Row, Card, CardTitle, Button, FormGroup, NavLink } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { addToMateriasCollection } from 'helpers/Firebase-db';
-import { functions } from 'helpers/Firebase';
+import { editDocument } from 'helpers/Firebase-db';
 import TagsInput from 'react-tagsinput';
 import { toolTipMaterias } from 'constants/texts';
 
@@ -36,11 +28,15 @@ class FormMateria extends Component {
   };
 
   onUserSubmit = async () => {
-    const { instId } = this.props.location;
+    const { instId, instRef, cursos } = this.props.location;
     let { user } = this.props;
     const { materiasTags } = this.state;
+    let instObj,
+      cursosObj = [];
 
-    Object.keys(materiasTags).forEach(async (id) => {
+    this.setState({ isLoading: true });
+    for (const id in materiasTags) {
+      let arrayMaterias = [];
       const materiasPorCurso = materiasTags[id];
 
       for (const materia in materiasPorCurso) {
@@ -53,23 +49,22 @@ class FormMateria extends Component {
           'Materia agregada exitosamente',
           'Error al agregar la materia'
         );
-
-        try {
-          this.setState({ isLoading: true });
-          const asignarMateriasAction = functions.httpsCallable(
-            'asignarMaterias'
-          );
-          await asignarMateriasAction({
-            instId,
-            id,
-            matRef,
-            uid: user,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+        arrayMaterias.push(matRef);
       }
-    });
+      const cursoObj = {
+        curso_id: cursos[id].ref,
+        materias: arrayMaterias,
+      };
+      cursosObj.push(cursoObj);
+    }
+
+    instObj = [
+      {
+        institucion_id: instRef,
+        cursos: cursosObj,
+      },
+    ];
+    await editDocument('usuarios', user, { instituciones: instObj }, 'Materia');
 
     this.setState({ isLoading: false });
     this.props.history.push('/seleccion-curso');
@@ -104,21 +99,21 @@ class FormMateria extends Component {
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <p className="tip-text">{toolTipMaterias}</p>
-                    {cursos.map((curso) => {
+                    {Object.keys(cursos).map((curso) => {
                       return (
-                        <FormGroup key={curso.id}>
+                        <FormGroup key={curso}>
                           <div className="form-group has-float-label">
                             <TagsInput
-                              value={this.state.materiasTags[curso.id] || []}
+                              value={this.state.materiasTags[curso] || []}
                               onChange={(materias) =>
-                                this.handleTagChange(curso.id, materias)
+                                this.handleTagChange(curso, materias)
                               }
                               inputProps={{
                                 placeholder: '',
                               }}
                             />
                             <span className="span-float-label">
-                              Materias de {curso.nombre}
+                              Materias de {cursos[curso].nombre}
                             </span>
                           </div>
                         </FormGroup>

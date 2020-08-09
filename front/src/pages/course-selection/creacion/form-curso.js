@@ -38,9 +38,9 @@ class FormCurso extends Component {
   };
 
   onUserSubmit = async () => {
-    const { instId } = this.props.location;
+    const { instId, instRef } = this.props.location;
     const { cursosTags } = this.state;
-    let arrayCursos = [];
+    const cursosMapeados = {};
 
     for (const tag in cursosTags) {
       const cursoObj = {
@@ -56,13 +56,14 @@ class FormCurso extends Component {
         'Curso agregado exitosamente',
         'Error al agregar el curso'
       );
-      arrayCursos.push({ id: docRef.id, nombre: cursoObj.nombre });
+      cursosMapeados[docRef.id] = { ref: docRef, nombre: cursoObj.nombre };
     }
 
     this.props.history.push({
       pathname: '/seleccion-curso/crear-materia',
-      cursos: arrayCursos,
+      cursos: cursosMapeados,
       instId,
+      instRef,
     });
   };
 
