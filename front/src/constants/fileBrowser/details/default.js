@@ -55,6 +55,7 @@ class Detail extends React.Component {
     this.setEstadoFechaYTipo(correccion);
     this.setFechaVtoEntrega(correccion);
     this.getAlumno(correccion.id_alumno);
+    this.loadingOff();
   };
 
   /* Esta funcion se encarga de obtener la key "idUsuario-nombreCorreccion" a partir del campo URL */
@@ -84,7 +85,6 @@ class Detail extends React.Component {
     this.setState({
       alumno: nombre + ' ' + apellido,
     });
-    this.loadingOff();
   };
 
   handleCloseClick = (event) => {
