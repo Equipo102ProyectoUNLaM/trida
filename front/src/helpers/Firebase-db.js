@@ -64,6 +64,12 @@ export const getDocument = async (docRef) => {
   }
 };
 
+export const getUsernameById = async (id) => {
+  let docObj = await getDocument(`users/${id}`);
+  let { data } = docObj;
+  return data.name;
+};
+
 // agrega un documento
 // parámetros: colección, objeto a agregar y reemplazo para mostrar en la notificación
 export const addDocument = async (
