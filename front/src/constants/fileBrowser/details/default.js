@@ -190,31 +190,6 @@ class Detail extends React.Component {
               </Button>
             </ModalFooter>
           </Modal>
-          {/*           
-          <h2>Detalle de la corrección</h2>
-          <dl className="row-detail-correcciones">
-            <dt>Nombre del archivo</dt>
-            <dd>{this.props.file.key}</dd>
-            {('props', console.log(this.props))}
-            <dt>Alumno </dt>
-            <dd>{alumno}</dd>
-            <dt>Estado </dt>
-            <dd>{estado}</dd>
-            <dt>Fecha Entrega </dt>
-            <dd>{fecha_entrega}</dd>
-            <dt>Fecha Vencimiento de la Entrega </dt>
-            <dd>{fecha_vto_entrega}</dd>
-          </dl>
-          <div className="actions-detail-correcciones">
-            <a href="#" onClick={this.handleCloseClick}>
-              CERRAR
-            </a>
-            <a href="#" onClick={this.goToCorreccion}>
-              CORREGIR
-            </a>
-          </div>
-
-  */}
         </div>
       </Fragment>
     );

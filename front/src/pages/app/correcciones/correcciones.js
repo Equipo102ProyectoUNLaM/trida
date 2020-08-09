@@ -88,10 +88,6 @@ class Correcciones extends Component {
     }
   }
 
-  onCorregirCorrecciones = () => {
-    alert('hola');
-  };
-
   handleDownloadFile = (fileKeys) => {
     fileKeys.forEach((fileKey) => {
       const file = this.state.files.find((i) => i.key === fileKey);
@@ -119,7 +115,6 @@ class Correcciones extends Component {
             files={files}
             icons={Icons.FontAwesome(4)}
             detailRenderer={DefaultDetail}
-            /*  detailRendererProps={{ fullKey: files.fullKey }} */
             actionRenderer={DefaultActionCorrecciones}
             onDownloadFile={this.handleDownloadFile}
           />

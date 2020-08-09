@@ -25,8 +25,6 @@ const Actions = (props) => {
 
     canDownloadFile,
     onDownloadFile,
-
-    onCorregir,
   } = props;
 
   /** @type any */
@@ -184,8 +182,6 @@ Actions.propTypes = {
 
   canDownloadFile: PropTypes.bool,
   onDownloadFile: PropTypes.func,
-
-  onCorregir: PropTypes.func,
 };
 
 Actions.defaultProps = {
@@ -211,8 +207,6 @@ Actions.defaultProps = {
 
   canDownloadFile: false,
   onDownloadFile: null,
-
-  onCorregir: null,
 };
 
 export default Actions;
