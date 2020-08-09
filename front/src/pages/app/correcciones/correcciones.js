@@ -8,7 +8,7 @@ import { injectIntl } from 'react-intl';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import CorreccionesDetailRenderer from './correccionesDetailRenderer';
-import { DefaultDetail } from 'constants/fileBrowser/details';
+import { DefaultDetail, CustomDetail } from 'constants/fileBrowser/details';
 import {
   DefaultConfirmDeletion,
   MultipleConfirmDeletion,
@@ -25,8 +25,6 @@ class Correcciones extends Component {
       isLoading: true,
       subjectId: subject.id,
     };
-
-    //this.onCorregir = this.onCorregir.bind(this);
   }
 
   async componentDidMount() {
@@ -37,7 +35,6 @@ class Correcciones extends Component {
     let arrayFiles = [];
 
     try {
-      console.log(this.state.subjectId);
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
       const listRef = storage.ref(this.state.subjectId + '/correcciones');
       await listRef.listAll().then(async (result) => {
@@ -47,11 +44,13 @@ class Correcciones extends Component {
           ctrFiles++;
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
-              var obj = {
-                key: metadata.fullPath.replace(
+              const fileKey = this.getPlainName(metadata.fullPath);
+              let obj = {
+                fullKey: metadata.fullPath.replace(
                   this.state.subjectId + '/correcciones/',
                   ''
                 ),
+                key: fileKey,
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
@@ -63,10 +62,9 @@ class Correcciones extends Component {
                 this.setState((state) => ({
                   files: state.files.concat(arrayFiles),
                 }));
+
                 arrayFiles = [];
               }
-
-              console.log(this.state.files);
             });
           });
         });
@@ -80,9 +78,22 @@ class Correcciones extends Component {
     }
   }
 
+  /*Esta funcion la uso para eliminar el id_usuario de la key de la correccion
+    ya que tiene la forma "idUsuario-nombreCorreccion" */
+
+  getPlainName(text) {
+    //Elimino la parte de "materiaID/correcciones/" del path
+    let newText = text.replace(this.state.subjectId + '/correcciones/', '');
+    const pos = newText.indexOf('-'); //Busco el primer "-", que representa el idUsuario para eliminarlo
+    if (pos) {
+      return newText.slice(pos + 1);
+    } else {
+      return newText;
+    }
+  }
+
   onCorregirCorrecciones = () => {
     alert('hola');
-    console.log('estoy en onCorregirCorrecciones');
   };
 
   handleDownloadFile = (fileKeys) => {
@@ -112,9 +123,8 @@ class Correcciones extends Component {
             files={files}
             icons={Icons.FontAwesome(4)}
             detailRenderer={DefaultDetail}
+            detailRendererProps={{ fullKey: files.fullKey }}
             actionRenderer={DefaultActionCorrecciones}
-            onDeleteFile={() => null}
-            confirmDeletionRenderer={DefaultConfirmDeletion}
             onRenameFile={this.onCorregirCorrecciones}
             onDownloadFile={this.handleDownloadFile}
           />
