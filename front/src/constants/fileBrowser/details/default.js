@@ -26,6 +26,7 @@ class Detail extends React.Component {
       fecha_entrega: '',
       fecha_vto_entrega: '',
       modalRight: true,
+      tipo_entrega: '',
     };
   }
 
@@ -51,11 +52,12 @@ class Detail extends React.Component {
   setInitialState = async () => {
     const keyFile = this.getKeyFile();
     const correccion = await this.getCorreccion(keyFile);
-    this.setEstadoYFecha(correccion);
+    this.setEstadoFechaYTipo(correccion);
     this.setFechaVtoEntrega(correccion);
     this.getAlumno(correccion.id_alumno);
   };
 
+  /* Esta funcion se encarga de obtener la key "idUsuario-nombreCorreccion" a partir del campo URL */
   getKeyFile() {
     const busquedaIni = '%2Fcorrecciones%2F';
     const longbusquedaIni = busquedaIni.length;
@@ -90,12 +92,14 @@ class Detail extends React.Component {
       event.preventDefault();
     }
     this.props.close();
+    this.toggleRight();
   };
 
-  setEstadoYFecha(correccion) {
+  setEstadoFechaYTipo(correccion) {
     this.setState({
       estado: correccion.estado,
       fecha_entrega: correccion.fecha_entrega,
+      tipo_entrega: correccion.tipo,
     });
   }
 
@@ -114,7 +118,6 @@ class Detail extends React.Component {
     });
   };
 
-  //REVISAR
   getFechaEvaluacion = async (idEvaluacion) => {
     const evalObj = await getDocument(`practicas/${idEvaluacion}`);
     this.setState({
@@ -147,6 +150,7 @@ class Detail extends React.Component {
       estado,
       fecha_entrega,
       fecha_vto_entrega,
+      tipo_entrega,
     } = this.state;
 
     return (
@@ -165,11 +169,12 @@ class Detail extends React.Component {
               <dl>
                 <dt>Nombre del archivo</dt>
                 <dd>{this.props.file.key}</dd>
-                {('props', console.log(this.props))}
                 <dt>Alumno </dt>
                 <dd>{alumno}</dd>
                 <dt>Estado </dt>
                 <dd>{estado}</dd>
+                <dt>Tipo de Entrega </dt>
+                <dd>{tipo_entrega}</dd>
                 <dt>Fecha Entrega </dt>
                 <dd>{fecha_entrega}</dd>
                 <dt>Fecha Vencimiento de la Entrega </dt>
@@ -180,7 +185,7 @@ class Detail extends React.Component {
               <Button color="primary" onClick={this.goToCorreccion}>
                 CORREGIR
               </Button>{' '}
-              <Button color="secondary" onClick={this.toggleRight}>
+              <Button color="secondary" onClick={this.handleCloseClick}>
                 SALIR
               </Button>
             </ModalFooter>

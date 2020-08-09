@@ -74,7 +74,8 @@ class Correcciones extends Component {
   }
 
   /*Esta funcion la uso para eliminar el id_usuario de la key de la correccion
-    ya que tiene la forma "idUsuario-nombreCorreccion" */
+    ya que tiene la forma "idUsuario-nombreCorreccion", ya que la Key es el campo
+    que se muestra en la lista de correcciones */
 
   getPlainName(text) {
     //Elimino la parte de "materiaID/correcciones/" del path
