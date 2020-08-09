@@ -14,6 +14,8 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form, Field } from 'formik';
 import { addToSubCollection } from 'helpers/Firebase-db';
+import TagsInput from 'react-tagsinput';
+import { toolTipCursos } from 'constants/texts';
 
 class FormCurso extends Component {
   constructor(props) {
@@ -22,6 +24,7 @@ class FormCurso extends Component {
     this.state = {
       isEmpty: false,
       nombre: '',
+      cursosTags: [],
     };
   }
 
@@ -30,28 +33,35 @@ class FormCurso extends Component {
     this.setState({ [name]: value });
   };
 
+  handleTagChange = (cursosTags) => {
+    this.setState({ cursosTags });
+  };
+
   onUserSubmit = async () => {
     const { instId } = this.props.location;
-    const obj = {
-      nombre: this.state.nombre,
-    };
-    const docRef = await addToSubCollection(
-      'instituciones',
-      instId,
-      'cursos',
-      obj,
-      this.props.user,
-      'Curso agregado!',
-      'Curso agregado exitosamente',
-      'Error al agregar el curso'
-    );
-    localStorage.setItem(
-      'course',
-      JSON.stringify({ id: docRef.id, name: obj.nombre })
-    );
+    const { cursosTags } = this.state;
+    let arrayCursos = [];
+
+    for (const tag in cursosTags) {
+      const cursoObj = {
+        nombre: cursosTags[tag],
+      };
+      const docRef = await addToSubCollection(
+        'instituciones',
+        instId,
+        'cursos',
+        cursoObj,
+        this.props.user,
+        'Curso agregado!',
+        'Curso agregado exitosamente',
+        'Error al agregar el curso'
+      );
+      arrayCursos.push({ id: docRef.id, nombre: cursoObj.nombre });
+    }
+
     this.props.history.push({
       pathname: '/seleccion-curso/crear-materia',
-      cursoId: docRef.id,
+      cursos: arrayCursos,
       instId,
     });
   };
@@ -71,20 +81,18 @@ class FormCurso extends Component {
               <Formik onSubmit={this.onUserSubmit}>
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
-                    <FormGroup className="form-group has-float-label">
-                      <Label>
+                    <FormGroup>
+                      <p className="tip-text">{toolTipCursos}</p>
+                      <div className="form-group has-float-label">
+                        <TagsInput
+                          value={this.state.cursosTags}
+                          onChange={this.handleTagChange}
+                          inputProps={{
+                            placeholder: '',
+                          }}
+                        />
                         <IntlMessages id="curso.nombre" />
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="nombre"
-                        onChange={this.handleChange}
-                      />
-                      {errors.nombre && touched.nombre && (
-                        <div className="invalid-feedback d-block">
-                          {errors.nombre}
-                        </div>
-                      )}
+                      </div>
                     </FormGroup>
                     <p className="tip-text">Ejemplo: &quot;1er grado&quot;</p>
                     <Row className="button-group">

@@ -9204,6 +9204,10 @@ tr.folder{
   margin-top: 0.5rem !important;
 }
 
+.react-tagsinput {
+  padding: 0.2rem;
+}
+
 
 .react-tagsinput-input {
   background: transparent;
@@ -9223,4 +9227,16 @@ tr.folder{
   border-radius: 0 !important;
   border-color: #d7d7d7;
   height: 45.1042px;
+}
+
+.span-float-label {
+  position: absolute;
+    cursor: text;
+    font-size: 90%;
+    opacity: 1;
+    top: -0.4em;
+    left: 0.75rem;
+    z-index: 3;
+    line-height: 1;
+    padding: 0 1px;
 }

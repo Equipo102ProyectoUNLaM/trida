@@ -15,6 +15,8 @@ import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form, Field } from 'formik';
 import { addToMateriasCollection } from 'helpers/Firebase-db';
 import { functions } from 'helpers/Firebase';
+import TagsInput from 'react-tagsinput';
+import { toolTipMaterias } from 'constants/texts';
 
 class FormMateria extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class FormMateria extends Component {
       isEmpty: false,
       nombre: '',
       isLoading: false,
+      materiasTags: {},
     };
   }
 
@@ -33,41 +36,57 @@ class FormMateria extends Component {
   };
 
   onUserSubmit = async () => {
-    const { cursoId, instId } = this.props.location;
+    const { instId } = this.props.location;
     let { user } = this.props;
-    const obj = {
-      nombre: this.state.nombre,
-    };
-    const matRef = await addToMateriasCollection(
-      instId,
-      cursoId,
-      obj,
-      user,
-      'Materia agregada!',
-      'Materia agregada exitosamente',
-      'Error al agregar la materia'
-    );
-    let { id } = matRef;
-    localStorage.setItem('subject', JSON.stringify({ id, name: obj.nombre }));
-    try {
-      this.setState({ isLoading: true });
-      const asignarMateriasAction = functions.httpsCallable('asignarMaterias');
-      await asignarMateriasAction({
-        instId,
-        cursoId,
-        id,
-        uid: user,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const { materiasTags } = this.state;
+
+    Object.keys(materiasTags).forEach(async (id) => {
+      const materiasPorCurso = materiasTags[id];
+
+      for (const materia in materiasPorCurso) {
+        const matRef = await addToMateriasCollection(
+          instId,
+          id,
+          { nombre: materiasPorCurso[materia] },
+          user,
+          'Materia agregada!',
+          'Materia agregada exitosamente',
+          'Error al agregar la materia'
+        );
+
+        try {
+          this.setState({ isLoading: true });
+          const asignarMateriasAction = functions.httpsCallable(
+            'asignarMaterias'
+          );
+          await asignarMateriasAction({
+            instId,
+            id,
+            matRef,
+            uid: user,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+
     this.setState({ isLoading: false });
-    this.props.history.push('/app/home');
+    this.props.history.push('/seleccion-curso');
+  };
+
+  handleTagChange = (curso, materias) => {
+    this.setState({
+      materiasTags: {
+        ...this.state.materiasTags,
+        [curso]: materias,
+      },
+    });
   };
 
   render() {
     const { isLoading } = this.state;
-
+    const { cursos } = this.props.location;
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
@@ -84,21 +103,27 @@ class FormMateria extends Component {
               <Formik onSubmit={this.onUserSubmit}>
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
-                    <FormGroup className="form-group has-float-label">
-                      <Label>
-                        <IntlMessages id="materia.nombre" />
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="nombre"
-                        onChange={this.handleChange}
-                      />
-                      {errors.nombre && touched.nombre && (
-                        <div className="invalid-feedback d-block">
-                          {errors.nombre}
-                        </div>
-                      )}
-                    </FormGroup>
+                    <p className="tip-text">{toolTipMaterias}</p>
+                    {cursos.map((curso) => {
+                      return (
+                        <FormGroup key={curso.id}>
+                          <div className="form-group has-float-label">
+                            <TagsInput
+                              value={this.state.materiasTags[curso.id] || []}
+                              onChange={(materias) =>
+                                this.handleTagChange(curso.id, materias)
+                              }
+                              inputProps={{
+                                placeholder: '',
+                              }}
+                            />
+                            <span className="span-float-label">
+                              Materias de {curso.nombre}
+                            </span>
+                          </div>
+                        </FormGroup>
+                      );
+                    })}
                     <p className="tip-text">Ejemplo: &quot;Matemática&quot;</p>
                     <Row className="button-group">
                       <Button
