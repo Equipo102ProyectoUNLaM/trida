@@ -1,5 +1,36 @@
 const data = [
   {
+    id: 'virtual-classes',
+    icon: 'iconsminds-blackboard',
+    label: 'menu.clases-virtuales',
+    to: '/app/clases-virtuales',
+    subs: [
+      {
+        icon: 'iconsminds-book',
+        label: 'menu.mis-clases',
+        to: '/app/clases-virtuales/mis-clases',
+      },
+      {
+        icon: 'iconsminds-blackboard',
+        label: 'menu.board',
+        to: '/app/clases-virtuales/pizarron',
+      },
+    ],
+  },
+  {
+    id: 'content',
+    icon: 'simple-icon-cloud-upload',
+    label: 'menu.content',
+    to: '/app/contenidos',
+    subs: [
+      {
+        icon: 'simple-icon-cloud-upload',
+        label: 'menu.my-contents',
+        to: '/app/contenidos',
+      },
+    ],
+  },
+  {
     id: 'communications',
     icon: 'iconsminds-mail',
     label: 'menu.communications',
@@ -19,50 +50,6 @@ const data = [
         icon: 'iconsminds-receipt-4',
         label: 'menu.formal',
         to: '/app/comunicaciones/formales',
-      },
-    ],
-  },
-  {
-    id: 'content',
-    icon: 'simple-icon-cloud-upload',
-    label: 'menu.content',
-    to: '/app/contenidos',
-    subs: [
-      {
-        icon: 'simple-icon-cloud-upload',
-        label: 'menu.my-contents',
-        to: '/app/contenidos',
-      },
-    ],
-  },
-  {
-    id: 'corrections',
-    icon: 'simple-icon-check',
-    label: 'menu.corrections',
-    to: '/app/correcciones',
-    subs: [
-      {
-        icon: 'simple-icon-check',
-        label: 'menu.my-corrections',
-        to: '/app/correcciones',
-      },
-    ],
-  },
-  {
-    id: 'virtual-classes',
-    icon: 'iconsminds-blackboard',
-    label: 'menu.clases-virtuales',
-    to: '/app/clases-virtuales',
-    subs: [
-      {
-        icon: 'iconsminds-book',
-        label: 'menu.mis-clases',
-        to: '/app/clases-virtuales/mis-clases',
-      },
-      {
-        icon: 'iconsminds-blackboard',
-        label: 'menu.board',
-        to: '/app/clases-virtuales/pizarron',
       },
     ],
   },
@@ -89,6 +76,19 @@ const data = [
         icon: 'simple-icon-note',
         label: 'menu.my-evaluations',
         to: '/app/evaluaciones',
+      },
+    ],
+  },
+  {
+    id: 'corrections',
+    icon: 'simple-icon-check',
+    label: 'menu.corrections',
+    to: '/app/correcciones',
+    subs: [
+      {
+        icon: 'simple-icon-check',
+        label: 'menu.my-corrections',
+        to: '/app/correcciones',
       },
     ],
   },

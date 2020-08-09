@@ -6,7 +6,6 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Row } from 'reactstrap';
 import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
-import { getFechaHoraActual } from 'helpers/Utils';
 
 var datos = [];
 
@@ -57,10 +56,9 @@ class FormMensaje extends Component {
     event.preventDefault();
 
     //Convierto el array de seleccionados al formato { id, nombre }
-    const receptores = this.state.selectedOptions.map(({ value, label }) => ({
-      id: value,
-      nombre: label,
-    }));
+    const receptores = this.state.selectedOptions.map(
+      ({ value, label }) => value
+    );
 
     const msg = {
       emisor: {
@@ -73,7 +71,6 @@ class FormMensaje extends Component {
       formal: false,
       general: false,
       idMateria: this.state.idMateria,
-      fechaHoraEnvio: getFechaHoraActual(),
     };
     //guardar msj en bd
     await addDocument(
@@ -98,13 +95,16 @@ class FormMensaje extends Component {
     for (const user of users) {
       const docObj = await getDocument(`users/${user}`);
       let i = 0;
-      const nombre = docObj.data.name;
-      // Armo el array que va a alimentar el Select
-      datos.push({
-        label: nombre,
-        value: user,
-        key: i,
-      });
+
+      if (docObj.data.id !== this.state.idUser) {
+        const nombre = docObj.data.name;
+        // Armo el array que va a alimentar el Select
+        datos.push({
+          label: nombre,
+          value: user,
+          key: i,
+        });
+      }
 
       i++;
     }
@@ -131,10 +131,12 @@ class FormMensaje extends Component {
               className="react-select"
               classNamePrefix="react-select"
               isMulti
+              placeholder="Seleccione los destinatarios"
               name="form-field-name"
               value={selectedOptions}
               onChange={this.handleChangeMulti}
               options={datos}
+              required
             />
           </Colxx>
         </Row>
@@ -156,7 +158,7 @@ class FormMensaje extends Component {
 
         <ModalFooter>
           <Button color="primary" type="submit">
-            Agregar
+            Enviar
           </Button>
           <Button color="secondary" onClick={toggleModal}>
             Cancelar
