@@ -27,7 +27,19 @@ class Detail extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
+    this.loadingOn();
+    this.setInitialState();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.file.key !== this.props.file.key) {
+      this.loadingOn();
+      this.setInitialState();
+    }
+  }
+
+  setInitialState = async () => {
     const keyFile = this.getKeyFile();
     const correccion = await this.getCorreccion(keyFile);
     this.setEstadoYFecha(correccion);
@@ -60,8 +72,8 @@ class Detail extends React.Component {
     const { nombre, apellido } = alumnoObj.data;
     this.setState({
       alumno: nombre + ' ' + apellido,
-      isLoading: false,
     });
+    this.loadingOff();
   };
 
   handleCloseClick = (event) => {
@@ -100,6 +112,18 @@ class Detail extends React.Component {
       fecha_vto_entrega: evalObj.data.fecha_finalizacion,
     });
   };
+
+  loadingOn() {
+    this.setState({
+      isLoading: true,
+    });
+  }
+
+  loadingOff() {
+    this.setState({
+      isLoading: false,
+    });
+  }
 
   goToCorreccion = (event) => {
     alert('Acá escribir la función que lleve a la corrección');
