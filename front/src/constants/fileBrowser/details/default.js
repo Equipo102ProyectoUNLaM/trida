@@ -101,9 +101,8 @@ class Detail extends React.Component {
     });
   };
 
-  probando = (event) => {
-    alert('Hola');
-    console.log('Hola');
+  goToCorreccion = (event) => {
+    alert('Acá escribir la función que lleve a la corrección');
   };
 
   render() {
@@ -122,7 +121,7 @@ class Detail extends React.Component {
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
         <div className="item-detail">
           <h2>Detalle de la corrección</h2>
-          <dl>
+          <dl className="row-detail-correcciones">
             <dt>Nombre del archivo</dt>
             <dd>{this.props.file.key}</dd>
             {('props', console.log(this.props))}
@@ -135,12 +134,14 @@ class Detail extends React.Component {
             <dt>Fecha Vencimiento de la Entrega </dt>
             <dd>{fecha_vto_entrega}</dd>
           </dl>
-          <a href="#" onClick={this.probando}>
-            Probando
-          </a>
-          <a href="#" onClick={this.handleCloseClick}>
-            Close
-          </a>
+          <div className="actions-detail-correcciones">
+            <a href="#" onClick={this.handleCloseClick}>
+              CERRAR
+            </a>
+            <a href="#" onClick={this.goToCorreccion}>
+              CORREGIR
+            </a>
+          </div>
         </div>
       </Fragment>
     );

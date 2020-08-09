@@ -132,17 +132,6 @@ const Actions = (props) => {
         );
       }
 
-      if (!isFolder && canDownloadFile) {
-        actions.push(
-          <li key="action-corregir">
-            <a onClick={onRenameFile} href="/" role="button">
-              {icons.Download}
-              &nbsp;Corregir
-            </a>
-          </li>
-        );
-      }
-
       if (actions.length) {
         actions = <ul className="item-actions">{actions}</ul>;
       } else {

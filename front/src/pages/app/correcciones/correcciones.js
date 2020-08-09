@@ -7,12 +7,7 @@ import { storage } from 'helpers/Firebase';
 import { injectIntl } from 'react-intl';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
-import CorreccionesDetailRenderer from './correccionesDetailRenderer';
-import { DefaultDetail, CustomDetail } from 'constants/fileBrowser/details';
-import {
-  DefaultConfirmDeletion,
-  MultipleConfirmDeletion,
-} from 'constants/fileBrowser/confirmations';
+import { DefaultDetail } from 'constants/fileBrowser/details';
 import { DefaultActionCorrecciones } from 'constants/fileBrowser/actions';
 
 class Correcciones extends Component {
@@ -125,7 +120,6 @@ class Correcciones extends Component {
             detailRenderer={DefaultDetail}
             detailRendererProps={{ fullKey: files.fullKey }}
             actionRenderer={DefaultActionCorrecciones}
-            onRenameFile={this.onCorregirCorrecciones}
             onDownloadFile={this.handleDownloadFile}
           />
         </div>

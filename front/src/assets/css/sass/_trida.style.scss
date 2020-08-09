@@ -9175,5 +9175,15 @@ div.rendered-file-browser{
 }
 
 .item-detail{
-  padding-top: 3.5rem;
+  //padding-top: 3.5rem;
+}
+
+.row-detail-correcciones {
+  //display: flex;
+}
+
+.actions-detail-correcciones {
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
 }
