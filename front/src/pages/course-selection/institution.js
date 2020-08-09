@@ -7,21 +7,16 @@ import MediumCardListView from '../../containers/pages/MediumCardListView';
 import { firestore } from 'helpers/Firebase';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../redux/actions';
+import { getInstituciones } from 'helpers/Firebase-user';
 
 function collect(props) {
   return { data: props.data };
 }
 
-const mapStateToProps = ({ authUser }) => {
-  const { user } = authUser;
-  return {
-    user,
-  };
-};
-
 class Institution extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       items: [],
       isLoading: true,
@@ -30,28 +25,11 @@ class Institution extends Component {
   }
 
   getInstituciones = async () => {
-    const array = [];
-    var userId = localStorage.getItem('user_id');
     try {
-      const userRef = firestore.doc(`users/${userId}`);
-      var userDoc = await userRef.get();
-      const { instituciones } = userDoc.data();
-      if (!instituciones) return;
-      for (const inst of instituciones) {
-        const institutionRef = firestore.doc(`${inst.institucion_id.path}`);
-        var institutionDoc = await institutionRef.get();
-        const { nombre, niveles } = institutionDoc.data();
-        const obj = {
-          id: inst.institucion_id.id,
-          name: nombre,
-          tags: niveles,
-        };
-        array.push(obj);
-      }
+      const items = await getInstituciones(this.props.user);
+      this.dataListRenderer(items);
     } catch (err) {
       console.log('Error getting documents', err);
-    } finally {
-      this.dataListRenderer(array);
     }
   };
 
@@ -59,7 +37,7 @@ class Institution extends Component {
     this.setState({
       items: array,
       isLoading: false,
-      isEmpty: array.length === 0 ? true : false,
+      isEmpty: !array.length,
     });
   }
 
@@ -137,6 +115,15 @@ class Institution extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+
+  return {
+    user,
+  };
+};
+
 export default withRouter(
   connect(mapStateToProps, {
     logoutUser,

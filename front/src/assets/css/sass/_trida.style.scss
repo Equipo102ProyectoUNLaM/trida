@@ -1131,6 +1131,17 @@ button {
     }
   }
 }
+.select__menu {
+  z-index: 4 !important;;
+}
+
+.select__menu-list {
+  z-index: 4 !important;
+}
+
+.select__option {
+  z-index: 4 !important;
+}
 
 /* 03.Widths-Spacing */
 .w-10 {
@@ -5999,6 +6010,11 @@ input:-webkit-autofill {
     padding: 80px;
   }
 
+  .form-side-full {
+    width: 100%;
+    padding: 80px;
+  }
+
   @include respond-below(md) {
     flex-direction: column;
 
@@ -6399,6 +6415,11 @@ input:-webkit-autofill {
   position: relative;
 }
 
+.with-tooltip {
+  width: 90% !important;
+  margin-left: 1rem !important;
+}
+
 .has-float-label label::after,
 .has-float-label > span::after {
   background: $foreground-color !important;
@@ -6497,6 +6518,26 @@ input:-webkit-autofill {
 
 .input-group .has-float-label .form-control {
   width: 100%;
+}
+
+.input-file {
+  display: flex;
+  flex-grow: 1;
+  border: 1px solid #d7d7d7;
+  align-items: center;
+
+  label {
+    padding: 0.75rem;
+    margin: 0;
+    cursor: pointer;
+    color: rgba(33, 33, 33, 0.7);
+  }
+ 
+ input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+ }
 }
 
 .input-group .has-float-label:not(:last-child),
@@ -9055,6 +9096,17 @@ footer.page-footer {
   cursor: pointer;
 }
 
+// Otros
+.tip-text {
+  color: rgba(33, 33, 33, 0.7);
+  font-size: 90%;
+}
+
+.tooltip-question {
+  margin: 0.5rem !important;
+  color: $theme-color-2;
+}
+
 #cover-spin {
   background-color: rgba(255,255,255,0.7);
   z-index: 1050;
@@ -9156,6 +9208,19 @@ tr.folder{
   word-break: break-word;
 }
 
+.react-tagsinput-input {
+  background: transparent;
+  border: 0;
+  color: #777;
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 6px;
+  margin-top: 1px;
+  outline: none;
+  padding: 5px;
+  width: 50% !important;
+}
 .ReactTable .rt-th, .ReactTable .rt-td {
   padding-top: 10px !important;
   padding-bottom: 0px !important;

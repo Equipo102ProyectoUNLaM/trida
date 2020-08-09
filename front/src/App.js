@@ -11,8 +11,9 @@ import './helpers/Firebase';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
-import { isMultiColorActive, isDemo } from './constants/defaultValues';
+import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
+import { AuthRoute } from 'components/rutas/auth-route';
 
 const ViewMain = React.lazy(() =>
   import(/* webpackChunkName: "views" */ './pages')
@@ -33,26 +34,6 @@ const ViewPizarron = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './pages/window-pizarron')
 );
 
-const AuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        authUser || isDemo ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/user/login',
-              state: { from: props.location },
-            }}
-          />
-        )
-      }
-    />
-  );
-};
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -67,7 +48,7 @@ class App extends Component {
   }
 
   render() {
-    const { locale, loginUser } = this.props;
+    const { locale, loginUser, match } = this.props;
     const currentAppLocale = AppLocale[locale];
 
     return (
@@ -87,13 +68,15 @@ class App extends Component {
                     authUser={loginUser}
                     component={ViewCourse}
                   />
-                  <Route
+                  <AuthRoute
                     path="/app"
-                    render={(props) => <ViewApp {...props} />}
+                    authUser={loginUser}
+                    component={ViewApp}
                   />
-                  <Route
+                  <AuthRoute
                     path="/pizarron"
-                    render={(props) => <ViewPizarron {...props} />}
+                    authUser={loginUser}
+                    component={ViewPizarron}
                   />
                   <Route
                     path="/user"
@@ -104,10 +87,11 @@ class App extends Component {
                     exact
                     render={(props) => <ViewError {...props} />}
                   />
-                  <Route
+                  <AuthRoute
                     path="/"
+                    authUser={loginUser}
                     exact
-                    render={(props) => <ViewMain {...props} />}
+                    component={ViewMain}
                   />
                   <Redirect to="/error" />
                 </Switch>
