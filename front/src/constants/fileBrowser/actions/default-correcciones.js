@@ -25,6 +25,8 @@ const Actions = (props) => {
 
     canDownloadFile,
     onDownloadFile,
+
+    onCorregir,
   } = props;
 
   /** @type any */
@@ -130,6 +132,17 @@ const Actions = (props) => {
         );
       }
 
+      if (!isFolder && canDownloadFile) {
+        actions.push(
+          <li key="action-corregir">
+            <a onClick={onRenameFile} href="/" role="button">
+              {icons.Download}
+              &nbsp;Corregir
+            </a>
+          </li>
+        );
+      }
+
       if (actions.length) {
         actions = <ul className="item-actions">{actions}</ul>;
       } else {
@@ -164,7 +177,6 @@ Actions.propTypes = {
   isFolder: PropTypes.bool,
   icons: PropTypes.object,
   nameFilter: PropTypes.string,
-  fullKey: PropTypes.string,
 
   canCreateFolder: PropTypes.bool,
   onCreateFolder: PropTypes.func,
@@ -183,6 +195,8 @@ Actions.propTypes = {
 
   canDownloadFile: PropTypes.bool,
   onDownloadFile: PropTypes.func,
+
+  onCorregir: PropTypes.func,
 };
 
 Actions.defaultProps = {
@@ -190,7 +204,6 @@ Actions.defaultProps = {
   isFolder: false,
   icons: {},
   nameFilter: '',
-  fullKey: '',
 
   canCreateFolder: false,
   onCreateFolder: null,
@@ -209,6 +222,8 @@ Actions.defaultProps = {
 
   canDownloadFile: false,
   onDownloadFile: null,
+
+  onCorregir: null,
 };
 
 export default Actions;

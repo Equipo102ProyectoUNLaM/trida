@@ -51,6 +51,8 @@ Table of Contents
 46.Course Selection
 47.Contenidos
 48. Mensajeria
+49.Correcciones
+
 */
 
 /* 00.Variables and Imports */
@@ -9159,4 +9161,19 @@ tr.folder{
 .ReactTable .rt-th, .ReactTable .rt-td {
   padding-top: 10px !important;
   padding-bottom: 0px !important;
+}
+
+
+//49 Correcciones
+
+div.demo-mount-nested-editable, .rendered-react-keyed-file-browser{
+  display: flex;
+}
+
+div.rendered-file-browser{
+  padding-right: 3rem;
+}
+
+.item-detail{
+  padding-top: 3.5rem;
 }
