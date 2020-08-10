@@ -1,12 +1,15 @@
 import { firestore } from 'helpers/Firebase';
 import { editDocument } from 'helpers/Firebase-db';
 
-export const getUserName = async (userId) => {
+export const getUserNameAndPhoto = async (userId) => {
   try {
     const userRef = firestore.doc(`usuarios/${userId}`);
     var userDoc = await userRef.get();
-    const { nombre, apellido } = userDoc.data();
-    return nombre + ' ' + apellido;
+    const { nombre, apellido, foto } = userDoc.data();
+    return {
+      nombre: nombre + ' ' + apellido,
+      foto: foto,
+    };
   } catch (err) {
     console.log('Error getting users document', err);
   }
