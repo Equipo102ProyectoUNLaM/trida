@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 
@@ -63,6 +64,7 @@ class FormPractica extends React.Component {
       await addDocument(
         'practicas',
         obj,
+        this.props.user,
         'Práctica agregada',
         'Práctica agregada exitosamente',
         'Error al agregar la práctica'
@@ -148,4 +150,9 @@ class FormPractica extends React.Component {
   }
 }
 
-export default FormPractica;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(FormPractica);

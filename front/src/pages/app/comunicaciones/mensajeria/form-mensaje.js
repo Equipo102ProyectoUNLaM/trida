@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
@@ -13,7 +14,6 @@ class FormMensaje extends Component {
     super(props);
 
     const { id: idMat } = JSON.parse(localStorage.getItem('subject'));
-    const userId = localStorage.getItem('user_id');
 
     this.state = {
       textoMensaje: '',
@@ -22,7 +22,7 @@ class FormMensaje extends Component {
       selectedTag: [],
       idMateria: idMat,
       isLoading: true,
-      idUser: userId,
+      idUser: this.props.user,
       nombreUser: '',
     };
   }
@@ -76,6 +76,7 @@ class FormMensaje extends Component {
     await addDocument(
       'mensajes',
       msg,
+      this.props.user,
       'Mensaje enviado',
       'Mensaje enviado exitosamente',
       'Error al enviar el mensaje'
@@ -167,4 +168,9 @@ class FormMensaje extends Component {
   }
 }
 
-export default FormMensaje;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(FormMensaje);

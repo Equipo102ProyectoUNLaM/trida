@@ -1,6 +1,18 @@
 import { firestore } from './Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
 import { getFechaHoraActual } from 'helpers/Utils';
+firestore.enablePersistence().catch(function (err) {
+  console.log(err);
+  if (err.code == 'failed-precondition') {
+    // Multiple tabs open, persistence can only be enabled
+    // in one tab at a a time.
+    // ...
+  } else if (err.code == 'unimplemented') {
+    // The current browser does not support all of the
+    // features required to enable persistence
+    // ...
+  }
+});
 
 // trae una colección
 // parámetro: colección obligatora
@@ -63,12 +75,11 @@ export const getUsernameById = async (id) => {
 export const addDocument = async (
   collection,
   object,
+  userId,
   mensajePrincipal,
   mensajeSecundario,
   mensajeError
 ) => {
-  const userId = localStorage.getItem('user_id');
-
   object = {
     ...object,
     fecha_creacion: getFechaHoraActual(),
@@ -80,9 +91,62 @@ export const addDocument = async (
     .collection(collection)
     .add(object)
     .then(function () {
+      if (mensajePrincipal) {
+        NotificationManager.success(
+          `${mensajeSecundario}`,
+          `${mensajePrincipal}`,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+    })
+    .catch(function (error) {
+      if (mensajePrincipal) {
+        NotificationManager.error(
+          `${mensajeError}`,
+          error,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+    });
+};
+
+export const addDocumentWithId = async (collection, id, object, message) => {
+  firestore
+    .collection(collection)
+    .doc(id)
+    .set(object)
+    .then(function () {
+      if (message) {
+        NotificationManager.success(
+          `${message} agregada exitosamente`,
+          `${message} agregada!`,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+    })
+    .catch(function (error) {
+      if (message) {
+        NotificationManager.error(
+          `Error al agregar ${message}`,
+          error,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
       NotificationManager.success(
-        `${mensajeSecundario}`,
-        `${mensajePrincipal}!`,
+        `${message}`,
+        `${message}!`,
         3000,
         null,
         null,
@@ -90,7 +154,7 @@ export const addDocument = async (
       );
     })
     .catch(function (error) {
-      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+      NotificationManager.error(`${message}`, error, 3000, null, null, '');
     });
 };
 
