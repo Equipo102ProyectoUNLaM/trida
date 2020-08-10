@@ -12,13 +12,11 @@ class Mensajeria extends Component {
   constructor(props) {
     super(props);
 
-    const { id } = JSON.parse(localStorage.getItem('subject'));
-
     this.state = {
       itemsSent: [],
       itemsReceive: [],
       modalMessageOpen: false,
-      materiaId: id,
+      materiaId: this.props.subject.id,
       usuarioId: this.props.user,
       isLoading: true,
       asuntoMensaje: '',
@@ -196,9 +194,10 @@ class Mensajeria extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user } = authUser;
-  return { user };
+  const { subject } = seleccionCurso;
+  return { user, subject };
 };
 
 export default connect(mapStateToProps)(Mensajeria);

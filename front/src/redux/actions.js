@@ -25,6 +25,13 @@ export const MENU_CHANGE_DEFAULT_CLASSES = 'MENU_CHANGE_DEFAULT_CLASSES';
 export const MENU_CHANGE_HAS_SUB_ITEM_STATUS =
   'MENU_CHANGE_HAS_SUB_ITEM_STATUS';
 
+/* INSTITUTION */
+export const UPDATE_INSTITUTION = 'UPDATE_INSTITUTION';
+export const UPDATE_COURSE = 'UPDATE_COURSE';
+export const UPDATE_SUBJECT = 'UPDATE_SUBJECT';
+export const CLEAN_SELECCION_CURSO = 'CLEAN_SELECCION_CURSO';
+
 export * from './menu/actions';
 export * from './settings/actions';
 export * from './auth/actions';
+export * from './institucion/actions';
