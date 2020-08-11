@@ -109,7 +109,7 @@ class Detail extends React.Component {
 
   checkEstado(correccion) {
     const ESTADO_CORREGIDO = 'corregido';
-    const estado = this.state.estado.toLowerCase();
+    const estado = correccion.estado.toLowerCase();
     if (estado === ESTADO_CORREGIDO) {
       this.hideButton();
     }
