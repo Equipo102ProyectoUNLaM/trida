@@ -9230,16 +9230,10 @@ tr.folder{
 
 //49 Correcciones
 
-div.demo-mount-nested-editable, .rendered-react-keyed-file-browser{
-  display: flex;
-}
-
 div.rendered-file-browser{
   padding-right: 3rem;
 }
 
-.actions-detail-correcciones {
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
+.hide-button {
+  display: none;
 }

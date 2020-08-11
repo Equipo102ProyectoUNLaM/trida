@@ -27,6 +27,7 @@ class Detail extends React.Component {
       fecha_vto_entrega: '',
       modalRight: true,
       tipo_entrega: '',
+      hideButton: false,
     };
   }
 
@@ -37,12 +38,14 @@ class Detail extends React.Component {
   };
 
   componentDidMount() {
+    this.showButton();
     this.loadingOn();
     this.setInitialState();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.file.key !== this.props.file.key) {
+      this.showButton();
       this.loadingOn();
       this.toggleRight();
       this.setInitialState();
@@ -53,6 +56,7 @@ class Detail extends React.Component {
     const keyFile = this.getKeyFile();
     const correccion = await this.getCorreccion(keyFile);
     this.setEstadoFechaYTipo(correccion);
+    this.checkEstado(correccion);
     this.setFechaVtoEntrega(correccion);
     this.getAlumno(correccion.id_alumno);
     this.loadingOff();
@@ -100,6 +104,26 @@ class Detail extends React.Component {
       estado: correccion.estado,
       fecha_entrega: correccion.fecha_entrega,
       tipo_entrega: correccion.tipo,
+    });
+  }
+
+  checkEstado(correccion) {
+    const ESTADO_CORREGIDO = 'corregido';
+    const estado = this.state.estado.toLowerCase();
+    if (estado === ESTADO_CORREGIDO) {
+      this.hideButton();
+    }
+  }
+
+  hideButton() {
+    this.setState({
+      hideButton: true,
+    });
+  }
+
+  showButton() {
+    this.setState({
+      hideButton: false,
     });
   }
 
@@ -151,6 +175,7 @@ class Detail extends React.Component {
       fecha_entrega,
       fecha_vto_entrega,
       tipo_entrega,
+      hideButton,
     } = this.state;
 
     return (
@@ -182,7 +207,11 @@ class Detail extends React.Component {
               </dl>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={this.goToCorreccion}>
+              <Button
+                color="primary"
+                className={`${hideButton ? 'hide-button' : ''} `}
+                onClick={this.goToCorreccion}
+              >
                 CORREGIR
               </Button>{' '}
               <Button color="secondary" onClick={this.handleCloseClick}>
