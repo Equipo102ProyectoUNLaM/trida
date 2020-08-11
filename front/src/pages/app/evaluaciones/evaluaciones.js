@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
@@ -14,14 +15,12 @@ class Evaluaciones extends Component {
   constructor(props) {
     super(props);
 
-    const { id } = JSON.parse(localStorage.getItem('subject'));
-
     this.state = {
       items: [],
       modalDeleteOpen: false,
       selectedItems: [],
       isLoading: true,
-      materiaId: id,
+      materiaId: this.props.subject.id,
       evalId: '',
     };
   }
@@ -121,4 +120,10 @@ class Evaluaciones extends Component {
     );
   }
 }
-export default withRouter(Evaluaciones);
+
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return { subject };
+};
+
+export default connect(mapStateToProps)(withRouter(Evaluaciones));
