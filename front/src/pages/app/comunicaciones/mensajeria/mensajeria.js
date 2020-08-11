@@ -12,6 +12,8 @@ class Mensajeria extends Component {
   constructor(props) {
     super(props);
 
+    const { id } = localStorage.getItem('subject');
+
     this.state = {
       itemsSent: [],
       itemsReceive: [],
