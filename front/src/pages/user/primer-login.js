@@ -69,7 +69,6 @@ class PrimerLogin extends Component {
 
     const fotoId =
       'gs://trida-7f28f.appspot.com/usuarios/' + this.props.loginUser;
-    console.log(fotoId);
 
     if (!this.props.loading) {
       if (nombre !== '' && apellido !== '') {
