@@ -306,7 +306,7 @@ class TopNav extends Component {
               </DropdownToggle>
               <DropdownToggle className="p-0" color="empty">
                 <span>
-                  <img alt="Foto Perfil" src={this.state.fotoURL} />
+                  <img alt="Foto perfil" src={this.state.fotoURL} />
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>

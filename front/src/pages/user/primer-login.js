@@ -53,7 +53,6 @@ class PrimerLogin extends Component {
         this.setState({
           loading: false,
         });
-        console.log(task.snapshot.downloadURL);
       }
     );
   };
