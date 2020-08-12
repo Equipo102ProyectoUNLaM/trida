@@ -48,7 +48,6 @@ exports.register = functions.auth.user().onCreate((data)=> {
       nombre: '',
       apellido: '',
       telefono: '',
-      foto: '',
       primerLogin: true,
       cambiarPassword: false,
       instituciones: [],

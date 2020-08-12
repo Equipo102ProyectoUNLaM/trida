@@ -28,7 +28,6 @@ class PrimerLogin extends Component {
       nombre: '',
       apellido: '',
       telefono: 0,
-      foto: '',
       isLoading: false,
       fotoPerfilText: 'Seleccione una foto de perfil',
     };
@@ -67,16 +66,12 @@ class PrimerLogin extends Component {
 
     await this.subirFoto(foto);
 
-    const fotoId =
-      'gs://trida-7f28f.appspot.com/usuarios/' + this.props.loginUser;
-
     if (!this.props.loading) {
       if (nombre !== '' && apellido !== '') {
         const obj = {
           nombre,
           apellido,
           telefono,
-          foto: fotoId,
           primerLogin: false,
         };
         await editDocument(
