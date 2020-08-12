@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Row,
-  Card,
-  CardTitle,
-  Label,
-  Button,
-  FormGroup,
-  NavLink,
-} from 'reactstrap';
+import { Row, Card, CardTitle, Button, FormGroup, NavLink } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { addToSubCollection } from 'helpers/Firebase-db';
 import TagsInput from 'react-tagsinput';
 import { toolTipCursos } from 'constants/texts';
+import { isEmpty } from 'helpers/Utils';
+import 'react-tagsinput/react-tagsinput.css';
 
 class FormCurso extends Component {
   constructor(props) {
@@ -38,8 +32,10 @@ class FormCurso extends Component {
   };
 
   onUserSubmit = async () => {
-    const { instId, instRef } = this.props.location;
     const { cursosTags } = this.state;
+
+    const { instId, instRef } = this.props.location;
+
     const cursosMapeados = {};
 
     for (const tag in cursosTags) {
@@ -103,6 +99,7 @@ class FormCurso extends Component {
                           this.props.loading ? 'show-spinner' : ''
                         }`}
                         size="lg"
+                        disabled={isEmpty(this.state.cursosTags)}
                       >
                         <span className="spinner d-inline-block">
                           <span className="bounce1" />

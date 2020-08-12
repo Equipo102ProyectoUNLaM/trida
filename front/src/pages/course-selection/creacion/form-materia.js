@@ -9,6 +9,8 @@ import { addToMateriasCollection } from 'helpers/Firebase-db';
 import { editDocument } from 'helpers/Firebase-db';
 import TagsInput from 'react-tagsinput';
 import { toolTipMaterias } from 'constants/texts';
+import { isEmpty } from 'helpers/Utils';
+import 'react-tagsinput/react-tagsinput.css';
 
 class FormMateria extends Component {
   constructor(props) {
@@ -123,6 +125,7 @@ class FormMateria extends Component {
                     <Row className="button-group">
                       <Button
                         color="primary"
+                        disabled={isEmpty(this.state.materiasTags)}
                         className={`btn-shadow btn-multiple-state ${
                           this.props.loading ? 'show-spinner' : ''
                         }`}
