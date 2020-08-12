@@ -220,9 +220,9 @@ class TopNav extends Component {
 
   async getUserNameAndPhoto() {
     try {
-      const { name, foto } = await getUserNameAndPhoto(this.props.user);
+      const { nombre, foto } = await getUserNameAndPhoto(this.props.user);
       this.setState({
-        userName: name,
+        userName: nombre,
         fotoURL: foto,
       });
     } catch (err) {
