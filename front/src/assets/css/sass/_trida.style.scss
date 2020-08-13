@@ -155,7 +155,7 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/2406-gradient-symbols-pastel-3.png") no-repeat center center fixed;
+  background: url("/assets/img/2406-gradient-symbols-pastel-4.png") no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -6005,6 +6005,7 @@ input:-webkit-autofill {
 .auth-card {
   display: flex;
   flex-direction: row;
+  box-shadow: -3px -3px 8px 10px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
   @include depth(1);
 
   .image-side {
