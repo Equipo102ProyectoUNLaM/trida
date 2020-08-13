@@ -16,6 +16,7 @@ import {
 } from '../actions';
 
 import { auth, functions } from 'helpers/Firebase';
+import { getCollection } from 'helpers/Firebase-db';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -139,7 +140,22 @@ export const registerUser = (user) => async (dispatch) => {
       dispatch(registerUserError(registerUser.message));
     }
   } catch (error) {
-    return dispatch(registerUserError(error.message));
+    if (
+      error.message === 'Este correo ya está siendo usado por otro usuario.'
+    ) {
+      const [userObj] = await getCollection('usuarios', [
+        { field: 'mail', operator: '==', id: email },
+      ]);
+      const { id } = userObj;
+      const asignarMateriasAction = functions.httpsCallable('asignarMaterias');
+      await asignarMateriasAction({
+        instId,
+        courseId,
+        subjectId,
+        uid: id,
+      });
+      return dispatch(registerUserSuccess(registerUser));
+    } else return dispatch(registerUserError(error.message));
   }
 };
 
