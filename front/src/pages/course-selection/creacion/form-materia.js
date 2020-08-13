@@ -84,6 +84,7 @@ class FormMateria extends Component {
   render() {
     const { isLoading } = this.state;
     const { cursos } = this.props.location;
+
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
