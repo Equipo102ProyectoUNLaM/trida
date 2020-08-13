@@ -1,13 +1,13 @@
 import React, { Fragment, Component } from 'react';
-import { Row, Card, CardBody, Jumbotron, Button } from 'reactstrap';
-import IntlMessages from '../../helpers/IntlMessages';
-import { Colxx } from '../../components/common/CustomBootstrap';
+import { Row, Card, CardBody, Jumbotron } from 'reactstrap';
+import IntlMessages from 'helpers/IntlMessages';
+import { Colxx } from 'components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
-import MediumCardListView from '../../containers/pages/MediumCardListView';
-import { firestore } from 'helpers/Firebase';
+import MediumCardListView from 'containers/pages/MediumCardListView';
 import { connect } from 'react-redux';
-import { logoutUser } from '../../redux/actions';
+import { logoutUser } from 'redux/actions';
 import { getInstituciones } from 'helpers/Firebase-user';
+import CrearInstitucion from './creacion/crear-institucion';
 
 function collect(props) {
   return { data: props.data };
@@ -88,25 +88,7 @@ class Institution extends Component {
                     </Row>
                   </Jumbotron>
                 )}
-                {isEmpty === true && (
-                  <Colxx>
-                    <h3 className="text-center">
-                      El usuario con el que ingresaste no posee instituciones
-                      asociadas.
-                    </h3>
-                    <h3 className="text-center">
-                      Cerrá sesión para ingresar con otro usuario
-                    </h3>
-                    <Button
-                      color="primary"
-                      onClick={() => this.handleLogout()}
-                      block
-                      className="mb-2"
-                    >
-                      Cerrar sesión
-                    </Button>
-                  </Colxx>
-                )}
+                {isEmpty === true && <CrearInstitucion />}
               </CardBody>
             </Card>
           </Colxx>

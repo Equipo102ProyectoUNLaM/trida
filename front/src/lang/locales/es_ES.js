@@ -9,11 +9,14 @@ Tabla de Contenidos
 05. Páginas generales
 06.Virtual Classes
   06.01.My Classes
-07.Institution Selection
-08.Course Selection
-09.Prácticas
-10.Contenidos
-11.Mensajes
+07. Institucion
+08. Curso
+09. Materia
+10. Prácticas
+11. Evaluaciones
+12. Contenidos
+13. Mensajería
+
 */
 
 module.exports = {
@@ -106,25 +109,39 @@ module.exports = {
   'pizarron.abrir-pizarron': 'Abrir pizarrón',
   'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
 
-  /* 07.Institution */
-  'institution.selection': '¿A qué institución desea acceder?',
+  /* 07.Institucion */
+  'institution.selection': '¿A qué Institución desea acceder?',
+  'institucion.complete-datos': 'Completá los datos de la Institución',
+  'institucion.nombre': 'Nombre de la Institución',
+  'institucion.telefono': 'Teléfono de la Institución',
+  'institucion.tipo': 'Tipo de Institución',
+  'institucion.niveles': 'Niveles educativos',
+  'institucion.crear': 'Crear Institución',
 
-  /* 08.Course Selection */
+  /* 08. Curso */
   'course.selection': '¿Qué materia desea gestionar?',
+  'curso.complete-datos': 'Completá los datos del Curso',
+  'curso.nombre': 'Nombre del curso',
+  'curso.crear': 'Crear Curso',
 
-  /* 08.Prácticas */
+  /* 09. Materia */
+  'materia.complete-datos': 'Completá los datos de la Materia',
+  'materia.nombre': 'Nombre de la materia',
+  'materia.crear': 'Crear Materia',
+
+  /* 10. Prácticas */
   'activity.add': 'AGREGAR PRÁCTICA',
   'activity.edit': 'EDITAR PRÁCTICA',
   'activity.delete': 'ELIMINAR PRÁCTICA',
   'fecha.modificar': 'Modificar fecha de entrega',
 
-  /* 09.Evaluaciones */
+  /* 11. Evaluaciones */
   'evaluacion.agregar': 'AGREGAR EVALUACIÓN',
 
-  /* 10.Contenidos */
-  'contenido.agregar': 'Subir archivos',
+  /* 12. Contenidos */
+  'contenido.agregar': 'AGREGAR CONTENIDO',
 
-  /* 11. Mensajeria */
+  /* 13. Mensajeria */
   'messages.new': 'CREAR NUEVO MENSAJE',
   'messages.receiver': 'Destinatario',
 };

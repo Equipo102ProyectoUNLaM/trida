@@ -652,6 +652,16 @@ button {
   }
 }
 
+.button-group-centered {
+  justify-content: center;
+  padding-left: 15px;
+  margin-top: 1rem;
+
+  .button {
+    margin: 0 0.2rem;
+  }
+}
+
 .check-button {
   cursor: default !important;
 }
@@ -1387,8 +1397,8 @@ button {
     right: -7px;
   }
   &.badge-top-right-3 {
-    top: 70px;
-    left: -7px;
+    top: 72px;
+    right: -7px;
   }
 }
 
@@ -9149,6 +9159,13 @@ to {transform:rotate(360deg);}
   padding-top: 1rem;
 }
 
+.aligned-vertically {
+  align-items: center;
+  display: flex;
+  padding: 0.5rem 0rem;
+  color: $theme-color-1;
+}
+
 // 47 Contenidos
 
 tr.folder{
@@ -9221,7 +9238,15 @@ tr.folder{
   padding: 5px;
   width: 50% !important;
 }
+
+.select__control {
+  border-radius: 0 !important;
+  border-color: #d7d7d7;
+  height: 45.1042px;
+}
+
 .ReactTable .rt-th, .ReactTable .rt-td {
   padding-top: 10px !important;
   padding-bottom: 0px !important;
 }
+
