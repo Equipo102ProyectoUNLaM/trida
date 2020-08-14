@@ -181,6 +181,20 @@ exports.asignarMaterias = functions.https.onCall(async (data)=> {
   
 });
 
+exports.agregarMaterias = functions.https.onCall(async (data)=> {
+  // traer instituciones del usuario, comparar con lo que trae instObj y mergearlos
+  try {
+    const instObj = await this.asignarFuncion(data);
+    console.log(instObj);
+    await admin.firestore().collection('usuarios')
+    .doc(data.uid)
+    .set( { instituciones: instObj }, { merge: true });
+  } catch (error) {
+    console.log('error', error);
+  }
+  
+});
+
 let transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp.gmail.com',
