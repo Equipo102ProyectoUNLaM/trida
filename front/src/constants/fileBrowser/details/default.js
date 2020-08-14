@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { getFormattedDate } from 'helpers/Utils';
 
 class Detail extends React.Component {
   static propTypes = {
@@ -102,7 +103,7 @@ class Detail extends React.Component {
   setEstadoFechaYTipo(correccion) {
     this.setState({
       estado: correccion.estado,
-      fecha_entrega: correccion.fecha_entrega,
+      fecha_entrega: getFormattedDate(correccion.fecha_entrega),
       tipo_entrega: correccion.tipo,
     });
   }
@@ -128,9 +129,9 @@ class Detail extends React.Component {
   }
 
   setFechaVtoEntrega(correccion) {
-    if (correccion.tipo === 'practica') {
+    if (correccion.tipo.toLowerCase() === 'practica') {
       this.getFechaPractica(correccion.id_entrega);
-    } else if (correccion.tipo === 'evaluacion') {
+    } else if (correccion.tipo.toLowerCase() === 'evaluacion') {
       this.getFechaEvaluacion(correccion.id_entrega);
     }
   }
@@ -138,14 +139,14 @@ class Detail extends React.Component {
   getFechaPractica = async (idPractica) => {
     const practicaObj = await getDocument(`practicas/${idPractica}`);
     this.setState({
-      fecha_vto_entrega: practicaObj.data.fechaVencimiento,
+      fecha_vto_entrega: getFormattedDate(practicaObj.data.fechaVencimiento),
     });
   };
 
   getFechaEvaluacion = async (idEvaluacion) => {
     const evalObj = await getDocument(`practicas/${idEvaluacion}`);
     this.setState({
-      fecha_vto_entrega: evalObj.data.fecha_finalizacion,
+      fecha_vto_entrega: getFormattedDate(evalObj.data.fecha_finalizacion),
     });
   };
 

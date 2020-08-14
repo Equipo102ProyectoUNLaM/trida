@@ -9,6 +9,7 @@ import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import { DefaultDetail } from 'constants/fileBrowser/details';
 import { DefaultActionCorrecciones } from 'constants/fileBrowser/actions';
+import { DefaultFilter } from 'constants/fileBrowser/filters';
 
 class Correcciones extends Component {
   constructor(props) {
@@ -117,6 +118,7 @@ class Correcciones extends Component {
             detailRenderer={DefaultDetail}
             actionRenderer={DefaultActionCorrecciones}
             onDownloadFile={this.handleDownloadFile}
+            filterRenderer={DefaultFilter}
           />
         </div>
       </Fragment>
