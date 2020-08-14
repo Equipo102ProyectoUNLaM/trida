@@ -18,7 +18,6 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import PaginaVideollamada from './pagina-videollamada';
 import { storage } from 'helpers/Firebase';
 import { getDocument, editDocument } from 'helpers/Firebase-db';
-import { buscarArchivosStorage } from 'helpers/Firebase-storage';
 import { isEmpty } from 'helpers/Utils';
 import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
@@ -69,12 +68,81 @@ class TabsDeClase extends Component {
   };
 
   async dataListRenderer() {
-    const files = await buscarArchivosStorage(this.props.idMateria);
+    var array = [];
+    try {
+      //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
+      var listRef = storage.ref(this.props.idMateria + '/contenidos');
+      // Obtenemos las referencias de carpetas y archivos
+      await listRef.listAll().then(async (result) => {
+        //Carpetas
+        for (const folderRef of result.prefixes) {
+          //Listamos archivos de cada carpeta
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            this.props.idMateria
+          );
+          array = array.concat(subFolderElements);
+        }
+        //Archivos
+        for (const res of result.items) {
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(
+                  this.props.idMateria + '/contenidos/',
+                  ''
+                ),
+                modified: Moment(metadata.updated),
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
+          });
+        }
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      this.setState({
+        files: array,
+      });
+      await this.matchFilesWithContents();
+    }
+  }
 
-    this.setState({
-      files,
-      isLoading: false,
-    });
+  async listFolderItems(ref, subjectId) {
+    var array = [];
+    try {
+      await ref.listAll().then(async (result) => {
+        //Carpetas
+        for (const folderRef of result.prefixes) {
+          var subFolderElements = await this.listFolderItems(
+            folderRef,
+            subjectId
+          );
+          array = array.concat(subFolderElements);
+        }
+        //Archivos
+        for (const res of result.items) {
+          await res.getMetadata().then(async (metadata) => {
+            await res.getDownloadURL().then(async (url) => {
+              var obj = {
+                key: metadata.fullPath.replace(subjectId + '/', ''),
+                modified: Moment(metadata.updated),
+                size: metadata.size,
+                url: url,
+              };
+              array.push(obj);
+            });
+          });
+        }
+      });
+    } catch (err) {
+      console.log('Error getting documents', err);
+    } finally {
+      return array;
+    }
   }
 
   matchFilesWithContents = async () => {
