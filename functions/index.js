@@ -190,15 +190,15 @@ let transporter = nodemailer.createTransport(smtpTransport({
   }
 }));
 
-exports.sendMail = functions.https.onCall((email, options) => {
-      const dest = email;
-      const { from, subject, html } = options;
-      const mailOptions = {
-          from,
-          to: dest,
-          subject,
-          html
-      };
+exports.sendMail = functions.https.onCall((data) => {
+  const { email, subject, html } = data;
 
-    return transporter.sendMail(mailOptions);
+  const mailOptions = {
+    from: 'Trida App <trida.app@gmail.com>',
+    to: email,
+    subject,
+    html,
+  };
+
+  return transporter.sendMail(mailOptions);
 });
