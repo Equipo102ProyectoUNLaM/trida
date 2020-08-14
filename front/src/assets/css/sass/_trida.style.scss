@@ -654,6 +654,16 @@ button {
   }
 }
 
+.button-group-centered {
+  justify-content: center;
+  padding-left: 15px;
+  margin-top: 1rem;
+
+  .button {
+    margin: 0 0.2rem;
+  }
+}
+
 .check-button {
   cursor: default !important;
 }
@@ -1389,8 +1399,8 @@ button {
     right: -7px;
   }
   &.badge-top-right-3 {
-    top: 70px;
-    left: -7px;
+    top: 72px;
+    right: -7px;
   }
 }
 
@@ -9151,6 +9161,13 @@ to {transform:rotate(360deg);}
   padding-top: 1rem;
 }
 
+.aligned-vertically {
+  align-items: center;
+  display: flex;
+  padding: 0.5rem 0rem;
+  color: $theme-color-1;
+}
+
 // 47 Contenidos
 
 tr.folder{
@@ -9197,6 +9214,10 @@ tr.folder{
   margin-top: 0.5rem !important;
 }
 
+.react-tagsinput {
+  padding: 0.2rem;
+}
+
 // 48 Mensajeria
 .users-names {
   padding-top: 2rem;
@@ -9223,13 +9244,54 @@ tr.folder{
   padding: 5px;
   width: 50% !important;
 }
+
+.react-tagsinput-tag {
+  background-color: #cde69c;
+  border-radius: 2px;
+  border: 1px solid #a5d24a;
+  color: #638421;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  padding: 5px;
+}
+
+.react-tagsinput-remove {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.react-tagsinput-tag a::before {
+  content: " ×";
+}
+
+.select__control {
+  border-radius: 0 !important;
+  border-color: #d7d7d7;
+  height: 45.1042px;
+}
+
+.span-float-label {
+  position: absolute;
+    cursor: text;
+    font-size: 90%;
+    opacity: 1;
+    top: -0.4em;
+    left: 0.75rem;
+    z-index: 3;
+    line-height: 1;
+    padding: 0 1px;
+}
+
 .ReactTable .rt-th, .ReactTable .rt-td {
   padding-top: 10px !important;
   padding-bottom: 0px !important;
 }
 
 //49 Correcciones
-
 div.rendered-file-browser{
   padding-right: 3rem;
 }

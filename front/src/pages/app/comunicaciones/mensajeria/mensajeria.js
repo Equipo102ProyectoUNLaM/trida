@@ -11,8 +11,7 @@ import { getUsernameById } from 'helpers/Firebase-db';
 class Mensajeria extends Component {
   constructor(props) {
     super(props);
-
-    const { id } = JSON.parse(localStorage.getItem('subject'));
+    const { id } = localStorage.getItem('subject');
 
     this.state = {
       itemsSent: [],

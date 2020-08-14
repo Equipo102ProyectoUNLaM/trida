@@ -1,5 +1,4 @@
 import { firestore } from 'helpers/Firebase';
-import { editDocument } from 'helpers/Firebase-db';
 
 export const getUserName = async (userId) => {
   try {
