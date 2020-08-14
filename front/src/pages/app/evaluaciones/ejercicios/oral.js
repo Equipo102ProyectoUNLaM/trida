@@ -20,6 +20,7 @@ class Oral extends React.Component {
 
   handleChange = (event) => {
     const { value, name } = event.target;
+    if (!name || name.length === 0) return;
     this.setState({ [name]: value });
     this.props.onEjercicioChange({ [name]: value }, this.props.ejercicioId);
   };
@@ -39,7 +40,7 @@ class Oral extends React.Component {
             <Label>Tema</Label>
             <Input
               name="tema"
-              value={this.state.tema}
+              defaultValue={this.state.tema}
               onChange={this.handleChange}
             />
           </div>

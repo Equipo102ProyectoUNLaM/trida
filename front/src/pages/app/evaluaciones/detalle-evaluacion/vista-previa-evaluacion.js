@@ -79,7 +79,7 @@ export default class ModalVistaPreviaEvaluacion extends Component {
                       <RespuestaLibre
                         ejercicioId={index}
                         value={ejercicio.data}
-                        preview="true"
+                        preview={true}
                         onEjercicioChange={this.onEjercicioChange}
                       />
                     )}
@@ -88,7 +88,7 @@ export default class ModalVistaPreviaEvaluacion extends Component {
                       <OpcionMultiple
                         ejercicioId={index}
                         value={ejercicio.data}
-                        preview="true"
+                        preview={true}
                         onEjercicioChange={this.onEjercicioChange}
                       />
                     )}
@@ -97,7 +97,7 @@ export default class ModalVistaPreviaEvaluacion extends Component {
                       <Oral
                         ejercicioId={index}
                         value={ejercicio.data}
-                        preview="true"
+                        preview={true}
                         onEjercicioChange={this.onEjercicioChange}
                       />
                     )}

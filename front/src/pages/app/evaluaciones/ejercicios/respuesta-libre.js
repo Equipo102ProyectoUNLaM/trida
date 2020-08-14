@@ -19,6 +19,7 @@ class RespuestaLibre extends React.Component {
 
   handleChange = (event) => {
     const { value, name } = event.target;
+    if (!name || name.length === 0) return;
     this.setState({ [name]: value });
     this.props.onEjercicioChange({ [name]: value }, this.props.ejercicioId);
   };
@@ -38,7 +39,7 @@ class RespuestaLibre extends React.Component {
             <Label>Consigna</Label>
             <Input
               name="consigna"
-              value={consigna}
+              defaultValue={consigna}
               onChange={this.handleChange}
             />
           </div>

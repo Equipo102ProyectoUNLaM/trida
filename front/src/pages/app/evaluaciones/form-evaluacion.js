@@ -22,6 +22,7 @@ class FormEvaluacion extends React.Component {
       fecha_finalizacion: '',
       fecha_publicacion: '',
       descripcion: '',
+      creador: '',
       modalEditOpen: false,
       modalAddOpen: false,
       ejercicios: [],
@@ -30,6 +31,7 @@ class FormEvaluacion extends React.Component {
 
   handleChange = (event) => {
     const { value, name } = event.target;
+    if (!name || name.length === 0) return;
     this.setState({ [name]: value });
   };
 

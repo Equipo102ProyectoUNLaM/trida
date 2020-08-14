@@ -21,6 +21,11 @@ class AgregarEjercicio extends React.Component {
           numero: 1,
         },
       ],
+      modalEditOpen: false,
+      modalAddOpen: false,
+      consigna: '',
+      opciones: [],
+      tema: '',
       cant: 1,
     };
   }
@@ -40,6 +45,7 @@ class AgregarEjercicio extends React.Component {
 
   handleChange = (event) => {
     const { value, name } = event.target;
+    if (!name || name.length === 0) return;
     this.setState({ [name]: value });
   };
 
@@ -82,7 +88,6 @@ class AgregarEjercicio extends React.Component {
     }
     this.setState({
       selectData: datos,
-      ejercicios: arrayDeObjetos,
     });
   };
 
@@ -98,6 +103,10 @@ class AgregarEjercicio extends React.Component {
 
   removeExcercise = (index) => {
     let ejercicios = this.state.ejerciciosSeleccionados;
+    const numeroEjer = ejercicios[index].numero;
+    for (let index = numeroEjer - 1; index < ejercicios.length; index++) {
+      ejercicios[index].numero = ejercicios[index].numero - 1;
+    }
     ejercicios.splice(index, 1);
     this.setState({
       ejerciciosSeleccionados: ejercicios,
@@ -152,6 +161,7 @@ class AgregarEjercicio extends React.Component {
                               TIPO_EJERCICIO.respuesta_libre && (
                               <RespuestaLibre
                                 ejercicioId={index}
+                                preview={false}
                                 value={ejercicio}
                                 onEjercicioChange={this.onEjercicioChange}
                               />
@@ -162,7 +172,8 @@ class AgregarEjercicio extends React.Component {
                               <OpcionMultiple
                                 ejercicioId={index}
                                 value={ejercicio}
-                                onEjercicioChange={this.onEjercicioChange}
+                                preview={false}
+                                // onEjercicioChange={this.onEjercicioChange}
                               />
                             )}
 
@@ -170,7 +181,8 @@ class AgregarEjercicio extends React.Component {
                               <Oral
                                 ejercicioId={index}
                                 value={ejercicio}
-                                onEjercicioChange={this.onEjercicioChange}
+                                preview={false}
+                                // onEjercicioChange={this.onEjercicioChange}
                               />
                             )}
                           </div>

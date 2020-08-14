@@ -27,6 +27,7 @@ class OpcionMultiple extends React.Component {
 
   handleChange = (event) => {
     const { value, name } = event.target;
+    if (!name || name.length === 0) return;
     this.setState({ [name]: value });
     this.props.onEjercicioChange({ [name]: value }, this.props.ejercicioId);
   };
@@ -101,7 +102,7 @@ class OpcionMultiple extends React.Component {
               <Input
                 name="consigna"
                 onChange={this.handleChange}
-                value={consigna}
+                defaultValue={consigna}
               />
             </div>
             <div className="rta-libre-container">
@@ -120,7 +121,7 @@ class OpcionMultiple extends React.Component {
                   className="opcionMultipleInput margin-auto"
                   name="opcion"
                   onChange={(e) => this.handleOptionsChange(e, index)}
-                  value={op.opcion}
+                  defaultValue={op.opcion}
                 />
                 <div
                   className="glyph-icon simple-icon-close remove-icon"
