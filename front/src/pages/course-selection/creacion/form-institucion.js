@@ -71,12 +71,9 @@ class FormInstitucion extends Component {
       'Institución creada con éxito',
       'Error al crear la Institución'
     );
-    localStorage.setItem(
-      'institution',
-      JSON.stringify({ id: instRef.id, name: obj.nombre })
-    );
     this.props.history.push({
       pathname: '/seleccion-curso/crear-curso',
+      instRef: instRef,
       instId: instRef.id,
     });
   };
