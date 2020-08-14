@@ -27,12 +27,23 @@ export const getDateWithFormat = () => {
   if (mm < 10) {
     mm = '0' + mm;
   }
-  return dd + '.' + mm + '.' + yyyy;
+  return dd + '/' + mm + '/' + yyyy;
 };
 
 export const getCurrentTime = () => {
   const now = new Date();
-  return now.getHours() + ':' + now.getMinutes();
+  const hours = now.getHours();
+  const minuts = now.getMinutes();
+  const hoursFormatted = hours.toString().length === 1 ? '0' + hours : hours;
+  const minutsFormatted =
+    minuts.toString().length === 1 ? '0' + minuts : minuts;
+  return hoursFormatted + ':' + minutsFormatted;
+};
+
+export const getFechaHoraActual = () => {
+  const day = getDateWithFormat();
+  const hour = getCurrentTime();
+  return day + ' - ' + hour;
 };
 
 export const getDirection = () => {

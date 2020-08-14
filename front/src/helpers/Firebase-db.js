@@ -1,5 +1,18 @@
 import { firestore } from './Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
+import { getFechaHoraActual } from 'helpers/Utils';
+firestore.enablePersistence().catch(function (err) {
+  console.log(err);
+  if (err.code === 'failed-precondition') {
+    // Multiple tabs open, persistence can only be enabled
+    // in one tab at a a time.
+    // ...
+  } else if (err.code === 'unimplemented') {
+    // The current browser does not support all of the
+    // features required to enable persistence
+    // ...
+  }
+});
 
 // trae una colección
 // parámetro: colección obligatora
@@ -108,7 +121,7 @@ export async function getCollectionWithSubCollections(
 // trae un documento en formato objeto (id + data (objeto con datos del documento))
 // parámetro: referencia al documento
 export const getDocument = async (docRef) => {
-  const ref = firestore.doc(docRef);
+  const ref = await firestore.doc(docRef);
   try {
     const refSnapShot = await ref.get();
     const docId = refSnapShot.id;
@@ -132,33 +145,47 @@ export const getDocumentWithSubCollection = async (docRef, subCollection) => {
   }
 };
 
+export const getUsernameById = async (id) => {
+  let docObj = await getDocument(`users/${id}`);
+  let { data } = docObj;
+  return data.name;
+};
+
 // agrega un documento
 // parámetros: colección, objeto a agregar y reemplazo para mostrar en la notificación
-export const addDocument = async (collection, object, message) => {
-  firestore
-    .collection(collection)
-    .add(object)
-    .then(function () {
-      if (message)
-        NotificationManager.success(
-          `${message} agregada exitosamente`,
-          `${message} agregada!`,
-          3000,
-          null,
-          null,
-          ''
-        );
-    })
-    .catch(function (error) {
-      NotificationManager.error(
-        `Error al agregar ${message}`,
-        error,
+export const addDocument = async (
+  collection,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+
+  try {
+    const docRef = await firestore.collection(collection).add(object);
+    if (mensajePrincipal) {
+      NotificationManager.success(
+        `${mensajeSecundario}`,
+        `${mensajePrincipal}`,
         3000,
         null,
         null,
         ''
       );
-    });
+    }
+    return docRef;
+  } catch (error) {
+    if (mensajePrincipal) {
+      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+    }
+  }
 };
 
 // agrega un documento con una subcoleccion
@@ -166,12 +193,18 @@ export const addDocument = async (collection, object, message) => {
 export const addDocumentWithSubcollection = async (
   collection,
   object,
+  userId,
   message,
   subCollection,
   subCollectionMessage
 ) => {
   let objectSubcollectionData = object.subcollection.data;
-  let objectBaseData = object;
+  let objectBaseData = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
   delete objectBaseData.subcollection;
 
   firestore
@@ -204,33 +237,155 @@ export const addDocumentWithSubcollection = async (
         null,
         ''
       );
-    })
-    .catch(function (error) {
-      NotificationManager.error(
-        `Error al agregar ${message}`,
-        error,
+    });
+};
+
+export const addToSubCollection = async (
+  collection,
+  doc,
+  subcollection,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+
+  try {
+    const docRef = await firestore
+      .collection(collection)
+      .doc(doc)
+      .collection(subcollection)
+      .add(object);
+    if (mensajePrincipal) {
+      NotificationManager.success(
+        `${mensajeSecundario}`,
+        `${mensajePrincipal}`,
         3000,
         null,
         null,
         ''
       );
+    }
+    return docRef;
+  } catch (error) {
+    if (mensajePrincipal) {
+      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+    }
+  }
+};
+
+export const addToMateriasCollection = async (
+  docInst,
+  docCurso,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+
+  try {
+    const docRef = await firestore
+      .collection('instituciones')
+      .doc(docInst)
+      .collection('cursos')
+      .doc(docCurso)
+      .collection('materias')
+      .add(object);
+    if (mensajePrincipal) {
+      NotificationManager.success(
+        `${mensajeSecundario}`,
+        `${mensajePrincipal}`,
+        3000,
+        null,
+        null,
+        ''
+      );
+    }
+    return docRef;
+  } catch (error) {
+    if (mensajePrincipal) {
+      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+    }
+  }
+};
+
+export const addDocumentWithId = async (collection, id, object, message) => {
+  firestore
+    .collection(collection)
+    .doc(id)
+    .set(object)
+    .then(function () {
+      if (message) {
+        NotificationManager.success(
+          `${message} agregada exitosamente`,
+          `${message} agregada!`,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+    })
+    .catch(function (error) {
+      if (message) {
+        NotificationManager.error(
+          `Error al agregar ${message}`,
+          error,
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+      NotificationManager.success(
+        `${message}`,
+        `${message}!`,
+        3000,
+        null,
+        null,
+        ''
+      );
+    })
+    .catch(function (error) {
+      NotificationManager.error(`${message}`, error, 3000, null, null, '');
     });
 };
 
 // edita un documento
 // parámetros: colección, id del documento, objeto a editar y reemplazo para mostrar en la notificación
 export const editDocument = async (collection, docId, obj, message) => {
+  obj = {
+    ...obj,
+    fecha_edicion: getFechaHoraActual(),
+  };
+
   var ref = firestore.collection(collection).doc(docId);
   ref.set(obj, { merge: true });
 
-  NotificationManager.success(
-    `${message} editada exitosamente`,
-    `${message} editada!`,
-    3000,
-    null,
-    null,
-    ''
-  );
+  if (message) {
+    NotificationManager.success(
+      `${message} editada exitosamente`,
+      `${message} editada!`,
+      3000,
+      null,
+      null,
+      ''
+    );
+  }
 };
 
 // borra un documento

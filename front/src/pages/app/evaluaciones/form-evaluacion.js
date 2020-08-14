@@ -1,14 +1,14 @@
 import React from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
+import { connect } from 'react-redux';
 import {
   addDocument,
   editDocument,
   deleteDocument,
   addDocumentWithSubcollection,
+  getUsernameById,
 } from 'helpers/Firebase-db';
 import { Colxx } from 'components/common/CustomBootstrap';
-import moment from 'moment';
-import DatePicker from 'react-datepicker';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercicio';
 
@@ -45,8 +45,9 @@ class FormEvaluacion extends React.Component {
     });
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.idEval) {
+      const userName = await getUsernameById(this.props.user);
       this.setState({
         evaluacionId: this.props.idEval,
         nombre: this.props.evaluacion.nombre,
@@ -55,6 +56,7 @@ class FormEvaluacion extends React.Component {
         fecha_publicacion: this.props.evaluacion.fecha_publicacion,
         descripcion: this.props.evaluacion.descripcion,
         ejercicios: this.props.evaluacion.ejercicios,
+        creador: userName,
       });
     }
   }
@@ -64,7 +66,6 @@ class FormEvaluacion extends React.Component {
 
     const obj = {
       nombre: this.state.nombre,
-      fecha_creacion: moment().format('YYYY-MM-DD'),
       fecha_finalizacion: this.state.fecha_finalizacion,
       fecha_publicacion: this.state.fecha_publicacion,
       descripcion: this.state.descripcion,
@@ -74,9 +75,11 @@ class FormEvaluacion extends React.Component {
         data: ejercicios,
       },
     };
+
     await addDocumentWithSubcollection(
       'evaluaciones',
       obj,
+      this.props.user,
       'Evaluación',
       'ejercicios',
       'Ejercicios'
@@ -143,7 +146,6 @@ class FormEvaluacion extends React.Component {
                 <Label>Fecha de Creación</Label>
                 <Input
                   name="fecha_creacion"
-                  type="date"
                   readOnly
                   value={evaluacion.fecha_creacion}
                 />
@@ -152,7 +154,7 @@ class FormEvaluacion extends React.Component {
             <Colxx xxs="6">
               <FormGroup className="mb-3">
                 <Label>Creada por</Label>
-                <Input name="autor" readOnly value={evaluacion.autor} />
+                <Input name="autor" readOnly value={this.state.creador} />
               </FormGroup>
             </Colxx>
           </Row>
@@ -251,4 +253,9 @@ class FormEvaluacion extends React.Component {
   }
 }
 
-export default FormEvaluacion;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(FormEvaluacion);

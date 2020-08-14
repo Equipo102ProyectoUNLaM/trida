@@ -1,7 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
-import * as moment from 'moment';
 
 class FormPractica extends React.Component {
   constructor(props) {
@@ -61,7 +61,14 @@ class FormPractica extends React.Component {
         activo: true,
         idMateria: id,
       };
-      await addDocument('practicas', obj, 'Práctica');
+      await addDocument(
+        'practicas',
+        obj,
+        this.props.user,
+        'Práctica agregada',
+        'Práctica agregada exitosamente',
+        'Error al agregar la práctica'
+      );
     } else {
       const obj = {
         nombre: this.state.nombre,
@@ -143,4 +150,9 @@ class FormPractica extends React.Component {
   }
 }
 
-export default FormPractica;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(FormPractica);

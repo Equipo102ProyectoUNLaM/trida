@@ -49,7 +49,9 @@ Table of Contents
 44.Rtl
 45.Board
 46.Course Selection
-
+47.Contenidos
+48.Mensajeria
+49.Evaluaciones
 */
 
 /* 00.Variables and Imports */
@@ -651,6 +653,16 @@ button {
   }
 }
 
+.button-group-centered {
+  justify-content: center;
+  padding-left: 15px;
+  margin-top: 1rem;
+
+  .button {
+    margin: 0 0.2rem;
+  }
+}
+
 .check-button {
   cursor: default !important;
 }
@@ -1130,6 +1142,17 @@ button {
     }
   }
 }
+.select__menu {
+  z-index: 4 !important;;
+}
+
+.select__menu-list {
+  z-index: 4 !important;
+}
+
+.select__option {
+  z-index: 4 !important;
+}
 
 /* 03.Widths-Spacing */
 .w-10 {
@@ -1215,6 +1238,16 @@ button {
 .mb-5,
 .my-5 {
   margin-bottom: 2rem !important;
+}
+
+.mb-3
+{
+  margin-bottom: 1rem !important;
+}
+
+.mr-3
+{
+  margin-right: 0.01rem !important;
 }
 
 .float-none-xs {
@@ -1365,8 +1398,8 @@ button {
     right: -7px;
   }
   &.badge-top-right-3 {
-    top: 70px;
-    left: -7px;
+    top: 72px;
+    right: -7px;
   }
 }
 
@@ -3471,6 +3504,7 @@ nav .nomargin {
 /* 19.React Table */
 .ReactTable {
   border: initial;
+  text-align: center;
 
   .scrollbar-container {
     margin: initial;
@@ -3510,12 +3544,17 @@ nav .nomargin {
   padding-bottom: 10px;
   box-shadow: initial;
   border: initial;
-  text-align: left;
+  text-align: center;
   font-weight: 700;
 }
 
 .ReactTable .rt-tbody .rt-tr-group {
   border-bottom: 1px solid $separator-color-light;
+}
+
+.ReactTable .rt-tr-group {
+  flex: 0 auto;
+  height: 2.3rem;
 }
 
 .ReactTable .list-item-heading {
@@ -3529,11 +3568,13 @@ nav .nomargin {
 .ReactTable .rt-thead .rt-th.-sort-desc,
 .ReactTable .rt-thead .rt-td.-sort-desc {
   box-shadow: inset 0 -3px 0 0 $theme-color-1;
+  font-style: italic;
 }
 
 .ReactTable .rt-thead .rt-th.-sort-asc,
 .ReactTable .rt-thead .rt-td.-sort-asc {
   box-shadow: inset 0 3px 0 0 $theme-color-1;
+  font-style: italic;
 }
 
 /* 20.Alerts */
@@ -5980,6 +6021,11 @@ input:-webkit-autofill {
     padding: 80px;
   }
 
+  .form-side-full {
+    width: 100%;
+    padding: 80px;
+  }
+
   @include respond-below(md) {
     flex-direction: column;
 
@@ -6129,7 +6175,7 @@ input:-webkit-autofill {
 }
 
 .ck.ck-toolbar {
-  background: !important;
+  background: transparent !important;
 }
 
 .RichEditor-root {
@@ -6380,6 +6426,11 @@ input:-webkit-autofill {
   position: relative;
 }
 
+.with-tooltip {
+  width: 90% !important;
+  margin-left: 1rem !important;
+}
+
 .has-float-label label::after,
 .has-float-label > span::after {
   background: $foreground-color !important;
@@ -6478,6 +6529,26 @@ input:-webkit-autofill {
 
 .input-group .has-float-label .form-control {
   width: 100%;
+}
+
+.input-file {
+  display: flex;
+  flex-grow: 1;
+  border: 1px solid #d7d7d7;
+  align-items: center;
+
+  label {
+    padding: 0.75rem;
+    margin: 0;
+    cursor: pointer;
+    color: rgba(33, 33, 33, 0.7);
+  }
+ 
+ input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+ }
 }
 
 .input-group .has-float-label:not(:last-child),
@@ -6674,6 +6745,34 @@ input:-webkit-autofill {
   to {
     -webkit-transform: rotate(360deg);
   }
+}
+
+.cover-spin {
+  background-color: rgba(255,255,255,0.7);
+  z-index: 1050;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cover-spin::after {
+    content:'';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba($theme-color-1, 0.2);
+    border-radius: 50%;
+    border-top-color: $theme-color-1;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    left: calc(50% - 15px);
+    top: calc(50% - 15px);
+    position: fixed;
+    z-index: 1;
 }
 
 /* 36.Context Menu */
@@ -8978,7 +9077,11 @@ footer.page-footer {
   .encrypted-icon, .github-corner {
     display: none !important;
   }
+}
 
+.open-in-new-window-row {
+  margin-top: -20px;
+  margin-bottom: 20px;
 }
 
 .board {
@@ -9004,6 +9107,151 @@ footer.page-footer {
   cursor: pointer;
 }
 
+// Otros
+.tip-text {
+  color: rgba(33, 33, 33, 0.7);
+  font-size: 90%;
+}
+
+.tooltip-question {
+  margin: 0.5rem !important;
+  color: $theme-color-2;
+}
+
+#cover-spin {
+  background-color: rgba(255,255,255,0.7);
+  z-index: 1050;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@-webkit-keyframes spin {
+from {-webkit-transform:rotate(0deg);}
+to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+from {transform:rotate(0deg);}
+to {transform:rotate(360deg);}
+}
+
+#cover-spin::after {
+  content:'';
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba($theme-color-1, 0.2);
+  border-radius: 50%;
+  border-top-color: $theme-color-1;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+  left: calc(50% - 15px);
+  top: calc(50% - 15px);
+  position: fixed;
+  z-index: 1;
+}
+
+.asunto-msj {
+  padding-top: 1rem;
+}
+
+.aligned-vertically {
+  align-items: center;
+  display: flex;
+  padding: 0.5rem 0rem;
+  color: $theme-color-1;
+}
+
+// 47 Contenidos
+
+tr.folder{
+  th { color: transparent; }
+  th:after {
+    content: "Archivo";
+    color: black; /* set color to original text color */
+    margin-left: -15px;
+    /* margin-left equals length of text we're replacing */
+  }
+
+  th.modified { color: transparent; }
+  th.modified:after {
+        content: "Modificado";
+        color: black; /* set color to original text color */
+        margin-left: -30px;
+        /* margin-left equals length of text we're replacing */
+    }
+
+  th.size { color: transparent; }
+  th.size:after {
+        content: "Tamaño";
+        color: black; /* set color to original text color */
+        margin-left: -30px;
+        /* margin-left equals length of text we're replacing */
+    }
+}
+
+.delete-button{
+  margin-bottom: 1rem !important;
+    margin-left: 0.5rem;
+}
+
+.col-inline{
+  display: flex;
+}
+
+.card-delete-message{
+  padding-top: 1rem;
+}
+
+.center{
+  margin-bottom: 0.5rem !important;
+  margin-top: 0.5rem !important;
+}
+
+// 48 Mensajeria
+.users-names {
+  padding-top: 2rem;
+}
+
+.fecha-mensaje {
+  padding-left: 0.25rem;
+}
+
+.break-word {
+  word-break: break-word;
+}
+
+.react-tagsinput-input {
+  background: transparent;
+  border: 0;
+  color: #777;
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 6px;
+  margin-top: 1px;
+  outline: none;
+  padding: 5px;
+  width: 50% !important;
+}
+
+.select__control {
+  border-radius: 0 !important;
+  border-color: #d7d7d7;
+  height: 45.1042px;
+}
+
+.ReactTable .rt-th, .ReactTable .rt-td {
+  padding-top: 10px !important;
+  padding-bottom: 0px !important;
+}
+
+//49 Evaluaciones
 .ejerciciosItem {
   width: 50%;
   float: left;

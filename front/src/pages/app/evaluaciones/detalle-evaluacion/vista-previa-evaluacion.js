@@ -63,7 +63,7 @@ export default class ModalVistaPreviaEvaluacion extends Component {
         isOpen={this.props.isOpen}
         toggle={this.props.toggle}
       >
-        <ModalHeader>{this.state.nombre}</ModalHeader>
+        <ModalHeader>{nombre}</ModalHeader>
         <ModalBody className="modal-ejercicios-body">
           {ejercicios.map((ejercicio, index) => (
             <Row className="mb-4" key={index + 'ejer'}>

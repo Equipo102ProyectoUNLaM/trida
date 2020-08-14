@@ -12,10 +12,14 @@ import {
   FormText,
 } from 'reactstrap';
 import { createRandomString } from 'helpers/Utils';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
 
 const PaginaVideollamada = ({ idSala }) => {
   const { handleSubmit, register, errors } = useForm();
-  const room = idSala;
+  const room = CryptoJS.AES.decrypt(idSala, secretKey).toString(
+    CryptoJS.enc.Utf8
+  );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
   const isHost = true;
 
@@ -42,7 +46,7 @@ const PaginaVideollamada = ({ idSala }) => {
   return call ? (
     <>
       <Videollamada
-        roomName={idSala}
+        roomName={room}
         userName={name}
         password={createRandomString()}
         containerStyles={{ width: '100%', height: '700px' }}
@@ -63,7 +67,7 @@ const PaginaVideollamada = ({ idSala }) => {
                 name="room"
                 type="text"
                 placeholder="Sala"
-                value={idSala}
+                value={room}
                 disabled={true}
               />
             </FormGroup>

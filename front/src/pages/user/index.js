@@ -1,6 +1,9 @@
-import React, { Suspense } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import React, { Suspense, Component } from 'react';
+import { connect } from 'react-redux';
+import { Switch, Redirect, withRouter } from 'react-router-dom';
 import UserLayout from '../../layout/UserLayout';
+import { AuthRoute } from 'components/rutas/auth-route';
+import { NonAuthRoute } from 'components/rutas/non-auth-route';
 
 const Login = React.lazy(() =>
   import(/* webpackChunkName: "user-login" */ './login')
@@ -14,34 +17,62 @@ const ForgotPassword = React.lazy(() =>
 const ResetPassword = React.lazy(() =>
   import(/* webpackChunkName: "user-reset-password" */ './reset-password')
 );
+const PrimerLogin = React.lazy(() =>
+  import(/* webpackChunkName: "user-primer-login" */ './primer-login')
+);
+const CambiarPassword = React.lazy(() =>
+  import(/* webpackChunkName: "user-cambiar-password" */ './cambiar-password')
+);
 
-const User = ({ match }) => {
-  return (
-    <UserLayout>
-      <Suspense fallback={<div className="loading" />}>
-        <Switch>
-          <Redirect exact from={`${match.url}/`} to={`${match.url}/login`} />
-          <Route
-            path={`${match.url}/login`}
-            render={props => <Login {...props} />}
-          />
-          <Route
-            path={`${match.url}/register`}
-            render={props => <Register {...props} />}
-          />
-          <Route
-            path={`${match.url}/forgot-password`}
-            render={props => <ForgotPassword {...props} />}
-          />
-          <Route
-            path={`${match.url}/reset-password`}
-            render={props => <ResetPassword {...props} />}
-          />
-          <Redirect to="/error" />
-        </Switch>
-      </Suspense>
-    </UserLayout>
-  );
+class User extends Component {
+  render() {
+    const { loginUser, match } = this.props;
+    return (
+      <UserLayout>
+        <Suspense fallback={<div className="loading" />}>
+          <Switch>
+            <Redirect exact from={`${match.url}/`} to={`${match.url}/login`} />
+            <NonAuthRoute
+              path={`${match.url}/login`}
+              component={Login}
+              authUser={loginUser}
+            />
+            <NonAuthRoute
+              path={`${match.url}/register`}
+              component={Register}
+              authUser={loginUser}
+            />
+            <NonAuthRoute
+              path={`${match.url}/forgot-password`}
+              component={ForgotPassword}
+              authUser={loginUser}
+            />
+            <NonAuthRoute
+              path={`${match.url}/reset-password`}
+              component={ResetPassword}
+              authUser={loginUser}
+            />
+            <AuthRoute
+              path={`${match.url}/primer-login`}
+              component={PrimerLogin}
+              authUser={loginUser}
+            />
+            <AuthRoute
+              path={`${match.url}/cambiar-password`}
+              component={CambiarPassword}
+              authUser={loginUser}
+            />
+            <Redirect to="/error" />
+          </Switch>
+        </Suspense>
+      </UserLayout>
+    );
+  }
+}
+
+const mapStateToProps = ({ authUser }) => {
+  const { user: loginUser } = authUser;
+  return { loginUser };
 };
 
-export default User;
+export default withRouter(connect(mapStateToProps)(User));
