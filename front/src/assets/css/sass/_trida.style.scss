@@ -51,6 +51,8 @@ Table of Contents
 46.Course Selection
 47.Contenidos
 48. Mensajeria
+49.Correcciones
+
 */
 
 /* 00.Variables and Imports */
@@ -9289,3 +9291,11 @@ tr.folder{
   padding-bottom: 0px !important;
 }
 
+//49 Correcciones
+div.rendered-file-browser{
+  padding-right: 3rem;
+}
+
+.hide-button {
+  display: none;
+}
