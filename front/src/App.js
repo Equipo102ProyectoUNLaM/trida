@@ -48,7 +48,7 @@ class App extends Component {
   }
 
   render() {
-    const { locale, loginUser, match } = this.props;
+    const { locale, loginUser } = this.props;
     const currentAppLocale = AppLocale[locale];
 
     return (

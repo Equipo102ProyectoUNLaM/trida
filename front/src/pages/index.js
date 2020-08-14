@@ -27,7 +27,6 @@ class Main extends Component {
     this.setState({
       cambiarPassword: data.cambiarPassword,
       primerLogin: data.primerLogin,
-      cambiarPassword: data.cambiarPassword,
       isLoading: false,
     });
   };

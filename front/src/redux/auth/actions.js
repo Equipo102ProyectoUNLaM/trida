@@ -16,6 +16,7 @@ import {
 } from '../actions';
 
 import { auth, functions } from 'helpers/Firebase';
+import { authErrorMessage } from 'constants/errorMessages';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -32,7 +33,8 @@ export const loginUser = (email, password) => async (dispatch) => {
       dispatch(loginUserError(login.message));
     }
   } catch (error) {
-    dispatch(loginUserError(error));
+    const errorMessage = authErrorMessage(error.message);
+    dispatch(loginUserError(errorMessage));
   }
 };
 
