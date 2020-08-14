@@ -17,15 +17,15 @@ import {
   clickOnMobileMenu,
   logoutUser,
   changeLocale,
-} from '../../redux/actions';
+} from 'redux/actions';
 
 import {
   menuHiddenBreakpoint,
   searchPath,
   isDarkSwitchActive,
-} from '../../constants/defaultValues';
+} from 'constants/defaultValues';
 
-import { MobileMenuIcon, MenuIcon } from '../../components/svg';
+import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
