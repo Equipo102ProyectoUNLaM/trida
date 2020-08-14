@@ -190,16 +190,14 @@ let transporter = nodemailer.createTransport(smtpTransport({
   }
 }));
 
-exports.sendMail = functions.https.onCall((email) => {
+exports.sendMail = functions.https.onCall((email, options) => {
       const dest = email;
+      const { from, subject, html } = options;
       const mailOptions = {
-          from: 'Trida App <trida.app@gmail.com>',
+          from,
           to: dest,
-          subject: 'Te invitaron a Trida!',
-          html: `<p style="font-size: 16px;">En instantes recibirás un mail para establecer tu contraseña. <br />
-          Luego, podés loguearte con este mail y tu contraseña en trida.com.ar</p>
-              <br />
-          `
+          subject,
+          html
       };
 
     return transporter.sendMail(mailOptions);
