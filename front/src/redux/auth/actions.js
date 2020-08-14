@@ -109,7 +109,6 @@ export const registerUserError = (message) => ({
 
 export const registerUser = (user) => async (dispatch) => {
   const { email, password, isInvited, instId, courseId, subjectId } = user;
-
   dispatch(registerUserStart());
 
   try {
@@ -161,9 +160,10 @@ export const registerUser = (user) => async (dispatch) => {
   }
 };
 
-export const sendInvitationEmail = async (email) => {
+export const sendInvitationEmail = async (email, options) => {
   const sendMail = functions.httpsCallable('sendMail');
-  sendMail(email).catch(function (error) {
+
+  sendMail({ email, ...options }).catch(function (error) {
     console.log(error);
   });
 };

@@ -11,7 +11,7 @@ export const addMail = {
   from: 'Trida App <trida.app@gmail.com>',
   subject: 'Te agregaron a una materia en Trida!',
   html: `<p style="font-size: 16px;">Te agregaron a una nueva materia en trida. <br />
-Podés loguearte con este mail y tu contraseña en trida.com.ar</p>
+    Podés loguearte con este mail y tu contraseña en trida.com.ar</p>
         <br />
     `,
 };
