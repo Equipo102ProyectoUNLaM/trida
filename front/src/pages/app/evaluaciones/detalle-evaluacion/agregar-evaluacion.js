@@ -13,10 +13,13 @@ export default class AgregarEvaluacion extends Component {
     this.state = {
       evaluacionId: '',
       nombre: '',
-      fecha: '',
+      fecha_creacion: '',
+      fecha_publicacion: '',
+      fecha_finalizacion: '',
       descripcion: '',
       isLoading: true,
       idMateria: id,
+      ejercicios: [],
     };
   }
 
@@ -45,8 +48,7 @@ export default class AgregarEvaluacion extends Component {
               breadcrumb
             />
             <FormEvaluacion
-              idEval={this.state.evaluacionId}
-              itemsEval={this.state}
+              evaluacion={this.state}
               onEvaluacionAgregada={this.onEvaluacionAgregada}
               onCancel={this.onEvaluacionAgregada}
               idMateria={this.state.idMateria}

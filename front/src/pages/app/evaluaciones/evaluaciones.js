@@ -4,9 +4,9 @@ import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import ModalVistaPreviaEvaluacion from 'pages/app/evaluaciones/detalle-evaluacion/vista-previa-evaluacion';
 import {
   logicDeleteDocument,
-  getCollection,
   getCollectionWithSubCollections,
 } from 'helpers/Firebase-db';
 
@@ -23,6 +23,7 @@ class Evaluaciones extends Component {
     this.state = {
       items: [],
       modalDeleteOpen: false,
+      modalPreviewOpen: false,
       selectedItems: [],
       isLoading: true,
       materiaId: id,
@@ -53,7 +54,18 @@ class Evaluaciones extends Component {
     });
   };
 
+  togglePreviewModal = () => {
+    this.setState({
+      modalPreviewOpen: !this.state.modalPreviewOpen,
+    });
+  };
+
   dataListRenderer(arrayDeObjetos) {
+    arrayDeObjetos.forEach((element) => {
+      element.data.subcollections = element.data.subcollections.sort(
+        (a, b) => a.data.numero - b.data.numero
+      );
+    });
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
@@ -63,8 +75,12 @@ class Evaluaciones extends Component {
 
   onEdit = (idEvaluacion) => {
     this.props.history.push(
-      `/app/evaluaciones/detalle-evaluacion/${idEvaluacion}`
+      `/app/evaluaciones/editar-evaluacion/${idEvaluacion}`
     );
+  };
+
+  onCancel = () => {
+    this.props.history.push(`/app/evaluaciones`);
   };
 
   onAdd = () => {
@@ -78,6 +94,13 @@ class Evaluaciones extends Component {
     this.toggleDeleteModal();
   };
 
+  onPreview = (idEvaluacion) => {
+    this.setState({
+      evalId: idEvaluacion,
+    });
+    this.togglePreviewModal();
+  };
+
   borrarEvaluacion = async () => {
     await logicDeleteDocument('evaluaciones', this.state.evalId, 'Evaluación');
     this.setState({
@@ -87,17 +110,14 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
-  editarEjercicio = (tipo) => {
-    console.log(tipo);
-    if (tipo == 'opcion_multiple') {
-      this.props.history.push(`/app/evaluaciones/ejercicios/opcion-multiple`);
-    } else if (tipo == 'respuesta_libre') {
-      this.props.history.push(`/app/evaluaciones/ejercicios/respuesta-libre`);
-    }
-  };
-
   render() {
-    const { modalDeleteOpen, items, isLoading } = this.state;
+    const {
+      modalDeleteOpen,
+      items,
+      isLoading,
+      modalPreviewOpen,
+      evalId,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -114,12 +134,15 @@ class Evaluaciones extends Component {
                 <CardTabs
                   key={evaluacion.id}
                   item={evaluacion}
+                  materiaId={this.state.materiaId}
+                  updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
                   navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
-                  onEditarEjercicio={this.editarEjercicio}
+                  onCancel={this.onCancel}
+                  onPreview={this.onPreview}
                 />
               );
             })}{' '}
@@ -133,6 +156,13 @@ class Evaluaciones extends Component {
               toggle={this.toggleDeleteModal}
               isOpen={modalDeleteOpen}
               onConfirm={this.borrarEvaluacion}
+            />
+          )}
+          {modalPreviewOpen && (
+            <ModalVistaPreviaEvaluacion
+              evalId={evalId}
+              toggle={this.togglePreviewModal}
+              isOpen={modalPreviewOpen}
             />
           )}
         </div>

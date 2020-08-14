@@ -118,6 +118,20 @@ export const getDocument = async (docRef) => {
   }
 };
 
+// trae un documento en formato objeto (id + data (objeto con datos del documento))
+// junto con la coleccion interior
+// parámetro: referencia al documento y nombre de la sub coleccion
+export const getDocumentWithSubCollection = async (docRef, subCollection) => {
+  try {
+    const docObj = await getDocument(docRef);
+    const { id, data } = docObj;
+    const subColObj = await getCollection(docRef + '/' + subCollection);
+    return { id: id, data: data, subCollection: subColObj };
+  } catch (err) {
+    console.log('Error getting documents', err);
+  }
+};
+
 // agrega un documento
 // parámetros: colección, objeto a agregar y reemplazo para mostrar en la notificación
 export const addDocument = async (collection, object, message) => {
@@ -125,14 +139,15 @@ export const addDocument = async (collection, object, message) => {
     .collection(collection)
     .add(object)
     .then(function () {
-      NotificationManager.success(
-        `${message} agregada exitosamente`,
-        `${message} agregada!`,
-        3000,
-        null,
-        null,
-        ''
-      );
+      if (message)
+        NotificationManager.success(
+          `${message} agregada exitosamente`,
+          `${message} agregada!`,
+          3000,
+          null,
+          null,
+          ''
+        );
     })
     .catch(function (error) {
       NotificationManager.error(
@@ -227,14 +242,15 @@ export const deleteDocument = async (collection, document, message) => {
   } catch (err) {
     console.log('Error deleting documents', err);
   } finally {
-    NotificationManager.success(
-      `${message} borrada exitosamente`,
-      `${message} borrada!`,
-      3000,
-      null,
-      null,
-      ''
-    );
+    if (message)
+      NotificationManager.success(
+        `${message} borrada exitosamente`,
+        `${message} borrada!`,
+        3000,
+        null,
+        null,
+        ''
+      );
   }
 };
 

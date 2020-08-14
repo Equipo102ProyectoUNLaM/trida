@@ -65,7 +65,7 @@ module.exports = {
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
   'menu.agregar': 'Agregar Evaluación',
-  'menu.detalle-evaluacion': 'Detalle de Evaluación',
+  'menu.editar-evaluacion': 'Editar Evaluación',
   'menu.mis-instituciones': 'Mis Instituciones',
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',

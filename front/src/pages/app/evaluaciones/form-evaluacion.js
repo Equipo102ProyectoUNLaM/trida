@@ -1,51 +1,34 @@
+/* eslint-disable */
 import React from 'react';
-import {
-  Row,
-  Input,
-  ModalFooter,
-  Button,
-  FormGroup,
-  Label,
-  NavLink,
-  CustomInput,
-} from 'reactstrap';
-import Select from 'react-select';
+import { Input, ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
 import {
   addDocument,
   editDocument,
-  getCollection,
+  deleteDocument,
   addDocumentWithSubcollection,
 } from 'helpers/Firebase-db';
+import { Colxx } from 'components/common/CustomBootstrap';
+import moment from 'moment';
+import DatePicker from "react-datepicker";
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercicio';
 
 class FormEvaluacion extends React.Component {
-  constructor() {
-    super();
-
-    this.getEjercicios();
-
+  constructor(props) {
+    super(props);
     this.state = {
       evaluacionId: '',
       nombre: '',
+      fecha_creacion: '',
       fecha_finalizacion: '',
       fecha_publicacion: '',
       descripcion: '',
-      idMateria: '',
       modalEditOpen: false,
       modalAddOpen: false,
-      selectData: [],
-      ejerciciosSeleccionados: [
-        {
-          nombre: '',
-          tipo: '',
-        },
-      ],
-      ejercicioSeleccionado: {
-        nombre: '',
-        tipo: '',
-      },
-      inputs: ['input-0'],
+      ejercicios: [],
     };
+
+    //this.ejerciciosComponentRef = React.createRef();
   }
 
   handleChange = (event) => {
@@ -69,73 +52,29 @@ class FormEvaluacion extends React.Component {
     if (this.props.idEval) {
       this.setState({
         evaluacionId: this.props.idEval,
-        nombre: this.props.itemsEval.nombre,
-        fecha_finalizacion: this.props.itemsEval.fecha_finalizacion,
-        fecha_publicacion: this.props.itemsEval.fecha_publicacion,
-        descripcion: this.props.itemsEval.descripcion,
+        nombre: this.props.evaluacion.nombre,
+        fecha_creacion: this.props.evaluacion.fecha_creacion,
+        fecha_finalizacion: this.props.evaluacion.fecha_finalizacion,
+        fecha_publicacion: this.props.evaluacion.fecha_publicacion,
+        descripcion: this.props.evaluacion.descripcion,
+        ejercicios: this.props.evaluacion.ejercicios,
       });
     }
   }
 
-  getEjercicios = async () => {
-    let arrayDeObjetos = await getCollection('ejercicios');
-    let datos = [];
-    for (const ej of arrayDeObjetos) {
-      const i = 0;
-      datos.push({
-        label: ej.data.nombre,
-        value: ej.data.tipo,
-        key: i,
-      });
-      i++;
-    }
-    this.setState({
-      selectData: datos,
-      ejercicios: arrayDeObjetos,
-    });
-  };
-
-  handleAddEjercicio = (e) => {
-    this.state.ejerciciosSeleccionados.push(this.state.ejercicioSeleccionado);
-    this.setState({
-      ejercicioSeleccionado: {
-        nombre: '',
-        tipo: '',
-      },
-    });
-  };
-
-  handleSelectChange = (e) => {
-    this.setState({
-      ejercicioSeleccionado: {
-        nombre: e.label,
-        tipo: e.value,
-      },
-    });
-    //this.state.ejercicioSeleccionado.nombre = e.label;
-    //this.state.ejercicioSeleccionado.tipo = e.value;
-  };
-
   onSubmit = async () => {
-    if (
-      this.state.ejerciciosSeleccionados[0].nombre == '' &&
-      this.state.ejerciciosSeleccionados[0].tipo == ''
-    ) {
-      let finalEjerciciosSeleccionados = [
-        ...this.state.ejerciciosSeleccionados,
-      ];
-      finalEjerciciosSeleccionados.splice(0, 1);
-      this.setState({ ejerciciosSeleccionados: finalEjerciciosSeleccionados });
-    }
+    let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+
     const obj = {
       nombre: this.state.nombre,
+      fecha_creacion: moment().format('YYYY-MM-DD'),
       fecha_finalizacion: this.state.fecha_finalizacion,
       fecha_publicacion: this.state.fecha_publicacion,
       descripcion: this.state.descripcion,
       idMateria: this.props.idMateria,
       activo: true,
       subcollection: {
-        data: this.state.ejerciciosSeleccionados,
+        data: ejercicios,
       },
     };
     await addDocumentWithSubcollection(
@@ -150,12 +89,29 @@ class FormEvaluacion extends React.Component {
   };
 
   onEdit = async () => {
+    let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+
+    this.state.ejercicios.forEach(async (element) => {
+      await deleteDocument(
+        `evaluaciones/${this.state.evaluacionId}/ejercicios`,
+        element.id
+      );
+    });
+
+    ejercicios.forEach(async (element) => {
+      await addDocument(
+        `evaluaciones/${this.state.evaluacionId}/ejercicios`,
+        element
+      );
+    });
+
     const obj = {
       nombre: this.state.nombre,
       fecha_finalizacion: this.state.fecha_finalizacion,
       fecha_publicacion: this.state.fecha_publicacion,
       descripcion: this.state.descripcion,
     };
+
     await editDocument(
       'evaluaciones',
       this.state.evaluacionId,
@@ -168,45 +124,74 @@ class FormEvaluacion extends React.Component {
   };
 
   render() {
-    const { onCancel } = this.props;
+    const { onCancel, evaluacion } = this.props;
     const {
       modalEditOpen,
       modalAddOpen,
-      ejercicios,
-      ejercicioSeleccionado,
+      nombre,
+      fecha_finalizacion,
+      fecha_publicacion,
+      descripcion,
     } = this.state;
     return (
       <form>
         <FormGroup className="mb-3">
           <Label>Nombre de la evaluacion</Label>
-          <Input
-            name="nombre"
-            onChange={this.handleChange}
-            value={this.state.nombre}
-          />
+          <Input name="nombre" onChange={this.handleChange} value={nombre} />
         </FormGroup>
+        {evaluacion.fecha_creacion && (
 
-        <FormGroup className="mb-3">
-          <Label>Fecha de Finalización</Label>
-          <Input
-            name="fecha_finalizacion"
-            type="date"
-            placeholder="DD/MM/AAAA"
-            onChange={this.handleChange}
-            value={this.state.fecha_finalizacion}
-          />
-        </FormGroup>
+          <Row>
+            <Colxx xxs="6">
+              <FormGroup className="mb-3">
+                <Label>Fecha de Creación</Label>
+                <Input
+                  name="fecha_creacion"
+                  type="date"
+                  readOnly
+                  value={evaluacion.fecha_creacion}
+                />
+              </FormGroup>
+            </Colxx>
+            <Colxx xxs="6">
+              <FormGroup className="mb-3">
+                <Label>Creada por</Label>
+                <Input
+                  name="autor"
+                  readOnly
+                  value={evaluacion.autor}
+                />
+              </FormGroup>
+            </Colxx>
+          </Row>
+        )}
 
-        <FormGroup className="mb-3">
-          <Label>Fecha de Publicación</Label>
-          <Input
-            name="fecha_publicación"
-            type="date"
-            placeholder="DD/MM/AAAA"
-            onChange={this.handleChange}
-            value={this.state.fecha_publicacion}
-          />
-        </FormGroup>
+        <Row>
+          <Colxx xxs="6">
+            <FormGroup className="mb-3">
+              <Label>Fecha de Finalización</Label>
+              <Input
+                name="fecha_finalizacion"
+                type="date"
+                placeholder="Ingrese la fecha de finalización de la evaluación"
+                onChange={this.handleChange}
+                value={fecha_finalizacion}
+              />
+            </FormGroup>
+          </Colxx>
+          <Colxx xxs="6">
+            <FormGroup className="mb-3">
+              <Label>Fecha de Publicación</Label>
+              <Input
+                name="fecha_publicacion"
+                type="date"
+                placeholder="Ingrese la fecha de publicación de la evaluación"
+                onChange={this.handleChange}
+                value={fecha_publicacion}
+              />
+            </FormGroup>
+          </Colxx>
+        </Row>
 
         <FormGroup className="mb-3">
           <Label>Descripción</Label>
@@ -214,61 +199,41 @@ class FormEvaluacion extends React.Component {
             name="descripcion"
             type="textarea"
             onChange={this.handleChange}
-            value={this.state.descripcion}
+            value={descripcion}
           />
         </FormGroup>
-        <FormGroup className="mb-3">
-          <div className="glyph-icon simple-icon-plus agregar-ejercicios-action-icon">
-            <p className="icon-text">Agregar ejercicios</p>
-          </div>
-          {this.state.ejerciciosSeleccionados.map((ejercicio, index) => (
-            <Row key={index} className="ejerciciosSelectRow">
-              <Select
-                className="react-select ejerciciosSelect"
-                classNamePrefix="react-select"
-                name="ejercicios-select-1"
-                value={this.state.selectData.find(
-                  (obj) => obj.value === ejercicio
-                )}
-                onChange={this.handleSelectChange}
-                options={this.state.selectData}
-              />
 
-              <Button
-                outline
-                onClick={this.handleAddEjercicio}
-                size="sm"
-                color="primary"
-                className="button"
-              >
-                {' '}
-                Agregar{' '}
-              </Button>
-            </Row>
-          ))}
-        </FormGroup>
+        <AgregarEjercicio
+        ref={(ejer) => {this.ejerciciosComponentRef = ejer}}
+          ejercicios={evaluacion.ejercicios}
+         //ref={this.ejerciciosComponentRef}
+        />
+
         <ModalFooter>
-          {!this.props.idEval && (
+          {!evaluacion.evaluacionId && (
             <>
               <Button color="primary" onClick={this.toggleAddModal}>
-                Agregar
+                Crear Evaluación
               </Button>
               <Button color="secondary" onClick={onCancel}>
                 Cancelar
               </Button>
             </>
           )}
-          {this.props.idEval && (
+          {evaluacion.evaluacionId && (
             <>
               <Button color="primary" onClick={this.toggleEditModal}>
-                Guardar
+                Guardar Evaluación
+              </Button>
+              <Button color="secondary" onClick={onCancel}>
+                Cancelar
               </Button>
             </>
           )}
         </ModalFooter>
         {modalEditOpen && (
           <ModalConfirmacion
-            texto="Está seguro de que desea guardar la evaluación?"
+            texto="¿Está seguro de que desea editar la evaluación?"
             titulo="Guardar Evaluación"
             buttonPrimary="Aceptar"
             buttonSecondary="Cancelar"
@@ -279,8 +244,8 @@ class FormEvaluacion extends React.Component {
         )}
         {modalAddOpen && (
           <ModalConfirmacion
-            texto="Está seguro de que desea guardar la evaluación?"
-            titulo="Guardar Evaluación"
+            texto="¿Está seguro de que desea crear la evaluación?"
+            titulo="Crear Evaluación"
             buttonPrimary="Aceptar"
             buttonSecondary="Cancelar"
             toggle={this.toggleAddModal}

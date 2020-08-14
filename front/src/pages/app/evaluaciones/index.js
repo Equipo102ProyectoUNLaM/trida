@@ -4,8 +4,8 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Evaluaciones = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './evaluaciones')
 );
-const DetalleEvaluacion = React.lazy(() =>
-  import('./detalle-evaluacion/detalle-evaluacion')
+const EditarEvaluacion = React.lazy(() =>
+  import('./detalle-evaluacion/editar-evaluacion')
 );
 const AgregarEvaluacion = React.lazy(() =>
   import('./detalle-evaluacion/agregar-evaluacion')
@@ -21,8 +21,8 @@ const MenuEvaluaciones = ({ match }) => (
         render={(props) => <Evaluaciones {...props} />}
       />
       <Route
-        path={`${match.url}/detalle-evaluacion/:evaluacionId`}
-        render={(props) => <DetalleEvaluacion {...props} />}
+        path={`${match.url}/editar-evaluacion/:evaluacionId`}
+        render={(props) => <EditarEvaluacion {...props} />}
       />
       <Route
         path={`${match.url}/agregar`}

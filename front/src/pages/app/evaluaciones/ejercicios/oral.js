@@ -1,18 +1,19 @@
 import React, { Fragment } from 'react';
 import { Input, Label } from 'reactstrap';
 
-class RespuestaLibre extends React.Component {
+class Oral extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      consigna: '',
+      tema: '',
     };
   }
 
   componentDidMount() {
     if (this.props.value) {
       this.setState({
-        consigna: this.props.value.consigna,
+        tema: this.props.value.tema,
       });
     }
   }
@@ -24,21 +25,21 @@ class RespuestaLibre extends React.Component {
   };
 
   render() {
-    const { consigna } = this.state;
     const { preview } = this.props;
     return (
       <Fragment>
         {preview && (
-          <div>
-            <Label>{consigna}</Label>
+          <div className="rta-libre-container">
+            <Label>{this.state.tema}</Label>
           </div>
         )}
+
         {!preview && (
           <div className="rta-libre-container">
-            <Label>Consigna</Label>
+            <Label>Tema</Label>
             <Input
-              name="consigna"
-              value={consigna}
+              name="tema"
+              value={this.state.tema}
               onChange={this.handleChange}
             />
           </div>
@@ -48,4 +49,4 @@ class RespuestaLibre extends React.Component {
   }
 }
 
-export default RespuestaLibre;
+export default Oral;

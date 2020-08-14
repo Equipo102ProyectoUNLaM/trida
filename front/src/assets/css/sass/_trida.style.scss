@@ -9014,14 +9014,36 @@ footer.page-footer {
   text-align: center;
 }
 
-.ejerciciosSelect {
-  width: 75%;
-  margin-left: 5%;
-  margin-right: 5%;
+.rta-libre-container{
+  padding-top: 2rem;
 }
 
-.ejerciciosSelectRow {
-  padding-bottom: 2%;
+.delete-icon{
+  text-align: center;
+  margin: auto;
+  color: red;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding-bottom: 0.5rem;
+}
+
+.remove-icon{
+  text-align: center;
+  margin: auto;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.icon-container{
+  display: grid;
+}
+
+.checkbox{
+  position: relative;
+}
+
+.margin-auto{
+  margin:auto !important;
 }
 
 .opcionMultipleRow {
@@ -9029,7 +9051,19 @@ footer.page-footer {
 }
 
 .opcionMultipleInput {
-  width: 75%;
+  width: 80%;
   margin-left: 5%;
   margin-right: 5%;
+}
+
+.tab-card-evaluaciones {
+  display:contents;
+}
+
+.modal-ejercicios{
+  max-width: 60rem !important;
+}
+
+.modal-ejercicios-body{
+  background-color: $theme-color-1;
 }
