@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { Input, ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
 import {
@@ -9,7 +8,7 @@ import {
 } from 'helpers/Firebase-db';
 import { Colxx } from 'components/common/CustomBootstrap';
 import moment from 'moment';
-import DatePicker from "react-datepicker";
+import DatePicker from 'react-datepicker';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercicio';
 
@@ -27,8 +26,6 @@ class FormEvaluacion extends React.Component {
       modalAddOpen: false,
       ejercicios: [],
     };
-
-    //this.ejerciciosComponentRef = React.createRef();
   }
 
   handleChange = (event) => {
@@ -140,7 +137,6 @@ class FormEvaluacion extends React.Component {
           <Input name="nombre" onChange={this.handleChange} value={nombre} />
         </FormGroup>
         {evaluacion.fecha_creacion && (
-
           <Row>
             <Colxx xxs="6">
               <FormGroup className="mb-3">
@@ -156,11 +152,7 @@ class FormEvaluacion extends React.Component {
             <Colxx xxs="6">
               <FormGroup className="mb-3">
                 <Label>Creada por</Label>
-                <Input
-                  name="autor"
-                  readOnly
-                  value={evaluacion.autor}
-                />
+                <Input name="autor" readOnly value={evaluacion.autor} />
               </FormGroup>
             </Colxx>
           </Row>
@@ -204,9 +196,10 @@ class FormEvaluacion extends React.Component {
         </FormGroup>
 
         <AgregarEjercicio
-        ref={(ejer) => {this.ejerciciosComponentRef = ejer}}
+          ref={(ejer) => {
+            this.ejerciciosComponentRef = ejer;
+          }}
           ejercicios={evaluacion.ejercicios}
-         //ref={this.ejerciciosComponentRef}
         />
 
         <ModalFooter>
