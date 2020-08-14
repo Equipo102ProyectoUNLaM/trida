@@ -17,6 +17,7 @@ import {
 
 import { auth, functions } from 'helpers/Firebase';
 import { getCollection } from 'helpers/Firebase-db';
+import { addMail, inviteMail } from 'constants/emailTexts';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -119,7 +120,7 @@ export const registerUser = (user) => async (dispatch) => {
     if (data) {
       const { uid } = data;
       if (isInvited) {
-        await sendInvitationEmail(email);
+        await sendInvitationEmail(email, inviteMail);
         await auth.sendPasswordResetEmail(email);
 
         const asignarMateriasAction = functions.httpsCallable(
@@ -154,6 +155,7 @@ export const registerUser = (user) => async (dispatch) => {
         subjectId,
         uid: id,
       });
+      await sendInvitationEmail(email, addMail);
       return dispatch(registerUserSuccess(registerUser));
     } else return dispatch(registerUserError(error.message));
   }
