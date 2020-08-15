@@ -157,7 +157,7 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/background-2.jpg") no-repeat center center fixed;
+  background: url("/assets/img/2406-gradient-symbols-pastel-5.png") no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -318,12 +318,14 @@ hr {
 }
 
 .logo-single {
-  width: 140px;
-  height: 35px;
-  background: url($logoPath) no-repeat;
+  width: 117px;
+  margin-bottom: 20px;
+  background-image: url($logoPath);
+  background-repeat: no-repeat;
+  height: 92px;
+  background-size: contain;
   background-position: center center;
   display: inline-block;
-  margin-bottom: 60px;
 }
 
 .list-item-heading-container {
@@ -1770,6 +1772,7 @@ nav .nomargin {
       height: 100%;
       background: url($logoPath) no-repeat;
       background-position: center center;
+      background-size: contain;
     }
 
     .logo-mobile {
@@ -6004,12 +6007,12 @@ input:-webkit-autofill {
 .auth-card {
   display: flex;
   flex-direction: row;
+  box-shadow: -3px -3px 8px 10px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
   @include depth(1);
 
   .image-side {
     width: 40%;
-    background: url("/assets/img/login-background-2.png") no-repeat center top;
-    background-size: cover;
+    background: $theme-color-5;
     padding: 80px 40px;
 
     .h3 {
@@ -6060,6 +6063,9 @@ input:-webkit-autofill {
 
     .logo-single {
       margin-bottom: 20px;
+      background-size: cover;
+      width: 139px;
+      height: 115px;
     }
 
     p.h2 {
