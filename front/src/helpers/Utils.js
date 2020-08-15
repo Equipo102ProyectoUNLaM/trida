@@ -1,4 +1,6 @@
 import { defaultDirection } from '../constants/defaultValues';
+import * as _moment from 'moment';
+const moment = _moment;
 
 export const isEmpty = (obj) => !obj || Object.keys(obj).length === 0;
 
@@ -91,4 +93,10 @@ export const toDateTime = (secs) => {
   const formattedDate =
     t.getDate() + '-' + (t.getMonth() + 1) + '-' + t.getFullYear();
   return formattedDate;
+};
+
+/*  Esta función recibe un string con una fecha en cualquier formato y devuelve
+ un string de la fecha en formato DD/MM/YYYY */
+export const getFormattedDate = (date) => {
+  return moment(date).locale('es').format('DD/MM/YYYY');
 };

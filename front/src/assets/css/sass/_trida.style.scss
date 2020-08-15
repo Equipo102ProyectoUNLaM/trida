@@ -51,6 +51,8 @@ Table of Contents
 46.Course Selection
 47.Contenidos
 48. Mensajeria
+49.Correcciones
+
 */
 
 /* 00.Variables and Imports */
@@ -155,7 +157,7 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/background-2.jpg") no-repeat center center fixed;
+  background: url("/assets/img/2406-gradient-symbols-pastel-5.png") no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -316,12 +318,14 @@ hr {
 }
 
 .logo-single {
-  width: 140px;
-  height: 35px;
-  background: url($logoPath) no-repeat;
+  width: 117px;
+  margin-bottom: 20px;
+  background-image: url($logoPath);
+  background-repeat: no-repeat;
+  height: 92px;
+  background-size: contain;
   background-position: center center;
   display: inline-block;
-  margin-bottom: 60px;
 }
 
 .list-item-heading-container {
@@ -1768,6 +1772,7 @@ nav .nomargin {
       height: 100%;
       background: url($logoPath) no-repeat;
       background-position: center center;
+      background-size: contain;
     }
 
     .logo-mobile {
@@ -6002,12 +6007,12 @@ input:-webkit-autofill {
 .auth-card {
   display: flex;
   flex-direction: row;
+  box-shadow: -3px -3px 8px 10px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
   @include depth(1);
 
   .image-side {
     width: 40%;
-    background: url("/assets/img/login-background-2.png") no-repeat center top;
-    background-size: cover;
+    background: $theme-color-5;
     padding: 80px 40px;
 
     .h3 {
@@ -6058,6 +6063,9 @@ input:-webkit-autofill {
 
     .logo-single {
       margin-bottom: 20px;
+      background-size: cover;
+      width: 139px;
+      height: 115px;
     }
 
     p.h2 {
@@ -9212,6 +9220,10 @@ tr.folder{
   margin-top: 0.5rem !important;
 }
 
+.react-tagsinput {
+  padding: 0.2rem;
+}
+
 // 48 Mensajeria
 .users-names {
   padding-top: 2rem;
@@ -9239,10 +9251,45 @@ tr.folder{
   width: 50% !important;
 }
 
+.react-tagsinput-tag {
+  background-color: #cde69c;
+  border-radius: 2px;
+  border: 1px solid #a5d24a;
+  color: #638421;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  padding: 5px;
+}
+
+.react-tagsinput-remove {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.react-tagsinput-tag a::before {
+  content: " ×";
+}
+
 .select__control {
   border-radius: 0 !important;
   border-color: #d7d7d7;
   height: 45.1042px;
+}
+
+.span-float-label {
+  position: absolute;
+    cursor: text;
+    font-size: 90%;
+    opacity: 1;
+    top: -0.4em;
+    left: 0.75rem;
+    z-index: 3;
+    line-height: 1;
+    padding: 0 1px;
 }
 
 .ReactTable .rt-th, .ReactTable .rt-td {
@@ -9250,3 +9297,11 @@ tr.folder{
   padding-bottom: 0px !important;
 }
 
+//49 Correcciones
+div.rendered-file-browser{
+  padding-right: 3rem;
+}
+
+.hide-button {
+  display: none;
+}

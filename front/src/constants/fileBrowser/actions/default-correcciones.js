@@ -164,7 +164,6 @@ Actions.propTypes = {
   isFolder: PropTypes.bool,
   icons: PropTypes.object,
   nameFilter: PropTypes.string,
-  fullKey: PropTypes.string,
 
   canCreateFolder: PropTypes.bool,
   onCreateFolder: PropTypes.func,
@@ -190,7 +189,6 @@ Actions.defaultProps = {
   isFolder: false,
   icons: {},
   nameFilter: '',
-  fullKey: '',
 
   canCreateFolder: false,
   onCreateFolder: null,
