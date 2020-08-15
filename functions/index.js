@@ -181,14 +181,69 @@ exports.asignarMaterias = functions.https.onCall(async (data)=> {
   
 });
 
+exports.institucionesUsuario = async ({ uid }) => {
+  const userRef = admin.firestore().collection('usuarios').doc(uid);
+  const userDoc = await userRef.get();
+  const userObj = userDoc.data();
+  const { instituciones } = userObj;
+  return instituciones;
+}
+
+exports.mergeInstituciones = async (instUser, instAsignar) => {
+  const [institucionAsignar] = instAsignar;
+
+  const institucionYaAsignada = instUser.find(institucion => institucion.institucion_id.isEqual(institucionAsignar.institucion_id));
+
+  // La que voy a asignar es nueva (no está dentro de instUser)
+  if (!institucionYaAsignada) {
+    return [...instUser,  ...instAsignar]
+  }
+  
+  // El usuario ya posee la institución a la cual lo invitaron
+  const { cursos } = institucionYaAsignada;
+
+  // Para cada curso que voy a asignar, pregunto si ya lo posee asignado
+  institucionAsignar.cursos.forEach(cursoAsignar => {
+    const cursoYaAsignado = cursos.find(curso => curso.curso_id.isEqual(cursoAsignar.curso_id));
+
+    if (!cursoYaAsignado) {
+      return cursos.push(cursoAsignar);
+    }
+
+    const { materias } = cursoYaAsignado;
+    console.log('ANTES TENÍA', materias.length);
+
+    cursoAsignar.materias.forEach(materiaAsignar => {
+      const materiaYaAsignada = materias.find(materia => materia.isEqual(materiaAsignar))
+
+      console.log('YA ESTA ASIGNADA?', Boolean(materiaYaAsignada));
+
+      if (!materiaYaAsignada) {
+        materias.push(materiaAsignar);
+        console.log('AHORA TIENE', materias.length)
+        return;
+      }
+
+      console.log('AHORA TIENE', materias.length)
+    })
+
+    console.log('YA TERMINÓ, AHORA TIENE', materias.length)
+  })
+  
+  return instAsignar;
+}
+
 exports.agregarMaterias = functions.https.onCall(async (data)=> {
-  // traer instituciones del usuario, comparar con lo que trae instObj y mergearlos
+
   try {
-    const instObj = await this.asignarFuncion(data);
-    console.log(instObj);
+    const instUser = await this.institucionesUsuario(data);
+    console.log({instUser});
+    const instAsignar = await this.asignarFuncion(data);
+    console.log({instAsignar});
+    const instituciones = await this.mergeInstituciones(instUser, instAsignar);
     await admin.firestore().collection('usuarios')
-    .doc(data.uid)
-    .set( { instituciones: instObj }, { merge: true });
+      .doc(data.uid)
+      .update({ instituciones });
   } catch (error) {
     console.log('error', error);
   }

@@ -29,7 +29,7 @@ class ModalEnviarInvitacion extends React.Component {
 
     this.state = {
       modalInvitacionOpen: false,
-      tags: [],
+      tags: ['juli.foglia@gmail.com'],
       items: [],
       isLoading: true,
       showCourses: false,

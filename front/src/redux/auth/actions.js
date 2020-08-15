@@ -147,8 +147,8 @@ export const registerUser = (user) => async (dispatch) => {
         { field: 'mail', operator: '==', id: email },
       ]);
       const { id } = userObj;
-      const asignarMateriasAction = functions.httpsCallable('asignarMaterias');
-      await asignarMateriasAction({
+      const agregarMaterias = functions.httpsCallable('agregarMaterias');
+      await agregarMaterias({
         instId,
         courseId,
         subjectId,
