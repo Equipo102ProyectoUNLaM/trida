@@ -211,35 +211,27 @@ exports.mergeInstituciones = async (instUser, instAsignar) => {
     }
 
     const { materias } = cursoYaAsignado;
-    console.log('ANTES TENÍA', materias.length);
 
     cursoAsignar.materias.forEach(materiaAsignar => {
       const materiaYaAsignada = materias.find(materia => materia.isEqual(materiaAsignar))
 
-      console.log('YA ESTA ASIGNADA?', Boolean(materiaYaAsignada));
-
       if (!materiaYaAsignada) {
         materias.push(materiaAsignar);
-        console.log('AHORA TIENE', materias.length)
         return;
       }
 
-      console.log('AHORA TIENE', materias.length)
     })
 
-    console.log('YA TERMINÓ, AHORA TIENE', materias.length)
   })
   
-  return instAsignar;
+  return instUser;
 }
 
 exports.agregarMaterias = functions.https.onCall(async (data)=> {
 
   try {
     const instUser = await this.institucionesUsuario(data);
-    console.log({instUser});
     const instAsignar = await this.asignarFuncion(data);
-    console.log({instAsignar});
     const instituciones = await this.mergeInstituciones(instUser, instAsignar);
     await admin.firestore().collection('usuarios')
       .doc(data.uid)

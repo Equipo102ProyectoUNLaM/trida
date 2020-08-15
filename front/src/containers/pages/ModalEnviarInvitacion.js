@@ -29,7 +29,7 @@ class ModalEnviarInvitacion extends React.Component {
 
     this.state = {
       modalInvitacionOpen: false,
-      tags: ['juli.foglia@gmail.com'],
+      tags: [],
       items: [],
       isLoading: true,
       showCourses: false,
@@ -301,7 +301,12 @@ class ModalEnviarInvitacion extends React.Component {
           <p className="tip-text">* campos requeridos</p>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" size="sm" onClick={this.onConfirm}>
+          <Button
+            color="primary"
+            size="sm"
+            onClick={this.onConfirm}
+            disabled={isEmpty(this.state.tags)}
+          >
             Confirmar
           </Button>
           <Button color="secondary" size="sm" onClick={toggle}>
