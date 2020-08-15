@@ -1,11 +1,24 @@
-import { firestore } from 'helpers/Firebase';
+import { firestore, storage } from 'helpers/Firebase';
 
-export const getUserName = async (userId) => {
+export const getUserNameAndPhoto = async (userId) => {
   try {
     const userRef = firestore.doc(`usuarios/${userId}`);
     var userDoc = await userRef.get();
     const { nombre, apellido } = userDoc.data();
-    return nombre + ' ' + apellido;
+    let foto = '';
+
+    await storage
+      .ref('usuarios')
+      .child(userId)
+      .getDownloadURL()
+      .then((url) => {
+        foto = url;
+      });
+
+    return {
+      nombre: nombre + ' ' + apellido,
+      foto: foto,
+    };
   } catch (err) {
     console.log('Error getting users document', err);
   }
