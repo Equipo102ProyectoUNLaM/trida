@@ -42,7 +42,7 @@ class TopNav extends Component {
       isInFullScreen: false,
       searchKeyword: '',
       fotoURL: '',
-      userName,
+      userName: '',
     };
   }
 
