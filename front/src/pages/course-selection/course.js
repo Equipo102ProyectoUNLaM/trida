@@ -5,6 +5,7 @@ import { Colxx } from '../../components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
 import { getCourses } from 'helpers/Firebase-user';
 import { connect } from 'react-redux';
+import { updateSubject, updateCourse } from 'redux/actions';
 
 const HOME_URL = '/app/home';
 
@@ -57,8 +58,8 @@ class Course extends Component {
   };
 
   onCourseSelection(subject, course) {
-    if (subject) localStorage.setItem('subject', JSON.stringify(subject));
-    if (course) localStorage.setItem('course', JSON.stringify(course));
+    if (subject) this.props.updateSubject(subject);
+    if (course) this.props.updateCourse(course);
     this.props.history.push(HOME_URL);
   }
 
@@ -129,4 +130,6 @@ const mapStateToProps = ({ authUser }) => {
   };
 };
 
-export default connect(mapStateToProps)(withRouter(Course));
+export default connect(mapStateToProps, { updateSubject, updateCourse })(
+  withRouter(Course)
+);

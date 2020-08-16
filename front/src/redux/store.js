@@ -15,7 +15,7 @@ export function configureStore(initialState) {
 
   const enhancer = composeEnhancers(
     applyMiddleware(...middlewares),
-    persistState('authUser')
+    persistState(['authUser', 'seleccionCurso'])
   );
 
   const store = createStore(reducers, initialState, enhancer);

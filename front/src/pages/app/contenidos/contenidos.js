@@ -1,15 +1,16 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Row, Card, CardBody, Button } from 'reactstrap';
-import IntlMessages from '../../../helpers/IntlMessages';
+import IntlMessages from 'helpers/IntlMessages';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FileBrowser, { Icons } from 'react-keyed-file-browser';
 import { storage } from 'helpers/Firebase';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
-import Dropzone from '../../../containers/forms/Dropzone';
-import { Colxx } from '../../../components/common/CustomBootstrap';
-import { NotificationManager } from '../../../components/common/react-notifications';
+import Dropzone from 'containers/forms/Dropzone';
+import { Colxx } from 'components/common/CustomBootstrap';
+import { NotificationManager } from 'components/common/react-notifications';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { DefaultAction } from 'constants/fileBrowser/actions';
 import { DefaultFilter } from 'constants/fileBrowser/filters';
@@ -21,13 +22,12 @@ import {
 class Contenidos extends Component {
   constructor(props) {
     super(props);
-    const subject = JSON.parse(localStorage.getItem('subject'));
     this.state = {
       files: [],
       isLoading: true,
       canSubmitFiles: true, //boton inhabilitado
       dropZone: [],
-      subjectId: subject.id,
+      subjectId: this.props.subject.id,
       modalRenameOpen: false,
       selectedFolder: '',
       repeatedFiles: [],
@@ -488,5 +488,11 @@ class Contenidos extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return { subject };
+};
+
 const mount = document.querySelectorAll('div.demo-mount-nested-editable');
-export default injectIntl(Contenidos, mount[0]);
+export default connect(mapStateToProps)(injectIntl(Contenidos, mount[0]));

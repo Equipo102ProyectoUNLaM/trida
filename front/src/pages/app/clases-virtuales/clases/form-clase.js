@@ -27,14 +27,13 @@ class FormClase extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { id } = JSON.parse(localStorage.getItem('subject'));
 
     const obj = {
       nombre: this.state.nombre,
       fecha: this.state.fecha,
       descripcion: this.state.descripcion,
       idSala: this.state.idSala,
-      idMateria: id,
+      idMateria: this.props.subject.id,
       contenidos: [],
     };
     await addDocument(
@@ -122,9 +121,10 @@ class FormClase extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user } = authUser;
-  return { user };
+  const { subject } = seleccionCurso;
+  return { user, subject };
 };
 
 export default connect(mapStateToProps)(FormClase);
