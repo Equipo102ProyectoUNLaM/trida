@@ -181,6 +181,67 @@ exports.asignarMaterias = functions.https.onCall(async (data)=> {
   
 });
 
+exports.institucionesUsuario = async ({ uid }) => {
+  const userRef = admin.firestore().collection('usuarios').doc(uid);
+  const userDoc = await userRef.get();
+  const userObj = userDoc.data();
+  const { instituciones } = userObj;
+  return instituciones;
+}
+
+exports.mergeInstituciones = async (instUser, instAsignar) => {
+  const [institucionAsignar] = instAsignar;
+
+  const institucionYaAsignada = instUser.find(institucion => institucion.institucion_id.isEqual(institucionAsignar.institucion_id));
+
+  // La que voy a asignar es nueva (no está dentro de instUser)
+  if (!institucionYaAsignada) {
+    return [...instUser,  ...instAsignar]
+  }
+  
+  // El usuario ya posee la institución a la cual lo invitaron
+  const { cursos } = institucionYaAsignada;
+
+  // Para cada curso que voy a asignar, pregunto si ya lo posee asignado
+  institucionAsignar.cursos.forEach(cursoAsignar => {
+    const cursoYaAsignado = cursos.find(curso => curso.curso_id.isEqual(cursoAsignar.curso_id));
+
+    if (!cursoYaAsignado) {
+      return cursos.push(cursoAsignar);
+    }
+
+    const { materias } = cursoYaAsignado;
+
+    cursoAsignar.materias.forEach(materiaAsignar => {
+      const materiaYaAsignada = materias.find(materia => materia.isEqual(materiaAsignar))
+
+      if (!materiaYaAsignada) {
+        materias.push(materiaAsignar);
+        return;
+      }
+
+    })
+
+  })
+  
+  return instUser;
+}
+
+exports.agregarMaterias = functions.https.onCall(async (data)=> {
+
+  try {
+    const instUser = await this.institucionesUsuario(data);
+    const instAsignar = await this.asignarFuncion(data);
+    const instituciones = await this.mergeInstituciones(instUser, instAsignar);
+    await admin.firestore().collection('usuarios')
+      .doc(data.uid)
+      .update({ instituciones });
+  } catch (error) {
+    console.log('error', error);
+  }
+  
+});
+
 let transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp.gmail.com',
@@ -190,17 +251,15 @@ let transporter = nodemailer.createTransport(smtpTransport({
   }
 }));
 
-exports.sendMail = functions.https.onCall((email) => {
-      const dest = email;
-      const mailOptions = {
-          from: 'Trida App <trida.app@gmail.com>',
-          to: dest,
-          subject: 'Te invitaron a Trida!',
-          html: `<p style="font-size: 16px;">En instantes recibirás un mail para establecer tu contraseña. <br />
-          Luego, podés loguearte con este mail y tu contraseña en trida.com.ar</p>
-              <br />
-          `
-      };
+exports.sendMail = functions.https.onCall((data) => {
+  const { email, subject, html } = data;
 
-    return transporter.sendMail(mailOptions);
+  const mailOptions = {
+    from: 'Trida App <trida.app@gmail.com>',
+    to: email,
+    subject,
+    html,
+  };
+
+  return transporter.sendMail(mailOptions);
 });
