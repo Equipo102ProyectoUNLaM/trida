@@ -17,6 +17,7 @@ import {
   clickOnMobileMenu,
   logoutUser,
   changeLocale,
+  cleanSeleccionCurso,
 } from 'redux/actions';
 
 import {
@@ -189,6 +190,7 @@ class TopNav extends Component {
 
   handleLogout = () => {
     this.props.logoutUser();
+    this.props.cleanSeleccionCurso();
   };
 
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
@@ -237,17 +239,17 @@ class TopNav extends Component {
             <Breadcrumb className="nomargin">
               <BreadcrumbItem>
                 <a href="/seleccion-curso/institution">
-                  {this.state.institution.name}
+                  {this.props.institution.name}
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <a
-                  href={`/seleccion-curso/course/${this.state.institution.id}`}
+                  href={`/seleccion-curso/course/${this.props.institution.id}`}
                 >
-                  {this.state.course.name}
+                  {this.props.course.name}
                 </a>
               </BreadcrumbItem>
-              <BreadcrumbItem active>{this.state.subject.name}</BreadcrumbItem>
+              <BreadcrumbItem active>{this.props.subject.name}</BreadcrumbItem>
             </Breadcrumb>
           </div>
         </div>
@@ -307,11 +309,12 @@ class TopNav extends Component {
   }
 }
 
-const mapStateToProps = ({ menu, settings, authUser }) => {
+const mapStateToProps = ({ menu, settings, authUser, seleccionCurso }) => {
   const { containerClassnames, menuClickCount, selectedMenuHasSubItems } = menu;
   const { locale } = settings;
   const { user, userData } = authUser;
   const { nombre, apellido, foto } = userData;
+  const { institution, course, subject } = seleccionCurso;
   return {
     containerClassnames,
     menuClickCount,
@@ -321,6 +324,9 @@ const mapStateToProps = ({ menu, settings, authUser }) => {
     nombre,
     apellido,
     foto,
+    institution,
+    course,
+    subject,
   };
 };
 
@@ -329,6 +335,7 @@ export default injectIntl(
     setContainerClassnames,
     clickOnMobileMenu,
     logoutUser,
+    cleanSeleccionCurso,
     changeLocale,
   })(TopNav)
 );

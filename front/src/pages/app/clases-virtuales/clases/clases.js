@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
@@ -17,14 +18,12 @@ class Clase extends Component {
   constructor(props) {
     super(props);
 
-    const { id } = JSON.parse(localStorage.getItem('subject'));
-
     this.state = {
       items: [],
       modalOpen: false,
       selectedItems: [],
       isLoading: true,
-      idMateria: id,
+      idMateria: this.props.subject.id,
     };
   }
 
@@ -99,4 +98,12 @@ class Clase extends Component {
     );
   }
 }
-export default injectIntl(Clase);
+
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return {
+    subject,
+  };
+};
+
+export default injectIntl(connect(mapStateToProps)(Clase));
