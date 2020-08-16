@@ -31,6 +31,9 @@ import TopnavDarkSwitch from './Topnav.DarkSwitch';
 import { getDirection, setDirection } from '../../helpers/Utils';
 import { getUserNameAndPhoto } from 'helpers/Firebase-user';
 
+const publicUrl = process.env.PUBLIC_URL;
+const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
+
 class TopNav extends Component {
   constructor(props) {
     super(props);
@@ -232,6 +235,7 @@ class TopNav extends Component {
 
   render() {
     const { containerClassnames, menuClickCount } = this.props;
+    const { fotoURL } = this.state;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
@@ -305,9 +309,15 @@ class TopNav extends Component {
                 <span className="name mr-1">{this.state.userName}</span>
               </DropdownToggle>
               <DropdownToggle className="p-0" color="empty">
-                <span>
-                  <img alt="Foto perfil" src={this.state.fotoURL} />
-                </span>
+                {fotoURL ? (
+                  <span>
+                    <img src={fotoURL} />
+                  </span>
+                ) : (
+                  <span>
+                    <img src={imagenDefaultUsuario} />
+                  </span>
+                )}
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>
