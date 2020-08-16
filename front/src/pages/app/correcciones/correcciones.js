@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
@@ -14,12 +15,11 @@ import { DefaultFilter } from 'constants/fileBrowser/filters';
 class Correcciones extends Component {
   constructor(props) {
     super(props);
-    const subject = JSON.parse(localStorage.getItem('subject'));
 
     this.state = {
       files: [],
       isLoading: true,
-      subjectId: subject.id,
+      subjectId: this.props.subject.id,
     };
   }
 
@@ -125,6 +125,12 @@ class Correcciones extends Component {
     );
   }
 }
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return {
+    subject,
+  };
+};
 
 const mount = document.querySelectorAll('div.demo-mount-nested-editable');
-export default injectIntl(Correcciones, mount[0]);
+export default connect(mapStateToProps)(Correcciones, mount[0]);

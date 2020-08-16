@@ -2,9 +2,14 @@ import { firestore, storage } from 'helpers/Firebase';
 import { getDocument } from 'helpers/Firebase-db';
 
 export const getUserData = async (userId) => {
+  let foto = '';
   try {
     const { data } = await getDocument(`usuarios/${userId}`);
-    const foto = await storage.ref('usuarios').child(userId).getDownloadURL();
+    try {
+      foto = await storage.ref('usuarios').child(userId).getDownloadURL();
+    } catch (error) {
+      console.log(error);
+    }
 
     return {
       ...data,

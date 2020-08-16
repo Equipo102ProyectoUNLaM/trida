@@ -21,21 +21,12 @@ class FormMensaje extends Component {
       idMateria: this.props.subject.id,
       isLoading: true,
       idUser: this.props.user,
-      nombreUser: '',
     };
   }
 
   componentDidMount() {
     this.getUsersOfSubject(this.state.idMateria);
-    this.getUserName();
   }
-
-  getUserName = async () => {
-    const docObj = await getDocument(`users/${this.state.idUser}`);
-    this.setState({
-      nombreUser: docObj.data.name,
-    });
-  };
 
   handleChangeMulti = (selectedOptions) => {
     this.setState({ selectedOptions });
@@ -61,7 +52,7 @@ class FormMensaje extends Component {
     const msg = {
       emisor: {
         id: this.state.idUser,
-        nombre: this.state.nombreUser,
+        nombre: this.props.nombre + this.props.apellido,
       },
       receptor: receptores,
       contenido: this.state.textoMensaje,
@@ -168,9 +159,10 @@ class FormMensaje extends Component {
 }
 
 const mapStateToProps = ({ authUser, seleccionCurso }) => {
-  const { user } = authUser;
+  const { user, userData } = authUser;
+  const { nombre, apellido } = userData;
   const { subject } = seleccionCurso;
-  return { user, subject };
+  return { user, subject, nombre, apellido };
 };
 
 export default connect(mapStateToProps)(FormMensaje);

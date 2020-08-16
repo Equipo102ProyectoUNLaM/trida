@@ -34,15 +34,9 @@ import { getDirection, setDirection } from '../../helpers/Utils';
 class TopNav extends Component {
   constructor(props) {
     super(props);
-    var institution = JSON.parse(localStorage.getItem('institution'));
-    var course = JSON.parse(localStorage.getItem('course'));
-    var subject = JSON.parse(localStorage.getItem('subject'));
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
-      institution,
-      course,
-      subject,
     };
   }
 

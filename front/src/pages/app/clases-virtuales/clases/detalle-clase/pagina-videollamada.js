@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import Videollamada from 'components/videollamada/videollamada';
 import {
@@ -15,9 +16,9 @@ import { createRandomString } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 
-const PaginaVideollamada = ({ idSala }) => {
+const PaginaVideollamada = (props) => {
   const { handleSubmit, register, errors } = useForm();
-  const room = CryptoJS.AES.decrypt(idSala, secretKey).toString(
+  const room = CryptoJS.AES.decrypt(props.idSala, secretKey).toString(
     CryptoJS.enc.Utf8
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
@@ -61,24 +62,14 @@ const PaginaVideollamada = ({ idSala }) => {
         <Container>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <FormGroup className="mb-3">
-              <Label>Sala</Label>
-              <Input
-                id="room"
-                name="room"
-                type="text"
-                placeholder="Sala"
-                value={room}
-                disabled={true}
-              />
-            </FormGroup>
-            <FormGroup className="mb-3">
               <Label>Nombre</Label>
               <Input
                 id="name"
                 name="name"
                 type="text"
                 placeholder="Nombre"
-                value={name}
+                value={`${props.nombre} ${props.apellido}`}
+                disabled
                 onChange={(e) => setName(e.target.value)}
                 innerRef={register({
                   required: 'El nombre es requerido!',
@@ -121,4 +112,13 @@ const PaginaVideollamada = ({ idSala }) => {
   );
 };
 
-export default PaginaVideollamada;
+const mapStateToProps = ({ authUser }) => {
+  const { userData } = authUser;
+  const { nombre, apellido } = userData;
+  return {
+    nombre,
+    apellido,
+  };
+};
+
+export default connect(mapStateToProps)(PaginaVideollamada);

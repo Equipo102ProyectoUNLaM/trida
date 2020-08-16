@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getFormattedDate } from 'helpers/Utils';
@@ -17,11 +18,10 @@ class Detail extends React.Component {
 
   constructor(props) {
     super(props);
-    const { id } = JSON.parse(localStorage.getItem('subject'));
 
     this.state = {
       isLoading: true,
-      subjectId: id,
+      subjectId: this.props.subject.id,
       alumno: '',
       estado: '',
       fecha_entrega: '',
@@ -226,4 +226,11 @@ class Detail extends React.Component {
   }
 }
 
-export default Detail;
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return {
+    subject,
+  };
+};
+
+export default connect(mapStateToProps)(Detail);
