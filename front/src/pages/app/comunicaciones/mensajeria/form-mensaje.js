@@ -13,14 +13,12 @@ class FormMensaje extends Component {
   constructor(props) {
     super(props);
 
-    const { id: idMat } = JSON.parse(localStorage.getItem('subject'));
-
     this.state = {
       textoMensaje: '',
       asunto: '',
       selectedOptions: [],
       selectedTag: [],
-      idMateria: idMat,
+      idMateria: this.props.subject.id,
       isLoading: true,
       idUser: this.props.user,
       nombreUser: '',
@@ -169,9 +167,10 @@ class FormMensaje extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user } = authUser;
-  return { user };
+  const { subject } = seleccionCurso;
+  return { user, subject };
 };
 
 export default connect(mapStateToProps)(FormMensaje);

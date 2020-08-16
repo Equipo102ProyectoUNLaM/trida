@@ -17,6 +17,7 @@ import {
   clickOnMobileMenu,
   logoutUser,
   changeLocale,
+  cleanSeleccionCurso,
 } from 'redux/actions';
 
 import {
@@ -37,17 +38,10 @@ const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 class TopNav extends Component {
   constructor(props) {
     super(props);
-    var institution = JSON.parse(localStorage.getItem('institution'));
-    var course = JSON.parse(localStorage.getItem('course'));
-    var subject = JSON.parse(localStorage.getItem('subject'));
-    var userName = localStorage.getItem('user_name');
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
       fotoURL: '',
-      institution,
-      course,
-      subject,
       userName,
     };
   }
@@ -200,6 +194,7 @@ class TopNav extends Component {
 
   handleLogout = () => {
     this.props.logoutUser();
+    this.props.cleanSeleccionCurso();
   };
 
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
@@ -261,17 +256,17 @@ class TopNav extends Component {
             <Breadcrumb className="nomargin">
               <BreadcrumbItem>
                 <a href="/seleccion-curso/institution">
-                  {this.state.institution.name}
+                  {this.props.institution.name}
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <a
-                  href={`/seleccion-curso/course/${this.state.institution.id}`}
+                  href={`/seleccion-curso/course/${this.props.institution.id}`}
                 >
-                  {this.state.course.name}
+                  {this.props.course.name}
                 </a>
               </BreadcrumbItem>
-              <BreadcrumbItem active>{this.state.subject.name}</BreadcrumbItem>
+              <BreadcrumbItem active>{this.props.subject.name}</BreadcrumbItem>
             </Breadcrumb>
           </div>
         </div>
@@ -334,16 +329,20 @@ class TopNav extends Component {
   }
 }
 
-const mapStateToProps = ({ menu, settings, authUser }) => {
+const mapStateToProps = ({ menu, settings, authUser, seleccionCurso }) => {
   const { containerClassnames, menuClickCount, selectedMenuHasSubItems } = menu;
   const { locale } = settings;
   const { user } = authUser;
+  const { institution, course, subject } = seleccionCurso;
   return {
     containerClassnames,
     menuClickCount,
     selectedMenuHasSubItems,
     locale,
     user,
+    institution,
+    course,
+    subject,
   };
 };
 
@@ -352,6 +351,7 @@ export default injectIntl(
     setContainerClassnames,
     clickOnMobileMenu,
     logoutUser,
+    cleanSeleccionCurso,
     changeLocale,
   })(TopNav)
 );

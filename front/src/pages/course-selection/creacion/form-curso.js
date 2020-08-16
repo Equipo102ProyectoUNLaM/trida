@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Row,
-  Card,
-  CardTitle,
-  Label,
-  Button,
-  FormGroup,
-  NavLink,
-} from 'reactstrap';
+import { Row, Card, CardTitle, Button, FormGroup, NavLink } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { addToSubCollection } from 'helpers/Firebase-db';
+import TagsInput from 'react-tagsinput';
+import { toolTipCursos } from 'constants/texts';
+import { isEmpty } from 'helpers/Utils';
+import 'react-tagsinput/react-tagsinput.css';
 
 class FormCurso extends Component {
   constructor(props) {
@@ -22,6 +18,7 @@ class FormCurso extends Component {
     this.state = {
       isEmpty: false,
       nombre: '',
+      cursosTags: [],
     };
   }
 
@@ -30,29 +27,39 @@ class FormCurso extends Component {
     this.setState({ [name]: value });
   };
 
+  handleTagChange = (cursosTags) => {
+    this.setState({ cursosTags });
+  };
+
   onUserSubmit = async () => {
-    const { instId } = this.props.location;
-    const obj = {
-      nombre: this.state.nombre,
-    };
-    const docRef = await addToSubCollection(
-      'instituciones',
-      instId,
-      'cursos',
-      obj,
-      this.props.user,
-      'Curso agregado!',
-      'Curso agregado exitosamente',
-      'Error al agregar el curso'
-    );
-    localStorage.setItem(
-      'course',
-      JSON.stringify({ id: docRef.id, name: obj.nombre })
-    );
+    const { cursosTags } = this.state;
+
+    const { instId, instRef } = this.props.location;
+
+    const cursosMapeados = {};
+
+    for (const tag in cursosTags) {
+      const cursoObj = {
+        nombre: cursosTags[tag],
+      };
+      const docRef = await addToSubCollection(
+        'instituciones',
+        instId,
+        'cursos',
+        cursoObj,
+        this.props.user,
+        'Curso agregado!',
+        'Curso agregado exitosamente',
+        'Error al agregar el curso'
+      );
+      cursosMapeados[docRef.id] = { ref: docRef, nombre: cursoObj.nombre };
+    }
+
     this.props.history.push({
       pathname: '/seleccion-curso/crear-materia',
-      cursoId: docRef.id,
+      cursos: cursosMapeados,
       instId,
+      instRef,
     });
   };
 
@@ -71,20 +78,18 @@ class FormCurso extends Component {
               <Formik onSubmit={this.onUserSubmit}>
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
-                    <FormGroup className="form-group has-float-label">
-                      <Label>
+                    <FormGroup>
+                      <p className="tip-text">{toolTipCursos}</p>
+                      <div className="form-group has-float-label">
+                        <TagsInput
+                          value={this.state.cursosTags}
+                          onChange={this.handleTagChange}
+                          inputProps={{
+                            placeholder: '',
+                          }}
+                        />
                         <IntlMessages id="curso.nombre" />
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="nombre"
-                        onChange={this.handleChange}
-                      />
-                      {errors.nombre && touched.nombre && (
-                        <div className="invalid-feedback d-block">
-                          {errors.nombre}
-                        </div>
-                      )}
+                      </div>
                     </FormGroup>
                     <p className="tip-text">Ejemplo: &quot;1er grado&quot;</p>
                     <Row className="button-group">
@@ -94,6 +99,7 @@ class FormCurso extends Component {
                           this.props.loading ? 'show-spinner' : ''
                         }`}
                         size="lg"
+                        disabled={isEmpty(this.state.cursosTags)}
                       >
                         <span className="spinner d-inline-block">
                           <span className="bounce1" />

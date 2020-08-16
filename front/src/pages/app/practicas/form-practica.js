@@ -50,7 +50,6 @@ class FormPractica extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     if (this.props.operationType === 'add') {
-      const { id } = JSON.parse(localStorage.getItem('subject'));
       const obj = {
         nombre: this.state.nombre,
         fechaLanzada: this.state.fechaLanzada,
@@ -59,7 +58,7 @@ class FormPractica extends React.Component {
         fechaVencimiento: this.state.fechaVencimiento,
         fechaPublicada: new Date(),
         activo: true,
-        idMateria: id,
+        idMateria: this.props.subject.id,
       };
       await addDocument(
         'practicas',
@@ -150,9 +149,10 @@ class FormPractica extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user } = authUser;
-  return { user };
+  const { subject } = seleccionCurso;
+  return { user, subject };
 };
 
 export default connect(mapStateToProps)(FormPractica);

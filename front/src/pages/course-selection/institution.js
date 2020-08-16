@@ -3,9 +3,9 @@ import { Row, Card, CardBody, Jumbotron } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
-import MediumCardListView from 'containers/pages/MediumCardListView';
+import MediumCardListView from '../../containers/pages/MediumCardListView';
 import { connect } from 'react-redux';
-import { logoutUser } from 'redux/actions';
+import { logoutUser, updateInstitution } from 'redux/actions';
 import { getInstituciones } from 'helpers/Firebase-user';
 import CrearInstitucion from './creacion/crear-institucion';
 
@@ -43,7 +43,7 @@ class Institution extends Component {
 
   onInstitutionSelected = (institution) => {
     if (institution) {
-      localStorage.setItem('institution', JSON.stringify(institution));
+      this.props.updateInstitution(institution);
     }
   };
 
@@ -109,5 +109,6 @@ const mapStateToProps = ({ authUser }) => {
 export default withRouter(
   connect(mapStateToProps, {
     logoutUser,
+    updateInstitution,
   })(Institution)
 );
