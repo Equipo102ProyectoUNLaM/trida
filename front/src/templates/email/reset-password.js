@@ -83,12 +83,14 @@ export default class ResetPassword extends Component {
                     <h1>Su contraseña ha sido modificada correctamente</h1>
                   </CardTitle>
                   <CardBody>
-                    <h4>
-                      Ahora puede iniciar sesión con su nueva contraseña en
-                    </h4>
-                    <NavLink to={`/`}>
-                      <h4>trida.com.ar</h4>
-                    </NavLink>
+                    <Row>
+                      <h4>
+                        Ahora puede iniciar sesión con su nueva contraseña en
+                      </h4>
+                      <NavLink to={`/`}>
+                        <h4>trida.com.ar</h4>
+                      </NavLink>
+                    </Row>
                   </CardBody>
                 </div>
               </Card>
