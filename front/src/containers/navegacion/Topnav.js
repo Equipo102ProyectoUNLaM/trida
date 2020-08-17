@@ -30,6 +30,8 @@ import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
+const publicUrl = process.env.PUBLIC_URL;
+const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
 class TopNav extends Component {
   constructor(props) {
@@ -207,8 +209,13 @@ class TopNav extends Component {
   };
 
   render() {
-    const { containerClassnames, menuClickCount } = this.props;
-    const { fotoURL } = this.state;
+    const {
+      containerClassnames,
+      menuClickCount,
+      foto,
+      nombre,
+      apellido,
+    } = this.props;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
@@ -279,14 +286,18 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-user">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">
-                  {`${this.props.nombre} ${this.props.apellido}`}
-                </span>
+                <span className="name mr-1">{`${nombre} ${apellido}`}</span>
               </DropdownToggle>
               <DropdownToggle className="p-0" color="empty">
-                <span>
-                  <img alt="Foto perfil" src={this.props.foto} />
-                </span>
+                {foto ? (
+                  <span>
+                    <img src={foto} />
+                  </span>
+                ) : (
+                  <span>
+                    <img src={imagenDefaultUsuario} />
+                  </span>
+                )}
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>

@@ -5,7 +5,6 @@ import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import FileBrowser, { Icons } from 'react-keyed-file-browser';
 import { storage } from 'helpers/Firebase';
-import { injectIntl } from 'react-intl';
 import Moment from 'moment';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import { DefaultDetail } from 'constants/fileBrowser/details';

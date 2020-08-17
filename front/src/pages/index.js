@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getDocument } from 'helpers/Firebase-db';
 
 // si es primer login, mostrar pantalla de primer login
 // si es invitacion, mostrar cambiar contraseña y luego primer login
