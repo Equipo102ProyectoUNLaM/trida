@@ -91,38 +91,44 @@ class FormEvaluacion extends React.Component {
   };
 
   onEdit = async () => {
-    let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+    try {
+      let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
 
-    this.state.ejercicios.forEach(async (element) => {
-      await deleteDocument(
-        `evaluaciones/${this.state.evaluacionId}/ejercicios`,
-        element.id
+      const obj = {
+        nombre: this.state.nombre,
+        fecha_finalizacion: this.state.fecha_finalizacion,
+        fecha_publicacion: this.state.fecha_publicacion,
+        descripcion: this.state.descripcion,
+      };
+
+      await editDocument(
+        'evaluaciones',
+        this.state.evaluacionId,
+        obj,
+        'Evaluación'
       );
-    });
 
-    ejercicios.forEach(async (element) => {
-      await addDocument(
-        `evaluaciones/${this.state.evaluacionId}/ejercicios`,
-        element
-      );
-    });
+      this.state.ejercicios.forEach(async (element) => {
+        await deleteDocument(
+          `evaluaciones/${this.state.evaluacionId}/ejercicios`,
+          element.id
+        );
+      });
 
-    const obj = {
-      nombre: this.state.nombre,
-      fecha_finalizacion: this.state.fecha_finalizacion,
-      fecha_publicacion: this.state.fecha_publicacion,
-      descripcion: this.state.descripcion,
-    };
+      ejercicios.forEach(async (element) => {
+        await addDocument(
+          `evaluaciones/${this.state.evaluacionId}/ejercicios`,
+          element,
+          this.props.user
+        );
+      });
 
-    await editDocument(
-      'evaluaciones',
-      this.state.evaluacionId,
-      obj,
-      'Evaluación'
-    );
-    this.toggleEditModal();
-    this.props.onEvaluacionEditada();
-    return;
+      this.toggleEditModal();
+      this.props.onEvaluacionEditada();
+      return;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   render() {
@@ -165,18 +171,6 @@ class FormEvaluacion extends React.Component {
         <Row>
           <Colxx xxs="6">
             <FormGroup className="mb-3">
-              <Label>Fecha de Finalización</Label>
-              <Input
-                name="fecha_finalizacion"
-                type="date"
-                placeholder="Ingrese la fecha de finalización de la evaluación"
-                onChange={this.handleChange}
-                value={fecha_finalizacion}
-              />
-            </FormGroup>
-          </Colxx>
-          <Colxx xxs="6">
-            <FormGroup className="mb-3">
               <Label>Fecha de Publicación</Label>
               <Input
                 name="fecha_publicacion"
@@ -184,6 +178,18 @@ class FormEvaluacion extends React.Component {
                 placeholder="Ingrese la fecha de publicación de la evaluación"
                 onChange={this.handleChange}
                 value={fecha_publicacion}
+              />
+            </FormGroup>
+          </Colxx>
+          <Colxx xxs="6">
+            <FormGroup className="mb-3">
+              <Label>Fecha de Finalización</Label>
+              <Input
+                name="fecha_finalizacion"
+                type="date"
+                placeholder="Ingrese la fecha de finalización de la evaluación"
+                onChange={this.handleChange}
+                value={fecha_finalizacion}
               />
             </FormGroup>
           </Colxx>

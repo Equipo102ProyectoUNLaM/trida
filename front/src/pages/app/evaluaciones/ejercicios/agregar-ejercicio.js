@@ -173,7 +173,7 @@ class AgregarEjercicio extends React.Component {
                                 ejercicioId={index}
                                 value={ejercicio}
                                 preview={false}
-                                // onEjercicioChange={this.onEjercicioChange}
+                                onEjercicioChange={this.onEjercicioChange}
                               />
                             )}
 
@@ -182,7 +182,7 @@ class AgregarEjercicio extends React.Component {
                                 ejercicioId={index}
                                 value={ejercicio}
                                 preview={false}
-                                // onEjercicioChange={this.onEjercicioChange}
+                                onEjercicioChange={this.onEjercicioChange}
                               />
                             )}
                           </div>
