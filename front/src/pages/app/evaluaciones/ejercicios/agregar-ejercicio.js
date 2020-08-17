@@ -108,8 +108,10 @@ class AgregarEjercicio extends React.Component {
       ejercicios[index].numero = ejercicios[index].numero - 1;
     }
     ejercicios.splice(index, 1);
+    let oldCant = this.state.cant;
     this.setState({
       ejerciciosSeleccionados: ejercicios,
+      cant: oldCant - 1,
     });
   };
 
