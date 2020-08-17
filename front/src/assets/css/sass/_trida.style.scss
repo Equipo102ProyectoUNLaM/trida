@@ -6354,14 +6354,14 @@ input:-webkit-autofill {
 }
 
 .theme-colors {
-  width: 280px;
+  width: 130px;
   position: fixed;
   z-index: 1030;
   top: 50%;
   right: 0;
   background: $foreground-color;
   @include depth(1);
-  transform: translate(280px, -50%);
+  transform: translate(130px, -50%);
   transition: transform 0.4s ease-out;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -6381,6 +6381,7 @@ input:-webkit-autofill {
   }
 
   .theme-color {
+    margin-right: 1rem;
     width: 24px;
     height: 24px;
     display: inline-block;
