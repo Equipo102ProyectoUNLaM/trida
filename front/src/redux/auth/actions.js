@@ -17,6 +17,7 @@ import {
 
 import { auth, functions } from 'helpers/Firebase';
 import { getCollection } from 'helpers/Firebase-db';
+import { getUserData } from 'helpers/Firebase-user';
 import { addMail, inviteMail } from 'constants/emailTexts';
 import { authErrorMessage } from 'constants/errorMessages';
 
@@ -30,7 +31,8 @@ export const loginUser = (email, password) => async (dispatch) => {
   try {
     const login = await auth.signInWithEmailAndPassword(email, password);
     if (!login.message) {
-      dispatch(loginUserSuccess(login.user));
+      const data = await getUserData(`${login.user.uid}`);
+      dispatch(loginUserSuccess(login.user, data));
     } else {
       dispatch(loginUserError(login.message));
     }
@@ -45,9 +47,9 @@ export const loginUserStart = (user, history) => ({
   payload: { user, history },
 });
 
-export const loginUserSuccess = (user) => ({
+export const loginUserSuccess = (user, userData) => ({
   type: LOGIN_USER_SUCCESS,
-  payload: user,
+  payload: { user, userData },
 });
 
 export const loginUserError = (message) => ({
