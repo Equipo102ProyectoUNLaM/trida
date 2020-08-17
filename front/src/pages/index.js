@@ -12,8 +12,8 @@ class Main extends Component {
 
     this.state = {
       isLoading: true,
-      primerLogin: true,
-      cambiarPassword: true,
+      primerLogin: this.props.primerLogin,
+      cambiarPassword: this.props.cambiarPassword,
     };
   }
 
@@ -22,11 +22,7 @@ class Main extends Component {
   }
 
   getUserData = async () => {
-    const datos = await getDocument(`usuarios/${this.props.loginUser}`);
-    const { data } = datos;
     this.setState({
-      cambiarPassword: data.cambiarPassword,
-      primerLogin: data.primerLogin,
       isLoading: false,
     });
   };
@@ -51,9 +47,9 @@ class Main extends Component {
 }
 
 const mapStateToProps = ({ authUser }) => {
-  const { user: loginUser } = authUser;
-
-  return { loginUser };
+  const { user: loginUser, userData } = authUser;
+  const { cambiarPassword, primerLogin } = userData;
+  return { loginUser, cambiarPassword, primerLogin };
 };
 
 export default connect(mapStateToProps)(Main);

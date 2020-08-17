@@ -34,11 +34,12 @@ export default (state = INIT_STATE, action) => {
       return { ...state, loading: true, error: '' };
 
     case LOGIN_USER_SUCCESS:
+      const { instituciones, ...userData } = action.payload.userData;
       return {
         ...state,
         loading: false,
         user: action.payload.user.uid,
-        userData: action.payload.userData,
+        userData: userData,
         error: '',
       };
 

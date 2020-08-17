@@ -280,8 +280,7 @@ class TopNav extends Component {
             <UncontrolledDropdown className="dropdown-menu-user">
               <DropdownToggle className="p-0" color="empty">
                 <span className="name mr-1">
-                  {this.props.nombre}
-                  {this.props.apellido}
+                  {`${this.props.nombre} ${this.props.apellido}`}
                 </span>
               </DropdownToggle>
               <DropdownToggle className="p-0" color="empty">
