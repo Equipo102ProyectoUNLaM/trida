@@ -48,7 +48,6 @@ exports.register = functions.auth.user().onCreate((data)=> {
       nombre: '',
       apellido: '',
       telefono: '',
-      foto: '',
       primerLogin: true,
       cambiarPassword: false,
       instituciones: [],
@@ -58,7 +57,7 @@ exports.register = functions.auth.user().onCreate((data)=> {
     return admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set(user)
-    .then(doc => console.log('user added', doc))   
+    .then(doc => console.log('user added', doc))
 });
 
 const authErrorMessage = (error) => {
@@ -178,7 +177,7 @@ exports.asignarMaterias = functions.https.onCall(async (data)=> {
   } catch (error) {
     console.log('error', error);
   }
-  
+
 });
 
 exports.institucionesUsuario = async ({ uid }) => {

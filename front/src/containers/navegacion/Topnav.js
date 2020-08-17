@@ -29,8 +29,11 @@ import {
 import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
-import { getDirection, setDirection } from 'helpers/Utils';
-import { getUserName } from 'helpers/Firebase-user';
+import { getDirection, setDirection } from '../../helpers/Utils';
+import { getUserNameAndPhoto } from 'helpers/Firebase-user';
+
+const publicUrl = process.env.PUBLIC_URL;
+const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
 class TopNav extends Component {
   constructor(props) {
@@ -38,12 +41,13 @@ class TopNav extends Component {
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
+      fotoURL: '',
       userName: '',
     };
   }
 
   componentDidMount() {
-    this.getUserName();
+    this.getUserNameAndPhoto();
   }
 
   componentDidUpdate(prevProps) {
@@ -212,11 +216,12 @@ class TopNav extends Component {
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
-  async getUserName() {
+  async getUserNameAndPhoto() {
     try {
-      const name = await getUserName(this.props.user);
+      const { nombre, foto } = await getUserNameAndPhoto(this.props.user);
       this.setState({
-        userName: name,
+        userName: nombre,
+        fotoURL: foto,
       });
     } catch (err) {
       console.log('Error getting users document', err);
@@ -225,6 +230,7 @@ class TopNav extends Component {
 
   render() {
     const { containerClassnames, menuClickCount } = this.props;
+    const { fotoURL } = this.state;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
@@ -298,7 +304,15 @@ class TopNav extends Component {
                 <span className="name mr-1">{this.state.userName}</span>
               </DropdownToggle>
               <DropdownToggle className="p-0" color="empty">
-                <div className="header-icons glyph-icon simple-icon-user" />
+                {fotoURL ? (
+                  <span>
+                    <img src={fotoURL} />
+                  </span>
+                ) : (
+                  <span>
+                    <img src={imagenDefaultUsuario} />
+                  </span>
+                )}
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>

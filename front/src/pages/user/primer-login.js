@@ -18,6 +18,7 @@ import { editDocument } from 'helpers/Firebase-db';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
+import { storage } from 'helpers/Firebase';
 
 class PrimerLogin extends Component {
   constructor(props) {
@@ -27,19 +28,49 @@ class PrimerLogin extends Component {
       nombre: '',
       apellido: '',
       telefono: 0,
-      foto: '',
+      isLoading: false,
+      fotoPerfilText: 'Seleccione una foto de perfil',
     };
   }
 
+  subirFoto = async (file) => {
+    const listRef = storage.ref(`usuarios/${this.props.loginUser}`);
+    const task = listRef.put(file);
+    task.on(
+      'state_changed',
+      () => {},
+      (error) => {
+        console.error(error.message);
+        enviarNotificacionError(
+          'La foto de perfil no pudo ser cargada',
+          'Error'
+        );
+        this.setState({
+          loading: false,
+        });
+      },
+      () => {
+        this.setState({
+          loading: false,
+        });
+      }
+    );
+  };
+
   onUserSubmit = async () => {
     const { nombre, apellido, telefono, foto } = this.state;
+    this.setState({
+      loading: true,
+    });
+
+    await this.subirFoto(foto);
+
     if (!this.props.loading) {
       if (nombre !== '' && apellido !== '') {
         const obj = {
           nombre,
           apellido,
           telefono,
-          foto,
           primerLogin: false,
         };
         await editDocument(
@@ -67,11 +98,16 @@ class PrimerLogin extends Component {
   };
 
   setSelectedFile = (event) => {
-    console.log('file');
+    this.setState({
+      foto: event.target.files[0],
+      fotoPerfilText: event.target.files[0].name,
+    });
   };
 
   render() {
-    return (
+    return this.state.isLoading ? (
+      <div className="loading" />
+    ) : (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
@@ -137,7 +173,7 @@ class PrimerLogin extends Component {
                         </InputGroupAddon>
                         <div className="input-file">
                           <label htmlFor="upload-photo">
-                            Seleccione su foto
+                            {this.state.fotoPerfilText}
                           </label>
                           <input
                             onChange={this.setSelectedFile}
