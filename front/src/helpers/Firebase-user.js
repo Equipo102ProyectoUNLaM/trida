@@ -11,9 +11,14 @@ export const getUserNameAndPhoto = async (userId) => {
       .ref('usuarios')
       .child(userId)
       .getDownloadURL()
-      .then((url) => {
-        foto = url;
-      });
+      .then(
+        (url) => {
+          foto = url;
+        },
+        () => {
+          foto = '';
+        }
+      );
 
     return {
       nombre: nombre + ' ' + apellido,
