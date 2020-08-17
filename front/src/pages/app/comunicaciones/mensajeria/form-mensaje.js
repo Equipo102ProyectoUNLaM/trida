@@ -82,11 +82,11 @@ class FormMensaje extends Component {
     // Me quedo con el array de usuarios que pertenecen a esta materia
     const users = arrayDeObjetos[0].data.usuario_id;
     for (const user of users) {
-      const docObj = await getDocument(`users/${user}`);
+      const docObj = await getDocument(`usuarios/${user}`);
       let i = 0;
 
       if (docObj.data.id !== this.state.idUser) {
-        const nombre = docObj.data.name;
+        const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
         // Armo el array que va a alimentar el Select
         datos.push({
           label: nombre,

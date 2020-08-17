@@ -33,7 +33,6 @@ class Mensajeria extends Component {
     const mensajesEnviados = await getCollection('mensajes', [
       { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
       { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'general', operator: '==', id: false },
       { field: 'formal', operator: '==', id: false },
     ]);
     await this.dataMessageSentRenderer(mensajesEnviados);
@@ -61,7 +60,7 @@ class Mensajeria extends Component {
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
-      destinatarios: elem.data.receptor,
+      destinatarios: elem.data.general ? [] : elem.data.receptor,
     }));
     arrayDeData = await this.getNameOfReceivers(arrayDeData);
     this.setState({
@@ -85,14 +84,18 @@ class Mensajeria extends Component {
 
   getNameOfReceivers = async (arrayDeData) => {
     arrayDeData.forEach(async (mensaje, indexM) => {
-      mensaje.destinatarios.forEach(async (destinatario, indexD) => {
-        let name = await getUsernameById(destinatario);
-        if (arrayDeData[indexM].destinatarios.length - 1 > indexD) {
-          arrayDeData[indexM].destinatarios[indexD] = name + ', ';
-        } else {
-          arrayDeData[indexM].destinatarios[indexD] = name;
-        }
-      });
+      if (mensaje.destinatarios.length > 0) {
+        mensaje.destinatarios.forEach(async (destinatario, indexD) => {
+          let name = await getUsernameById(destinatario);
+          if (arrayDeData[indexM].destinatarios.length - 1 > indexD) {
+            arrayDeData[indexM].destinatarios[indexD] = name + ', ';
+          } else {
+            arrayDeData[indexM].destinatarios[indexD] = name;
+          }
+        });
+      } else {
+        arrayDeData[indexM].destinatarios = ['Mensaje General'];
+      }
     });
     return arrayDeData;
   };
