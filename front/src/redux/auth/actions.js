@@ -16,6 +16,9 @@ import {
 } from '../actions';
 
 import { auth, functions } from 'helpers/Firebase';
+import { getCollection } from 'helpers/Firebase-db';
+import { addMail, inviteMail } from 'constants/emailTexts';
+import { authErrorMessage } from 'constants/errorMessages';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -32,7 +35,8 @@ export const loginUser = (email, password) => async (dispatch) => {
       dispatch(loginUserError(login.message));
     }
   } catch (error) {
-    dispatch(loginUserError(error));
+    const errorMessage = authErrorMessage(error.message);
+    dispatch(loginUserError(errorMessage));
   }
 };
 
@@ -107,7 +111,6 @@ export const registerUserError = (message) => ({
 
 export const registerUser = (user) => async (dispatch) => {
   const { email, password, isInvited, instId, courseId, subjectId } = user;
-
   dispatch(registerUserStart());
 
   try {
@@ -118,7 +121,7 @@ export const registerUser = (user) => async (dispatch) => {
     if (data) {
       const { uid } = data;
       if (isInvited) {
-        await sendInvitationEmail(email);
+        await sendInvitationEmail(email, inviteMail);
         await auth.sendPasswordResetEmail(email);
 
         const asignarMateriasAction = functions.httpsCallable(
@@ -139,13 +142,30 @@ export const registerUser = (user) => async (dispatch) => {
       dispatch(registerUserError(registerUser.message));
     }
   } catch (error) {
-    return dispatch(registerUserError(error.message));
+    if (
+      error.message === 'Este correo ya está siendo usado por otro usuario.'
+    ) {
+      const [userObj] = await getCollection('usuarios', [
+        { field: 'mail', operator: '==', id: email },
+      ]);
+      const { id } = userObj;
+      const agregarMaterias = functions.httpsCallable('agregarMaterias');
+      await agregarMaterias({
+        instId,
+        courseId,
+        subjectId,
+        uid: id,
+      });
+      await sendInvitationEmail(email, addMail);
+      return dispatch(registerUserSuccess(registerUser));
+    } else return dispatch(registerUserError(error.message));
   }
 };
 
-export const sendInvitationEmail = async (email) => {
+export const sendInvitationEmail = async (email, options) => {
   const sendMail = functions.httpsCallable('sendMail');
-  sendMail(email).catch(function (error) {
+
+  sendMail({ email, ...options }).catch(function (error) {
     console.log(error);
   });
 };
