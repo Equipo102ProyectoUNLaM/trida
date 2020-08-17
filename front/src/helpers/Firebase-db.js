@@ -3,15 +3,6 @@ import { NotificationManager } from 'components/common/react-notifications';
 import { getFechaHoraActual } from 'helpers/Utils';
 firestore.enablePersistence().catch(function (err) {
   console.log(err);
-  if (err.code === 'failed-precondition') {
-    // Multiple tabs open, persistence can only be enabled
-    // in one tab at a a time.
-    // ...
-  } else if (err.code === 'unimplemented') {
-    // The current browser does not support all of the
-    // features required to enable persistence
-    // ...
-  }
 });
 
 // trae una colección

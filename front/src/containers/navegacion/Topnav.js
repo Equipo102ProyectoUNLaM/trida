@@ -30,8 +30,6 @@ import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
-import { getUserNameAndPhoto } from 'helpers/Firebase-user';
-
 const publicUrl = process.env.PUBLIC_URL;
 const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
@@ -41,12 +39,7 @@ class TopNav extends Component {
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
-      userName: '',
     };
-  }
-
-  componentDidMount() {
-    this.getUserNameAndPhoto();
   }
 
   componentDidUpdate(prevProps) {
@@ -215,21 +208,14 @@ class TopNav extends Component {
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
-  async getUserNameAndPhoto() {
-    try {
-      const { nombre, foto } = await getUserNameAndPhoto(this.props.user);
-      this.setState({
-        userName: nombre,
-        fotoURL: foto,
-      });
-    } catch (err) {
-      console.log('Error getting users document', err);
-    }
-  }
-
   render() {
-    const { containerClassnames, menuClickCount } = this.props;
-    const { fotoURL } = this.state;
+    const {
+      containerClassnames,
+      menuClickCount,
+      foto,
+      nombre,
+      apellido,
+    } = this.props;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
@@ -300,12 +286,12 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-user">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">{this.state.userName}</span>
+                <span className="name mr-1">{`${nombre} ${apellido}`}</span>
               </DropdownToggle>
               <DropdownToggle className="p-0" color="empty">
-                {fotoURL ? (
+                {foto ? (
                   <span>
-                    <img src={fotoURL} />
+                    <img src={foto} />
                   </span>
                 ) : (
                   <span>
@@ -331,7 +317,8 @@ class TopNav extends Component {
 const mapStateToProps = ({ menu, settings, authUser, seleccionCurso }) => {
   const { containerClassnames, menuClickCount, selectedMenuHasSubItems } = menu;
   const { locale } = settings;
-  const { user } = authUser;
+  const { user, userData } = authUser;
+  const { nombre, apellido, foto } = userData;
   const { institution, course, subject } = seleccionCurso;
   return {
     containerClassnames,
@@ -339,6 +326,9 @@ const mapStateToProps = ({ menu, settings, authUser, seleccionCurso }) => {
     selectedMenuHasSubItems,
     locale,
     user,
+    nombre,
+    apellido,
+    foto,
     institution,
     course,
     subject,
