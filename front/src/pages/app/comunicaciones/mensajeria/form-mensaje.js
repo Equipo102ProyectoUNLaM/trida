@@ -21,6 +21,7 @@ class FormMensaje extends Component {
       idMateria: this.props.subject.id,
       isLoading: true,
       idUser: this.props.user,
+      esGeneral: false,
     };
   }
 
@@ -44,10 +45,11 @@ class FormMensaje extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
 
-    //Convierto el array de seleccionados al formato { id, nombre }
-    const receptores = this.state.selectedOptions.map(
-      ({ value, label }) => value
-    );
+    //Si no es un mensaje general, convierto el array de seleccionados al formato { id, nombre }
+    let receptores = null;
+    if (!this.state.esGeneral) {
+      receptores = this.state.selectedOptions.map(({ value, label }) => value);
+    }
 
     const msg = {
       emisor: {
@@ -58,7 +60,7 @@ class FormMensaje extends Component {
       contenido: this.state.textoMensaje,
       asunto: this.state.asunto,
       formal: false,
-      general: false,
+      general: this.state.esGeneral,
       idMateria: this.state.idMateria,
     };
     //guardar msj en bd
@@ -74,6 +76,13 @@ class FormMensaje extends Component {
     this.props.onMensajeEnviado();
   };
 
+  handleCheckBoxChange = async () => {
+    this.setState({
+      esGeneral: !this.state.esGeneral,
+      selectedOptions: [],
+    });
+  };
+
   getUsersOfSubject = async () => {
     const idMateria = this.state.idMateria;
     const arrayDeObjetos = await getCollection('usuariosPorMateria', [
@@ -82,11 +91,11 @@ class FormMensaje extends Component {
     // Me quedo con el array de usuarios que pertenecen a esta materia
     const users = arrayDeObjetos[0].data.usuario_id;
     for (const user of users) {
-      const docObj = await getDocument(`users/${user}`);
+      const docObj = await getDocument(`usuarios/${user}`);
       let i = 0;
 
       if (docObj.data.id !== this.state.idUser) {
-        const nombre = docObj.data.name;
+        const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
         // Armo el array que va a alimentar el Select
         datos.push({
           label: nombre,
@@ -104,7 +113,13 @@ class FormMensaje extends Component {
   };
 
   render() {
-    const { isLoading, selectedOptions, asunto, textoMensaje } = this.state;
+    const {
+      isLoading,
+      selectedOptions,
+      asunto,
+      textoMensaje,
+      esGeneral,
+    } = this.state;
     const { toggleModal } = this.props;
 
     return isLoading ? (
@@ -112,21 +127,36 @@ class FormMensaje extends Component {
     ) : (
       <form onSubmit={this.handleSubmit}>
         <Row>
-          <Colxx xxs="12" md="6">
+          <Colxx xxs="12" md="12">
             <label>
               <IntlMessages id="messages.receiver" />
             </label>
-            <Select
-              className="react-select"
-              classNamePrefix="react-select"
-              isMulti
-              placeholder="Seleccione los destinatarios"
-              name="form-field-name"
-              value={selectedOptions}
-              onChange={this.handleChangeMulti}
-              options={datos}
-              required
-            />
+            <Row>
+              <Colxx xxs="12" md="4">
+                <Select
+                  className="react-select"
+                  classNamePrefix="react-select"
+                  isMulti
+                  placeholder="Seleccione los destinatarios"
+                  name="form-field-name"
+                  value={selectedOptions}
+                  onChange={this.handleChangeMulti}
+                  options={datos}
+                  required
+                  isDisabled={esGeneral}
+                />
+              </Colxx>
+              <Colxx xxs="12" md="6" className="receivers-general">
+                <Input
+                  name="esGeneral"
+                  className="general-check"
+                  type="checkbox"
+                  checked={esGeneral}
+                  onChange={() => this.handleCheckBoxChange()}
+                />
+                <label>¿Es un mensaje general?</label>
+              </Colxx>
+            </Row>
           </Colxx>
         </Row>
 

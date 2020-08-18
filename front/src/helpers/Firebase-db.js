@@ -139,7 +139,7 @@ export const getDocumentWithSubCollection = async (docRef, subCollection) => {
 export const getUsernameById = async (id) => {
   let docObj = await getDocument(`usuarios/${id}`);
   let { data } = docObj;
-  return data.name;
+  return data.nombre + ' ' + data.apellido;
 };
 
 // agrega un documento

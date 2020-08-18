@@ -50,7 +50,7 @@ Table of Contents
 45.Board
 46.Course Selection
 47.Contenidos
-48. Mensajeria
+48.Mensajeria
 49.Correcciones
 50.Evaluaciones
 
@@ -9226,6 +9226,14 @@ tr.folder{
 }
 
 // 48 Mensajeria
+.receivers-general {
+  align-self: flex-end;
+}
+
+.general-check {
+  margin-right: 1rem;
+}
+
 .users-names {
   padding-top: 2rem;
 }
