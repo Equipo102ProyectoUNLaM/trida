@@ -52,6 +52,7 @@ Table of Contents
 47.Contenidos
 48. Mensajeria
 49.Correcciones
+50.Evaluaciones
 
 */
 
@@ -2903,7 +2904,7 @@ nav .nomargin {
 .tab-card {
   border: initial;
   background: $foreground-color;
-  width: 20rem !important;
+  width: 60rem !important;
   margin: 0.8rem;
 }
 
@@ -9303,4 +9304,69 @@ div.rendered-file-browser{
 
 .hide-button {
   display: none;
+}
+
+//50 Evaluaciones
+.ejerciciosItem {
+  width: 50%;
+  float: left;
+}
+
+.ejerciciosRow {
+  padding-bottom: 1%;
+  text-align: center;
+}
+
+.rta-libre-container{
+  padding-top: 2rem;
+}
+
+.delete-icon{
+  text-align: center;
+  margin: auto;
+  color: red;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding-bottom: 0.5rem;
+}
+
+.remove-icon{
+  text-align: center;
+  margin: auto;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.icon-container{
+  display: grid;
+}
+
+.checkbox{
+  position: relative;
+}
+
+.margin-auto{
+  margin:auto !important;
+}
+
+.opcionMultipleRow {
+  padding-bottom: 2%;
+}
+
+.opcionMultipleInput {
+  width: 80%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.tab-card-evaluaciones {
+  display:contents;
+}
+
+.modal-ejercicios{
+  max-width: 60rem !important;
+}
+
+.modal-ejercicios-body{
+  background-color: $theme-color-1;
 }

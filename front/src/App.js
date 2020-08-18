@@ -34,6 +34,10 @@ const ViewPizarron = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './pages/window-pizarron')
 );
 
+const Action = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ 'templates/email/action')
+);
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -93,6 +97,7 @@ class App extends Component {
                     exact
                     component={ViewMain}
                   />
+                  <Route path="/action" component={Action} />
                   <Redirect to="/error" />
                 </Switch>
               </Router>
