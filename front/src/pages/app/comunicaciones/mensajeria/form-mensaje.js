@@ -146,10 +146,10 @@ class FormMensaje extends Component {
                   isDisabled={esGeneral}
                 />
               </Colxx>
-              <Colxx xxs="12" md="6">
+              <Colxx xxs="12" md="6" className="receivers-general">
                 <Input
                   name="esGeneral"
-                  className="margin-auto checkbox"
+                  className="general-check"
                   type="checkbox"
                   checked={esGeneral}
                   onChange={() => this.handleCheckBoxChange()}
