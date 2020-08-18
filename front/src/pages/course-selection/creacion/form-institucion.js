@@ -17,6 +17,7 @@ import NIVELES from 'constants/niveles';
 import IntlMessages from 'helpers/IntlMessages';
 import { addDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
+import { formInstitucionSchema } from '../validations';
 
 class FormInstitucion extends Component {
   constructor(props) {
@@ -53,13 +54,14 @@ class FormInstitucion extends Component {
     this.setState({ selectedNiveles });
   };
 
-  onUserSubmit = async () => {
+  onUserSubmit = async (values) => {
+    const { nombre } = values;
     const nivelesState = [...this.state.selectedNiveles];
     const nivelesArray = nivelesState.map((elem) => elem.value);
 
     const obj = {
       niveles: nivelesArray,
-      nombre: this.state.nombre,
+      nombre: nombre,
       telefono: this.state.telefono,
       tipo: this.state.selectedInst.value,
     };
@@ -85,6 +87,7 @@ class FormInstitucion extends Component {
       selectedNiveles,
       nivelesOptions,
     } = this.state;
+    const initialValues = { nombre: '' };
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -96,18 +99,18 @@ class FormInstitucion extends Component {
               <CardTitle className="mb-4">
                 <IntlMessages id="institucion.complete-datos" />
               </CardTitle>
-              <Formik onSubmit={this.onUserSubmit}>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={this.onUserSubmit}
+                validationSchema={formInstitucionSchema}
+              >
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <FormGroup className="form-group has-float-label">
                       <Label>
                         <IntlMessages id="institucion.nombre" />
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="nombre"
-                        onChange={this.handleChange}
-                      />
+                      <Field className="form-control" name="nombre" />
                       {errors.nombre && touched.nombre && (
                         <div className="invalid-feedback d-block">
                           {errors.nombre}
@@ -130,7 +133,7 @@ class FormInstitucion extends Component {
                     </div>
                     <FormGroup className="form-group has-float-label">
                       <Label>
-                        <IntlMessages id="user.telefono" />
+                        <IntlMessages id="institucion.telefono" />
                       </Label>
                       <Field
                         className="form-control"

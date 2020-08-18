@@ -15,18 +15,18 @@ import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { editDocument } from 'helpers/Firebase-db';
-
+import { updateDatosUsuario } from 'redux/actions';
+import { getUserData } from 'helpers/Firebase-user';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { storage } from 'helpers/Firebase';
+import { primerLoginSchema } from './validations';
 
 class PrimerLogin extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      nombre: '',
-      apellido: '',
       telefono: 0,
       isLoading: false,
       fotoPerfilText: 'Seleccione una foto de perfil',
@@ -36,6 +36,10 @@ class PrimerLogin extends Component {
   subirFoto = async (file) => {
     const listRef = storage.ref(`usuarios/${this.props.loginUser}`);
     const task = listRef.put(file);
+    this.setState({
+      loading: true,
+    });
+
     task.on(
       'state_changed',
       () => {},
@@ -57,33 +61,24 @@ class PrimerLogin extends Component {
     );
   };
 
-  onUserSubmit = async () => {
-    const { nombre, apellido, telefono, foto } = this.state;
-    this.setState({
-      loading: true,
-    });
+  onUserSubmit = async (values) => {
+    const { nombre, apellido } = values;
+    const { telefono, foto } = this.state;
 
-    await this.subirFoto(foto);
-
-    if (!this.props.loading) {
-      if (nombre !== '' && apellido !== '') {
-        const obj = {
-          nombre,
-          apellido,
-          telefono,
-          primerLogin: false,
-        };
-        await editDocument(
-          'usuarios',
-          this.props.loginUser,
-          obj,
-          'Información'
-        );
-        this.props.history.push('/');
-      } else {
-        enviarNotificacionError('Complete el nombre y apellido', 'Error');
-      }
+    if (foto) {
+      await this.subirFoto(foto);
     }
+
+    const obj = {
+      nombre,
+      apellido,
+      telefono,
+      primerLogin: false,
+    };
+    await editDocument('usuarios', this.props.loginUser, obj, 'Información');
+    this.props.history.push('/seleccion-curso');
+    const userData = await getUserData(this.props.loginUser);
+    this.props.updateDatosUsuario(userData);
   };
 
   componentDidUpdate() {
@@ -105,6 +100,7 @@ class PrimerLogin extends Component {
   };
 
   render() {
+    const initialValues = { nombre: '', apellido: '' };
     return this.state.isLoading ? (
       <div className="loading" />
     ) : (
@@ -118,18 +114,18 @@ class PrimerLogin extends Component {
               <CardTitle className="mb-4">
                 <IntlMessages id="user.complete-datos" />
               </CardTitle>
-              <Formik onSubmit={this.onUserSubmit}>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={this.onUserSubmit}
+                validationSchema={primerLoginSchema}
+              >
                 {({ errors, touched }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <FormGroup className="form-group has-float-label">
                       <Label>
                         <IntlMessages id="user.nombre" />
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="nombre"
-                        onChange={this.handleChange}
-                      />
+                      <Field className="form-control" name="nombre" />
                       {errors.nombre && touched.nombre && (
                         <div className="invalid-feedback d-block">
                           {errors.nombre}
@@ -140,11 +136,7 @@ class PrimerLogin extends Component {
                       <Label>
                         <IntlMessages id="user.apellido" />
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="apellido"
-                        onChange={this.handleChange}
-                      />
+                      <Field className="form-control" name="apellido" />
                       {errors.apellido && touched.apellido && (
                         <div className="invalid-feedback d-block">
                           {errors.apellido}
@@ -186,6 +178,7 @@ class PrimerLogin extends Component {
                     </FormGroup>
                     <Row className="button-group">
                       <Button
+                        type="submit"
                         color="primary"
                         className={`btn-shadow btn-multiple-state ${
                           this.props.loading ? 'show-spinner' : ''
@@ -219,4 +212,4 @@ const mapStateToProps = ({ authUser }) => {
   return { loginUser };
 };
 
-export default connect(mapStateToProps)(PrimerLogin);
+export default connect(mapStateToProps, { updateDatosUsuario })(PrimerLogin);
