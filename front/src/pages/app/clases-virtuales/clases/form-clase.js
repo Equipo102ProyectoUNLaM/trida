@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from 'rc-switch';
@@ -7,48 +8,39 @@ import { addDocument } from 'helpers/Firebase-db';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 
-class FormClase extends React.Component {
-  constructor() {
-    super();
+const FormClase = ({ toggleModal, onClaseAgregada, subject, user }) => {
+  const { handleSubmit, errors, control } = useForm();
+  const [switchVideollamada, setSwitchVideollamada] = useState(false);
 
-    this.state = {
-      switchVideollamada: false,
-      nombre: '',
-      fecha: '',
-      descripcion: '',
-      idSala: '',
-    };
-  }
+  const onSubmit = async (values) => {
+    let idSala = '';
+    const { nombre, fecha, descripcion } = values;
 
-  handleChange = (event) => {
-    const { value, name } = event.target;
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = async (event) => {
-    event.preventDefault();
-
+    if (switchVideollamada) {
+      const uuid = createUUID();
+      idSala = CryptoJS.AES.encrypt(uuid, secretKey).toString();
+    }
     const obj = {
-      nombre: this.state.nombre,
-      fecha: this.state.fecha,
-      descripcion: this.state.descripcion,
-      idSala: this.state.idSala,
-      idMateria: this.props.subject.id,
+      nombre,
+      fecha,
+      descripcion,
+      idSala,
+      idMateria: subject.id,
       contenidos: [],
     };
     await addDocument(
       'clases',
       obj,
-      this.props.user,
+      user,
       'Clase agregada',
       'Clase agregada exitosamente',
       'Error al agregar la clase'
     );
 
-    this.props.onClaseAgregada();
+    onClaseAgregada();
   };
 
-  generateIdSala = () => {
+  const generateIdSala = () => {
     this.setState(
       (prevState) => ({
         switchVideollamada: !prevState.switchVideollamada,
@@ -63,63 +55,87 @@ class FormClase extends React.Component {
     );
   };
 
-  render() {
-    const { toggleModal } = this.props;
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FormGroup className="mb-3">
+        <Label>Nombre de la clase</Label>
+        <Controller
+          as={Input}
+          control={control}
+          name="nombre"
+          defaultValue=""
+          rules={{
+            required: { value: true, message: 'El nombre es requerido' },
+          }}
+        />
+        {errors.nombre && (
+          <div className="invalid-feedback d-block">
+            {errors.nombre.message}
+          </div>
+        )}
+      </FormGroup>
 
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <FormGroup className="mb-3">
-          <Label>Nombre de la clase</Label>
-          <Input
-            name="nombre"
-            onChange={this.handleChange}
-            value={this.state.nombre}
-          />
-        </FormGroup>
+      <FormGroup className="mb-3">
+        <Label>Fecha</Label>
+        <Controller
+          as={Input}
+          control={control}
+          name="fecha"
+          defaultValue=""
+          type="date"
+          placeholder="DD/MM/AAAA"
+          rules={{
+            required: { value: true, message: 'La fecha es requerida' },
+          }}
+        />
+        {errors.fecha && (
+          <div className="invalid-feedback d-block">{errors.fecha.message}</div>
+        )}
+      </FormGroup>
 
-        <FormGroup className="mb-3">
-          <Label>Fecha</Label>
-          <Input
-            name="fecha"
-            type="date"
-            placeholder="DD/MM/AAAA"
-            onChange={this.handleChange}
-            value={this.state.fecha}
-          />
-        </FormGroup>
+      <FormGroup className="mb-3">
+        <Label>Descripción</Label>
+        <Controller
+          as={Input}
+          control={control}
+          name="descripcion"
+          defaultValue=""
+          type="textarea"
+          rules={{
+            required: { value: true, message: 'La descripción es requerida' },
+          }}
+        />
+        {errors.descripcion && (
+          <div className="invalid-feedback d-block">
+            {errors.descripcion.message}
+          </div>
+        )}
+      </FormGroup>
 
-        <FormGroup className="mb-3">
-          <Label>Descripción</Label>
-          <Input
-            name="descripcion"
-            type="textarea"
-            onChange={this.handleChange}
-            value={this.state.descripcion}
-          />
-        </FormGroup>
-
-        <FormGroup check>
-          <Label check>¿Esta clase tendrá videollamada?</Label>
-          <Switch
-            id="Tooltip-Switch"
-            className="custom-switch custom-switch-primary"
-            onChange={this.generateIdSala}
-            checkedChildren="Si"
-            unCheckedChildren="No"
-          />
-        </FormGroup>
-        <ModalFooter>
-          <Button color="primary" type="submit">
-            Agregar
-          </Button>
-          <Button color="secondary" onClick={toggleModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </form>
-    );
-  }
-}
+      <FormGroup check>
+        <Label check>¿Esta clase tendrá videollamada?</Label>
+        <Switch
+          id="Tooltip-Switch"
+          className="custom-switch custom-switch-primary"
+          onChange={(value) => {
+            console.log(value);
+            setSwitchVideollamada(value);
+          }}
+          checkedChildren="Si"
+          unCheckedChildren="No"
+        />
+      </FormGroup>
+      <ModalFooter>
+        <Button color="primary" type="submit">
+          Agregar
+        </Button>
+        <Button color="secondary" onClick={toggleModal}>
+          Cancelar
+        </Button>
+      </ModalFooter>
+    </form>
+  );
+};
 
 const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user } = authUser;
