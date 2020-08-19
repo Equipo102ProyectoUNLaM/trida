@@ -224,7 +224,7 @@ class TopNav extends Component {
         userName: name,
       });
     } catch (err) {
-      console.log('Error getting users document', err);
+      console.log('Error al obtener documento de usuarios', err);
     }
   }
 

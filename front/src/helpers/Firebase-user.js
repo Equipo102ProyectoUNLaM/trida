@@ -7,7 +7,7 @@ export const getUserName = async (userId) => {
     const { nombre, apellido } = userDoc.data();
     return nombre + ' ' + apellido;
   } catch (err) {
-    console.log('Error getting users document', err);
+    console.log('Error al obtener documentod de usuarios', err);
   }
 };
 
