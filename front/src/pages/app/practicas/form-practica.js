@@ -100,8 +100,8 @@ class FormPractica extends React.Component {
         validationSchema={formPracticaSchema}
       >
         {({ errors, touched }) => (
-          <Form className="av-tooltip tooltip-label-bottom">
-            <FormGroup className="mb-3">
+          <Form className="av-tooltip tooltip-label-right">
+            <FormGroup className="mb-3 error-l-150">
               <Label>Nombre de la practica</Label>
               <Field className="form-control" name="nombre" type="textarea" />
               {errors.nombre && touched.nombre && (
@@ -109,7 +109,7 @@ class FormPractica extends React.Component {
               )}
             </FormGroup>
 
-            <FormGroup className="mb-3">
+            <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
                 className="form-control"
@@ -123,7 +123,7 @@ class FormPractica extends React.Component {
               )}
             </FormGroup>
 
-            <FormGroup className="mb-3">
+            <FormGroup className="mb-3 error-l-100">
               <Label>Fecha Lanzada</Label>
               <Field
                 className="form-control"
@@ -138,7 +138,7 @@ class FormPractica extends React.Component {
               )}
             </FormGroup>
 
-            <FormGroup className="mb-3">
+            <FormGroup className="mb-3 error-l-125">
               <Label>Fecha Vencimiento</Label>
               <Field
                 className="form-control"
