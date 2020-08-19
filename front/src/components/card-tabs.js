@@ -17,6 +17,7 @@ import { editDocument } from 'helpers/Firebase-db';
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import Calendario from './common/Calendario';
+import moment from 'moment';
 
 class CardTabs extends Component {
   constructor(props) {
@@ -49,14 +50,32 @@ class CardTabs extends Component {
     this.props.onEdit(this.props.item.id);
   };
 
+  handleClickVistaPrevia = () => {
+    this.props.onPreview(this.props.item.id);
+  };
+
   handleClickDelete = () => {
     this.props.onDelete(this.props.item.id);
   };
 
-  handleClickChangeDate = async (date) => {
+  handleEditarEjercicio = (e, tipo) => {
+    e.preventDefault();
+    this.props.onEditarEjercicio(tipo);
+  };
+
+  handleClickChangeFinalDate = async (date) => {
     if (date) {
-      const obj = { fecha: date.format('YYYY-MM-DD') };
+      const obj = { fecha_finalizacion: date.format('YYYY-MM-DD') };
       await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
+      this.props.updateEvaluaciones(this.props.materiaId);
+    }
+  };
+
+  handleClickChangePublicationDate = async (date) => {
+    if (date) {
+      const obj = { fecha_publicacion: date.format('YYYY-MM-DD') };
+      await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
+      this.props.updateEvaluaciones(this.props.materiaId);
     }
   };
 
@@ -64,11 +83,11 @@ class CardTabs extends Component {
     const { item } = this.props;
     const { data } = item;
     return (
-      <Row>
+      <Row lg="12" className="tab-card-evaluaciones">
         <Colxx xxs="12">
-          <Row>
-            <Colxx xxs="12" xs="6" lg="3">
-              <Card className="tab-card">
+          <Row lg="12">
+            <Colxx xxs="12" xs="12" lg="12">
+              <Card className="mb-4">
                 <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs ml-0 mr-0">
                     <NavItem className="w-50 text-center">
@@ -109,21 +128,58 @@ class CardTabs extends Component {
                     <Row>
                       <Colxx sm="12">
                         <CardBody>
-                          <CardTitle className="mb-4">{data.nombre}</CardTitle>
-                          {data.descripcion && (
-                            <p className="mb-4">{data.descripcion}</p>
-                          )}
-                          {!data.descripcion && (
-                            <p className="mb-4">Sin descripción</p>
-                          )}
-                          <Row className="dropdown-calendar">
-                            <Calendario
-                              handleClick={this.handleClickChangeDate}
-                              text="Modificar fecha de evaluación"
-                              evalCalendar={true}
-                            />
-                            {data.fecha && <p className="mb-4">{data.fecha}</p>}
-                            {!data.fecha && <p className="mb-4">Sin fecha</p>}
+                          <Row>
+                            <Colxx lg="8">
+                              <CardTitle className="mb-4">
+                                {data.base.nombre}
+                              </CardTitle>
+                              {data.base.descripcion && (
+                                <p className="mb-4">{data.base.descripcion}</p>
+                              )}
+                              {!data.base.descripcion && (
+                                <p className="mb-4">Sin descripción</p>
+                              )}
+                            </Colxx>
+                            <Colxx lg="4">
+                              <Row className="dropdown-calendar">
+                                <p>Fecha de Finalización</p>
+                                <Calendario
+                                  handleClick={this.handleClickChangeFinalDate}
+                                  text="Modificar fecha de evaluación"
+                                  evalCalendar={true}
+                                />
+                                {data.base.fecha_finalizacion && (
+                                  <p className="mb-4">
+                                    {moment(
+                                      data.base.fecha_finalizacion
+                                    ).format('DD/MM/YYYY')}
+                                  </p>
+                                )}
+                                {!data.base.fecha_finalizacion && (
+                                  <p className="mb-4">Sin fecha</p>
+                                )}
+                              </Row>
+                              <Row className="dropdown-calendar">
+                                <p>Fecha de Publicación</p>
+                                <Calendario
+                                  handleClick={
+                                    this.handleClickChangePublicationDate
+                                  }
+                                  text="Modificar fecha de publicación"
+                                  evalCalendar={true}
+                                />
+                                {data.base.fecha_publicacion && (
+                                  <p className="mb-4">
+                                    {moment(data.base.fecha_publicacion).format(
+                                      'DD/MM/YYYY'
+                                    )}
+                                  </p>
+                                )}
+                                {!data.base.fecha_publicacion && (
+                                  <p className="mb-4">Sin fecha</p>
+                                )}
+                              </Row>
+                            </Colxx>
                           </Row>
                           <Row className="button-group">
                             <Button
@@ -133,7 +189,7 @@ class CardTabs extends Component {
                               color="primary"
                               className="button"
                             >
-                              Editar
+                              Editar Evaluación
                             </Button>
                             <Button
                               outline
@@ -142,7 +198,7 @@ class CardTabs extends Component {
                               color="primary"
                               className="button"
                             >
-                              Borrar
+                              Borrar Evaluación
                             </Button>
                           </Row>
                         </CardBody>
@@ -153,15 +209,30 @@ class CardTabs extends Component {
                     <Row>
                       <Colxx sm="12">
                         <CardBody>
-                          <p>Traer ejercicios asociados a la eval</p>
-                          <Button
-                            outline
-                            size="sm"
-                            color="primary"
-                            onClick={this.handleClickEdit}
-                          >
-                            Editar
-                          </Button>
+                          {data.subcollections.length > 0 && (
+                            <ol>
+                              {data.subcollections.map((scol) => (
+                                <div
+                                  className="ejerciciosRow"
+                                  key={scol.id + 'ej'}
+                                >
+                                  <li className="ejerciciosItem">
+                                    {scol.data.nombre}
+                                  </li>
+                                </div>
+                              ))}
+                            </ol>
+                          )}
+                          <Row className="button-group">
+                            <Button
+                              outline
+                              size="sm"
+                              color="primary"
+                              onClick={this.handleClickVistaPrevia}
+                            >
+                              Vista Previa de Evaluación
+                            </Button>
+                          </Row>
                         </CardBody>
                       </Colxx>
                     </Row>

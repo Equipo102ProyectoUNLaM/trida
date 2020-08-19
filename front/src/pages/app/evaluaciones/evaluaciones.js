@@ -1,10 +1,15 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
+import ModalVistaPreviaEvaluacion from 'pages/app/evaluaciones/detalle-evaluacion/vista-previa-evaluacion';
+import {
+  logicDeleteDocument,
+  getCollectionWithSubCollections,
+} from 'helpers/Firebase-db';
 
 function collect(props) {
   return { data: props.data };
@@ -14,23 +19,27 @@ class Evaluaciones extends Component {
   constructor(props) {
     super(props);
 
-    const { id } = JSON.parse(localStorage.getItem('subject'));
-
     this.state = {
       items: [],
       modalDeleteOpen: false,
+      modalPreviewOpen: false,
       selectedItems: [],
       isLoading: true,
-      materiaId: id,
+      materiaId: this.props.subject.id,
       evalId: '',
     };
   }
 
   getEvaluaciones = async (materiaId) => {
-    const arrayDeObjetos = await getCollection('evaluaciones', [
-      { field: 'idMateria', operator: '==', id: materiaId },
-      { field: 'activo', operator: '==', id: true },
-    ]);
+    const arrayDeObjetos = await getCollectionWithSubCollections(
+      'evaluaciones',
+      [
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'activo', operator: '==', id: true },
+      ],
+      false,
+      'ejercicios'
+    );
     this.dataListRenderer(arrayDeObjetos);
   };
 
@@ -44,7 +53,18 @@ class Evaluaciones extends Component {
     });
   };
 
+  togglePreviewModal = () => {
+    this.setState({
+      modalPreviewOpen: !this.state.modalPreviewOpen,
+    });
+  };
+
   dataListRenderer(arrayDeObjetos) {
+    arrayDeObjetos.forEach((element) => {
+      element.data.subcollections = element.data.subcollections.sort(
+        (a, b) => a.data.numero - b.data.numero
+      );
+    });
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
@@ -54,8 +74,12 @@ class Evaluaciones extends Component {
 
   onEdit = (idEvaluacion) => {
     this.props.history.push(
-      `/app/evaluaciones/detalle-evaluacion/${idEvaluacion}`
+      `/app/evaluaciones/editar-evaluacion/${idEvaluacion}`
     );
+  };
+
+  onCancel = () => {
+    this.props.history.push(`/app/evaluaciones`);
   };
 
   onAdd = () => {
@@ -69,6 +93,13 @@ class Evaluaciones extends Component {
     this.toggleDeleteModal();
   };
 
+  onPreview = (idEvaluacion) => {
+    this.setState({
+      evalId: idEvaluacion,
+    });
+    this.togglePreviewModal();
+  };
+
   borrarEvaluacion = async () => {
     await logicDeleteDocument('evaluaciones', this.state.evalId, 'Evaluación');
     this.setState({
@@ -79,7 +110,13 @@ class Evaluaciones extends Component {
   };
 
   render() {
-    const { modalDeleteOpen, items, isLoading } = this.state;
+    const {
+      modalDeleteOpen,
+      items,
+      isLoading,
+      modalPreviewOpen,
+      evalId,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -96,11 +133,15 @@ class Evaluaciones extends Component {
                 <CardTabs
                   key={evaluacion.id}
                   item={evaluacion}
+                  materiaId={this.state.materiaId}
+                  updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
                   navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
+                  onCancel={this.onCancel}
+                  onPreview={this.onPreview}
                 />
               );
             })}{' '}
@@ -116,9 +157,22 @@ class Evaluaciones extends Component {
               onConfirm={this.borrarEvaluacion}
             />
           )}
+          {modalPreviewOpen && (
+            <ModalVistaPreviaEvaluacion
+              evalId={evalId}
+              toggle={this.togglePreviewModal}
+              isOpen={modalPreviewOpen}
+            />
+          )}
         </div>
       </Fragment>
     );
   }
 }
-export default withRouter(Evaluaciones);
+
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return { subject };
+};
+
+export default connect(mapStateToProps)(withRouter(Evaluaciones));

@@ -17,6 +17,7 @@ import {
   clickOnMobileMenu,
   logoutUser,
   changeLocale,
+  cleanSeleccionCurso,
 } from 'redux/actions';
 
 import {
@@ -29,27 +30,16 @@ import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
-import { getUserName } from 'helpers/Firebase-user';
+const publicUrl = process.env.PUBLIC_URL;
+const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
 class TopNav extends Component {
   constructor(props) {
     super(props);
-    var institution = JSON.parse(localStorage.getItem('institution'));
-    var course = JSON.parse(localStorage.getItem('course'));
-    var subject = JSON.parse(localStorage.getItem('subject'));
-    var userName = localStorage.getItem('user_name');
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
-      institution,
-      course,
-      subject,
-      userName,
     };
-  }
-
-  componentDidMount() {
-    this.getUserName();
   }
 
   componentDidUpdate(prevProps) {
@@ -196,6 +186,7 @@ class TopNav extends Component {
 
   handleLogout = () => {
     this.props.logoutUser();
+    this.props.cleanSeleccionCurso();
   };
 
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
@@ -217,19 +208,14 @@ class TopNav extends Component {
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
-  async getUserName() {
-    try {
-      const name = await getUserName(this.props.user);
-      this.setState({
-        userName: name,
-      });
-    } catch (err) {
-      console.log('Error al obtener documento de usuarios', err);
-    }
-  }
-
   render() {
-    const { containerClassnames, menuClickCount } = this.props;
+    const {
+      containerClassnames,
+      menuClickCount,
+      foto,
+      nombre,
+      apellido,
+    } = this.props;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
@@ -255,17 +241,17 @@ class TopNav extends Component {
             <Breadcrumb className="nomargin">
               <BreadcrumbItem>
                 <a href="/seleccion-curso/institution">
-                  {this.state.institution.name}
+                  {this.props.institution.name}
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <a
-                  href={`/seleccion-curso/course/${this.state.institution.id}`}
+                  href={`/seleccion-curso/course/${this.props.institution.id}`}
                 >
-                  {this.state.course.name}
+                  {this.props.course.name}
                 </a>
               </BreadcrumbItem>
-              <BreadcrumbItem active>{this.state.subject.name}</BreadcrumbItem>
+              <BreadcrumbItem active>{this.props.subject.name}</BreadcrumbItem>
             </Breadcrumb>
           </div>
         </div>
@@ -300,10 +286,18 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-user">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">{this.state.userName}</span>
+                <span className="name mr-1">{`${nombre} ${apellido}`}</span>
               </DropdownToggle>
               <DropdownToggle className="p-0" color="empty">
-                <div className="header-icons glyph-icon simple-icon-user" />
+                {foto ? (
+                  <span>
+                    <img src={foto} />
+                  </span>
+                ) : (
+                  <span>
+                    <img src={imagenDefaultUsuario} />
+                  </span>
+                )}
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>
@@ -320,16 +314,24 @@ class TopNav extends Component {
   }
 }
 
-const mapStateToProps = ({ menu, settings, authUser }) => {
+const mapStateToProps = ({ menu, settings, authUser, seleccionCurso }) => {
   const { containerClassnames, menuClickCount, selectedMenuHasSubItems } = menu;
   const { locale } = settings;
-  const { user } = authUser;
+  const { user, userData } = authUser;
+  const { nombre, apellido, foto } = userData;
+  const { institution, course, subject } = seleccionCurso;
   return {
     containerClassnames,
     menuClickCount,
     selectedMenuHasSubItems,
     locale,
     user,
+    nombre,
+    apellido,
+    foto,
+    institution,
+    course,
+    subject,
   };
 };
 
@@ -338,6 +340,7 @@ export default injectIntl(
     setContainerClassnames,
     clickOnMobileMenu,
     logoutUser,
+    cleanSeleccionCurso,
     changeLocale,
   })(TopNav)
 );

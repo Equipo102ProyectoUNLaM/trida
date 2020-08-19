@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import CardInicio from 'components/cards-inicio';
 import { getCourses, getInstituciones } from 'helpers/Firebase-user';
-import { connect } from 'react-redux';
+import { updateInstitution, updateSubject, updateCourse } from 'redux/actions';
 
 class Inicio extends Component {
   constructor(props) {
@@ -16,7 +17,9 @@ class Inicio extends Component {
       showCourses: false,
       showSubjects: false,
       instId: '',
+      instObj: {},
       courseId: '',
+      courseObj: {},
       courses: [],
       subjects: [],
     };
@@ -24,7 +27,6 @@ class Inicio extends Component {
 
   componentDidMount() {
     this.getInstituciones();
-    //sendInvitationEmail('juli.foglia@gmail.com');
   }
 
   getInstituciones = async () => {
@@ -36,35 +38,40 @@ class Inicio extends Component {
     }
   };
 
-  showCourses = (institutionId) => {
+  showCourses = (institution) => {
     this.setState({
       showCourses: true,
       showSubjects: false,
       isLoading: true,
       courses: [],
       subjects: [],
-      instId: institutionId,
+      instId: institution.id,
+      instObj: institution,
     });
-    this.getUserCourses(institutionId, this.props.user);
+    this.getUserCourses(institution.id, this.props.user);
   };
 
-  showSubjects = (courseId) => {
+  showSubjects = (course) => {
     const [array] = this.state.courses;
     this.setState({
       showSubjects: true,
       subjects: array.subjects,
-      courseId,
+      courseId: course.id,
+      courseObj: course,
     });
   };
 
-  navigateToSubject = (subjectId) => {
-    /* localStorage.setItem('institution', this.state.instId);
-    localStorage.setItem('course', this.state.courseId);
-    localStorage.setItem('subject', subjectId); */
+  navigateToSubject = (subject) => {
+    this.props.updateInstitution(this.state.instObj);
+    this.props.updateCourse(this.state.courseObj);
+    this.props.updateSubject(subject);
   };
 
   async getUserCourses(institutionId, userId) {
     let array = [];
+    this.setState({
+      isLoading: true,
+    });
     try {
       array = await getCourses(institutionId, userId);
     } catch (err) {
@@ -96,7 +103,7 @@ class Inicio extends Component {
       subjects,
     } = this.state;
     return isLoading ? (
-      <div className="loading-transparent" />
+      <div className="cover-spin" />
     ) : (
       <Fragment>
         <Row>
@@ -116,7 +123,7 @@ class Inicio extends Component {
               {items.map((institution) => {
                 return (
                   <CardInicio
-                    showChildren={this.showCourses}
+                    showChildren={() => this.showCourses(institution)}
                     key={institution.id}
                     item={institution}
                     itemId={institution.id}
@@ -138,7 +145,7 @@ class Inicio extends Component {
                   {courses.map((course) => {
                     return (
                       <CardInicio
-                        showChildren={this.showSubjects}
+                        showChildren={() => this.showSubjects(course)}
                         key={course.id}
                         item={course}
                         itemId={course.id}
@@ -162,7 +169,7 @@ class Inicio extends Component {
                   {subjects.map((subject) => {
                     return (
                       <CardInicio
-                        showChildren={this.navigateToSubject}
+                        showChildren={() => this.navigateToSubject(subject)}
                         key={subject.id}
                         item={subject}
                         itemId={subject.id}
@@ -187,4 +194,8 @@ const mapStateToProps = ({ authUser }) => {
   };
 };
 
-export default connect(mapStateToProps)(Inicio);
+export default connect(mapStateToProps, {
+  updateInstitution,
+  updateCourse,
+  updateSubject,
+})(Inicio);

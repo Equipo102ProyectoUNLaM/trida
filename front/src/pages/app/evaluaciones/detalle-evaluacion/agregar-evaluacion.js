@@ -1,22 +1,24 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 
-export default class AgregarEvaluacion extends Component {
+class AgregarEvaluacion extends Component {
   constructor(props) {
     super(props);
-
-    const { id } = JSON.parse(localStorage.getItem('subject'));
 
     this.state = {
       evaluacionId: '',
       nombre: '',
-      fecha: '',
+      fecha_creacion: '',
+      fecha_publicacion: '',
+      fecha_finalizacion: '',
       descripcion: '',
       isLoading: true,
-      idMateria: id,
+      idMateria: this.props.subject.id,
+      ejercicios: [],
     };
   }
 
@@ -45,8 +47,7 @@ export default class AgregarEvaluacion extends Component {
               breadcrumb
             />
             <FormEvaluacion
-              idEval={this.state.evaluacionId}
-              itemsEval={this.state}
+              evaluacion={this.state}
               onEvaluacionAgregada={this.onEvaluacionAgregada}
               onCancel={this.onEvaluacionAgregada}
               idMateria={this.state.idMateria}
@@ -57,3 +58,10 @@ export default class AgregarEvaluacion extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return { subject };
+};
+
+export default connect(mapStateToProps)(AgregarEvaluacion);

@@ -87,9 +87,7 @@ class Login extends Component {
               </p>
             </div>
             <div className="form-side">
-              <NavLink to={`/`} className="white">
-                <span className="logo-single" />
-              </NavLink>
+              <div className="logo-single" />
               <CardTitle className="mb-4">
                 <IntlMessages id="usuario.login-title" />
               </CardTitle>

@@ -4,9 +4,9 @@ import { Row } from 'reactstrap';
 import { capitalize } from 'underscore.string';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
-import { getDocument } from 'helpers/Firebase-db';
+import { getDocumentWithSubCollection } from 'helpers/Firebase-db';
 
-export default class DetalleEvaluacion extends Component {
+export default class EditarEvaluacion extends Component {
   constructor(props) {
     super(props);
     const { evaluacionId } = this.props.match.params;
@@ -14,7 +14,9 @@ export default class DetalleEvaluacion extends Component {
     this.state = {
       evaluacionId,
       nombre: '',
-      fecha: '',
+      fecha_creacion: '',
+      fecha_publicacion: '',
+      fecha_finalizacion: '',
       descripcion: '',
       isLoading: true,
     };
@@ -25,14 +27,28 @@ export default class DetalleEvaluacion extends Component {
   }
 
   getDoc = async () => {
-    const docObj = await getDocument(`evaluaciones/${this.state.evaluacionId}`);
-    const { id, data } = docObj;
-    const { nombre, fecha, descripcion } = data;
+    const evaluacion = await getDocumentWithSubCollection(
+      `evaluaciones/${this.state.evaluacionId}`,
+      'ejercicios'
+    );
+
+    const { id, data, subCollection } = evaluacion;
+    const {
+      nombre,
+      fecha_creacion,
+      fecha_finalizacion,
+      fecha_publicacion,
+      descripcion,
+    } = data;
+
     this.setState({
       evaluacionId: id,
-      nombre,
-      fecha,
-      descripcion,
+      nombre: nombre,
+      fecha_creacion: fecha_creacion,
+      fecha_finalizacion: fecha_finalizacion,
+      fecha_publicacion: fecha_publicacion,
+      descripcion: descripcion,
+      ejercicios: subCollection.sort((a, b) => a.data.numero - b.data.numero),
       isLoading: false,
     });
   };
@@ -57,7 +73,8 @@ export default class DetalleEvaluacion extends Component {
             />
             <FormEvaluacion
               idEval={this.state.evaluacionId}
-              itemsEval={this.state}
+              evaluacion={this.state}
+              onCancel={this.onEvaluacionEditada}
               onEvaluacionEditada={this.onEvaluacionEditada}
             />{' '}
           </Colxx>

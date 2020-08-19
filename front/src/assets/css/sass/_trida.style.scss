@@ -50,8 +50,9 @@ Table of Contents
 45.Board
 46.Course Selection
 47.Contenidos
-48. Mensajeria
+48.Mensajeria
 49.Correcciones
+50.Evaluaciones
 
 */
 
@@ -157,7 +158,7 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/background-2.jpg") no-repeat center center fixed;
+  background: url("/assets/img/2406-gradient-symbols-pastel-5.png") no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -318,12 +319,14 @@ hr {
 }
 
 .logo-single {
-  width: 140px;
-  height: 35px;
-  background: url($logoPath) no-repeat;
+  width: 117px;
+  margin-bottom: 20px;
+  background-image: url($logoPath);
+  background-repeat: no-repeat;
+  height: 92px;
+  background-size: contain;
   background-position: center center;
   display: inline-block;
-  margin-bottom: 60px;
 }
 
 .list-item-heading-container {
@@ -1770,6 +1773,7 @@ nav .nomargin {
       height: 100%;
       background: url($logoPath) no-repeat;
       background-position: center center;
+      background-size: contain;
     }
 
     .logo-mobile {
@@ -1952,7 +1956,6 @@ nav .nomargin {
     position: relative;
 
     img {
-      margin-left: 10px;
       border-radius: 30px;
       width: 40px;
     }
@@ -2901,7 +2904,7 @@ nav .nomargin {
 .tab-card {
   border: initial;
   background: $foreground-color;
-  width: 20rem !important;
+  width: 60rem !important;
   margin: 0.8rem;
 }
 
@@ -6004,12 +6007,12 @@ input:-webkit-autofill {
 .auth-card {
   display: flex;
   flex-direction: row;
+  box-shadow: -3px -3px 8px 10px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
   @include depth(1);
 
   .image-side {
     width: 40%;
-    background: url("/assets/img/login-background-2.png") no-repeat center top;
-    background-size: cover;
+    background: $theme-color-5;
     padding: 80px 40px;
 
     .h3 {
@@ -6060,6 +6063,9 @@ input:-webkit-autofill {
 
     .logo-single {
       margin-bottom: 20px;
+      background-size: cover;
+      width: 139px;
+      height: 115px;
     }
 
     p.h2 {
@@ -6349,14 +6355,14 @@ input:-webkit-autofill {
 }
 
 .theme-colors {
-  width: 280px;
+  width: 130px;
   position: fixed;
   z-index: 1030;
   top: 50%;
   right: 0;
   background: $foreground-color;
   @include depth(1);
-  transform: translate(280px, -50%);
+  transform: translate(130px, -50%);
   transition: transform 0.4s ease-out;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -6376,6 +6382,7 @@ input:-webkit-autofill {
   }
 
   .theme-color {
+    margin-right: 1rem;
     width: 24px;
     height: 24px;
     display: inline-block;
@@ -6544,7 +6551,7 @@ input:-webkit-autofill {
     cursor: pointer;
     color: rgba(33, 33, 33, 0.7);
   }
- 
+
  input {
     opacity: 0;
     position: absolute;
@@ -9219,6 +9226,14 @@ tr.folder{
 }
 
 // 48 Mensajeria
+.receivers-general {
+  align-self: flex-end;
+}
+
+.general-check {
+  margin-right: 1rem;
+}
+
 .users-names {
   padding-top: 2rem;
 }
@@ -9298,4 +9313,69 @@ div.rendered-file-browser{
 
 .hide-button {
   display: none;
+}
+
+//50 Evaluaciones
+.ejerciciosItem {
+  width: 50%;
+  float: left;
+}
+
+.ejerciciosRow {
+  padding-bottom: 1%;
+  text-align: center;
+}
+
+.rta-libre-container{
+  padding-top: 2rem;
+}
+
+.delete-icon{
+  text-align: center;
+  margin: auto;
+  color: red;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding-bottom: 0.5rem;
+}
+
+.remove-icon{
+  text-align: center;
+  margin: auto;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.icon-container{
+  display: grid;
+}
+
+.checkbox{
+  position: relative;
+}
+
+.margin-auto{
+  margin:auto !important;
+}
+
+.opcionMultipleRow {
+  padding-bottom: 2%;
+}
+
+.opcionMultipleInput {
+  width: 80%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.tab-card-evaluaciones {
+  display:contents;
+}
+
+.modal-ejercicios{
+  max-width: 60rem !important;
+}
+
+.modal-ejercicios-body{
+  background-color: $theme-color-1;
 }

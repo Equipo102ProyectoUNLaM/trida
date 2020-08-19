@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
@@ -16,8 +17,6 @@ class Practica extends Component {
   constructor(props) {
     super(props);
 
-    const { id } = JSON.parse(localStorage.getItem('subject'));
-
     this.state = {
       items: [],
       modalCreateOpen: false,
@@ -27,7 +26,7 @@ class Practica extends Component {
       isLoading: true,
       idItemSelected: null,
       practicaId: '',
-      idMateria: id,
+      idMateria: this.props.subject.id,
     };
   }
 
@@ -194,4 +193,10 @@ class Practica extends Component {
     );
   }
 }
-export default injectIntl(Practica);
+
+const mapStateToProps = ({ seleccionCurso }) => {
+  const { subject } = seleccionCurso;
+  return { subject };
+};
+
+export default injectIntl(connect(mapStateToProps)(Practica));
