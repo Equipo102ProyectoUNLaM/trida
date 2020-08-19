@@ -79,7 +79,7 @@ class PrimerLogin extends Component {
           obj,
           'Información'
         );
-        this.props.history.push('/');
+        this.props.history.push('/seleccion-curso');
       } else {
         enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
