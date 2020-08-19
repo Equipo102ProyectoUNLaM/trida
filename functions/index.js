@@ -174,6 +174,7 @@ exports.asignarMaterias = functions.https.onCall(async (data)=> {
     await admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set( { instituciones: instObj }, { merge: true });
+    await admin.firestore().collection('usuariosPorMateria').doc(data.subjectId).set( {usuario_id: [ data.uid ]}, { merge: true });
   } catch (error) {
     console.log('error', error);
   }

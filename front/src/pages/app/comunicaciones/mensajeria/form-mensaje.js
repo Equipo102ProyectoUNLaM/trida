@@ -6,6 +6,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Row } from 'reactstrap';
 import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
+import { getUsersOfSubject } from 'helpers/Firebase-user';
 
 var datos = [];
 
@@ -26,7 +27,10 @@ class FormMensaje extends Component {
   }
 
   componentDidMount() {
-    this.getUsersOfSubject(this.state.idMateria);
+    datos = getUsersOfSubject(this.state.idMateria, this.state.idUser);
+    this.setState({
+      isLoading: false,
+    });
   }
 
   handleChangeMulti = (selectedOptions) => {
@@ -80,35 +84,6 @@ class FormMensaje extends Component {
     this.setState({
       esGeneral: !this.state.esGeneral,
       selectedOptions: [],
-    });
-  };
-
-  getUsersOfSubject = async () => {
-    const idMateria = this.state.idMateria;
-    const arrayDeObjetos = await getCollection('usuariosPorMateria', [
-      { field: 'materia_id', operator: '==', id: idMateria },
-    ]);
-    // Me quedo con el array de usuarios que pertenecen a esta materia
-    const users = arrayDeObjetos[0].data.usuario_id;
-    for (const user of users) {
-      const docObj = await getDocument(`usuarios/${user}`);
-      let i = 0;
-
-      if (docObj.data.id !== this.state.idUser) {
-        const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
-        // Armo el array que va a alimentar el Select
-        datos.push({
-          label: nombre,
-          value: user,
-          key: i,
-        });
-      }
-
-      i++;
-    }
-
-    this.setState({
-      isLoading: false,
     });
   };
 
