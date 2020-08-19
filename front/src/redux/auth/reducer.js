@@ -3,6 +3,7 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   SET_LOGIN_USER,
+  UPDATE_DATOS_USUARIO,
   REGISTER_USER_START,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
@@ -49,6 +50,12 @@ export default (state = INIT_STATE, action) => {
         loading: false,
         user: '',
         error: action.payload.message,
+      };
+
+    case UPDATE_DATOS_USUARIO:
+      return {
+        ...state,
+        userData: action.payload.userData,
       };
 
     case FORGOT_PASSWORD_SUCCESS:

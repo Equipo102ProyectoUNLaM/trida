@@ -86,6 +86,7 @@ export default class ResetPassword extends Component {
                     <Row>
                       <h4>
                         Ahora puede iniciar sesión con su nueva contraseña en
+                        &nbsp;
                       </h4>
                       <NavLink to={`/`}>
                         <h4>trida.com.ar</h4>
