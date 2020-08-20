@@ -33,6 +33,7 @@ class DataListView extends React.Component {
       onEditItem,
       navTo,
       calendario,
+      onDelete,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -62,10 +63,12 @@ class DataListView extends React.Component {
                       onClick={() => onEditItem(id)}
                     />
                   )}
-                  <div
-                    className="glyph-icon simple-icon-trash delete-action-icon"
-                    onClick={this.handleClickDelete}
-                  />
+                  {onDelete && (
+                    <div
+                      className="glyph-icon simple-icon-trash delete-action-icon"
+                      onClick={this.handleClickDelete}
+                    />
+                  )}
                   {calendario && (
                     <Calendario
                       handleClick={this.handleClick}

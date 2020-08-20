@@ -37,17 +37,26 @@ class Mensajeria extends Component {
     ]);
     await this.dataMessageSentRenderer(mensajesEnviados);
 
-    const mensajesRecibidos = await getCollection('mensajes', [
-      {
-        field: 'receptor',
-        operator: 'array-contains',
-        id: this.state.usuarioId,
-      },
+    // const mensajesRecibidos = await getCollection('mensajes', [
+    //   {
+    //     field: 'receptor',
+    //     operator: 'array-contains',
+    //     id: this.state.usuarioId,
+    //   },
+    //   { field: 'idMateria', operator: '==', id: this.state.materiaId },
+    //   { field: 'general', operator: '==', id: false },
+    //   { field: 'formal', operator: '==', id: false },
+    // ]);
+    // this.dataMessageReceivedRenderer(mensajesRecibidos);
+
+    const mensajesGeneralesRecibidos = await getCollection('mensajes', [
+      { field: 'emisor.id', operator: '>', id: this.state.usuarioId },
       { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'general', operator: '==', id: false },
+      { field: 'general', operator: '==', id: true },
       { field: 'formal', operator: '==', id: false },
     ]);
-    this.dataMessageReceivedRenderer(mensajesRecibidos);
+
+    this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos);
   };
 
   componentDidMount() {
