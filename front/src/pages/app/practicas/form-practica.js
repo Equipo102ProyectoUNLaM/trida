@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
+import { Formik, Form, Field } from 'formik';
+import { formPracticaSchema } from './validations';
 
 class FormPractica extends React.Component {
   constructor(props) {
@@ -11,9 +13,9 @@ class FormPractica extends React.Component {
       nombre: '',
       descripcion: '',
       fechaLanzada: '',
-      duracion: '',
       fechaVencimiento: '',
       idMateria: '',
+      isLoading: true,
     };
   }
 
@@ -24,21 +26,17 @@ class FormPractica extends React.Component {
   getDoc = async () => {
     if (this.props.id) {
       const { data } = await getDocument(`practicas/${this.props.id}`);
-      const {
-        nombre,
-        descripcion,
-        fechaLanzada,
-        duracion,
-        fechaVencimiento,
-      } = data;
+      const { nombre, descripcion, fechaLanzada, fechaVencimiento } = data;
       this.setState({
         nombre,
         descripcion,
         fechaLanzada,
-        duracion,
         fechaVencimiento,
       });
     }
+    this.setState({
+      isLoading: false,
+    });
     return;
   };
 
@@ -47,17 +45,14 @@ class FormPractica extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = async (event) => {
-    event.preventDefault();
+  onPracticaSubmit = async (values) => {
+    const { nombre, descripcion, fechaLanzada, fechaVencimiento } = values;
     if (this.props.operationType === 'add') {
       const obj = {
-        nombre: this.state.nombre,
-        fechaLanzada: this.state.fechaLanzada,
-        descripcion: this.state.descripcion,
-        duracion: this.state.duracion,
-        fechaVencimiento: this.state.fechaVencimiento,
-        fechaPublicada: new Date(),
-        activo: true,
+        nombre: nombre,
+        fechaLanzada: fechaLanzada,
+        descripcion: descripcion,
+        fechaVencimiento: fechaVencimiento,
         idMateria: this.props.subject.id,
       };
       await addDocument(
@@ -70,11 +65,10 @@ class FormPractica extends React.Component {
       );
     } else {
       const obj = {
-        nombre: this.state.nombre,
-        fechaLanzada: this.state.fechaLanzada,
-        descripcion: this.state.descripcion,
-        duracion: this.state.duracion,
-        fechaVencimiento: this.state.fechaVencimiento,
+        nombre: nombre,
+        fechaLanzada: fechaLanzada,
+        descripcion: descripcion,
+        fechaVencimiento: fechaVencimiento,
       };
       await editDocument('practicas', this.props.id, obj, 'Práctica');
     }
@@ -84,67 +78,91 @@ class FormPractica extends React.Component {
 
   render() {
     const { toggleModal, textConfirm } = this.props;
+    const {
+      isLoading,
+      nombre,
+      descripcion,
+      fechaLanzada,
+      fechaVencimiento,
+    } = this.state;
+    const initialValues = {
+      nombre: nombre,
+      descripcion: descripcion,
+      fechaLanzada: fechaLanzada,
+      fechaVencimiento: fechaVencimiento,
+    };
+    return isLoading ? (
+      <div className="loading" />
+    ) : (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={this.onPracticaSubmit}
+        validationSchema={formPracticaSchema}
+      >
+        {({ errors, touched }) => (
+          <Form className="av-tooltip tooltip-label-right">
+            <FormGroup className="mb-3 error-l-150">
+              <Label>Nombre de la practica</Label>
+              <Field className="form-control" name="nombre" type="textarea" />
+              {errors.nombre && touched.nombre && (
+                <div className="invalid-feedback d-block">{errors.nombre}</div>
+              )}
+            </FormGroup>
 
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <FormGroup className="mb-3">
-          <Label>Nombre de la practica</Label>
-          <Input
-            name="nombre"
-            onChange={this.handleChange}
-            value={this.state.nombre}
-          />
-        </FormGroup>
+            <FormGroup className="mb-3 error-l-75">
+              <Label>Descripción</Label>
+              <Field
+                className="form-control"
+                name="descripcion"
+                type="textarea"
+              />
+              {errors.descripcion && touched.descripcion && (
+                <div className="invalid-feedback d-block">
+                  {errors.descripcion}
+                </div>
+              )}
+            </FormGroup>
 
-        <FormGroup className="mb-3">
-          <Label>Descripción</Label>
-          <Input
-            name="descripcion"
-            type="textarea"
-            onChange={this.handleChange}
-            value={this.state.descripcion}
-          />
-        </FormGroup>
+            <FormGroup className="mb-3 error-l-100">
+              <Label>Fecha Lanzada</Label>
+              <Field
+                className="form-control"
+                name="fechaLanzada"
+                type="date"
+                placeholder="DD/MM/AAAA"
+              />
+              {errors.fechaLanzada && touched.fechaLanzada && (
+                <div className="invalid-feedback d-block">
+                  {errors.fechaLanzada}
+                </div>
+              )}
+            </FormGroup>
 
-        <FormGroup className="mb-3">
-          <Label>Fecha Lanzada</Label>
-          <Input
-            name="fechaLanzada"
-            type="date"
-            placeholder="DD/MM/AAAA"
-            onChange={this.handleChange}
-            value={this.state.fechaLanzada}
-          />
-        </FormGroup>
-
-        <FormGroup className="mb-3">
-          <Label>Fecha Vencimiento</Label>
-          <Input
-            name="fechaVencimiento"
-            type="date"
-            placeholder="DD/MM/AAAA"
-            onChange={this.handleChange}
-            value={this.state.fechaVencimiento}
-          />
-        </FormGroup>
-
-        <FormGroup className="mb-3">
-          <Label check>¿Cual será la duración de la práctica?</Label>
-          <Input
-            name="duracion"
-            onChange={this.handleChange}
-            value={this.state.duracion}
-          />
-        </FormGroup>
-        <ModalFooter>
-          <Button color="primary" type="submit">
-            {textConfirm}
-          </Button>
-          <Button color="secondary" onClick={toggleModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </form>
+            <FormGroup className="mb-3 error-l-125">
+              <Label>Fecha Vencimiento</Label>
+              <Field
+                className="form-control"
+                name="fechaVencimiento"
+                type="date"
+                placeholder="DD/MM/AAAA"
+              />
+              {errors.fechaVencimiento && touched.fechaVencimiento && (
+                <div className="invalid-feedback d-block">
+                  {errors.fechaVencimiento}
+                </div>
+              )}
+            </FormGroup>
+            <ModalFooter>
+              <Button color="primary" type="submit">
+                {textConfirm}
+              </Button>
+              <Button color="secondary" onClick={toggleModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Form>
+        )}
+      </Formik>
     );
   }
 }
