@@ -56,7 +56,6 @@ class FormPractica extends React.Component {
         descripcion: this.state.descripcion,
         duracion: this.state.duracion,
         fechaVencimiento: this.state.fechaVencimiento,
-        fechaPublicada: new Date(),
         activo: true,
         idMateria: this.props.subject.id,
       };

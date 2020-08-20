@@ -8,6 +8,7 @@ import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
+import ROLES from 'constants/roles';
 
 function collect(props) {
   return { data: props.data };
@@ -32,11 +33,17 @@ class Practica extends Component {
 
   getPracticas = async (materiaId) => {
     const arrayDeObjetos = await getCollection('practicas', [
-      {
-        field: 'fechaLanzada',
-        operator: '>',
-        id: new Date().toISOString().slice(0, 10),
-      },
+      this.props.rol === ROLES.Docente
+        ? {
+            field: 'fecha_creacion',
+            operator: '<=',
+            id: new Date().toISOString().slice(0, 10),
+          }
+        : {
+            field: 'fechaLanzada',
+            operator: '<=',
+            id: new Date().toISOString().slice(0, 10),
+          },
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
     ]);
@@ -45,6 +52,7 @@ class Practica extends Component {
 
   componentDidMount() {
     this.getPracticas(this.state.idMateria);
+    console.log(new Date().toISOString().slice(0, 10));
   }
 
   toggleCreateModal = () => {
@@ -128,8 +136,8 @@ class Practica extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.my-activities"
-            toggleModal={rol === 1 ? this.toggleCreateModal : null}
-            buttonText={rol === 1 ? 'activity.add' : null}
+            toggleModal={rol === ROLES.Docente ? this.toggleCreateModal : null}
+            buttonText={rol === ROLES.Docente ? 'activity.add' : null}
           />
           <ModalGrande
             modalOpen={modalCreateOpen}
@@ -154,11 +162,13 @@ class Practica extends Component {
                   text1={'Fecha de publicación: ' + practica.data.fechaLanzada}
                   text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
                   isSelect={this.state.selectedItems.includes(practica.id)}
-                  onEditItem={rol === 1 ? this.toggleEditModal : null}
-                  onDelete={rol === 1 ? this.onDelete : null}
+                  onEditItem={
+                    rol === ROLES.Docente ? this.toggleEditModal : null
+                  }
+                  onDelete={rol === ROLES.Docente ? this.onDelete : null}
                   navTo="#"
                   collect={collect}
-                  calendario={rol === 1 ? true : false}
+                  calendario={rol === ROLES.Docente ? true : false}
                 />
               );
             })}{' '}
