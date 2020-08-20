@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Input, Label } from 'reactstrap';
+import { Input, Label, FormGroup } from 'reactstrap';
 
 class Oral extends React.Component {
   constructor(props) {
@@ -27,22 +27,30 @@ class Oral extends React.Component {
 
   render() {
     const { preview } = this.props;
+    const { tema } = this.state;
     return (
       <Fragment>
         {preview && (
-          <div className="rta-libre-container">
+          <div>
             <Label>{this.state.tema}</Label>
           </div>
         )}
 
         {!preview && (
           <div className="rta-libre-container">
-            <Label>Tema</Label>
-            <Input
-              name="tema"
-              defaultValue={this.state.tema}
-              onChange={this.handleChange}
-            />
+            <FormGroup className="mb-3 error-l-50">
+              <Label>Tema</Label>
+              <Input
+                name="tema"
+                defaultValue={tema}
+                onChange={this.handleChange}
+              />
+              {this.props.submitted && !tema ? (
+                <div className="invalid-feedback d-block">
+                  Debe ingresar un tema
+                </div>
+              ) : null}
+            </FormGroup>
           </div>
         )}
       </Fragment>

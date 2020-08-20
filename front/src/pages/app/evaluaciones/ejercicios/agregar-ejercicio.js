@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Button, FormGroup, Card, CardBody, Label } from 'reactstrap';
+import { Row, Button, FormGroup, Card, CardBody } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import Select from 'react-select';
 import { getCollection } from 'helpers/Firebase-db';
@@ -67,6 +67,24 @@ class AgregarEjercicio extends React.Component {
     this.setState({ submitted: true });
     for (const ejer of this.state.ejerciciosSeleccionados) {
       if (!ejer.tipo) valid = false;
+      else {
+        switch (ejer.tipo) {
+          case TIPO_EJERCICIO.respuesta_libre:
+            if (!ejer.consigna) valid = false;
+            break;
+          case TIPO_EJERCICIO.oral:
+            if (!ejer.tema) valid = false;
+            break;
+          case TIPO_EJERCICIO.opcion_multiple:
+            if (!ejer.opciones || ejer.opciones.length === 0) {
+              valid = false;
+              break;
+            }
+            if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
+            if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
+            break;
+        }
+      }
     }
     return valid;
   };
@@ -180,6 +198,7 @@ class AgregarEjercicio extends React.Component {
                               TIPO_EJERCICIO.respuesta_libre && (
                               <RespuestaLibre
                                 ejercicioId={index}
+                                submitted={submitted}
                                 preview={false}
                                 value={ejercicio}
                                 onEjercicioChange={this.onEjercicioChange}
@@ -191,6 +210,7 @@ class AgregarEjercicio extends React.Component {
                               <OpcionMultiple
                                 ejercicioId={index}
                                 value={ejercicio}
+                                submitted={submitted}
                                 preview={false}
                                 onEjercicioChange={this.onEjercicioChange}
                               />
@@ -200,6 +220,7 @@ class AgregarEjercicio extends React.Component {
                               <Oral
                                 ejercicioId={index}
                                 value={ejercicio}
+                                submitted={submitted}
                                 preview={false}
                                 onEjercicioChange={this.onEjercicioChange}
                               />

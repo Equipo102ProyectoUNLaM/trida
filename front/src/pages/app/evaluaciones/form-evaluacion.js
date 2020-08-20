@@ -186,7 +186,7 @@ class FormEvaluacion extends React.Component {
         onSubmit={this.toggleModalWithValues}
       >
         {({ setFieldValue, setFieldTouched, values, errors, touched }) => (
-          <Form className="av-tooltip tooltip-label-right">
+          <Form className="av-tooltip tooltip-label-right" autoComplete="off">
             <FormGroup className="mb-3 error-l-150">
               <Label>Nombre de la evaluacion</Label>
               <Field className="form-control" name="nombre" />

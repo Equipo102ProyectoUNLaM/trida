@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Input, Label } from 'reactstrap';
+import { Input, Label, FormGroup } from 'reactstrap';
 
 class RespuestaLibre extends React.Component {
   constructor(props) {
@@ -36,12 +36,19 @@ class RespuestaLibre extends React.Component {
         )}
         {!preview && (
           <div className="rta-libre-container">
-            <Label>Consigna</Label>
-            <Input
-              name="consigna"
-              defaultValue={consigna}
-              onChange={this.handleChange}
-            />
+            <FormGroup className="mb-3 error-l-75">
+              <Label>Consigna</Label>
+              <Input
+                name="consigna"
+                defaultValue={consigna}
+                onChange={this.handleChange}
+              />
+              {this.props.submitted && !consigna ? (
+                <div className="invalid-feedback d-block">
+                  Debe ingresar una consigna
+                </div>
+              ) : null}
+            </FormGroup>
           </div>
         )}
       </Fragment>
