@@ -63,7 +63,12 @@ class AgregarEjercicio extends React.Component {
   };
 
   validateEjercicios = () => {
+    let valid = true;
     this.setState({ submitted: true });
+    for (const ejer of this.state.ejerciciosSeleccionados) {
+      if (!ejer.tipo) valid = false;
+    }
+    return valid;
   };
 
   getEjerciciosSeleccionados = () => {
