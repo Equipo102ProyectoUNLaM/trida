@@ -53,7 +53,6 @@ class Practica extends Component {
 
   componentDidMount() {
     this.getPracticas(this.state.idMateria);
-    console.log(new Date().toISOString().slice(0, 10));
   }
 
   toggleCreateModal = () => {
