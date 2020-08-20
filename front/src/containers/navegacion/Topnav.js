@@ -303,7 +303,7 @@ class TopNav extends Component {
                 <DropdownItem>Cuenta</DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem onClick={() => this.handleLogout()}>
-                  Desloguearse
+                  Cerrar Sesión
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
