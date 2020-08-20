@@ -25,7 +25,7 @@ const PaginaVideollamada = (props) => {
   const isHost = true;
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
-  const [name, setName] = useState('');
+  const [name, setName] = useState(props.nombre + ' ' + props.apellido);
   const [call, setCall] = useState(false);
 
   const onSubmit = (event) => {
