@@ -9,6 +9,7 @@ import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
+import { getFormattedDate } from 'helpers/Utils';
 
 function collect(props) {
   return { data: props.data };
@@ -159,8 +160,14 @@ class Practica extends Component {
                   key={practica.id + 'dataList'}
                   id={practica.id}
                   title={practica.data.nombre}
-                  text1={'Fecha de publicación: ' + practica.data.fechaLanzada}
-                  text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
+                  text1={
+                    'Fecha de publicación: ' +
+                    getFormattedDate(practica.data.fechaLanzada)
+                  }
+                  text2={
+                    'Fecha de entrega: ' +
+                    getFormattedDate(practica.data.fechaVencimiento)
+                  }
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={
                     rol === ROLES.Docente ? this.toggleEditModal : null
