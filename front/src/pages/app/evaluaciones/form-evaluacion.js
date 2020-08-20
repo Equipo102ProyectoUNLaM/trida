@@ -53,6 +53,8 @@ class FormEvaluacion extends React.Component {
   };
 
   toggleModalWithValues = (values) => {
+    const valid = this.ejerciciosComponentRef.validateEjercicios();
+    if (!valid) return;
     if (this.state.evaluacionId) {
       this.setState({
         fecha_finalizacion: values.fecha_finalizacion.format('YYYY-MM-DD'),
@@ -183,15 +185,7 @@ class FormEvaluacion extends React.Component {
         validationSchema={evaluationSchema}
         onSubmit={this.toggleModalWithValues}
       >
-        {({
-          handleSubmit,
-          setFieldValue,
-          setFieldTouched,
-          values,
-          errors,
-          touched,
-          isSubmitting,
-        }) => (
+        {({ setFieldValue, setFieldTouched, values, errors, touched }) => (
           <Form className="av-tooltip tooltip-label-right">
             <FormGroup className="mb-3 error-l-150">
               <Label>Nombre de la evaluacion</Label>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Button, FormGroup, Card, CardBody } from 'reactstrap';
+import { Row, Button, FormGroup, Card, CardBody, Label } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import Select from 'react-select';
 import { getCollection } from 'helpers/Firebase-db';
@@ -27,6 +27,7 @@ class AgregarEjercicio extends React.Component {
       opciones: [],
       tema: '',
       cant: 1,
+      submitted: false,
     };
   }
 
@@ -59,6 +60,10 @@ class AgregarEjercicio extends React.Component {
     this.setState({
       modalAddOpen: !this.state.modalAddOpen,
     });
+  };
+
+  validateEjercicios = () => {
+    this.setState({ submitted: true });
   };
 
   getEjerciciosSeleccionados = () => {
@@ -125,7 +130,7 @@ class AgregarEjercicio extends React.Component {
   };
 
   render() {
-    const { selectData, ejerciciosSeleccionados } = this.state;
+    const { selectData, ejerciciosSeleccionados, submitted } = this.state;
     return (
       <FormGroup className="mb-3">
         <div className="glyph-icon simple-icon-plus agregar-ejercicios-action-icon">
@@ -145,19 +150,26 @@ class AgregarEjercicio extends React.Component {
                             <h6 className="mb-4">
                               Ejercicio N°{ejercicio.numero}
                             </h6>
-                            <Select
-                              className="react-select ejerciciosSelect"
-                              classNamePrefix="react-select"
-                              name="ejercicios-select-1"
-                              placeholder="Seleccione el ejercicio que desea crear"
-                              value={selectData.find(
-                                (obj) => obj.value === ejercicio.tipo
-                              )}
-                              onChange={(e) =>
-                                this.handleSelectChange(e, index)
-                              }
-                              options={selectData}
-                            />
+                            <FormGroup className="mb-3 error-l-275">
+                              <Select
+                                className="react-select ejerciciosSelect"
+                                classNamePrefix="react-select"
+                                name="ejercicios-select-1"
+                                placeholder="Seleccione el ejercicio que desea crear"
+                                value={selectData.find(
+                                  (obj) => obj.value === ejercicio.tipo
+                                )}
+                                onChange={(e) =>
+                                  this.handleSelectChange(e, index)
+                                }
+                                options={selectData}
+                              />
+                              {submitted && !ejercicio.tipo ? (
+                                <div className="invalid-feedback d-block">
+                                  Debe elegir un tipo de ejercicio
+                                </div>
+                              ) : null}
+                            </FormGroup>
 
                             {ejercicio.tipo ===
                               TIPO_EJERCICIO.respuesta_libre && (
