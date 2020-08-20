@@ -102,7 +102,7 @@ class OpcionMultiple extends React.Component {
                 <Label>Pregunta</Label>
                 <Input
                   name="consigna"
-                  onChange={this.handleChange}
+                  onInputCapture={this.handleChange}
                   defaultValue={consigna}
                 />
                 {this.props.submitted && !consigna ? (
@@ -133,7 +133,7 @@ class OpcionMultiple extends React.Component {
                     <Input
                       className="opcionMultipleInput margin-auto"
                       name="opcion"
-                      onChange={(e) => this.handleOptionsChange(e, index)}
+                      onInputCapture={(e) => this.handleOptionsChange(e, index)}
                       defaultValue={op.opcion}
                     />
                     <div

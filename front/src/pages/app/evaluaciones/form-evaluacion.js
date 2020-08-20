@@ -34,12 +34,6 @@ class FormEvaluacion extends React.Component {
     };
   }
 
-  handleChange = (event) => {
-    const { value, name } = event.target;
-    if (!name || name.length === 0) return;
-    this.setState({ [name]: value });
-  };
-
   toggleModal = () => {
     if (this.state.evaluacionId) {
       this.setState({
@@ -52,8 +46,8 @@ class FormEvaluacion extends React.Component {
     }
   };
 
-  toggleModalWithValues = (values) => {
-    const valid = this.ejerciciosComponentRef.validateEjercicios();
+  toggleModalWithValues = async (values) => {
+    const valid = await this.ejerciciosComponentRef.validateEjercicios();
     if (!valid) return;
     if (this.state.evaluacionId) {
       this.setState({

@@ -80,6 +80,7 @@ class AgregarEjercicio extends React.Component {
               valid = false;
               break;
             }
+            if (!ejer.consigna) valid = false; //Sin consigna
             if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
             if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
             break;

@@ -41,7 +41,7 @@ class RespuestaLibre extends React.Component {
               <Input
                 name="consigna"
                 defaultValue={consigna}
-                onChange={this.handleChange}
+                onInputCapture={this.handleChange}
               />
               {this.props.submitted && !consigna ? (
                 <div className="invalid-feedback d-block">

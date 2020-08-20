@@ -43,7 +43,7 @@ class Oral extends React.Component {
               <Input
                 name="tema"
                 defaultValue={tema}
-                onChange={this.handleChange}
+                onInputCapture={this.handleChange}
               />
               {this.props.submitted && !tema ? (
                 <div className="invalid-feedback d-block">
