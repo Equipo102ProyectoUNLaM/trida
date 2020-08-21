@@ -236,6 +236,7 @@ exports.agregarMaterias = functions.https.onCall(async (data)=> {
     await admin.firestore().collection('usuarios')
       .doc(data.uid)
       .update({ instituciones });
+      await admin.firestore().collection('usuariosPorMateria').doc(data.subjectId).set( {usuario_id: [ data.uid ]}, { merge: true });
   } catch (error) {
     console.log('error', error);
   }
