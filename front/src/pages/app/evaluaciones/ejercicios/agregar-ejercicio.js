@@ -27,6 +27,7 @@ class AgregarEjercicio extends React.Component {
       opciones: [],
       tema: '',
       cant: 1,
+      submitted: false,
     };
   }
 
@@ -59,6 +60,34 @@ class AgregarEjercicio extends React.Component {
     this.setState({
       modalAddOpen: !this.state.modalAddOpen,
     });
+  };
+
+  validateEjercicios = () => {
+    let valid = true;
+    this.setState({ submitted: true });
+    for (const ejer of this.state.ejerciciosSeleccionados) {
+      if (!ejer.tipo) valid = false;
+      else {
+        switch (ejer.tipo) {
+          case TIPO_EJERCICIO.respuesta_libre:
+            if (!ejer.consigna) valid = false;
+            break;
+          case TIPO_EJERCICIO.oral:
+            if (!ejer.tema) valid = false;
+            break;
+          case TIPO_EJERCICIO.opcion_multiple:
+            if (!ejer.opciones || ejer.opciones.length === 0) {
+              valid = false;
+              break;
+            }
+            if (!ejer.consigna) valid = false; //Sin consigna
+            if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
+            if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
+            break;
+        }
+      }
+    }
+    return valid;
   };
 
   getEjerciciosSeleccionados = () => {
@@ -125,7 +154,7 @@ class AgregarEjercicio extends React.Component {
   };
 
   render() {
-    const { selectData, ejerciciosSeleccionados } = this.state;
+    const { selectData, ejerciciosSeleccionados, submitted } = this.state;
     return (
       <FormGroup className="mb-3">
         <div className="glyph-icon simple-icon-plus agregar-ejercicios-action-icon">
@@ -145,24 +174,32 @@ class AgregarEjercicio extends React.Component {
                             <h6 className="mb-4">
                               Ejercicio N°{ejercicio.numero}
                             </h6>
-                            <Select
-                              className="react-select ejerciciosSelect"
-                              classNamePrefix="react-select"
-                              name="ejercicios-select-1"
-                              placeholder="Seleccione el ejercicio que desea crear"
-                              value={selectData.find(
-                                (obj) => obj.value === ejercicio.tipo
-                              )}
-                              onChange={(e) =>
-                                this.handleSelectChange(e, index)
-                              }
-                              options={selectData}
-                            />
+                            <FormGroup className="mb-3 error-l-275">
+                              <Select
+                                className="react-select ejerciciosSelect"
+                                classNamePrefix="react-select"
+                                name="ejercicios-select-1"
+                                placeholder="Seleccione el ejercicio que desea crear"
+                                value={selectData.find(
+                                  (obj) => obj.value === ejercicio.tipo
+                                )}
+                                onChange={(e) =>
+                                  this.handleSelectChange(e, index)
+                                }
+                                options={selectData}
+                              />
+                              {submitted && !ejercicio.tipo ? (
+                                <div className="invalid-feedback d-block">
+                                  Debe elegir un tipo de ejercicio
+                                </div>
+                              ) : null}
+                            </FormGroup>
 
                             {ejercicio.tipo ===
                               TIPO_EJERCICIO.respuesta_libre && (
                               <RespuestaLibre
                                 ejercicioId={index}
+                                submitted={submitted}
                                 preview={false}
                                 value={ejercicio}
                                 onEjercicioChange={this.onEjercicioChange}
@@ -174,6 +211,7 @@ class AgregarEjercicio extends React.Component {
                               <OpcionMultiple
                                 ejercicioId={index}
                                 value={ejercicio}
+                                submitted={submitted}
                                 preview={false}
                                 onEjercicioChange={this.onEjercicioChange}
                               />
@@ -183,6 +221,7 @@ class AgregarEjercicio extends React.Component {
                               <Oral
                                 ejercicioId={index}
                                 value={ejercicio}
+                                submitted={submitted}
                                 preview={false}
                                 onEjercicioChange={this.onEjercicioChange}
                               />

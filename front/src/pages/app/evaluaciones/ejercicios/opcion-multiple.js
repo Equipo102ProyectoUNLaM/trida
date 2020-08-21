@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Row, Input, Button, Label } from 'reactstrap';
+import { Row, Input, Button, Label, FormGroup } from 'reactstrap';
 
 class OpcionMultiple extends React.Component {
   constructor(props) {
@@ -98,37 +98,66 @@ class OpcionMultiple extends React.Component {
         {!preview && (
           <div>
             <div className="rta-libre-container">
-              <Label>Pregunta</Label>
-              <Input
-                name="consigna"
-                onChange={this.handleChange}
-                defaultValue={consigna}
-              />
+              <FormGroup className="error-l-75">
+                <Label>Pregunta</Label>
+                <Input
+                  name="consigna"
+                  onInputCapture={this.handleChange}
+                  defaultValue={consigna}
+                />
+                {this.props.submitted && !consigna ? (
+                  <div className="invalid-feedback d-block">
+                    Debe ingresar una pregunta
+                  </div>
+                ) : null}
+              </FormGroup>
             </div>
             <div className="rta-libre-container">
-              <p>Opciones (Marque con un tilde las correctas)</p>
+              <FormGroup className="error-l-275">
+                <Label>Opciones (Marque con un tilde las correctas)</Label>
+                {this.props.submitted &&
+                (!opciones || opciones.length === 0) ? (
+                  <div className="invalid-feedback d-block">
+                    Debe cargar opciones
+                  </div>
+                ) : null}
+                {opciones.map((op, index) => (
+                  <Row key={'row' + index} className="opcionMultipleRow">
+                    <Input
+                      name="verdadera"
+                      className="margin-auto checkbox"
+                      type="checkbox"
+                      onChange={(e) => this.handleCheckBoxChange(e, index)}
+                      checked={op.verdadera}
+                    />
+                    <Input
+                      className="opcionMultipleInput margin-auto"
+                      name="opcion"
+                      onInputCapture={(e) => this.handleOptionsChange(e, index)}
+                      defaultValue={op.opcion}
+                    />
+                    <div
+                      className="glyph-icon simple-icon-close remove-icon"
+                      onClick={() => this.removeOption(index)}
+                    />
+                    {this.props.submitted &&
+                    !opciones.find((x) => x.verdadera === true) ? (
+                      <div
+                        className="invalid-feedback d-block"
+                        style={{ left: '525px' }}
+                      >
+                        Debe ingresar al menos una respuesta como verdadera
+                      </div>
+                    ) : null}
+                    {this.props.submitted && opciones.find((x) => !x.opcion) ? (
+                      <div className="invalid-feedback d-block">
+                        Debe completar todas las opciones
+                      </div>
+                    ) : null}
+                  </Row>
+                ))}
+              </FormGroup>
             </div>
-            {opciones.map((op, index) => (
-              <Row key={'row' + index} className="opcionMultipleRow">
-                <Input
-                  name="verdadera"
-                  className="margin-auto checkbox"
-                  type="checkbox"
-                  onChange={(e) => this.handleCheckBoxChange(e, index)}
-                  checked={op.verdadera}
-                />
-                <Input
-                  className="opcionMultipleInput margin-auto"
-                  name="opcion"
-                  onChange={(e) => this.handleOptionsChange(e, index)}
-                  defaultValue={op.opcion}
-                />
-                <div
-                  className="glyph-icon simple-icon-close remove-icon"
-                  onClick={() => this.removeOption(index)}
-                />
-              </Row>
-            ))}
             <Button
               outline
               onClick={this.handleAddOpcion}
