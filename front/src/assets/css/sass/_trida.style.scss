@@ -7972,7 +7972,7 @@ i.large-icon {
 
   .custom-control-inline {
     margin-right: 0;
-    margin-left: 1rem;
+    margin-left: 1rem !important;
   }
 
   .form-check-inline {
@@ -9378,4 +9378,8 @@ div.rendered-file-browser{
 
 .modal-ejercicios-body{
   background-color: $theme-color-1;
+}
+
+.margin-left-1 {
+  margin-left: 1rem !important;
 }

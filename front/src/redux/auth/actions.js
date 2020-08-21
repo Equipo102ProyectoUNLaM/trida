@@ -17,7 +17,7 @@ import {
 } from '../actions';
 
 import { auth, functions } from 'helpers/Firebase';
-import { getCollection } from 'helpers/Firebase-db';
+import { getCollection, editDocument } from 'helpers/Firebase-db';
 import { getUserData } from 'helpers/Firebase-user';
 import { addMail, inviteMail } from 'constants/emailTexts';
 import { authErrorMessage } from 'constants/errorMessages';
@@ -118,13 +118,13 @@ export const registerUserError = (message) => ({
 });
 
 export const registerUser = (user) => async (dispatch) => {
-  const { email, password, isInvited, instId, courseId, subjectId } = user;
+  const { email, password, isInvited, rol, instId, courseId, subjectId } = user;
   dispatch(registerUserStart());
 
   try {
     let registerUser = '';
     const user = functions.httpsCallable('user');
-    const userAuth = await user({ email, password });
+    const userAuth = await user({ email, password, rol });
     const { data } = userAuth;
     if (data) {
       const { uid } = data;
@@ -144,7 +144,7 @@ export const registerUser = (user) => async (dispatch) => {
       } else {
         dispatch(setLoginUser(registerUser));
       }
-
+      await editDocument('usuarios', uid, { rol });
       dispatch(registerUserSuccess(registerUser));
     } else {
       dispatch(registerUserError(registerUser.message));
