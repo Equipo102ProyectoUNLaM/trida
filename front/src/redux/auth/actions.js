@@ -5,6 +5,7 @@ import {
   SET_LOGIN_USER,
   REGISTER_USER_START,
   REGISTER_USER_SUCCESS,
+  UPDATE_DATOS_USUARIO,
   LOGIN_USER_ERROR,
   REGISTER_USER_ERROR,
   FORGOT_PASSWORD_START,
@@ -55,6 +56,11 @@ export const loginUserSuccess = (user, userData) => ({
 export const loginUserError = (message) => ({
   type: LOGIN_USER_ERROR,
   payload: { message },
+});
+
+export const updateDatosUsuario = (userData) => ({
+  type: UPDATE_DATOS_USUARIO,
+  payload: { userData },
 });
 
 export const forgotPasswordStart = (forgotUserMail, history) => ({
