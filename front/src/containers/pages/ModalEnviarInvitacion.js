@@ -152,7 +152,7 @@ class ModalEnviarInvitacion extends React.Component {
         this.setState({ isLoading: true });
         await this.props.registerUser(userObj);
         if (isEmpty(this.props.error)) {
-          this.registroExitoso(this.state.selectedSubject.key, '');
+          this.registroExitoso();
         }
       } catch (error) {
         enviarNotificacionError(
@@ -163,7 +163,7 @@ class ModalEnviarInvitacion extends React.Component {
     }
   };
 
-  registroExitoso = async (subjectId, userId) => {
+  registroExitoso = async () => {
     this.setState({ isLoading: false });
     this.props.toggle();
     enviarNotificacionExitosa(
