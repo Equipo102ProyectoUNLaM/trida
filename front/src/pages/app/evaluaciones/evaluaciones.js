@@ -6,6 +6,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalVistaPreviaEvaluacion from 'pages/app/evaluaciones/detalle-evaluacion/vista-previa-evaluacion';
+import ROLES from 'constants/roles';
 import {
   logicDeleteDocument,
   getCollectionWithSubCollections,
@@ -117,6 +118,7 @@ class Evaluaciones extends Component {
       modalPreviewOpen,
       evalId,
     } = this.state;
+    const { rol } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -124,8 +126,8 @@ class Evaluaciones extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.evaluations"
-            toggleModal={this.onAdd}
-            buttonText="evaluacion.agregar"
+            toggleModal={rol === ROLES.Docente ? this.onAdd : null}
+            buttonText={rol === ROLES.Docente ? 'evaluation.add' : null}
           />
           <Row>
             {items.map((evaluacion) => {
@@ -170,9 +172,12 @@ class Evaluaciones extends Component {
   }
 }
 
-const mapStateToProps = ({ seleccionCurso }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  return { subject };
+  const { userData } = authUser;
+  const { rol } = userData;
+
+  return { subject, rol };
 };
 
 export default connect(mapStateToProps)(withRouter(Evaluaciones));
