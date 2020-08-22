@@ -18,6 +18,7 @@ import {
   DefaultConfirmDeletion,
   MultipleConfirmDeletion,
 } from 'constants/fileBrowser/confirmations';
+import ROLES from 'constants/roles';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -422,42 +423,49 @@ class Contenidos extends Component {
       modalRenameOpen,
       repeatedFiles,
     } = this.state;
+    const { rol } = this.props;
+    const rolDocente = rol === ROLES.Docente;
     return (
       <Fragment>
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
         <div className="disable-text-selection">
           <HeaderDeModulo heading="menu.content" />
         </div>
-        <Row className="mb-4">
-          <Colxx xxs="12">
-            <Card>
-              <CardBody>
-                <Dropzone
-                  ref={this.dropZoneRef}
-                  parentCallback={this.callbackFunction}
-                  deleteFile={this.callbackDeleteFunction}
-                />
-              </CardBody>
-            </Card>
-          </Colxx>
-        </Row>
-        <Button
-          color="primary"
-          disabled={canSubmitFiles}
-          className="mb-2"
-          onClick={this.validateDuplicatedFiles.bind(this)}
-        >
-          <IntlMessages id="contenido.agregar" />
-        </Button>
+        {rolDocente && (
+          <>
+            <Row className="mb-4">
+              <Colxx xxs="12">
+                <Card>
+                  <CardBody>
+                    <Dropzone
+                      ref={this.dropZoneRef}
+                      parentCallback={this.callbackFunction}
+                      deleteFile={this.callbackDeleteFunction}
+                    />
+                  </CardBody>
+                </Card>
+              </Colxx>
+            </Row>
+
+            <Button
+              color="primary"
+              disabled={canSubmitFiles}
+              className="mb-2"
+              onClick={this.validateDuplicatedFiles.bind(this)}
+            >
+              <IntlMessages id="contenido.agregar" />
+            </Button>
+          </>
+        )}
         <div className="demo-mount-nested-editable">
           <FileBrowser
             files={this.state.files}
             icons={Icons.FontAwesome(4)}
             detailRenderer={() => null}
             onSelectFolder={this.handleSelectFolder}
-            onCreateFolder={this.handleCreateFolder}
-            onDeleteFolder={this.handleDeleteFolder}
-            onDeleteFile={this.handleDeleteFile}
+            onCreateFolder={rolDocente ? this.handleCreateFolder : false}
+            onDeleteFolder={rolDocente ? this.handleDeleteFolder : false}
+            onDeleteFile={rolDocente ? this.handleDeleteFile : false}
             onDownloadFile={this.handleDownloadFile}
             actionRenderer={DefaultAction}
             filterRenderer={DefaultFilter}
@@ -489,9 +497,11 @@ class Contenidos extends Component {
   }
 }
 
-const mapStateToProps = ({ seleccionCurso }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  return { subject };
+  const { userData } = authUser;
+  const { rol } = userData;
+  return { subject, rol };
 };
 
 const mount = document.querySelectorAll('div.demo-mount-nested-editable');
