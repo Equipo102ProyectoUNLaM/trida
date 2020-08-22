@@ -6,6 +6,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Row } from 'reactstrap';
 import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
+import ROLES from 'constants/roles';
 
 var datos = [];
 
@@ -120,7 +121,7 @@ class FormMensaje extends Component {
       textoMensaje,
       esGeneral,
     } = this.state;
-    const { toggleModal } = this.props;
+    const { toggleModal, rol } = this.props;
 
     return isLoading ? (
       <div className="loading" />
@@ -146,16 +147,18 @@ class FormMensaje extends Component {
                   isDisabled={esGeneral}
                 />
               </Colxx>
-              <Colxx xxs="12" md="6" className="receivers-general">
-                <Input
-                  name="esGeneral"
-                  className="general-check"
-                  type="checkbox"
-                  checked={esGeneral}
-                  onChange={() => this.handleCheckBoxChange()}
-                />
-                <label>¿Es un mensaje general?</label>
-              </Colxx>
+              {rol === ROLES.Docente && (
+                <Colxx xxs="12" md="6" className="receivers-general">
+                  <Input
+                    name="esGeneral"
+                    className="general-check"
+                    type="checkbox"
+                    checked={esGeneral}
+                    onChange={() => this.handleCheckBoxChange()}
+                  />
+                  <label>¿Es un mensaje general?</label>
+                </Colxx>
+              )}
             </Row>
           </Colxx>
         </Row>
@@ -190,9 +193,9 @@ class FormMensaje extends Component {
 
 const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user, userData } = authUser;
-  const { nombre, apellido } = userData;
+  const { nombre, apellido, rol } = userData;
   const { subject } = seleccionCurso;
-  return { user, subject, nombre, apellido };
+  return { user, subject, nombre, apellido, rol };
 };
 
 export default connect(mapStateToProps)(FormMensaje);
