@@ -30,14 +30,14 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script>
-      var theme = "light.purple";
-      if (typeof Storage !== "undefined") {
-          if (localStorage.getItem("__theme_color")) {
-              theme = localStorage.getItem("__theme_color");
-          }
+      var theme = 'light.purple';
+      if (typeof Storage !== 'undefined') {
+        if (localStorage.getItem('__theme_color')) {
+          theme = localStorage.getItem('__theme_color');
+        }
       }
-      if(theme.indexOf("dark") != -1) {
-          document.documentElement.style.background = "#1b191b";
+      if (theme.indexOf('dark') != -1) {
+        document.documentElement.style.background = '#1b191b';
       }
   </script>
   <div id="root">
