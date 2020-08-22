@@ -4,48 +4,39 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect
+  Redirect,
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import './helpers/Firebase';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
-import { isMultiColorActive, isDemo } from './constants/defaultValues';
+import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
+import { AuthRoute } from 'components/rutas/auth-route';
 
 const ViewMain = React.lazy(() =>
-  import(/* webpackChunkName: "views" */ './views')
+  import(/* webpackChunkName: "views" */ './pages')
 );
 const ViewApp = React.lazy(() =>
-  import(/* webpackChunkName: "views-app" */ './views/app')
+  import(/* webpackChunkName: "views-app" */ './pages/app')
+);
+const ViewCourse = React.lazy(() =>
+  import(/* webpackChunkName: "views-user" */ './pages/course-selection')
 );
 const ViewUser = React.lazy(() =>
-  import(/* webpackChunkName: "views-user" */ './views/user')
+  import(/* webpackChunkName: "views-user" */ './pages/user')
 );
 const ViewError = React.lazy(() =>
-  import(/* webpackChunkName: "views-error" */ './views/error')
+  import(/* webpackChunkName: "views-error" */ './pages/error')
+);
+const ViewPizarron = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ './pages/window-pizarron')
 );
 
-const AuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        authUser || isDemo ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/user/login',
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
-    />
-  );
-}
+const Action = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ 'templates/email/action')
+);
 
 class App extends Component {
   constructor(props) {
@@ -77,24 +68,36 @@ class App extends Component {
               <Router>
                 <Switch>
                   <AuthRoute
+                    path="/seleccion-curso"
+                    authUser={loginUser}
+                    component={ViewCourse}
+                  />
+                  <AuthRoute
                     path="/app"
                     authUser={loginUser}
                     component={ViewApp}
                   />
+                  <AuthRoute
+                    path="/pizarron"
+                    authUser={loginUser}
+                    component={ViewPizarron}
+                  />
                   <Route
                     path="/user"
-                    render={props => <ViewUser {...props} />}
+                    render={(props) => <ViewUser {...props} />}
                   />
                   <Route
                     path="/error"
                     exact
-                    render={props => <ViewError {...props} />}
+                    render={(props) => <ViewError {...props} />}
                   />
-                  <Route
+                  <AuthRoute
                     path="/"
+                    authUser={loginUser}
                     exact
-                    render={props => <ViewMain {...props} />}
+                    component={ViewMain}
                   />
+                  <Route path="/action" component={Action} />
                   <Redirect to="/error" />
                 </Switch>
               </Router>
@@ -113,7 +116,4 @@ const mapStateToProps = ({ authUser, settings }) => {
 };
 const mapActionsToProps = {};
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(App);
+export default connect(mapStateToProps, mapActionsToProps)(App);

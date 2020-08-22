@@ -1,9 +1,14 @@
-import { defaultDirection } from "../constants/defaultValues";
+import { defaultDirection } from '../constants/defaultValues';
+import * as _moment from 'moment';
+const moment = _moment;
+
+export const isEmpty = (obj) => !obj || Object.keys(obj).length === 0;
 
 export const mapOrder = (array, order, key) => {
   array.sort(function (a, b) {
-    var A = a[key], B = b[key];
-    if (order.indexOf(A + "") > order.indexOf(B + "")) {
+    var A = a[key],
+      B = b[key];
+    if (order.indexOf(A + '') > order.indexOf(B + '')) {
       return 1;
     } else {
       return -1;
@@ -11,7 +16,6 @@ export const mapOrder = (array, order, key) => {
   });
   return array;
 };
-
 
 export const getDateWithFormat = () => {
   const today = new Date();
@@ -25,33 +29,80 @@ export const getDateWithFormat = () => {
   if (mm < 10) {
     mm = '0' + mm;
   }
-  return dd + '.' + mm + '.' + yyyy;
-}
+  return dd + '/' + mm + '/' + yyyy;
+};
 
-export const getCurrentTime=()=>{
+export const getCurrentTime = () => {
   const now = new Date();
-  return now.getHours() + ":" + now.getMinutes()
-}
+  const hours = now.getHours();
+  const minuts = now.getMinutes();
+  const hoursFormatted = hours.toString().length === 1 ? '0' + hours : hours;
+  const minutsFormatted =
+    minuts.toString().length === 1 ? '0' + minuts : minuts;
+  return hoursFormatted + ':' + minutsFormatted;
+};
+
+export const getFechaHoraActual = () => {
+  const day = getDateWithFormat();
+  const hour = getCurrentTime();
+  return day + ' - ' + hour;
+};
 
 export const getDirection = () => {
   let direction = defaultDirection;
-  if (localStorage.getItem("direction")) {
-    const localValue = localStorage.getItem("direction");
-    if (localValue === "rtl" || localValue === "ltr") {
+  if (localStorage.getItem('direction')) {
+    const localValue = localStorage.getItem('direction');
+    if (localValue === 'rtl' || localValue === 'ltr') {
       direction = localValue;
     }
   }
   return {
     direction,
-    isRtl: direction === "rtl"
+    isRtl: direction === 'rtl',
   };
 };
 
-export const setDirection = localValue => {
-  let direction = "ltr";
-  if (localValue === "rtl" || localValue === "ltr") {
+export const setDirection = (localValue) => {
+  let direction = 'ltr';
+  if (localValue === 'rtl' || localValue === 'ltr') {
     direction = localValue;
   }
-  localStorage.setItem("direction", direction);
+  localStorage.setItem('direction', direction);
 };
 
+export const createUUID = () => {
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (
+    c
+  ) {
+    var r = (dt + Math.random() * 16) % 16 | 0;
+    dt = Math.floor(dt / 16);
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+
+  return uuid;
+};
+
+export const createRandomString = () => {
+  return Math.random().toString(36).slice(-8);
+};
+
+export const toDateTime = (secs) => {
+  var t = new Date(1970, 0, 1);
+  t.setSeconds(secs);
+  const formattedDate =
+    t.getDate() + '-' + (t.getMonth() + 1) + '-' + t.getFullYear();
+  return formattedDate;
+};
+
+/*  Esta función recibe un string con una fecha en cualquier formato y devuelve
+ un string de la fecha en formato DD/MM/YYYY */
+export const getFormattedDate = (date) => {
+  return moment(date).locale('es').format('DD/MM/YYYY');
+};
+
+/*  Esta función recibe un string con una fecha en formato YYYY-MM-AA y devuelve
+ un moment de la fecha */
+export const getDate = (date) => {
+  return moment(date).locale('es');
+};

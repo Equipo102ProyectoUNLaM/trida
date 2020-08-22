@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {
   themeColorStorageKey,
-  themeRadiusStorageKey
+  themeRadiusStorageKey,
 } from '../../constants/defaultValues';
-import { FormGroup, Label, CustomInput } from 'reactstrap';
+
 class ColorSwitcher extends Component {
   constructor(props) {
     super();
@@ -12,16 +12,17 @@ class ColorSwitcher extends Component {
     this.state = {
       isOpen: false,
       selectedColor: localStorage.getItem(themeColorStorageKey),
-      radius: localStorage.getItem(themeRadiusStorageKey) || 'rounded'
+      radius: localStorage.getItem(themeRadiusStorageKey) || 'rounded',
     };
     this.removeEvents();
   }
 
   getContainer = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     return ReactDOM.findDOMNode(this);
   };
 
-  toggle = e => {
+  toggle = (e) => {
     e.preventDefault();
     const isOpen = this.state.isOpen;
     if (!isOpen) {
@@ -30,7 +31,7 @@ class ColorSwitcher extends Component {
       this.removeEvents();
     }
     this.setState({
-      isOpen: !isOpen
+      isOpen: !isOpen,
     });
   };
   changeThemeColor = (e, color) => {
@@ -47,97 +48,71 @@ class ColorSwitcher extends Component {
   }
 
   addEvents = () => {
-    ['click', 'touchstart'].forEach(event =>
+    ['click', 'touchstart'].forEach((event) =>
       document.addEventListener(event, this.handleDocumentClick, true)
     );
   };
   removeEvents = () => {
-    ['click', 'touchstart'].forEach(event =>
+    ['click', 'touchstart'].forEach((event) =>
       document.removeEventListener(event, this.handleDocumentClick, true)
     );
   };
 
-  handleDocumentClick = e => {
+  handleDocumentClick = (e) => {
     const container = this.getContainer();
     if (container.contains(e.target) || container === e.target) {
       return;
     }
     this.toggle(e);
   };
-  changeRadius = radius => {
+  changeRadius = (radius) => {
     if (radius === 'flat') {
       document.body.classList.remove('rounded');
     } else {
       document.body.classList.add('rounded');
     }
     this.setState({
-      radius
+      radius,
     });
     localStorage.setItem(themeRadiusStorageKey, radius);
   };
 
   render() {
-    const { selectedColor, radius } = this.state;
+    const { selectedColor } = this.state;
     return (
       <div className={`theme-colors ${this.state.isOpen ? 'shown' : ''}`}>
         <div className="p-4">
-          <p className="text-muted mb-2">Light Theme</p>
-          <div className="d-flex flex-row justify-content-between mb-4">
-            {['purple', 'blue', 'green', 'orange', 'red'].map(color => (
+          <p className="text-muted mb-2">Tema Claro</p>
+          <div className="d-flex flex-row justify-content-flex-start mb-4">
+            {['blue', 'orange'].map((color) => (
               <a
                 key={`light.${color}`}
                 href={`#light.${color}`}
                 className={`theme-color theme-color-${color} ${
                   selectedColor === `light.${color}` ? 'active' : ''
                 }`}
-                onClick={e => this.changeThemeColor(e, `light.${color}`)}
+                onClick={(e) => this.changeThemeColor(e, `light.${color}`)}
               >
                 <span>`light.${color}`</span>
               </a>
             ))}
           </div>
-          <p className="text-muted mb-2">Dark Theme</p>
-          <div className="d-flex flex-row justify-content-between">
-            {['purple', 'blue', 'green', 'orange', 'red'].map(color => (
+          <p className="text-muted mb-2">Tema Oscuro</p>
+          <div className="d-flex flex-row justify-content-flex-start">
+            {['blue', 'orange'].map((color) => (
               <a
                 key={`dark.${color}`}
                 href={`#dark.${color}`}
                 className={`theme-color theme-color-${color} ${
                   selectedColor === `dark.${color}` ? 'active' : ''
                 }`}
-                onClick={e => this.changeThemeColor(e, `dark.${color}`)}
+                onClick={(e) => this.changeThemeColor(e, `dark.${color}`)}
               >
                 <span>`dark.${color}`</span>
               </a>
             ))}
           </div>
         </div>
-        <div className=" pb-0 pl-4 pt-4">
-          <FormGroup>
-            <Label for="radiusRadio">Border Radius </Label>
-            <div>
-              <CustomInput
-                type="radio"
-                name="radiusRadio"
-                id="rounded"
-                label="Rounded"
-                inline
-                defaultChecked={radius === 'rounded'}
-                onChange={() => this.changeRadius('rounded')}
-              />
-              <CustomInput
-                type="radio"
-                name="radiusRadio"
-                id="flat"
-                label="Flat"
-                inline
-                defaultChecked={radius === 'flat'}
-                onChange={() => this.changeRadius('flat')}
-              />
-            </div>
-          </FormGroup>
-        </div>
-
         <a href="#section" className="theme-button" onClick={this.toggle}>
           {' '}
           <i className="simple-icon-magic-wand" />{' '}

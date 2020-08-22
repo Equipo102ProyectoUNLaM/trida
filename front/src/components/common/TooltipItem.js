@@ -1,36 +1,30 @@
-import React from "react";
-import { Button, Tooltip } from "reactstrap";
+import React from 'react';
+import { Tooltip } from 'reactstrap';
 
 class TooltipItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tooltipOpen: false
+      tooltipOpen: false,
     };
   }
   toggle = () => {
-    this.setState(prevState => ({
-      tooltipOpen: !prevState.tooltipOpen
+    this.setState((prevState) => ({
+      tooltipOpen: !prevState.tooltipOpen,
     }));
   };
 
   render() {
     return (
-      <span>
-        <Button
-          className="mr-1 mb-2"
-          color="secondary"
-          id={"Tooltip-" + this.props.id}
-        >
-          {this.props.item.text}
-        </Button>
+      <span className="tooltip-question">
+        <i className="simple-icon-question" id={this.props.id} />
         <Tooltip
-          placement={this.props.item.placement}
+          placement="right"
           isOpen={this.state.tooltipOpen}
-          target={"Tooltip-" + this.props.id}
+          target={this.props.id}
           toggle={this.toggle}
         >
-          {this.props.item.body}
+          {this.props.body}
         </Tooltip>
       </span>
     );

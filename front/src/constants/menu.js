@@ -1,42 +1,96 @@
 const data = [
   {
-    id: "gogo",
-    icon: "iconsminds-air-balloon-1",
-    label: "menu.gogo",
-    to: "/app/gogo",
+    id: 'virtual-classes',
+    icon: 'iconsminds-blackboard',
+    label: 'menu.clases-virtuales',
+    to: '/app/clases-virtuales',
     subs: [
       {
-        icon: "simple-icon-paper-plane",
-        label: "menu.start",
-        to: "/app/gogo/start"
-      }     
-    ]
+        icon: 'iconsminds-book',
+        label: 'menu.mis-clases',
+        to: '/app/clases-virtuales/mis-clases',
+      },
+      {
+        icon: 'iconsminds-blackboard',
+        label: 'menu.board',
+        to: '/app/clases-virtuales/pizarron',
+      },
+    ],
   },
   {
-    id: "secondmenu",
-    icon: "iconsminds-three-arrow-fork",
-    label: "menu.second-menu",
-    to: "/app/second-menu",
+    id: 'content',
+    icon: 'simple-icon-cloud-upload',
+    label: 'menu.content',
+    to: '/app/contenidos',
     subs: [
       {
-        icon: "simple-icon-paper-plane",
-        label: "menu.second",
-        to: "/app/second-menu/second"
-      }
-    ]
+        icon: 'simple-icon-cloud-upload',
+        label: 'menu.my-contents',
+        to: '/app/contenidos',
+      },
+    ],
   },
   {
-    id: "blankpage",
-    icon: "iconsminds-bucket",
-    label: "menu.blank-page",
-    to: "/app/blank-page"
+    id: 'communications',
+    icon: 'iconsminds-mail',
+    label: 'menu.communications',
+    to: '/app/comunicaciones',
+    subs: [
+      {
+        icon: 'iconsminds-speach-bubble-comic-2',
+        label: 'menu.forum',
+        to: '/app/comunicaciones/foro',
+      },
+      {
+        icon: 'simple-icon-paper-plane',
+        label: 'menu.messages',
+        to: '/app/comunicaciones/mensajeria',
+      },
+      {
+        icon: 'iconsminds-receipt-4',
+        label: 'menu.formal',
+        to: '/app/comunicaciones/formales',
+      },
+    ],
   },
   {
-    id: "docs",
-    icon: "iconsminds-library",
-    label: "menu.docs",
-    to: "https://gogo-react-docs.coloredstrategies.com/",
-    newWindow:true
-  }
+    id: 'activities',
+    icon: 'iconsminds-library',
+    label: 'menu.activities',
+    to: '/app/practicas',
+    subs: [
+      {
+        icon: 'iconsminds-library',
+        label: 'menu.my-activities',
+        to: '/app/practicas',
+      },
+    ],
+  },
+  {
+    id: 'evaluations',
+    icon: 'simple-icon-note',
+    label: 'menu.evaluations',
+    to: '/app/evaluaciones',
+    subs: [
+      {
+        icon: 'simple-icon-note',
+        label: 'menu.my-evaluations',
+        to: '/app/evaluaciones',
+      },
+    ],
+  },
+  {
+    id: 'corrections',
+    icon: 'simple-icon-check',
+    label: 'menu.corrections',
+    to: '/app/correcciones',
+    subs: [
+      {
+        icon: 'simple-icon-check',
+        label: 'menu.my-corrections',
+        to: '/app/correcciones',
+      },
+    ],
+  },
 ];
 export default data;
