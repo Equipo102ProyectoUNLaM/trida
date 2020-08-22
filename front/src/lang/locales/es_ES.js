@@ -145,4 +145,5 @@ module.exports = {
   'messages.new': 'CREAR NUEVO MENSAJE',
   'messages.answer': 'RESPONDER MENSAJE',
   'messages.receiver': 'Destinatario',
+  'messages.resend': 'REENVIAR MENSAJE',
 };

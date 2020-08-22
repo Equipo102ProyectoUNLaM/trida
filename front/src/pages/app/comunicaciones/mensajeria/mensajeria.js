@@ -5,6 +5,7 @@ import { getCollection } from 'helpers/Firebase-db';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ModalGrande from 'containers/pages/ModalGrande';
+import ModalChico from 'containers/pages/ModalChico';
 import FormMensaje from './form-mensaje';
 import { getUsernameById } from 'helpers/Firebase-db';
 
@@ -18,6 +19,7 @@ class Mensajeria extends Component {
       modalMessageOpen: false,
       modalEnviarOpen: false,
       modalResponderOpen: false,
+      modalReenviarOpen: false,
       materiaId: this.props.subject.id,
       usuarioId: this.props.user,
       isLoading: true,
@@ -28,7 +30,7 @@ class Mensajeria extends Component {
       usuariosMail: '',
       idUsuarioAResponder: '',
       esEnviado: false,
-      isMensajeAResponder: '',
+      idMensajeAResponder: '',
     };
   }
 
@@ -127,7 +129,7 @@ class Mensajeria extends Component {
       usuariosMail: usuarios,
       esEnviado: enviado,
       idUsuarioAResponder: idUsuarioAResponder,
-      isMensajeAResponder: rowInfo.original.id,
+      idMensajeAResponder: rowInfo.original.id,
     });
     this.toggleDetailModal();
   };
@@ -158,22 +160,30 @@ class Mensajeria extends Component {
     });
   };
 
+  toggleReenviarModal = () => {
+    this.setState({
+      modalReenviarOpen: !this.state.modalReenviarOpen,
+      modalMessageOpen: false,
+    });
+  };
+
   render() {
     const {
       isLoading,
       itemsSent,
       itemsReceive,
       modalEnviarOpen,
+      modalMessageOpen,
+      modalReenviarOpen,
+      modalResponderOpen,
       contenidoMensaje,
       asuntoMensaje,
-      modalMessageOpen,
       fechaMensaje,
       botonDetalle,
       usuariosMail,
       esEnviado,
       idUsuarioAResponder,
-      modalResponderOpen,
-      isMensajeAResponder,
+      idMensajeAResponder,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -200,7 +210,7 @@ class Mensajeria extends Component {
               idUsuarioAResponder={idUsuarioAResponder}
               esResponder={modalResponderOpen}
               asuntoAResponder={asuntoMensaje}
-              idMensajeAResponder={isMensajeAResponder}
+              idMensajeAResponder={idMensajeAResponder}
             />
           </ModalGrande>
           <TabsDeMensajeria
@@ -219,8 +229,19 @@ class Mensajeria extends Component {
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}
               isOpen={modalMessageOpen}
-              onConfirm={this.toggleResponderModal}
+              onConfirm={
+                esEnviado ? this.toggleReenviarModal : this.toggleResponderModal
+              }
             />
+          )}
+          {this.state.modalReenviarOpen && (
+            <ModalChico
+              modalOpen={modalReenviarOpen}
+              toggleModal={this.toggleReenviarModal}
+              modalHeader={'messages.resend'}
+            >
+              HOLA
+            </ModalChico>
           )}
         </div>
       </Fragment>
