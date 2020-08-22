@@ -10,11 +10,6 @@ const data = [
         label: 'menu.mis-clases',
         to: '/app/clases-virtuales/mis-clases',
       },
-      {
-        icon: 'iconsminds-blackboard',
-        label: 'menu.board',
-        to: '/app/clases-virtuales/pizarron',
-      },
     ],
   },
   {
