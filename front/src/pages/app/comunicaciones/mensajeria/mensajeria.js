@@ -16,6 +16,8 @@ class Mensajeria extends Component {
       itemsSent: [],
       itemsReceive: [],
       modalMessageOpen: false,
+      modalEnviarOpen: false,
+      modalResponderOpen: false,
       materiaId: this.props.subject.id,
       usuarioId: this.props.user,
       isLoading: true,
@@ -24,7 +26,7 @@ class Mensajeria extends Component {
       fechaMensaje: '',
       botonDetalle: 'Responder',
       usuariosMail: '',
-      modalEnviarOpen: false,
+      idUsuarioAResponder: '',
       esEnviado: false,
     };
   }
@@ -75,6 +77,7 @@ class Mensajeria extends Component {
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
       remitente: elem.data.emisor.nombre,
+      idRemitente: elem.data.emisor.id,
     }));
     this.setState({
       itemsReceive: arrayDeData,
@@ -104,12 +107,14 @@ class Mensajeria extends Component {
     let botonMensaje = 'Responder';
     let usuarios = null;
     let enviado = false;
+    let idUsuarioAResponder = '';
     if (rowInfo.original.destinatarios) {
       botonMensaje = 'Reenviar';
       usuarios = rowInfo.original.destinatarios;
       enviado = true;
     } else {
       usuarios = rowInfo.original.remitente;
+      idUsuarioAResponder = rowInfo.original.idRemitente;
     }
     this.setState({
       asuntoMensaje: rowInfo.original.asunto,
@@ -118,6 +123,7 @@ class Mensajeria extends Component {
       botonDetalle: botonMensaje,
       usuariosMail: usuarios,
       esEnviado: enviado,
+      idUsuarioAResponder: idUsuarioAResponder,
     });
     this.toggleDetailModal();
   };
@@ -139,6 +145,12 @@ class Mensajeria extends Component {
     });
   };
 
+  toggleResponderModal = () => {
+    this.setState({
+      modalResponderOpen: !this.state.modalResponderOpen,
+    });
+  };
+
   render() {
     const {
       isLoading,
@@ -152,6 +164,8 @@ class Mensajeria extends Component {
       botonDetalle,
       usuariosMail,
       esEnviado,
+      idUsuarioAResponder,
+      modalResponderOpen,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -171,6 +185,10 @@ class Mensajeria extends Component {
             <FormMensaje
               toggleModal={this.toggleModal}
               onMensajeEnviado={this.onMensajeEnviado}
+              mensajeAResponder={contenidoMensaje}
+              usuarioAResponder={usuariosMail}
+              idUsuarioAResponder={idUsuarioAResponder}
+              esResponder={modalResponderOpen}
             />
           </ModalGrande>
           <TabsDeMensajeria
@@ -189,6 +207,7 @@ class Mensajeria extends Component {
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}
               isOpen={modalMessageOpen}
+              onConfirm={this.toggleResponderModal}
             />
           )}
         </div>
