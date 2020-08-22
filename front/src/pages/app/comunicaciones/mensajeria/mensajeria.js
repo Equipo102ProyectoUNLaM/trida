@@ -28,6 +28,7 @@ class Mensajeria extends Component {
       usuariosMail: '',
       idUsuarioAResponder: '',
       esEnviado: false,
+      isMensajeAResponder: '',
     };
   }
 
@@ -108,6 +109,7 @@ class Mensajeria extends Component {
     let usuarios = null;
     let enviado = false;
     let idUsuarioAResponder = '';
+
     if (rowInfo.original.destinatarios) {
       botonMensaje = 'Reenviar';
       usuarios = rowInfo.original.destinatarios;
@@ -116,6 +118,7 @@ class Mensajeria extends Component {
       usuarios = rowInfo.original.remitente;
       idUsuarioAResponder = rowInfo.original.idRemitente;
     }
+
     this.setState({
       asuntoMensaje: rowInfo.original.asunto,
       contenidoMensaje: rowInfo.original.contenido,
@@ -124,6 +127,7 @@ class Mensajeria extends Component {
       usuariosMail: usuarios,
       esEnviado: enviado,
       idUsuarioAResponder: idUsuarioAResponder,
+      isMensajeAResponder: rowInfo.original.id,
     });
     this.toggleDetailModal();
   };
@@ -136,6 +140,8 @@ class Mensajeria extends Component {
   toggleModal = () => {
     this.setState({
       modalEnviarOpen: !this.state.modalEnviarOpen,
+      modalMessageOpen: false,
+      modalResponderOpen: false,
     });
   };
 
@@ -148,6 +154,7 @@ class Mensajeria extends Component {
   toggleResponderModal = () => {
     this.setState({
       modalResponderOpen: !this.state.modalResponderOpen,
+      modalEnviarOpen: !this.state.modalEnviarOpen,
     });
   };
 
@@ -166,6 +173,7 @@ class Mensajeria extends Component {
       esEnviado,
       idUsuarioAResponder,
       modalResponderOpen,
+      isMensajeAResponder,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -180,7 +188,9 @@ class Mensajeria extends Component {
           <ModalGrande
             modalOpen={modalEnviarOpen}
             toggleModal={this.toggleModal}
-            modalHeader="messages.new"
+            modalHeader={
+              modalResponderOpen ? 'messages.answer' : 'messages.new'
+            }
           >
             <FormMensaje
               toggleModal={this.toggleModal}
@@ -189,6 +199,8 @@ class Mensajeria extends Component {
               usuarioAResponder={usuariosMail}
               idUsuarioAResponder={idUsuarioAResponder}
               esResponder={modalResponderOpen}
+              asuntoAResponder={asuntoMensaje}
+              idMensajeAResponder={isMensajeAResponder}
             />
           </ModalGrande>
           <TabsDeMensajeria

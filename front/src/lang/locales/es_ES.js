@@ -143,5 +143,6 @@ module.exports = {
 
   /* 13. Mensajeria */
   'messages.new': 'CREAR NUEVO MENSAJE',
+  'messages.answer': 'RESPONDER MENSAJE',
   'messages.receiver': 'Destinatario',
 };

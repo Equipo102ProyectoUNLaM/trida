@@ -27,7 +27,13 @@ class FormMensaje extends Component {
   }
 
   componentDidMount() {
-    this.getUsersOfSubject(this.state.idMateria);
+    if (!this.props.esResponder) {
+      this.getUsersOfSubject(this.state.idMateria);
+    }
+
+    this.setState({
+      isLoading: false,
+    });
   }
 
   handleChangeMulti = (selectedOptions) => {
@@ -52,10 +58,14 @@ class FormMensaje extends Component {
       receptores = this.state.selectedOptions.map(({ value, label }) => value);
     }
 
+    if (this.props.esResponder) {
+      receptores = [this.props.idUsuarioAResponder];
+    }
+
     const msg = {
       emisor: {
         id: this.state.idUser,
-        nombre: this.props.nombre + this.props.apellido,
+        nombre: this.props.nombre + ' ' + this.props.apellido,
       },
       receptor: receptores,
       contenido: this.state.textoMensaje,
@@ -63,6 +73,9 @@ class FormMensaje extends Component {
       formal: false,
       general: this.state.esGeneral,
       idMateria: this.state.idMateria,
+      responde_a: this.props.idMensajeAResponder
+        ? this.props.idMensajeAResponder
+        : '',
     };
     //guardar msj en bd
     await addDocument(
@@ -121,7 +134,13 @@ class FormMensaje extends Component {
       textoMensaje,
       esGeneral,
     } = this.state;
-    const { toggleModal, rol } = this.props;
+    const {
+      toggleModal,
+      rol,
+      mensajeAResponder,
+      usuarioAResponder,
+      esResponder,
+    } = this.props;
 
     return isLoading ? (
       <div className="loading" />
@@ -132,34 +151,53 @@ class FormMensaje extends Component {
             <label>
               <IntlMessages id="messages.receiver" />
             </label>
-            <Row>
-              <Colxx xxs="12" md="4">
-                <Select
-                  className="react-select"
-                  classNamePrefix="react-select"
-                  isMulti
-                  placeholder="Seleccione los destinatarios"
-                  name="form-field-name"
-                  value={selectedOptions}
-                  onChange={this.handleChangeMulti}
-                  options={datos}
-                  required
-                  isDisabled={esGeneral}
-                />
-              </Colxx>
-              {rol === ROLES.Docente && (
-                <Colxx xxs="12" md="6" className="receivers-general">
-                  <Input
-                    name="esGeneral"
-                    className="general-check"
-                    type="checkbox"
-                    checked={esGeneral}
-                    onChange={() => this.handleCheckBoxChange()}
+            {!esResponder && (
+              <Row>
+                <Colxx xxs="12" md="4">
+                  <Select
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    placeholder="Seleccione los destinatarios"
+                    name="form-field-name"
+                    value={selectedOptions}
+                    onChange={this.handleChangeMulti}
+                    options={datos}
+                    required
+                    isDisabled={esGeneral}
                   />
-                  <label>¿Es un mensaje general?</label>
                 </Colxx>
-              )}
-            </Row>
+                {rol === ROLES.Docente && (
+                  <Colxx xxs="12" md="6" className="receivers-general">
+                    <Input
+                      name="esGeneral"
+                      className="general-check"
+                      type="checkbox"
+                      checked={esGeneral}
+                      onChange={() => this.handleCheckBoxChange()}
+                    />
+                    <label>¿Es un mensaje general?</label>
+                  </Colxx>
+                )}
+              </Row>
+            )}
+            {esResponder && (
+              <Row>
+                <Input
+                  value={usuarioAResponder}
+                  disabled
+                  className="answer-message"
+                ></Input>
+                <label className="answer-message-title">
+                  Mensaje a responder
+                </label>
+                <Input
+                  value={mensajeAResponder}
+                  disabled
+                  className="answer-message"
+                ></Input>
+              </Row>
+            )}
           </Colxx>
         </Row>
 
