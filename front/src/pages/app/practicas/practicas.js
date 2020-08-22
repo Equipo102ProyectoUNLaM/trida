@@ -8,6 +8,8 @@ import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
+import ROLES from 'constants/roles';
+import { getFormattedDate } from 'helpers/Utils';
 
 function collect(props) {
   return { data: props.data };
@@ -32,11 +34,17 @@ class Practica extends Component {
 
   getPracticas = async (materiaId) => {
     const arrayDeObjetos = await getCollection('practicas', [
-      {
-        field: 'fechaLanzada',
-        operator: '>',
-        id: new Date().toISOString().slice(0, 10),
-      },
+      this.props.rol === ROLES.Docente
+        ? {
+            field: 'fecha_creacion',
+            operator: '<=',
+            id: new Date().toISOString().slice(0, 10),
+          }
+        : {
+            field: 'fechaLanzada',
+            operator: '<=',
+            id: new Date().toISOString().slice(0, 10),
+          },
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
     ]);
@@ -120,6 +128,7 @@ class Practica extends Component {
       isLoading,
       items,
     } = this.state;
+    const { rol } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -127,8 +136,8 @@ class Practica extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.my-activities"
-            toggleModal={this.toggleCreateModal}
-            buttonText="activity.add"
+            toggleModal={rol === ROLES.Docente ? this.toggleCreateModal : null}
+            buttonText={rol === ROLES.Docente ? 'activity.add' : null}
           />
           <ModalGrande
             modalOpen={modalCreateOpen}
@@ -150,14 +159,22 @@ class Practica extends Component {
                   key={practica.id + 'dataList'}
                   id={practica.id}
                   title={practica.data.nombre}
-                  text1={'Fecha de publicación: ' + practica.data.fechaLanzada}
-                  text2={'Fecha de entrega: ' + practica.data.fechaVencimiento}
+                  text1={
+                    'Fecha de publicación: ' +
+                    getFormattedDate(practica.data.fechaLanzada)
+                  }
+                  text2={
+                    'Fecha de entrega: ' +
+                    getFormattedDate(practica.data.fechaVencimiento)
+                  }
                   isSelect={this.state.selectedItems.includes(practica.id)}
-                  onEditItem={this.toggleEditModal}
-                  onDelete={this.onDelete}
+                  onEditItem={
+                    rol === ROLES.Docente ? this.toggleEditModal : null
+                  }
+                  onDelete={rol === ROLES.Docente ? this.onDelete : null}
                   navTo="#"
                   collect={collect}
-                  calendario={true}
+                  calendario={rol === ROLES.Docente ? true : false}
                 />
               );
             })}{' '}
@@ -194,9 +211,12 @@ class Practica extends Component {
   }
 }
 
-const mapStateToProps = ({ seleccionCurso }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  return { subject };
+  const { userData } = authUser;
+  const { rol } = userData;
+
+  return { subject, rol };
 };
 
 export default injectIntl(connect(mapStateToProps)(Practica));
