@@ -2,11 +2,13 @@ import React, { Component, Fragment } from 'react';
 import { Colxx } from '../../../../../components/common/CustomBootstrap';
 import TabsDeClase from './tabs-de-clase';
 import { Row } from 'reactstrap';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 import { capitalize } from 'underscore.string';
 import { getDocument } from 'helpers/Firebase-db';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 
-export default class DetalleClase extends Component {
+class DetalleClase extends Component {
   constructor(props) {
     super(props);
 
@@ -85,8 +87,18 @@ export default class DetalleClase extends Component {
           idSala={idSala}
           idClase={claseId}
           updateContenidos={this.getDetalleDeClase}
+          rol={this.props.rol}
         />
       </Fragment>
     );
   }
 }
+
+const mapStateToProps = ({ authUser }) => {
+  const { userData } = authUser;
+  const { rol } = userData;
+
+  return { rol };
+};
+
+export default injectIntl(connect(mapStateToProps)(DetalleClase));

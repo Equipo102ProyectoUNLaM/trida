@@ -23,6 +23,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import ROLES from 'constants/roles';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -222,6 +223,7 @@ class TabsDeClase extends Component {
       idClase,
       idMateria,
       updateContenidos,
+      rol,
     } = this.props;
     const {
       modalContenidosOpen,
@@ -239,7 +241,13 @@ class TabsDeClase extends Component {
               <Card className="mb-4">
                 <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
-                    <NavItem className="w-20 text-center">
+                    <NavItem
+                      className={
+                        rol === ROLES.Docente
+                          ? 'w-20 text-center'
+                          : 'w-50 text-center'
+                      }
+                    >
                       <NavLink
                         to="#1"
                         location={{}}
@@ -254,7 +262,13 @@ class TabsDeClase extends Component {
                         Aula Virtual
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-20 text-center">
+                    <NavItem
+                      className={
+                        rol === ROLES.Docente
+                          ? 'w-20 text-center'
+                          : 'w-50 text-center'
+                      }
+                    >
                       <NavLink
                         to="#2"
                         location={{}}
@@ -269,51 +283,57 @@ class TabsDeClase extends Component {
                         Contenidos
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-20 text-center">
-                      <NavLink
-                        to="#3"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '3',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('3');
-                        }}
-                      >
-                        Preguntas
-                      </NavLink>
-                    </NavItem>
-                    <NavItem className="w-20 text-center">
-                      <NavLink
-                        to="#4"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '4',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('4');
-                        }}
-                      >
-                        Respuestas
-                      </NavLink>
-                    </NavItem>
-                    <NavItem className="w-20 text-center">
-                      <NavLink
-                        to="#5"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '5',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('5');
-                        }}
-                      >
-                        Asistencia
-                      </NavLink>
-                    </NavItem>
+                    {rol === ROLES.Docente && (
+                      <NavItem className="w-20 text-center">
+                        <NavLink
+                          to="#3"
+                          location={{}}
+                          className={classnames({
+                            active: this.state.activeSecondTab === '3',
+                            'nav-link': true,
+                          })}
+                          onClick={() => {
+                            this.toggleSecondTab('3');
+                          }}
+                        >
+                          Preguntas
+                        </NavLink>
+                      </NavItem>
+                    )}
+                    {rol === ROLES.Docente && (
+                      <NavItem className="w-20 text-center">
+                        <NavLink
+                          to="#4"
+                          location={{}}
+                          className={classnames({
+                            active: this.state.activeSecondTab === '4',
+                            'nav-link': true,
+                          })}
+                          onClick={() => {
+                            this.toggleSecondTab('4');
+                          }}
+                        >
+                          Respuestas
+                        </NavLink>
+                      </NavItem>
+                    )}
+                    {rol === ROLES.Docente && (
+                      <NavItem className="w-20 text-center">
+                        <NavLink
+                          to="#5"
+                          location={{}}
+                          className={classnames({
+                            active: this.state.activeSecondTab === '5',
+                            'nav-link': true,
+                          })}
+                          onClick={() => {
+                            this.toggleSecondTab('5');
+                          }}
+                        >
+                          Asistencia
+                        </NavLink>
+                      </NavItem>
+                    )}
                   </Nav>
                 </CardHeader>
 
@@ -357,7 +377,11 @@ class TabsDeClase extends Component {
                                       key={contenido}
                                       id={contenido}
                                       title={gsReference.name}
-                                      onDelete={this.onDelete}
+                                      onDelete={
+                                        rol === ROLES.Docente
+                                          ? this.onDelete
+                                          : null
+                                      }
                                       navTo="#"
                                     />
                                   );
@@ -375,16 +399,18 @@ class TabsDeClase extends Component {
                               onConfirm={this.unlinkContenido}
                             />
                           )}
-                          <Row className="button-group">
-                            <Button
-                              onClick={this.toggleModalContenidos}
-                              color="primary"
-                              size="lg"
-                              className="button"
-                            >
-                              Asociar Contenidos
-                            </Button>
-                          </Row>
+                          {rol === ROLES.Docente && (
+                            <Row className="button-group">
+                              <Button
+                                onClick={this.toggleModalContenidos}
+                                color="primary"
+                                size="lg"
+                                className="button"
+                              >
+                                Asociar Contenidos
+                              </Button>
+                            </Row>
+                          )}
                           {modalContenidosOpen && (
                             <ModalGrande
                               modalOpen={modalContenidosOpen}
