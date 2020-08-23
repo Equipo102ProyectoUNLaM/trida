@@ -13,11 +13,13 @@ import {
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { editDocument } from 'helpers/Firebase-db';
-
+import ROLES from 'constants/roles';
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import Calendario from './common/Calendario';
 import moment from 'moment';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 
 class CardTabs extends Component {
   constructor(props) {
@@ -80,7 +82,7 @@ class CardTabs extends Component {
   };
 
   render() {
-    const { item } = this.props;
+    const { item, rol } = this.props;
     const { data } = item;
     return (
       <Row lg="12" className="tab-card-evaluaciones">
@@ -90,7 +92,13 @@ class CardTabs extends Component {
               <Card className="mb-4">
                 <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs ml-0 mr-0">
-                    <NavItem className="w-50 text-center">
+                    <NavItem
+                      className={
+                        rol === ROLES.Docente
+                          ? 'w-50 text-center'
+                          : 'w-100 text-center'
+                      }
+                    >
                       <NavLink
                         to="#"
                         location={{}}
@@ -105,21 +113,23 @@ class CardTabs extends Component {
                         Evaluación
                       </NavLink>
                     </NavItem>
-                    <NavItem className="w-50 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '2',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('2');
-                        }}
-                      >
-                        Ejercicios
-                      </NavLink>
-                    </NavItem>
+                    {rol === ROLES.Docente && (
+                      <NavItem className="w-50 text-center">
+                        <NavLink
+                          to="#"
+                          location={{}}
+                          className={classnames({
+                            active: this.state.activeSecondTab === '2',
+                            'nav-link': true,
+                          })}
+                          onClick={() => {
+                            this.toggleSecondTab('2');
+                          }}
+                        >
+                          Ejercicios
+                        </NavLink>
+                      </NavItem>
+                    )}
                   </Nav>
                 </CardHeader>
 
@@ -142,12 +152,16 @@ class CardTabs extends Component {
                             </Colxx>
                             <Colxx lg="4">
                               <Row className="dropdown-calendar">
-                                <p>Fecha de Finalización</p>
-                                <Calendario
-                                  handleClick={this.handleClickChangeFinalDate}
-                                  text="Modificar fecha de evaluación"
-                                  evalCalendar={true}
-                                />
+                                <p>Fecha de Finalización&nbsp;</p>
+                                {rol === ROLES.Docente && (
+                                  <Calendario
+                                    handleClick={
+                                      this.handleClickChangeFinalDate
+                                    }
+                                    text="Modificar fecha de evaluación"
+                                    evalCalendar={true}
+                                  />
+                                )}
                                 {data.base.fecha_finalizacion && (
                                   <p className="mb-4">
                                     {moment(
@@ -160,14 +174,16 @@ class CardTabs extends Component {
                                 )}
                               </Row>
                               <Row className="dropdown-calendar">
-                                <p>Fecha de Publicación</p>
-                                <Calendario
-                                  handleClick={
-                                    this.handleClickChangePublicationDate
-                                  }
-                                  text="Modificar fecha de publicación"
-                                  evalCalendar={true}
-                                />
+                                <p>Fecha de Publicación&nbsp;</p>
+                                {rol === ROLES.Docente && (
+                                  <Calendario
+                                    handleClick={
+                                      this.handleClickChangePublicationDate
+                                    }
+                                    text="Modificar fecha de publicación"
+                                    evalCalendar={true}
+                                  />
+                                )}
                                 {data.base.fecha_publicacion && (
                                   <p className="mb-4">
                                     {moment(data.base.fecha_publicacion).format(
@@ -182,24 +198,39 @@ class CardTabs extends Component {
                             </Colxx>
                           </Row>
                           <Row className="button-group">
-                            <Button
-                              outline
-                              onClick={this.handleClickEdit}
-                              size="sm"
-                              color="primary"
-                              className="button"
-                            >
-                              Editar Evaluación
-                            </Button>
-                            <Button
-                              outline
-                              onClick={this.handleClickDelete}
-                              size="sm"
-                              color="primary"
-                              className="button"
-                            >
-                              Borrar Evaluación
-                            </Button>
+                            {rol === ROLES.Docente && (
+                              <Button
+                                outline
+                                onClick={this.handleClickEdit}
+                                size="sm"
+                                color="primary"
+                                className="button"
+                              >
+                                Editar Evaluación
+                              </Button>
+                            )}
+                            {rol === ROLES.Docente && (
+                              <Button
+                                outline
+                                onClick={this.handleClickDelete}
+                                size="sm"
+                                color="primary"
+                                className="button"
+                              >
+                                Borrar Evaluación
+                              </Button>
+                            )}
+                            {rol === ROLES.Alumno && (
+                              <Button
+                                outline
+                                // onClick={this.handleClickMake}
+                                size="sm"
+                                color="primary"
+                                className="button"
+                              >
+                                Realizar Evaluación
+                              </Button>
+                            )}
                           </Row>
                         </CardBody>
                       </Colxx>
@@ -247,4 +278,11 @@ class CardTabs extends Component {
   }
 }
 
-export default CardTabs;
+const mapStateToProps = ({ authUser }) => {
+  const { userData } = authUser;
+  const { rol } = userData;
+
+  return { rol };
+};
+
+export default injectIntl(connect(mapStateToProps)(CardTabs));

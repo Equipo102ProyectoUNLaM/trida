@@ -136,7 +136,7 @@ module.exports = {
   'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 11. Evaluaciones */
-  'evaluacion.agregar': 'AGREGAR EVALUACIÓN',
+  'evaluation.add': 'AGREGAR EVALUACIÓN',
 
   /* 12. Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',
