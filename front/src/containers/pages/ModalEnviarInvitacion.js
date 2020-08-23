@@ -7,6 +7,8 @@ import {
   ModalFooter,
   Form,
   Row,
+  CustomInput,
+  Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import TagsInput from 'react-tagsinput';
@@ -45,6 +47,7 @@ class ModalEnviarInvitacion extends React.Component {
       selectedOption: '',
       selectedSubject: '',
       userId: '',
+      alumnosCheck: false,
     };
   }
 
@@ -138,7 +141,8 @@ class ModalEnviarInvitacion extends React.Component {
   };
 
   onConfirm = async () => {
-    const { tags } = this.state;
+    const { tags, alumnosCheck } = this.state;
+    const rol = alumnosCheck ? 2 : 1;
     for (const tag in tags) {
       const userObj = {
         email: tags[tag],
@@ -147,6 +151,7 @@ class ModalEnviarInvitacion extends React.Component {
         instId: this.state.selectedOption.key,
         courseId: this.state.selectedCourse.key,
         subjectId: this.state.selectedSubject.key,
+        rol,
       };
       try {
         this.setState({ isLoading: true });
@@ -296,6 +301,19 @@ class ModalEnviarInvitacion extends React.Component {
                 <IntlMessages id="user.mail-invitado" />
               </div>
               <TooltipItem body={toolTipMails} id="mails" />
+            </Row>
+            <Row>
+              <CustomInput
+                id="invitacion-alumnos"
+                type="checkbox"
+                name="invitacion-alumnos"
+                className="margin-left-1"
+                label={<Label>Los usuarios a invitar son alumnos</Label>}
+                checked={this.state.alumnosCheck}
+                onChange={() =>
+                  this.setState({ alumnosCheck: !this.state.alumnosCheck })
+                }
+              />
             </Row>
           </Form>
           <p className="tip-text">* campos requeridos</p>
