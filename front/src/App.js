@@ -99,7 +99,7 @@ class App extends Component {
                     render={(props) => <ViewError {...props} />}
                   />
                   <AuthRoute
-                    path="/main"
+                    path="/"
                     authUser={loginUser}
                     exact
                     component={ViewMain}

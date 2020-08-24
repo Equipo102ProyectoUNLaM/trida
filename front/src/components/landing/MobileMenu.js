@@ -21,10 +21,8 @@ const MobileMenu = () => {
         </nav>
         <div className="side-menu__sep"></div>
         <div className="side-menu__content">
-          <p>Menu mobile </p>
           <p>
             <a href="mailto:trida.app@gmail.com">trida.app@gmail.com</a> <br />
-            <a href="tel:11111111">1111 1111</a>
           </p>
           <div className="side-menu__social">
             <a href="https://twitter.com/trida_ar">

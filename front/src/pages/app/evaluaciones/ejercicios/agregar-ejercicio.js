@@ -190,7 +190,7 @@ class AgregarEjercicio extends React.Component {
                               />
                               {submitted && !ejercicio.tipo ? (
                                 <div className="invalid-feedback d-block">
-                                  Debe elegir un tipo de ejercicio
+                                  Seleccionar tipo de ejercicio
                                 </div>
                               ) : null}
                             </FormGroup>
