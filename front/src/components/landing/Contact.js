@@ -1,16 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BlockTitle from './BlockTitle';
+import { functions } from 'helpers/Firebase';
 import ContactBgShape from 'assets/landing/images/shapes/contact-bg-shape-1-1.png';
-import ContactImage from 'assets/landing/images/shapes/cta-1-shape-1.png';
 
 const Contact = () => {
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
+  const [asunto, setAsunto] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [mensaje, setMensaje] = useState('');
+
+  const handleSubmit = async () => {
+    const to = 'trida.app@gmail.com';
+    await sendEmail(to, {
+      from: 'Trida App <trida.app@gmail.com>',
+      subject: asunto,
+      html: `<p>mail: ${email} nombre: ${nombre} <br /> telefono: ${telefono} 
+      <br /> mensaje: ${mensaje}</p>`,
+    });
+  };
+
+  const sendEmail = async (email, options) => {
+    const sendMail = functions.httpsCallable('sendMail');
+
+    return await sendMail({ email, ...options }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
   return (
     <section id="contact" className="contact-one">
       <img src={ContactBgShape} className="contact-one__bg-shape-1" alt="" />
       <div className="container">
         <div className="row">
           <div className="col-lg-7">
-            <form className="contact-form-validated contact-one__form">
+            <form
+              className="contact-form-validated contact-one__form"
+              onSubmit={handleSubmit}
+            >
               <BlockTitle
                 textAlign="left"
                 paraText="Contactanos"
@@ -18,21 +45,52 @@ const Contact = () => {
               />
               <div className="row">
                 <div className="col-lg-6">
-                  <input type="text" placeholder="Nombre" name="name" />
+                  <input
+                    type="text"
+                    placeholder="Nombre"
+                    name="name"
+                    onChange={(e) => {
+                      setNombre(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="col-lg-6">
-                  <input type="text" placeholder="Email" name="email" />
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="col-lg-6">
-                  <input type="text" placeholder="Asunto" name="subject" />
+                  <input
+                    type="text"
+                    placeholder="Asunto"
+                    name="subject"
+                    onChange={(e) => {
+                      setAsunto(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="col-lg-6">
-                  <input type="text" placeholder="Teléfono" name="phone" />
+                  <input
+                    type="text"
+                    placeholder="Teléfono"
+                    name="phone"
+                    onChange={(e) => {
+                      setTelefono(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="col-lg-12">
                   <textarea
                     placeholder="Escribí tu mensaje"
                     name="message"
+                    onChange={(e) => {
+                      setMensaje(e.target.value);
+                    }}
                   ></textarea>
                 </div>
                 <div className="col-lg-12 text-left">
