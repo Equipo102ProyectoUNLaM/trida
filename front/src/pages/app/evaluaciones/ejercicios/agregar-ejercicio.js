@@ -64,6 +64,7 @@ class AgregarEjercicio extends React.Component {
 
   validateEjercicios = () => {
     let valid = true;
+    if (this.state.ejerciciosSeleccionados.length === 0) return valid;
     this.setState({ submitted: true });
     for (const ejer of this.state.ejerciciosSeleccionados) {
       if (!ejer.tipo) valid = false;
@@ -127,6 +128,7 @@ class AgregarEjercicio extends React.Component {
     this.setState({
       ejerciciosSeleccionados: ejer,
       cant: num,
+      submitted: false,
     });
   };
 
@@ -141,6 +143,7 @@ class AgregarEjercicio extends React.Component {
     this.setState({
       ejerciciosSeleccionados: ejercicios,
       cant: oldCant - 1,
+      submitted: false,
     });
   };
 
