@@ -15,6 +15,8 @@ import { Formik, Form, Field } from 'formik';
 import { evaluationSchema } from 'pages/app/evaluaciones/validations';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
 import { getDate } from 'helpers/Utils';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
 
 class FormEvaluacion extends React.Component {
   constructor(props) {
@@ -89,16 +91,25 @@ class FormEvaluacion extends React.Component {
 
   onSubmit = async () => {
     let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-
+    const ejerciciosEncriptados = this.encriptarEjercicios(ejercicios);
     const obj = {
-      nombre: this.state.nombre,
-      fecha_finalizacion: this.state.fecha_finalizacion,
-      fecha_publicacion: this.state.fecha_publicacion,
-      descripcion: this.state.descripcion,
+      nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
+      fecha_finalizacion: CryptoJS.AES.encrypt(
+        this.state.fecha_finalizacion,
+        secretKey
+      ).toString(),
+      fecha_publicacion: CryptoJS.AES.encrypt(
+        this.state.fecha_publicacion,
+        secretKey
+      ).toString(),
+      descripcion: CryptoJS.AES.encrypt(
+        this.state.descripcion,
+        secretKey
+      ).toString(),
       idMateria: this.props.idMateria,
       activo: true,
       subcollection: {
-        data: ejercicios,
+        data: ejerciciosEncriptados,
       },
     };
 
@@ -117,12 +128,21 @@ class FormEvaluacion extends React.Component {
   onEdit = async () => {
     try {
       let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-
+      const ejerciciosEncriptados = this.encriptarEjercicios(ejercicios);
       const obj = {
-        nombre: this.state.nombre,
-        fecha_finalizacion: this.state.fecha_finalizacion,
-        fecha_publicacion: this.state.fecha_publicacion,
-        descripcion: this.state.descripcion,
+        nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
+        fecha_finalizacion: CryptoJS.AES.encrypt(
+          this.state.fecha_finalizacion,
+          secretKey
+        ).toString(),
+        fecha_publicacion: CryptoJS.AES.encrypt(
+          this.state.fecha_publicacion,
+          secretKey
+        ).toString(),
+        descripcion: CryptoJS.AES.encrypt(
+          this.state.descripcion,
+          secretKey
+        ).toString(),
       };
 
       await editDocument(
@@ -139,7 +159,7 @@ class FormEvaluacion extends React.Component {
         );
       });
 
-      ejercicios.forEach(async (element) => {
+      ejerciciosEncriptados.forEach(async (element) => {
         await addDocument(
           `evaluaciones/${this.state.evaluacionId}/ejercicios`,
           element,
@@ -153,6 +173,47 @@ class FormEvaluacion extends React.Component {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  encriptarEjercicios = (ejercicios) => {
+    let result = ejercicios;
+    for (const ejercicio of result) {
+      ejercicio.tipo = CryptoJS.AES.encrypt(
+        ejercicio.tipo,
+        secretKey
+      ).toString();
+      ejercicio.nombre = CryptoJS.AES.encrypt(
+        ejercicio.nombre,
+        secretKey
+      ).toString();
+      ejercicio.numero = CryptoJS.AES.encrypt(
+        ejercicio.numero.toString(),
+        secretKey
+      ).toString();
+      if (ejercicio.consigna)
+        ejercicio.consigna = CryptoJS.AES.encrypt(
+          ejercicio.consigna,
+          secretKey
+        ).toString();
+      if (ejercicio.tema)
+        ejercicio.tema = CryptoJS.AES.encrypt(
+          ejercicio.tema,
+          secretKey
+        ).toString();
+      if (ejercicio.opciones) {
+        for (const opcion of ejercicio.opciones) {
+          opcion.opcion = CryptoJS.AES.encrypt(
+            opcion.opcion,
+            secretKey
+          ).toString();
+          opcion.verdadera = CryptoJS.AES.encrypt(
+            opcion.verdadera.toString(),
+            secretKey
+          ).toString();
+        }
+      }
+    }
+    return result;
   };
 
   render() {

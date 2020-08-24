@@ -20,6 +20,8 @@ import Calendario from './common/Calendario';
 import moment from 'moment';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
 
 class CardTabs extends Component {
   constructor(props) {
@@ -67,7 +69,12 @@ class CardTabs extends Component {
 
   handleClickChangeFinalDate = async (date) => {
     if (date) {
-      const obj = { fecha_finalizacion: date.format('YYYY-MM-DD') };
+      const obj = {
+        fecha_finalizacion: CryptoJS.AES.encrypt(
+          date.format('YYYY-MM-DD'),
+          secretKey
+        ).toString(),
+      };
       await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
       this.props.updateEvaluaciones(this.props.materiaId);
     }
@@ -75,7 +82,12 @@ class CardTabs extends Component {
 
   handleClickChangePublicationDate = async (date) => {
     if (date) {
-      const obj = { fecha_publicacion: date.format('YYYY-MM-DD') };
+      const obj = {
+        fecha_publicacion: CryptoJS.AES.encrypt(
+          date.format('YYYY-MM-DD'),
+          secretKey
+        ).toString(),
+      };
       await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
       this.props.updateEvaluaciones(this.props.materiaId);
     }
