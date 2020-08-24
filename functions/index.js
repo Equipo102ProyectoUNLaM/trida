@@ -236,12 +236,30 @@ exports.agregarMaterias = functions.https.onCall(async (data)=> {
     await admin.firestore().collection('usuarios')
       .doc(data.uid)
       .update({ instituciones });
-      await admin.firestore().collection('usuariosPorMateria').doc(data.subjectId).set( {usuario_id: [ data.uid ]}, { merge: true });
+      await this.agregarAUsusariosPorMateria(data.subjectId, data.uid);
+      //await admin.firestore().collection('usuariosPorMateria').doc(data.subjectId).set( {usuario_id: [ data.uid ]}, { merge: true });
   } catch (error) {
     console.log('error', error);
   }
   
 });
+
+exports.agregarAUsusariosPorMateria = functions.https.onCall(async (materia, userId)=> {
+  let collection = 'usuariosPorMateria';
+  try {
+    const usuariosPorMateriaRef = admin.firestore().collection(collection).doc(materia);
+    const usuariosPorMateria = usuariosPorMateriaRef.get();
+    const usuariosPorMateriaObj = usuariosPorMateria.data();
+    const { usuario_id } = userObj;
+    usuario_id.push(userId);
+    await this.agregarAUsusariosPorMateria(data.subjectId, data.uid);
+    //await admin.firestore().collection('usuariosPorMateria').doc(materia).set( {usuario_id: usuario_id}, { merge: true });
+  } catch (error) {
+    console.log('error', error);
+  }
+  
+});
+
 
 let transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',

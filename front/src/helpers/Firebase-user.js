@@ -16,7 +16,7 @@ export const getUserData = async (userId) => {
       foto,
     };
   } catch (err) {
-    console.log('Error al obtener documentod de usuarios', err);
+    console.log('Error al obtener documento de usuarios', err);
   }
 };
 
