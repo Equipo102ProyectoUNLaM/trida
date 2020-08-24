@@ -51,7 +51,7 @@ class Login extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.user !== prevProps.user) {
-      this.props.history.push('/');
+      this.props.history.push('/main');
     }
 
     if (!prevProps.error && this.props.error) {

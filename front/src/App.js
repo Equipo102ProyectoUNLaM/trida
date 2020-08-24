@@ -37,6 +37,9 @@ const ViewPizarron = React.lazy(() =>
 const Action = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ 'templates/email/action')
 );
+const ViewLanding = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ './pages/landing/landing')
+);
 
 class App extends Component {
   constructor(props) {
@@ -67,6 +70,10 @@ class App extends Component {
             <Suspense fallback={<div className="loading" />}>
               <Router>
                 <Switch>
+                  <Route
+                    path="/landing"
+                    render={(props) => <ViewLanding {...props} />}
+                  />
                   <AuthRoute
                     path="/seleccion-curso"
                     authUser={loginUser}
@@ -92,7 +99,7 @@ class App extends Component {
                     render={(props) => <ViewError {...props} />}
                   />
                   <AuthRoute
-                    path="/"
+                    path="/main"
                     authUser={loginUser}
                     exact
                     component={ViewMain}
