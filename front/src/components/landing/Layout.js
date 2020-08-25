@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
 
 import AppleTouch from 'assets/landing/images/favicons/apple-touch-icon.png';
 import Fevicon32 from 'assets/landing/images/favicons/favicon-32x32.png';

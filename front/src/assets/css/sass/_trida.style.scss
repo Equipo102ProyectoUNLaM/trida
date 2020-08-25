@@ -1003,6 +1003,10 @@ button {
   color: $theme-color-1;
 }
 
+.btn-link-inverse {
+  color: $inverse-theme-color;
+}
+
 .btn-link:hover {
   color: rgba($theme-color-1, 0.8);
   text-decoration: underline;

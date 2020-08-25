@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BlockTitle from './BlockTitle';
 import { functions } from 'helpers/Firebase';
 import ContactBgShape from 'assets/landing/images/shapes/contact-bg-shape-1-1.png';
+import ContactImage from 'assets/landing/images/contactOpacity.png';
 
 const Contact = () => {
   const [nombre, setNombre] = useState('');
@@ -105,7 +106,13 @@ const Contact = () => {
           <div
             className="col-lg-5 d-flex wow fadeInRight"
             data-wow-duration="1500ms"
-          ></div>
+          >
+            {/*             <div className="my-auto">
+              <div className="contact-one__image">
+                <img src={ContactImage} alt="" />
+              </div>
+            </div> */}
+          </div>
         </div>
       </div>
     </section>

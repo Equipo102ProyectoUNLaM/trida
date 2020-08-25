@@ -662,7 +662,7 @@ a:visited {
 }
 
 .main-nav__main-navigation .main-nav__navigation-box > li + li {
-  margin-left: 64px;
+  margin-left:44px;
 }
 
 .main-nav__main-navigation .main-nav__navigation-box > li > a {
@@ -1136,6 +1136,16 @@ a:visited {
 .banner-one__video i {
   color: #fff;
   font-size: 40px;
+}
+
+.banner-text-card {
+  flex: 0 0 58.333333%;
+    max-width: 58.333333%;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 50px;
+    margin-left: 50px;
 }
 
 /*--------------------------------------------------------------
@@ -3228,7 +3238,7 @@ a:visited {
 .cta-three p {
   margin: 0;
   font-size: 20px;
-  color: #a5a9be;
+  color: #ffffff;
   margin-bottom: 53px;
 }
 

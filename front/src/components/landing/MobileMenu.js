@@ -11,7 +11,7 @@ const MobileMenu = () => {
       </div>
       <div className="side-menu__block-inner ">
         <div className="side-menu__top justify-content-end">
-          <a href="#" className="side-menu__toggler side-menu__close-btn">
+          <a href="/" className="side-menu__toggler side-menu__close-btn">
             <img src={CloseBtn} alt="" />
           </a>
         </div>

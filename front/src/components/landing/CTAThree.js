@@ -13,7 +13,9 @@ const CTAThree = () => {
         <h3>
           Registrate hoy <br /> y empezá a usar la plataforma
         </h3>
-        <p>comenzá con una prueba gratuita para evaluar los servicios </p>
+        <p>
+          comenzá con una prueba gratuita por 3 meses para evaluar los servicios{' '}
+        </p>
         <div className="cta-three__btn-wrap">
           <a href="/user/register" className="cta-three__btn">
             <b>Registrate</b>

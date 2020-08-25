@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import BlockTitle from './BlockTitle';
 
-const Pricing = (props) => {
-  const [plan, setPlan] = useState(false);
+const Pricing = () => {
   return (
     <section className="pricing-one" id="pricing">
       <Container>

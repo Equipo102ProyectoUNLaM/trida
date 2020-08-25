@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
 
 const NavLinks = () => {
-  const [dropdownStatus, setDropdownStatus] = useState(false);
-  const handleDropdownStatus = () => {
-    setDropdownStatus(!dropdownStatus);
-    console.log(dropdownStatus);
-  };
   return (
     <ul className="main-nav__navigation-box">
       <li>

@@ -1,6 +1,5 @@
 import React from 'react';
 import Layout from 'components/landing/Layout';
-import Preloader from 'components/landing/Preloader';
 import MobileMenu from 'components/landing/MobileMenu';
 import Header from 'components/landing/Header';
 import Banner from 'components/landing/Banner';

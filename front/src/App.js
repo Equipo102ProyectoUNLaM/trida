@@ -38,7 +38,7 @@ const Action = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ 'templates/email/action')
 );
 const ViewLanding = React.lazy(() =>
-  import(/* webpackChunkName: "views-error" */ './pages/landing/landing')
+  import(/* webpackChunkName: "views-error" */ './pages/landing')
 );
 
 class App extends Component {
@@ -71,7 +71,8 @@ class App extends Component {
               <Router>
                 <Switch>
                   <Route
-                    path="/landing"
+                    path="/"
+                    exact
                     render={(props) => <ViewLanding {...props} />}
                   />
                   <AuthRoute
@@ -99,9 +100,8 @@ class App extends Component {
                     render={(props) => <ViewError {...props} />}
                   />
                   <AuthRoute
-                    path="/"
+                    path="/main"
                     authUser={loginUser}
-                    exact
                     component={ViewMain}
                   />
                   <Route path="/action" component={Action} />
