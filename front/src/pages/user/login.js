@@ -75,7 +75,8 @@ class Login extends Component {
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
             <div className="position-relative image-side ">
-              <p className="text-white h2">třída</p>
+              <div className="logo-single" />
+              {/* <p className="text-white h2">třída</p> */}
               <p className="white mb-0">
                 Ingrese sus datos para acceder.
                 <br />
@@ -87,7 +88,7 @@ class Login extends Component {
               </p>
             </div>
             <div className="form-side">
-              <div className="logo-single" />
+              {/* <div className="logo-single" /> */}
               <CardTitle className="mb-4">
                 <IntlMessages id="usuario.login-title" />
               </CardTitle>

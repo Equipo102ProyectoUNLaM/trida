@@ -3,6 +3,7 @@ import { useJitsi } from 'react-jutsu'; // Custom hook
 import { Button, Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { injectIntl } from 'react-intl';
+import ROLES from 'constants/roles';
 
 /* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
@@ -19,6 +20,7 @@ const Videollamada = ({
   options,
   isHost,
   setCallOff,
+  rol,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
@@ -111,24 +113,26 @@ const Videollamada = ({
   }, [jitsi, userName, password, subject]);
   return (
     <Fragment>
-      <Row className="button-group mb-3 mr-3">
-        <Button
-          className="button"
-          color="primary"
-          size="lg"
-          onClick={toggleShareScreen}
-        >
-          {shareButtonText}
-        </Button>{' '}
-        <Button
-          className="button"
-          color="primary"
-          size="lg"
-          onClick={abrirPizarron}
-        >
-          <IntlMessages id="pizarron.abrir-pizarron" />
-        </Button>
-      </Row>
+      {rol === ROLES.Docente && (
+        <Row className="button-group mb-3 mr-3">
+          <Button
+            className="button"
+            color="primary"
+            size="lg"
+            onClick={toggleShareScreen}
+          >
+            {shareButtonText}
+          </Button>{' '}
+          <Button
+            className="button"
+            color="primary"
+            size="lg"
+            onClick={abrirPizarron}
+          >
+            <IntlMessages id="pizarron.abrir-pizarron" />
+          </Button>
+        </Row>
+      )}
       <div id={parentNode}></div>
     </Fragment>
   );

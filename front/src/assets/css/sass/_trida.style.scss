@@ -319,11 +319,11 @@ hr {
 }
 
 .logo-single {
-  width: 117px;
+  width: 155px;
   margin-bottom: 20px;
   background-image: url($logoPath);
   background-repeat: no-repeat;
-  height: 92px;
+  height: 138px;
   background-size: contain;
   background-position: center center;
   display: inline-block;
@@ -1771,7 +1771,7 @@ nav .nomargin {
     .logo {
       width: 100%;
       height: 100%;
-      background: url($logoPath) no-repeat;
+      background: url($logoPathNav) no-repeat;
       background-position: center center;
       background-size: contain;
     }
@@ -7972,7 +7972,7 @@ i.large-icon {
 
   .custom-control-inline {
     margin-right: 0;
-    margin-left: 1rem;
+    margin-left: 1rem !important;
   }
 
   .form-check-inline {
@@ -9386,4 +9386,8 @@ div.rendered-file-browser{
 
 .modal-ejercicios-body{
   background-color: $theme-color-1;
+}
+
+.margin-left-1 {
+  margin-left: 1rem !important;
 }

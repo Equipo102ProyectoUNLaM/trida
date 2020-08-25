@@ -32,8 +32,9 @@ $shadowOffsetsBottom : 1 3 6 10 15;
 $shadowBlursBottom: 3 6 6 5 6;
 $shadowOpacitiesBottom: 0.04 0.1 0.2 0.22 0.22;
 
-$logoPath: "/assets/img/logo-rectangular-chico.png";
-$logoPathMobile: "/assets/img/logo-mobile.svg";
+$logoPath: "/assets/img/logo-white.png";
+$logoPathNav: "/assets/img/logo-nuevo.png";
+$logoPathMobile: "/assets/img/logo-nuevo.png";
 
 @import "../_mixins.scss";
 @import "../_trida.style.scss";

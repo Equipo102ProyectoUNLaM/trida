@@ -10,11 +10,6 @@ const data = [
         label: 'menu.mis-clases',
         to: '/app/clases-virtuales/mis-clases',
       },
-      {
-        icon: 'iconsminds-blackboard',
-        label: 'menu.board',
-        to: '/app/clases-virtuales/pizarron',
-      },
     ],
   },
   {
@@ -22,13 +17,6 @@ const data = [
     icon: 'simple-icon-cloud-upload',
     label: 'menu.content',
     to: '/app/contenidos',
-    subs: [
-      {
-        icon: 'simple-icon-cloud-upload',
-        label: 'menu.my-contents',
-        to: '/app/contenidos',
-      },
-    ],
   },
   {
     id: 'communications',
@@ -58,39 +46,18 @@ const data = [
     icon: 'iconsminds-library',
     label: 'menu.activities',
     to: '/app/practicas',
-    subs: [
-      {
-        icon: 'iconsminds-library',
-        label: 'menu.my-activities',
-        to: '/app/practicas',
-      },
-    ],
   },
   {
     id: 'evaluations',
     icon: 'simple-icon-note',
     label: 'menu.evaluations',
     to: '/app/evaluaciones',
-    subs: [
-      {
-        icon: 'simple-icon-note',
-        label: 'menu.my-evaluations',
-        to: '/app/evaluaciones',
-      },
-    ],
   },
   {
     id: 'corrections',
     icon: 'simple-icon-check',
     label: 'menu.corrections',
     to: '/app/correcciones',
-    subs: [
-      {
-        icon: 'simple-icon-check',
-        label: 'menu.my-corrections',
-        to: '/app/correcciones',
-      },
-    ],
   },
 ];
 export default data;

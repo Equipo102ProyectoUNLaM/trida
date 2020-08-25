@@ -7,6 +7,7 @@ import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormClase from './form-clase';
 import { getCollection } from 'helpers/Firebase-db';
+import ROLES from 'constants/roles';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase.jpeg`;
 
@@ -59,6 +60,7 @@ class Clase extends Component {
 
   render() {
     const { modalOpen, items, isLoading } = this.state;
+    const { rol } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -66,8 +68,8 @@ class Clase extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.mis-clases"
-            toggleModal={this.toggleModal}
-            buttonText="classes.add"
+            toggleModal={rol === ROLES.Docente ? this.toggleModal : null}
+            buttonText={rol === ROLES.Docente ? 'classes.add' : null}
           />
           <ModalGrande
             modalOpen={modalOpen}
@@ -99,11 +101,12 @@ class Clase extends Component {
   }
 }
 
-const mapStateToProps = ({ seleccionCurso }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  return {
-    subject,
-  };
+  const { userData } = authUser;
+  const { rol } = userData;
+
+  return { subject, rol };
 };
 
 export default injectIntl(connect(mapStateToProps)(Clase));

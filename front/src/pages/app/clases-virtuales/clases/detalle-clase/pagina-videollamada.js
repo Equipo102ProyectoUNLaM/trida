@@ -54,6 +54,7 @@ const PaginaVideollamada = (props) => {
         options={options}
         isHost={isHost}
         setCallOff={setVideollamadaOff}
+        rol={props.rol}
       />
     </>
   ) : (
@@ -114,10 +115,11 @@ const PaginaVideollamada = (props) => {
 
 const mapStateToProps = ({ authUser }) => {
   const { userData } = authUser;
-  const { nombre, apellido } = userData;
+  const { nombre, apellido, rol } = userData;
   return {
     nombre,
     apellido,
+    rol,
   };
 };
 
