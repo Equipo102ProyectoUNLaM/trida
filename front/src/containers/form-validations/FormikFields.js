@@ -287,7 +287,11 @@ export class FormikDatePicker extends React.Component {
       <DatePicker
         id={name}
         name={name}
-        dateFormat="DD/MM/YYYY"
+        dateFormat="DD/MM/YYYY - HH:mm"
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeCaption="Hora"
+        timeIntervals={60}
         className={className}
         selected={value}
         onChange={this.handleChange}

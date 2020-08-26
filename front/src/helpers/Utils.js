@@ -101,8 +101,8 @@ export const getFormattedDate = (date) => {
   return moment(date).locale('es').format('DD/MM/YYYY');
 };
 
-/*  Esta función recibe un string con una fecha en formato YYYY-MM-AA y devuelve
+/*  Esta función recibe un string con una fecha, y opcionalmente el formato en el que esta, y devuelve
  un moment de la fecha */
-export const getDate = (date) => {
-  return moment(date).locale('es');
+export const getDate = (date, format) => {
+  return moment(date, format ? format : 'DD/MM/YYYY').locale('es');
 };

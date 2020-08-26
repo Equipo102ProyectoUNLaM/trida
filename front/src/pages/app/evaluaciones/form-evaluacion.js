@@ -53,16 +53,20 @@ class FormEvaluacion extends React.Component {
     if (!valid) return;
     if (this.state.evaluacionId) {
       this.setState({
-        fecha_finalizacion: values.fecha_finalizacion.format('YYYY-MM-DD'),
-        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD'),
+        fecha_finalizacion: values.fecha_finalizacion.format(
+          'YYYY-MM-DD, HH:mm'
+        ),
+        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD, HH:mm'),
         descripcion: values.descripcion,
         nombre: values.nombre,
         modalEditOpen: !this.state.modalEditOpen,
       });
     } else {
       this.setState({
-        fecha_finalizacion: values.fecha_finalizacion.format('YYYY-MM-DD'),
-        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD'),
+        fecha_finalizacion: values.fecha_finalizacion.format(
+          'YYYY-MM-DD, HH:mm'
+        ),
+        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD, HH:mm'),
         descripcion: values.descripcion,
         nombre: values.nombre,
         modalAddOpen: !this.state.modalAddOpen,
@@ -77,8 +81,14 @@ class FormEvaluacion extends React.Component {
         evaluacionId: this.props.idEval,
         nombre: this.props.evaluacion.nombre,
         fecha_creacion: this.props.evaluacion.fecha_creacion,
-        fecha_finalizacion: getDate(this.props.evaluacion.fecha_finalizacion),
-        fecha_publicacion: getDate(this.props.evaluacion.fecha_publicacion),
+        fecha_finalizacion: getDate(
+          this.props.evaluacion.fecha_finalizacion,
+          'YYYY-MM-DD, HH:mm'
+        ),
+        fecha_publicacion: getDate(
+          this.props.evaluacion.fecha_publicacion,
+          'YYYY-MM-DD, HH:mm'
+        ),
         descripcion: this.props.evaluacion.descripcion,
         ejercicios: this.props.evaluacion.ejercicios,
         creador: userName,
@@ -273,7 +283,7 @@ class FormEvaluacion extends React.Component {
             <Row>
               <Colxx xxs="6">
                 <FormGroup className="mb-3 error-l-150">
-                  <Label>Fecha de Publicación</Label>
+                  <Label>Fecha y Hora de Publicación</Label>
                   <FormikDatePicker
                     name="fecha_publicacion"
                     value={values.fecha_publicacion}
@@ -290,7 +300,7 @@ class FormEvaluacion extends React.Component {
               </Colxx>
               <Colxx xxs="6">
                 <FormGroup className="mb-3 error-l-150">
-                  <Label>Fecha de Finalización</Label>
+                  <Label>Fecha y Hora de Finalización</Label>
                   <FormikDatePicker
                     name="fecha_finalizacion"
                     value={values.fecha_finalizacion}

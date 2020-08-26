@@ -71,7 +71,7 @@ class CardTabs extends Component {
     if (date) {
       const obj = {
         fecha_finalizacion: CryptoJS.AES.encrypt(
-          date.format('YYYY-MM-DD'),
+          date.format('YYYY-MM-DD, HH:mm'),
           secretKey
         ).toString(),
       };
@@ -84,7 +84,7 @@ class CardTabs extends Component {
     if (date) {
       const obj = {
         fecha_publicacion: CryptoJS.AES.encrypt(
-          date.format('YYYY-MM-DD'),
+          date.format('YYYY-MM-DD, HH:mm'),
           secretKey
         ).toString(),
       };
@@ -164,7 +164,7 @@ class CardTabs extends Component {
                             </Colxx>
                             <Colxx lg="4">
                               <Row className="dropdown-calendar">
-                                <p>Fecha de Finalización&nbsp;</p>
+                                <p>Fecha y Hora de Finalización&nbsp;</p>
                                 {rol === ROLES.Docente && (
                                   <Calendario
                                     handleClick={
@@ -172,13 +172,18 @@ class CardTabs extends Component {
                                     }
                                     text="Modificar fecha de evaluación"
                                     evalCalendar={true}
+                                    dateFormat={'DD/MM/YYYY - HH:mm'}
+                                    timeCaption="Hora"
+                                    timeIntervals={60}
+                                    timeFormat={'HH:mm'}
                                   />
                                 )}
                                 {data.base.fecha_finalizacion && (
                                   <p className="mb-4">
                                     {moment(
-                                      data.base.fecha_finalizacion
-                                    ).format('DD/MM/YYYY')}
+                                      data.base.fecha_finalizacion,
+                                      'YYYY-MM-DD, HH:mm'
+                                    ).format('DD/MM/YYYY - HH:mm')}
                                   </p>
                                 )}
                                 {!data.base.fecha_finalizacion && (
@@ -186,7 +191,7 @@ class CardTabs extends Component {
                                 )}
                               </Row>
                               <Row className="dropdown-calendar">
-                                <p>Fecha de Publicación&nbsp;</p>
+                                <p>Fecha y Hora de Publicación&nbsp;</p>
                                 {rol === ROLES.Docente && (
                                   <Calendario
                                     handleClick={
@@ -194,13 +199,18 @@ class CardTabs extends Component {
                                     }
                                     text="Modificar fecha de publicación"
                                     evalCalendar={true}
+                                    dateFormat={'DD/MM/YYYY - HH:mm'}
+                                    timeCaption="Hora"
+                                    timeIntervals={60}
+                                    timeFormat={'HH:mm'}
                                   />
                                 )}
                                 {data.base.fecha_publicacion && (
                                   <p className="mb-4">
-                                    {moment(data.base.fecha_publicacion).format(
-                                      'DD/MM/YYYY'
-                                    )}
+                                    {moment(
+                                      data.base.fecha_publicacion,
+                                      'YYYY-MM-DD, HH:mm'
+                                    ).format('DD/MM/YYYY - HH:mm')}
                                   </p>
                                 )}
                                 {!data.base.fecha_publicacion && (
