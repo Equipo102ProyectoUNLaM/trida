@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
   Redirect,
+  withRouter,
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import './helpers/Firebase';
@@ -54,6 +55,40 @@ class App extends Component {
     }
   }
 
+  /*   componentDidMount(prevProps) {
+    const { primerLogin, cambiarPassword } = this.props;
+
+    if (!prevProps) {
+      console.log('aca en app mount');
+      if (cambiarPassword) {
+        return <Redirect to="/user/cambiar-password" />;
+      }
+
+      if (primerLogin) {
+        return <Redirect to="/user/primer-login" />;
+      }
+      console.log('acaa mount');
+      return this.props.history.push('/');
+    }
+  } */
+
+  componentDidUpdate(prevProps) {
+    const { primerLogin, cambiarPassword } = this.props;
+
+    if (!prevProps.loginUser && this.props.loginUser) {
+      console.log('aca en app upd');
+      if (cambiarPassword) {
+        return <Redirect to="/user/cambiar-password" />;
+      }
+
+      if (primerLogin) {
+        return <Redirect to="/user/primer-login" />;
+      }
+      console.log('acaa upd');
+      return this.props.history.push('/seleccion-curso');
+    }
+  }
+
   render() {
     const { locale, loginUser } = this.props;
     const currentAppLocale = AppLocale[locale];
@@ -99,11 +134,6 @@ class App extends Component {
                     exact
                     render={(props) => <ViewError {...props} />}
                   />
-                  <AuthRoute
-                    path="/main"
-                    authUser={loginUser}
-                    component={ViewMain}
-                  />
                   <Route path="/action" component={Action} />
                   <Redirect to="/error" />
                 </Switch>
@@ -117,10 +147,11 @@ class App extends Component {
 }
 
 const mapStateToProps = ({ authUser, settings }) => {
-  const { user: loginUser } = authUser;
+  const { user: loginUser, userData } = authUser;
+  const { cambiarPassword, primerLogin } = userData;
   const { locale } = settings;
-  return { loginUser, locale };
+  return { loginUser, locale, cambiarPassword, primerLogin };
 };
 const mapActionsToProps = {};
 
-export default connect(mapStateToProps, mapActionsToProps)(App);
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(App));

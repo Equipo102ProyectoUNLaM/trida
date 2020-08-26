@@ -5,6 +5,7 @@ export const AuthRoute = ({ component: Component, authUser, ...rest }) => {
   return (
     <Route
       {...rest}
+      exact
       render={(props) =>
         authUser ? (
           <Component {...props} />
