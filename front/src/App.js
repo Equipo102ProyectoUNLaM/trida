@@ -6,6 +6,7 @@ import {
   Switch,
   Redirect,
   withRouter,
+  useHistory,
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import './helpers/Firebase';
@@ -55,42 +56,26 @@ class App extends Component {
     }
   }
 
-  /*   componentDidMount(prevProps) {
-    const { primerLogin, cambiarPassword } = this.props;
-
-    if (!prevProps) {
-      console.log('aca en app mount');
-      if (cambiarPassword) {
-        return <Redirect to="/user/cambiar-password" />;
-      }
-
-      if (primerLogin) {
-        return <Redirect to="/user/primer-login" />;
-      }
-      console.log('acaa mount');
-      return this.props.history.push('/');
-    }
-  } */
-
   componentDidUpdate(prevProps) {
     const { primerLogin, cambiarPassword } = this.props;
 
     if (!prevProps.loginUser && this.props.loginUser) {
-      console.log('aca en app upd');
       if (cambiarPassword) {
-        return <Redirect to="/user/cambiar-password" />;
+        this.props.history.push('/user/cambiar-password');
+        return this.props.history.go(0);
       }
 
       if (primerLogin) {
-        return <Redirect to="/user/primer-login" />;
+        this.props.history.push('/user/primer-login');
+        return this.props.history.go(0);
       }
-      console.log('acaa upd');
-      return this.props.history.push('/seleccion-curso');
+      this.props.history.push('/seleccion-curso');
+      return this.props.history.go(0);
     }
   }
 
   render() {
-    const { locale, loginUser } = this.props;
+    const { locale, loginUser, match } = this.props;
     const currentAppLocale = AppLocale[locale];
 
     return (
@@ -106,8 +91,8 @@ class App extends Component {
               <Router>
                 <Switch>
                   <Route
-                    path="/"
                     exact
+                    path="/"
                     render={(props) => <ViewLanding {...props} />}
                   />
                   <AuthRoute

@@ -110,7 +110,7 @@ module.exports = {
   'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
 
   /* 07.Institucion */
-  'institution.selection': '¿A qué Institución desea acceder?',
+  'institution.selection': '¿A qué Institución querés ingresar?',
   'institucion.complete-datos': 'Completá los datos de la Institución',
   'institucion.nombre': 'Nombre de la Institución',
   'institucion.telefono': 'Teléfono de la Institución',
@@ -119,7 +119,7 @@ module.exports = {
   'institucion.crear': 'Crear Institución',
 
   /* 08. Curso */
-  'course.selection': '¿Qué materia desea gestionar?',
+  'course.selection': '¿Qué materia querés gestionar?',
   'curso.complete-datos': 'Completá los datos del Curso',
   'curso.nombre': 'Nombre del curso',
   'curso.crear': 'Crear Curso',

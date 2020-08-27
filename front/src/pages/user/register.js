@@ -68,7 +68,7 @@ class Register extends Component {
                 Una vez registrado, podés crear tus instituciones. <br />
                 Si ya estás registrado, por favor{' '}
                 <NavLink to={`/user/login`} className="btn-link-inverse">
-                  ingresá
+                  ingresá acá
                 </NavLink>
                 .
               </p>

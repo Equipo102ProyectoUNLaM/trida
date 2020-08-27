@@ -31,10 +31,18 @@ const Team = () => {
                   <img src={TeamMemeber1} alt="" />
                 </div>
                 <div className="team-one__social">
-                  <a href="https://www.linkedin.com/in/matias-cairo-56b7a0b6/">
+                  <a
+                    href="https://www.linkedin.com/in/matias-cairo-56b7a0b6/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-linkedin"></i>
                   </a>
-                  <a href="https://www.instagram.com/maticairo/">
+                  <a
+                    href="https://www.instagram.com/maticairo/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-instagram"></i>
                   </a>
                 </div>
@@ -51,10 +59,18 @@ const Team = () => {
                   <img src={TeamMemeber2} alt="" />
                 </div>
                 <div className="team-one__social">
-                  <a href="https://www.linkedin.com/in/micaela-de-rito-016776a7/">
+                  <a
+                    href="https://www.linkedin.com/in/micaela-de-rito-016776a7/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-linkedin"></i>
                   </a>
-                  <a href="https://www.instagram.com/miccucha/">
+                  <a
+                    href="https://www.instagram.com/miccucha/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-instagram"></i>
                   </a>
                 </div>
@@ -71,10 +87,18 @@ const Team = () => {
                   <img src={TeamMemeber3} alt="" />
                 </div>
                 <div className="team-one__social">
-                  <a href="https://www.linkedin.com/in/julieta-foglia/">
+                  <a
+                    href="https://www.linkedin.com/in/julieta-foglia/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-linkedin"></i>
                   </a>
-                  <a href="https://www.instagram.com/julitys/">
+                  <a
+                    href="https://www.instagram.com/julitys/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-instagram"></i>
                   </a>
                 </div>
@@ -91,10 +115,18 @@ const Team = () => {
                   <img src={TeamMemeber4} alt="" />
                 </div>
                 <div className="team-one__social">
-                  <a href="https://www.linkedin.com/in/lautaro-perez-72138519a/">
+                  <a
+                    href="https://www.linkedin.com/in/lautaro-perez-72138519a/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-linkedin"></i>
                   </a>
-                  <a href="https://www.instagram.com/laautaperez/">
+                  <a
+                    href="https://www.instagram.com/laautaperez/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-instagram"></i>
                   </a>
                 </div>
@@ -111,10 +143,18 @@ const Team = () => {
                   <img src={TeamMemeber5} alt="" />
                 </div>
                 <div className="team-one__social">
-                  <a href="https://www.linkedin.com/in/thomas-reynoso/">
+                  <a
+                    href="https://www.linkedin.com/in/thomas-reynoso/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-linkedin"></i>
                   </a>
-                  <a href="https://www.instagram.com/thomireynoso/">
+                  <a
+                    href="https://www.instagram.com/thomireynoso/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <i className="fab fa-instagram"></i>
                   </a>
                 </div>
