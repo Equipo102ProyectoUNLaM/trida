@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import NavLinks from './NavLinks';
+import { logoutUser, cleanSeleccionCurso } from 'redux/actions';
 
 import LogoImage from 'assets/landing/images/logo-nuevo.png';
 
@@ -43,6 +45,11 @@ const HeaderHome = (props) => {
     });
   };
 
+  const handleLogout = () => {
+    props.logoutUser();
+    props.cleanSeleccionCurso();
+  };
+
   return (
     <header
       className={`site-header-one stricky  ${props.extraClassName} ${
@@ -62,13 +69,38 @@ const HeaderHome = (props) => {
           <NavLinks />
         </div>
         <div className="main-nav__right">
-          <a href="/user/login" className={`thm-btn ${props.btnClass}`}>
-            <span>Ingresar</span>
-          </a>
+          {!props.loginUser && (
+            <a href="/user/login" className={`thm-btn ${props.btnClass}`}>
+              <span>Ingresar</span>
+            </a>
+          )}
+          {props.loginUser && (
+            <div>
+              <a
+                href="/seleccion-curso"
+                className={`thm-btn ${props.btnClass}`}
+              >
+                <span>Ingresar a la plataforma</span>
+              </a>
+              <button
+                onClick={() => handleLogout()}
+                className={`thm-btn ${props.btnClass}`}
+              >
+                <span>Log Out</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
   );
 };
 
-export default HeaderHome;
+const mapStateToProps = ({ authUser }) => {
+  const { user: loginUser } = authUser;
+  return { loginUser };
+};
+
+export default connect(mapStateToProps, { logoutUser, cleanSeleccionCurso })(
+  HeaderHome
+);

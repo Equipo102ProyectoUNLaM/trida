@@ -80,6 +80,7 @@ a:visited {
   vertical-align: middle;
   border: none;
   outline: none;
+  margin: 2px;
   background-image: -webkit-gradient(
     linear,
     left top,
