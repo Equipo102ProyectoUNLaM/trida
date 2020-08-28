@@ -164,7 +164,7 @@ exports.asignarFuncion = async ({ instId, courseId, subjectId, uid }) => {
     },
   ];
 
-  await this.agregarAUsusariosPorMateria(subjectId, uid);
+  //await this.agregarAUsusariosPorMateria(subjectId, uid);
 
   return instObj;
 }
@@ -173,10 +173,11 @@ exports.asignarMaterias = functions.https.onCall(async (data)=> {
   try {
     const instObj = await this.asignarFuncion(data);
     console.log(instObj);
+    //TODO iterar instObj y agregar a usuarios por materia
+    await this.agregarAUsusariosPorMateria(instObj, data.uid);
     await admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set( { instituciones: instObj }, { merge: true });
-    //console.log(data.subjectId, data.uid);
     
   } catch (error) {
     console.log('error', error);
@@ -236,6 +237,8 @@ exports.agregarMaterias = functions.https.onCall(async (data)=> {
     const instUser = await this.institucionesUsuario(data);
     const instAsignar = await this.asignarFuncion(data);
     const instituciones = await this.mergeInstituciones(instUser, instAsignar);
+    //TODO iterar instObj y agregar a usuarios por materia
+    await this.agregarAUsusariosPorMateria(instAsignar, data.uid);
     await admin.firestore().collection('usuarios')
       .doc(data.uid)
       .update({ instituciones });
@@ -245,16 +248,25 @@ exports.agregarMaterias = functions.https.onCall(async (data)=> {
   
 });
 
-exports.agregarAUsusariosPorMateria = async (materia, userId) => {
+exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
   try {
-    const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(materia);
-    const usuariosPorMateria = await usuariosPorMateriaRef.get();
-    const usuariosPorMateriaObj = usuariosPorMateria.data();
-    console.log(usuariosPorMateriaObj);
-    const { usuario_id } = usuariosPorMateriaObj;
-    console.log("usuarios por materia", usuario_id);
-    usuario_id.push(userId);
-    await admin.firestore().collection('usuariosPorMateria').doc(materia).set( {usuario_id: usuario_id}, { merge: true });
+    for (const institucion of instituciones) {
+      for (const curso of institucion.cursos) {
+        for (const materiaRef of curso.materias) {
+          let usuario_id = [];
+          const materiaSnapShot = await materiaRef.get();
+          const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(materiaSnapShot.id);
+          const usuariosPorMateria = await usuariosPorMateriaRef.get();
+          const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+          if(usuariosPorMateriaObj !== undefined) {
+            usuario_id = usuariosPorMateriaObj.usuario_id;
+          }
+          usuario_id.push(userId);
+          await admin.firestore().collection('usuariosPorMateria').doc(materiaSnapShot.id).set( {usuario_id: usuario_id}, { merge: true });
+        }
+      }
+    }
   } catch (error) {
     console.log('error', error);
   }
