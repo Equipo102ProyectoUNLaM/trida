@@ -78,16 +78,13 @@ const HeaderHome = (props) => {
             <div>
               <a
                 href="/seleccion-curso"
-                className={`thm-btn ${props.btnClass}`}
+                className={`thm-btn ${props.btnClass} margin-left`}
               >
-                <span>Ingresar a la plataforma</span>
+                <span>Acceder a la Plataforma</span>
               </a>
-              <button
-                onClick={() => handleLogout()}
-                className={`thm-btn ${props.btnClass}`}
-              >
-                <span>Log Out</span>
-              </button>
+              <a onClick={handleLogout} className={`thm-btn ${props.btnClass}`}>
+                <span>Cerrar Sesión</span>
+              </a>
             </div>
           )}
         </div>
