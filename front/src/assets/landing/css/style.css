@@ -626,7 +626,7 @@ a:visited {
   padding-right: 15px;
   width: 100%;
   max-width: 1700px;
-  margin-left: 100px;
+  margin-left: auto;
   margin-right: auto;
 }
 
@@ -3099,7 +3099,7 @@ a:visited {
 
 .cta-three__btn {
   border-radius: 5px;
-  color: #fff;
+  color: #fff !important;
   cursor: pointer;
   -webkit-transition: all 500ms ease;
   transition: all 500ms ease;
