@@ -32,6 +32,9 @@ const ViewUser = React.lazy(() =>
 const ViewError = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './pages/error')
 );
+const ViewConstruccion = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ './pages/en-construccion')
+);
 const ViewPizarron = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './pages/window-pizarron')
 );
@@ -118,6 +121,11 @@ class App extends Component {
                     path="/error"
                     exact
                     render={(props) => <ViewError {...props} />}
+                  />
+                  <Route
+                    path="/en-construccion"
+                    exact
+                    render={(props) => <ViewConstruccion {...props} />}
                   />
                   <Route path="/action" component={Action} />
                   <Redirect to="/error" />

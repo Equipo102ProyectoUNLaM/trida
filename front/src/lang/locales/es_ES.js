@@ -91,6 +91,8 @@ module.exports = {
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
   'pages.error-code': 'Código de error',
   'pages.go-back-home': 'Regresar a Inicio',
+  'pages.error-construccion-title': 'Esta página se encuentra en construcción!',
+  'pages.en-construccion': 'Volvé a intentar mas tarde',
 
   /* 06.Pages general */
   'pages.orderby': 'Ordenar por',
