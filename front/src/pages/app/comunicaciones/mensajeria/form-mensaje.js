@@ -26,8 +26,8 @@ class FormMensaje extends Component {
     };
   }
 
-  componentDidMount() {
-    datos = getUsersOfSubject(this.state.idMateria, this.state.idUser);
+  async componentDidMount() {
+    datos = await getUsersOfSubject(this.state.idMateria, this.state.idUser);
     this.setState({
       isLoading: false,
     });

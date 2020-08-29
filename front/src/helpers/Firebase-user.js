@@ -106,15 +106,17 @@ export const getUsersOfSubject = async (idMateria, currentUser) => {
     if (docObj.data.id !== currentUser) {
       const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
       // Armo el array que va a alimentar el Select
-      datos.push({
-        label: nombre,
-        value: user,
-        key: i,
-      });
+      if (nombre !== ' ') {
+        datos.push({
+          label: nombre,
+          value: user,
+          key: i,
+        });
+      }
     }
 
     i++;
   }
-
+  console.log(datos);
   return datos;
 };
