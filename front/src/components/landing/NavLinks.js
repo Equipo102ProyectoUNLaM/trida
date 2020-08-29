@@ -1,14 +1,20 @@
 import React from 'react';
-import Link from 'next/link';
 import { Link as ScrollLink } from 'react-scroll';
 
 const NavLinks = () => {
   return (
     <ul className="main-nav__navigation-box">
       <li>
-        <Link href="/">
+        <ScrollLink
+          activeClass="current"
+          to="home"
+          spy={true}
+          smooth={true}
+          offset={-70}
+          duration={500}
+        >
           <a>Home</a>
-        </Link>
+        </ScrollLink>
       </li>
       <li>
         <ScrollLink

@@ -33,14 +33,14 @@ const Team = () => {
                 <div className="team-one__social">
                   <a
                     href="https://www.linkedin.com/in/matias-cairo-56b7a0b6/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-linkedin"></i>
                   </a>
                   <a
                     href="https://www.instagram.com/maticairo/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-instagram"></i>
@@ -61,14 +61,14 @@ const Team = () => {
                 <div className="team-one__social">
                   <a
                     href="https://www.linkedin.com/in/micaela-de-rito-016776a7/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-linkedin"></i>
                   </a>
                   <a
                     href="https://www.instagram.com/miccucha/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-instagram"></i>
@@ -89,14 +89,14 @@ const Team = () => {
                 <div className="team-one__social">
                   <a
                     href="https://www.linkedin.com/in/julieta-foglia/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-linkedin"></i>
                   </a>
                   <a
                     href="https://www.instagram.com/julitys/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-instagram"></i>
@@ -117,14 +117,14 @@ const Team = () => {
                 <div className="team-one__social">
                   <a
                     href="https://www.linkedin.com/in/lautaro-perez-72138519a/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-linkedin"></i>
                   </a>
                   <a
                     href="https://www.instagram.com/laautaperez/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-instagram"></i>
@@ -145,14 +145,14 @@ const Team = () => {
                 <div className="team-one__social">
                   <a
                     href="https://www.linkedin.com/in/thomas-reynoso/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-linkedin"></i>
                   </a>
                   <a
                     href="https://www.instagram.com/thomireynoso/"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     <i className="fab fa-instagram"></i>

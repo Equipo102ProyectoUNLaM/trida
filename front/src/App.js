@@ -6,7 +6,6 @@ import {
   Switch,
   Redirect,
   withRouter,
-  useHistory,
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import './helpers/Firebase';
@@ -78,7 +77,7 @@ class App extends Component {
   }
 
   render() {
-    const { locale, loginUser, match } = this.props;
+    const { locale, loginUser } = this.props;
     const currentAppLocale = AppLocale[locale];
 
     return (
