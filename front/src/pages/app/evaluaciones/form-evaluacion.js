@@ -17,6 +17,7 @@ import { FormikDatePicker } from 'containers/form-validations/FormikFields';
 import { getDate } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
+import { encriptarEjercicios } from 'handlers/EncryptionHandler';
 
 class FormEvaluacion extends React.Component {
   constructor(props) {
@@ -101,7 +102,7 @@ class FormEvaluacion extends React.Component {
 
   onSubmit = async () => {
     let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-    const ejerciciosEncriptados = this.encriptarEjercicios(ejercicios);
+    const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
     const obj = {
       nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
       fecha_finalizacion: CryptoJS.AES.encrypt(
@@ -138,7 +139,7 @@ class FormEvaluacion extends React.Component {
   onEdit = async () => {
     try {
       let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-      const ejerciciosEncriptados = this.encriptarEjercicios(ejercicios);
+      const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
       const obj = {
         nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
         fecha_finalizacion: CryptoJS.AES.encrypt(
@@ -183,47 +184,6 @@ class FormEvaluacion extends React.Component {
     } catch (err) {
       console.log(err);
     }
-  };
-
-  encriptarEjercicios = (ejercicios) => {
-    let result = ejercicios;
-    for (const ejercicio of result) {
-      ejercicio.tipo = CryptoJS.AES.encrypt(
-        ejercicio.tipo,
-        secretKey
-      ).toString();
-      ejercicio.nombre = CryptoJS.AES.encrypt(
-        ejercicio.nombre,
-        secretKey
-      ).toString();
-      ejercicio.numero = CryptoJS.AES.encrypt(
-        ejercicio.numero.toString(),
-        secretKey
-      ).toString();
-      if (ejercicio.consigna)
-        ejercicio.consigna = CryptoJS.AES.encrypt(
-          ejercicio.consigna,
-          secretKey
-        ).toString();
-      if (ejercicio.tema)
-        ejercicio.tema = CryptoJS.AES.encrypt(
-          ejercicio.tema,
-          secretKey
-        ).toString();
-      if (ejercicio.opciones) {
-        for (const opcion of ejercicio.opciones) {
-          opcion.opcion = CryptoJS.AES.encrypt(
-            opcion.opcion,
-            secretKey
-          ).toString();
-          opcion.verdadera = CryptoJS.AES.encrypt(
-            opcion.verdadera.toString(),
-            secretKey
-          ).toString();
-        }
-      }
-    }
-    return result;
   };
 
   render() {

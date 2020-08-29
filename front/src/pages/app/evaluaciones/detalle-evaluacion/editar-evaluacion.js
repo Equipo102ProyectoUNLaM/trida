@@ -7,6 +7,7 @@ import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 import { getDocumentWithSubCollection } from 'helpers/Firebase-db';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
+import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 
 export default class EditarEvaluacion extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ export default class EditarEvaluacion extends Component {
       descripcion,
     } = data;
 
-    const ejerciciosDesencriptados = this.desencriptarEjercicios(subCollection);
+    const ejerciciosDesencriptados = desencriptarEjercicios(subCollection);
 
     this.setState({
       evaluacionId: id,
@@ -67,47 +68,6 @@ export default class EditarEvaluacion extends Component {
       ),
       isLoading: false,
     });
-  };
-
-  desencriptarEjercicios = (ejercicios) => {
-    let result = ejercicios;
-    for (const ejercicio of result) {
-      ejercicio.data.tipo = CryptoJS.AES.decrypt(
-        ejercicio.data.tipo,
-        secretKey
-      ).toString(CryptoJS.enc.Utf8);
-      ejercicio.data.nombre = CryptoJS.AES.decrypt(
-        ejercicio.data.nombre,
-        secretKey
-      ).toString(CryptoJS.enc.Utf8);
-      ejercicio.data.numero = CryptoJS.AES.decrypt(
-        ejercicio.data.numero.toString(),
-        secretKey
-      ).toString(CryptoJS.enc.Utf8);
-      if (ejercicio.data.consigna)
-        ejercicio.data.consigna = CryptoJS.AES.decrypt(
-          ejercicio.data.consigna,
-          secretKey
-        ).toString(CryptoJS.enc.Utf8);
-      if (ejercicio.data.tema)
-        ejercicio.data.tema = CryptoJS.AES.decrypt(
-          ejercicio.data.tema,
-          secretKey
-        ).toString(CryptoJS.enc.Utf8);
-      if (ejercicio.data.opciones) {
-        for (const opcion of ejercicio.data.opciones) {
-          opcion.opcion = CryptoJS.AES.decrypt(
-            opcion.opcion,
-            secretKey
-          ).toString(CryptoJS.enc.Utf8);
-          opcion.verdadera =
-            CryptoJS.AES.decrypt(opcion.verdadera, secretKey).toString(
-              CryptoJS.enc.Utf8
-            ) === 'true';
-        }
-      }
-    }
-    return result;
   };
 
   onEvaluacionEditada = () => {
