@@ -69,7 +69,7 @@ class OpcionMultiple extends React.Component {
   };
 
   render() {
-    const { opciones, consigna } = this.state;
+    let { opciones, consigna } = this.state;
 
     const { preview } = this.props;
 

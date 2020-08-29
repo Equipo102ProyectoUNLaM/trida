@@ -5,6 +5,9 @@ import { capitalize } from 'underscore.string';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 import { getDocumentWithSubCollection } from 'helpers/Firebase-db';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
+import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 
 export default class EditarEvaluacion extends Component {
   constructor(props) {
@@ -41,14 +44,28 @@ export default class EditarEvaluacion extends Component {
       descripcion,
     } = data;
 
+    const ejerciciosDesencriptados = desencriptarEjercicios(subCollection);
+
     this.setState({
       evaluacionId: id,
-      nombre: nombre,
+      nombre: CryptoJS.AES.decrypt(nombre, secretKey).toString(
+        CryptoJS.enc.Utf8
+      ),
       fecha_creacion: fecha_creacion,
-      fecha_finalizacion: fecha_finalizacion,
-      fecha_publicacion: fecha_publicacion,
-      descripcion: descripcion,
-      ejercicios: subCollection.sort((a, b) => a.data.numero - b.data.numero),
+      fecha_finalizacion: CryptoJS.AES.decrypt(
+        fecha_finalizacion,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8),
+      fecha_publicacion: CryptoJS.AES.decrypt(
+        fecha_publicacion,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8),
+      descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
+        CryptoJS.enc.Utf8
+      ),
+      ejercicios: ejerciciosDesencriptados.sort(
+        (a, b) => a.data.numero - b.data.numero
+      ),
       isLoading: false,
     });
   };
