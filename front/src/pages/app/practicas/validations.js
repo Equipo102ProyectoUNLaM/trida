@@ -1,10 +1,10 @@
 import * as Yup from 'yup';
 
 export const formPracticaSchema = Yup.object().shape({
-  nombre: Yup.string().required('La práctica debe tener un nombre'),
-  descripcion: Yup.string().required('El campo descripción es obligatorio'),
-  fechaLanzada: Yup.string().required('La fecha de lanzamiento es obligatoria'),
+  nombre: Yup.string().required('El nombre es requerido'),
+  descripcion: Yup.string().required('La descripción es requerida'),
+  fechaLanzada: Yup.string().required('La fecha de lanzamiento es requerida'),
   fechaVencimiento: Yup.string().required(
-    'La fecha de vencimiento de entrega es obligatoria'
+    'La fecha de vencimiento es requerida'
   ),
 });

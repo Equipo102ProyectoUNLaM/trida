@@ -47,7 +47,7 @@ class Oral extends React.Component {
               />
               {this.props.submitted && !tema ? (
                 <div className="invalid-feedback d-block">
-                  Debe ingresar un tema
+                  El tema es requerido
                 </div>
               ) : null}
             </FormGroup>

@@ -11,6 +11,7 @@ import {
   logicDeleteDocument,
   getCollectionWithSubCollections,
 } from 'helpers/Firebase-db';
+import { desencriptarEvaluacion } from 'handlers/DecryptionHandler';
 
 function collect(props) {
   return { data: props.data };
@@ -41,7 +42,8 @@ class Evaluaciones extends Component {
       false,
       'ejercicios'
     );
-    this.dataListRenderer(arrayDeObjetos);
+    const evaluaciones = desencriptarEvaluacion(arrayDeObjetos);
+    this.dataListRenderer(evaluaciones);
   };
 
   componentDidMount() {

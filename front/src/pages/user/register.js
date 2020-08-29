@@ -34,6 +34,8 @@ class Register extends Component {
         enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
     }
+    // En deploy a prod, descomentar esto y comentar lo de arriba
+    //this.props.history.push('/en-construccion');
   };
 
   componentDidUpdate(prevProps) {
@@ -64,10 +66,11 @@ class Register extends Component {
               <span className="logo-single" />
               {/* <p className="text-white h2">třída</p> */}
               <p className="white mb-0">
-                Use este formulario para registrarse. <br />
-                Si ya está registrado, por favor{' '}
-                <NavLink to={`/user/login`} className="btn-link">
-                  ingrese
+                Usá este formulario para registrarte. <br />
+                Una vez registrado, podés crear tus instituciones. <br />
+                Si ya estás registrado, por favor{' '}
+                <NavLink to={`/user/login`} className="btn-link-inverse">
+                  ingresá acá
                 </NavLink>
                 .
               </p>

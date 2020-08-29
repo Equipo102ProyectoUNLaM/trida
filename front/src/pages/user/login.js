@@ -50,10 +50,6 @@ class Login extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.user !== prevProps.user) {
-      this.props.history.push('/');
-    }
-
     if (!prevProps.error && this.props.error) {
       NotificationManager.warning(
         this.props.error,
@@ -78,11 +74,11 @@ class Login extends Component {
               <div className="logo-single" />
               {/* <p className="text-white h2">třída</p> */}
               <p className="white mb-0">
-                Ingrese sus datos para acceder.
+                Ingresá tus datos para acceder.
                 <br />
-                Si usted es docente, por favor{' '}
-                <NavLink to={`/user/register`} className="btn-link">
-                  regístrese
+                Si sos docente, por favor{' '}
+                <NavLink to={`/user/register`} className="btn-link-inverse">
+                  registrate acá
                 </NavLink>
                 .
               </p>

@@ -38,23 +38,31 @@ class Calendario extends React.Component {
   };
 
   render() {
-    const { text, evalCalendar } = this.props;
+    const {
+      text,
+      evalCalendar,
+      dateFormat,
+      timeFormat,
+      timeCaption,
+      timeIntervals,
+    } = this.props;
     const classText = evalCalendar ? '-eval' : '';
     return (
-      <div
-        className={
-          'glyph-icon simple-icon-calendar set-date-action-icon' +
-          classText +
-          ' relative'
-        }
-        onClick={this.handleClick}
-      >
+      <div>
+        <div
+          className={
+            'glyph-icon simple-icon-calendar set-date-action-icon' +
+            classText +
+            ' relative'
+          }
+          onClick={this.handleClick}
+        ></div>
         <DropdownMenu
           className={'dropdown-menu-calendar ' + this.state.close}
           right
           id="iconMenuDropdown"
         >
-          <ModalHeader>
+          <ModalHeader className="margin-auto">
             <p className="mb-1">{text}</p>
           </ModalHeader>
           <DatePicker
@@ -64,15 +72,23 @@ class Calendario extends React.Component {
             selected={this.state.fecha}
             onChange={this.handleChange}
             peekNextMonth={true}
+            dateFormat={dateFormat ? dateFormat : 'DD/MM/YYYY'}
+            showTimeSelect={timeFormat ? true : false}
+            timeFormat={timeFormat ? timeFormat : null}
+            timeCaption={timeCaption ? timeCaption : null}
+            timeIntervals={timeIntervals ? timeIntervals : null}
             dropdownMode="select"
-            dateFormat="DD/MM/YYYY"
             defaultValue={null}
           />
           <ModalFooter>
-            <Button color="primary" onClick={this.onConfirm}>
+            <Button color="primary" className="button" onClick={this.onConfirm}>
               Confirmar
             </Button>
-            <Button color="primary" onClick={this.handleClick}>
+            <Button
+              color="primary"
+              className="button"
+              onClick={this.handleClick}
+            >
               Cancelar
             </Button>
           </ModalFooter>

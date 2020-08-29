@@ -329,6 +329,17 @@ hr {
   display: inline-block;
 }
 
+.logo-single-theme {
+  width: 155px;
+  margin-bottom: 20px;
+  background-image: url($logoTheme);
+  background-repeat: no-repeat;
+  height: 138px;
+  background-size: contain;
+  background-position: center center;
+  display: inline-block;
+}
+
 .list-item-heading-container {
   width: calc(100% - 125px);
 }
@@ -1001,6 +1012,10 @@ button {
 
 .btn-link {
   color: $theme-color-1;
+}
+
+.btn-link-inverse {
+  color: $inverse-theme-color;
 }
 
 .btn-link:hover {
@@ -9390,4 +9405,8 @@ div.rendered-file-browser{
 
 .margin-left-1 {
   margin-left: 1rem !important;
+}
+
+.react-datepicker {
+  display: flex !important;
 }

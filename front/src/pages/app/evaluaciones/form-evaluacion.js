@@ -15,6 +15,9 @@ import { Formik, Form, Field } from 'formik';
 import { evaluationSchema } from 'pages/app/evaluaciones/validations';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
 import { getDate } from 'helpers/Utils';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
+import { encriptarEjercicios } from 'handlers/EncryptionHandler';
 
 class FormEvaluacion extends React.Component {
   constructor(props) {
@@ -51,16 +54,20 @@ class FormEvaluacion extends React.Component {
     if (!valid) return;
     if (this.state.evaluacionId) {
       this.setState({
-        fecha_finalizacion: values.fecha_finalizacion.format('YYYY-MM-DD'),
-        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD'),
+        fecha_finalizacion: values.fecha_finalizacion.format(
+          'YYYY-MM-DD, HH:mm'
+        ),
+        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD, HH:mm'),
         descripcion: values.descripcion,
         nombre: values.nombre,
         modalEditOpen: !this.state.modalEditOpen,
       });
     } else {
       this.setState({
-        fecha_finalizacion: values.fecha_finalizacion.format('YYYY-MM-DD'),
-        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD'),
+        fecha_finalizacion: values.fecha_finalizacion.format(
+          'YYYY-MM-DD, HH:mm'
+        ),
+        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD, HH:mm'),
         descripcion: values.descripcion,
         nombre: values.nombre,
         modalAddOpen: !this.state.modalAddOpen,
@@ -75,8 +82,14 @@ class FormEvaluacion extends React.Component {
         evaluacionId: this.props.idEval,
         nombre: this.props.evaluacion.nombre,
         fecha_creacion: this.props.evaluacion.fecha_creacion,
-        fecha_finalizacion: getDate(this.props.evaluacion.fecha_finalizacion),
-        fecha_publicacion: getDate(this.props.evaluacion.fecha_publicacion),
+        fecha_finalizacion: getDate(
+          this.props.evaluacion.fecha_finalizacion,
+          'YYYY-MM-DD, HH:mm'
+        ),
+        fecha_publicacion: getDate(
+          this.props.evaluacion.fecha_publicacion,
+          'YYYY-MM-DD, HH:mm'
+        ),
         descripcion: this.props.evaluacion.descripcion,
         ejercicios: this.props.evaluacion.ejercicios,
         creador: userName,
@@ -89,16 +102,25 @@ class FormEvaluacion extends React.Component {
 
   onSubmit = async () => {
     let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-
+    const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
     const obj = {
-      nombre: this.state.nombre,
-      fecha_finalizacion: this.state.fecha_finalizacion,
-      fecha_publicacion: this.state.fecha_publicacion,
-      descripcion: this.state.descripcion,
+      nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
+      fecha_finalizacion: CryptoJS.AES.encrypt(
+        this.state.fecha_finalizacion,
+        secretKey
+      ).toString(),
+      fecha_publicacion: CryptoJS.AES.encrypt(
+        this.state.fecha_publicacion,
+        secretKey
+      ).toString(),
+      descripcion: CryptoJS.AES.encrypt(
+        this.state.descripcion,
+        secretKey
+      ).toString(),
       idMateria: this.props.idMateria,
       activo: true,
       subcollection: {
-        data: ejercicios,
+        data: ejerciciosEncriptados,
       },
     };
 
@@ -117,12 +139,21 @@ class FormEvaluacion extends React.Component {
   onEdit = async () => {
     try {
       let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-
+      const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
       const obj = {
-        nombre: this.state.nombre,
-        fecha_finalizacion: this.state.fecha_finalizacion,
-        fecha_publicacion: this.state.fecha_publicacion,
-        descripcion: this.state.descripcion,
+        nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
+        fecha_finalizacion: CryptoJS.AES.encrypt(
+          this.state.fecha_finalizacion,
+          secretKey
+        ).toString(),
+        fecha_publicacion: CryptoJS.AES.encrypt(
+          this.state.fecha_publicacion,
+          secretKey
+        ).toString(),
+        descripcion: CryptoJS.AES.encrypt(
+          this.state.descripcion,
+          secretKey
+        ).toString(),
       };
 
       await editDocument(
@@ -139,7 +170,7 @@ class FormEvaluacion extends React.Component {
         );
       });
 
-      ejercicios.forEach(async (element) => {
+      ejerciciosEncriptados.forEach(async (element) => {
         await addDocument(
           `evaluaciones/${this.state.evaluacionId}/ejercicios`,
           element,
@@ -212,7 +243,7 @@ class FormEvaluacion extends React.Component {
             <Row>
               <Colxx xxs="6">
                 <FormGroup className="mb-3 error-l-150">
-                  <Label>Fecha de Publicación</Label>
+                  <Label>Fecha y Hora de Publicación</Label>
                   <FormikDatePicker
                     name="fecha_publicacion"
                     value={values.fecha_publicacion}
@@ -229,7 +260,7 @@ class FormEvaluacion extends React.Component {
               </Colxx>
               <Colxx xxs="6">
                 <FormGroup className="mb-3 error-l-150">
-                  <Label>Fecha de Finalización</Label>
+                  <Label>Fecha y Hora de Finalización</Label>
                   <FormikDatePicker
                     name="fecha_finalizacion"
                     value={values.fecha_finalizacion}

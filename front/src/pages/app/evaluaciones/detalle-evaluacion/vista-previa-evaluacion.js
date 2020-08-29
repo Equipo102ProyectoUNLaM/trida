@@ -16,6 +16,9 @@ import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
+import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 
 export default class ModalVistaPreviaEvaluacion extends Component {
   constructor(props) {
@@ -45,10 +48,16 @@ export default class ModalVistaPreviaEvaluacion extends Component {
     const { id, data, subCollection } = evaluacion;
     const { nombre } = data;
 
+    const ejerciciosDesencriptados = desencriptarEjercicios(subCollection);
+
     this.setState({
       evaluacionId: id,
-      nombre: nombre,
-      ejercicios: subCollection.sort((a, b) => a.data.numero - b.data.numero),
+      nombre: CryptoJS.AES.decrypt(nombre, secretKey).toString(
+        CryptoJS.enc.Utf8
+      ),
+      ejercicios: ejerciciosDesencriptados.sort(
+        (a, b) => a.data.numero - b.data.numero
+      ),
       isLoading: false,
     });
   };

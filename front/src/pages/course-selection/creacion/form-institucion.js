@@ -93,9 +93,7 @@ class FormInstitucion extends Component {
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
             <div className="form-side-full">
-              <NavLink to={`/`} className="white">
-                <span className="logo-single" />
-              </NavLink>
+              <div className="logo-single-theme" />
               <CardTitle className="mb-4">
                 <IntlMessages id="institucion.complete-datos" />
               </CardTitle>

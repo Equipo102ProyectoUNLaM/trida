@@ -14,6 +14,7 @@ $theme-color-3: #6c90a1;
 $theme-color-4: #365573;
 $theme-color-5: #47799a;
 $theme-color-6: #8e9599;
+$inverse-theme-color: #f6c797;
 
 $primary-color: #969696;
 $secondary-color: #757575;
@@ -33,6 +34,7 @@ $shadowOpacitiesBottom: 0.1 0.3 0.6 0.7 0.8;
 
 $logoPath: "/assets/img/logo-white.png";
 $logoPathNav: "/assets/img/logo-nuevo.png";
+$logoTheme: "/assets/img/logo-azul-tc1.png";
 $logoPathMobile: "/assets/img/logo-nuevo.png";
 
 @import "../_mixins.scss";
