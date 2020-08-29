@@ -96,11 +96,9 @@ export const getCourses = async (institutionId, userId) => {
 
 export const getUsersOfSubject = async (idMateria, currentUser) => {
   let datos = [];
-  const arrayDeObjetos = await getCollection('usuariosPorMateria', [
-    { field: 'materia_id', operator: '==', id: idMateria },
-  ]);
+  const arrayDeObjetos = await getDocument(`usuariosPorMateria/${idMateria}`);
   // Me quedo con el array de usuarios que pertenecen a esta materia
-  const users = arrayDeObjetos[0].data.usuario_id;
+  const users = arrayDeObjetos.data.usuario_id;
   for (const user of users) {
     const docObj = await getDocument(`usuarios/${user}`);
     let i = 0;
