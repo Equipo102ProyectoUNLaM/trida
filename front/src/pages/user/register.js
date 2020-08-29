@@ -34,6 +34,8 @@ class Register extends Component {
         enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
     }
+    // En deploy a prod, descomentar esto y comentar lo de arriba
+    //this.props.history.push('/en-construccion');
   };
 
   componentDidUpdate(prevProps) {
