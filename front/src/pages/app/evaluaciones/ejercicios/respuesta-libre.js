@@ -45,7 +45,7 @@ class RespuestaLibre extends React.Component {
               />
               {this.props.submitted && !consigna ? (
                 <div className="invalid-feedback d-block">
-                  Debe ingresar una consigna
+                  La consigna es requerida
                 </div>
               ) : null}
             </FormGroup>

@@ -107,7 +107,7 @@ class OpcionMultiple extends React.Component {
                 />
                 {this.props.submitted && !consigna ? (
                   <div className="invalid-feedback d-block">
-                    Debe ingresar una pregunta
+                    Ingresar una pregunta
                   </div>
                 ) : null}
               </FormGroup>
@@ -118,7 +118,7 @@ class OpcionMultiple extends React.Component {
                 {this.props.submitted &&
                 (!opciones || opciones.length === 0) ? (
                   <div className="invalid-feedback d-block">
-                    Debe cargar opciones
+                    Opciones requeridas
                   </div>
                 ) : null}
                 {opciones.map((op, index) => (
@@ -146,12 +146,12 @@ class OpcionMultiple extends React.Component {
                         className="invalid-feedback d-block"
                         style={{ left: '525px' }}
                       >
-                        Debe ingresar al menos una respuesta como verdadera
+                        Una respuesta verdadera es requerida
                       </div>
                     ) : null}
                     {this.props.submitted && opciones.find((x) => !x.opcion) ? (
                       <div className="invalid-feedback d-block">
-                        Debe completar todas las opciones
+                        Todas las opciones son requeridas
                       </div>
                     ) : null}
                   </Row>

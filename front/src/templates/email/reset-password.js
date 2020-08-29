@@ -17,7 +17,7 @@ import { Colxx } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
 
 const ResetPassSchema = Yup.object().shape({
-  password: Yup.string().required('Debe ingresar una contraseña'),
+  password: Yup.string().required('La contraseña es requerida'),
 });
 
 export default class ResetPassword extends Component {
