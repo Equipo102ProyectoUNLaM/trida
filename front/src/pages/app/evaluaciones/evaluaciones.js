@@ -11,8 +11,6 @@ import {
   logicDeleteDocument,
   getCollectionWithSubCollections,
 } from 'helpers/Firebase-db';
-import * as CryptoJS from 'crypto-js';
-import { secretKey } from 'constants/defaultValues';
 import { desencriptarEvaluacion } from 'handlers/DecryptionHandler';
 
 function collect(props) {
