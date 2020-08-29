@@ -22,8 +22,7 @@ class Register extends Component {
     };
   }
   onUserRegister = () => {
-    // SE DEJA COMENTADO PARA PROD
-    /* const userObj = {
+    const userObj = {
       email: this.state.email,
       password: this.state.password,
       isInvited: this.state.isInvited,
@@ -34,8 +33,9 @@ class Register extends Component {
       } else {
         enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
-    } */
-    this.props.history.push('/en-construccion');
+    }
+    // En deploy a prod, descomentar esto y comentar lo de arriba
+    //this.props.history.push('/en-construccion');
   };
 
   componentDidUpdate(prevProps) {
