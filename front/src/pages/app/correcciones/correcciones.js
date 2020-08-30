@@ -10,6 +10,7 @@ import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-
 import { DefaultDetail } from 'constants/fileBrowser/details';
 import { DefaultActionCorrecciones } from 'constants/fileBrowser/actions';
 import { DefaultFilter } from 'constants/fileBrowser/filters';
+import ROLES from 'constants/roles';
 
 class Correcciones extends Component {
   constructor(props) {
@@ -40,18 +41,21 @@ class Correcciones extends Component {
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               const fileKey = this.getPlainName(metadata.fullPath);
-              let obj = {
-                fullKey: metadata.fullPath.replace(
-                  this.state.subjectId + '/correcciones/',
-                  ''
-                ),
-                key: fileKey,
-                modified: Moment(metadata.updated),
-                size: metadata.size,
-                url: url,
-              };
 
-              arrayFiles.push(obj);
+              if (fileKey) {
+                let obj = {
+                  fullKey: metadata.fullPath.replace(
+                    this.state.subjectId + '/correcciones/',
+                    ''
+                  ),
+                  key: fileKey,
+                  modified: Moment(metadata.updated),
+                  size: metadata.size,
+                  url: url,
+                };
+
+                arrayFiles.push(obj);
+              }
 
               if (ctrFiles === result.items.length) {
                 this.setState((state) => ({
@@ -81,10 +85,23 @@ class Correcciones extends Component {
     //Elimino la parte de "materiaID/correcciones/" del path
     let newText = text.replace(this.state.subjectId + '/correcciones/', '');
     const pos = newText.indexOf('-'); //Busco el primer "-", que representa el idUsuario para eliminarlo
-    if (pos) {
-      return newText.slice(pos + 1);
+
+    if (this.props.rol === ROLES.Docente) {
+      if (pos) {
+        return newText.slice(pos + 1);
+      } else {
+        return newText;
+      }
     } else {
-      return newText;
+      // si es alumno, devolver solo correcciones del usuario logueado
+      const usuarioCorreccion = newText.slice(0, pos);
+      if (usuarioCorreccion === this.props.user) {
+        if (pos) {
+          return newText.slice(pos + 1);
+        } else {
+          return newText;
+        }
+      } else return '';
     }
   }
 
@@ -124,10 +141,14 @@ class Correcciones extends Component {
     );
   }
 }
-const mapStateToProps = ({ seleccionCurso }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
+  const { user, userData } = authUser;
+  const { rol } = userData;
   return {
     subject,
+    user,
+    rol,
   };
 };
 
