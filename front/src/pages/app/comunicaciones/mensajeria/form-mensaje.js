@@ -5,8 +5,9 @@ import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Row } from 'reactstrap';
-import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
+import { addDocument } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
+import { getUsersOfSubject } from 'helpers/Firebase-user';
 
 var datos = [];
 
@@ -26,11 +27,10 @@ class FormMensaje extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (!this.props.esResponder) {
-      this.getUsersOfSubject(this.state.idMateria);
+      datos = await getUsersOfSubject(this.state.idMateria, this.state.idUser);
     }
-
     this.setState({
       isLoading: false,
     });
@@ -55,7 +55,7 @@ class FormMensaje extends Component {
     //Si no es un mensaje general, convierto el array de seleccionados al formato { id, nombre }
     let receptores = null;
     if (!this.state.esGeneral) {
-      receptores = this.state.selectedOptions.map(({ value, label }) => value);
+      receptores = this.state.selectedOptions.map(({ value }) => value);
     }
 
     if (this.props.esResponder) {
@@ -94,35 +94,6 @@ class FormMensaje extends Component {
     this.setState({
       esGeneral: !this.state.esGeneral,
       selectedOptions: [],
-    });
-  };
-
-  getUsersOfSubject = async () => {
-    const idMateria = this.state.idMateria;
-    const arrayDeObjetos = await getCollection('usuariosPorMateria', [
-      { field: 'materia_id', operator: '==', id: idMateria },
-    ]);
-    // Me quedo con el array de usuarios que pertenecen a esta materia
-    const users = arrayDeObjetos[0].data.usuario_id;
-    for (const user of users) {
-      const docObj = await getDocument(`usuarios/${user}`);
-      let i = 0;
-
-      if (docObj.data.id !== this.state.idUser) {
-        const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
-        // Armo el array que va a alimentar el Select
-        datos.push({
-          label: nombre,
-          value: user,
-          key: i,
-        });
-      }
-
-      i++;
-    }
-
-    this.setState({
-      isLoading: false,
     });
   };
 

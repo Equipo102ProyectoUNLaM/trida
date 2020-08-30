@@ -51,6 +51,10 @@ class FormMateria extends Component {
           'Materia agregada exitosamente',
           'Error al agregar la materia'
         );
+
+        await editDocument('usuariosPorMateria', matRef.id, {
+          usuario_id: [user],
+        });
         arrayMaterias.push(matRef);
       }
       const cursoObj = {
