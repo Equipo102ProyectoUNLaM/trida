@@ -1,5 +1,5 @@
 import { firestore, storage } from 'helpers/Firebase';
-import { getDocument } from 'helpers/Firebase-db';
+import { getDocument, getCollection } from 'helpers/Firebase-db';
 
 export const getUserData = async (userId) => {
   let foto = '';
@@ -16,7 +16,7 @@ export const getUserData = async (userId) => {
       foto,
     };
   } catch (err) {
-    console.log('Error getting users document', err);
+    console.log('Error al obtener documento de usuarios', err);
   }
 };
 
@@ -92,4 +92,31 @@ export const getCourses = async (institutionId, userId) => {
   } catch (err) {
     console.log('Error getting documents', err);
   }
+};
+
+export const getUsersOfSubject = async (idMateria, currentUser) => {
+  let datos = [];
+  const arrayDeObjetos = await getDocument(`usuariosPorMateria/${idMateria}`);
+  // Me quedo con el array de usuarios que pertenecen a esta materia
+  const users = arrayDeObjetos.data.usuario_id;
+  for (const user of users) {
+    const docObj = await getDocument(`usuarios/${user}`);
+    let i = 0;
+
+    if (docObj.data.id !== currentUser) {
+      const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
+      // Armo el array que va a alimentar el Select
+      if (nombre !== ' ') {
+        datos.push({
+          label: nombre,
+          value: user,
+          key: i,
+        });
+      }
+    }
+
+    i++;
+  }
+  console.log(datos);
+  return datos;
 };
