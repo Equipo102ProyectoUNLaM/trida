@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { Input, ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { Row } from 'reactstrap';
 import { addDocument } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
-import { getUsersOfSubject } from 'helpers/Firebase-user';
-
-var datos = [];
 
 class FormMensaje extends Component {
   constructor(props) {
@@ -24,13 +20,11 @@ class FormMensaje extends Component {
       isLoading: true,
       idUser: this.props.user,
       esGeneral: false,
+      datos: this.props.datosUsuarios,
     };
   }
 
-  async componentDidMount() {
-    if (!this.props.esResponder) {
-      datos = await getUsersOfSubject(this.state.idMateria, this.state.idUser);
-    }
+  componentDidMount() {
     this.setState({
       isLoading: false,
     });
@@ -46,7 +40,9 @@ class FormMensaje extends Component {
   };
 
   componentWillUnmount() {
-    datos = [];
+    this.setState({
+      datos: [],
+    });
   }
 
   handleSubmit = async (event) => {
@@ -104,6 +100,7 @@ class FormMensaje extends Component {
       asunto,
       textoMensaje,
       esGeneral,
+      datos,
     } = this.state;
     const {
       toggleModal,

@@ -8,6 +8,11 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalChico from 'containers/pages/ModalChico';
 import FormMensaje from './form-mensaje';
 import { getUsernameById } from 'helpers/Firebase-db';
+import Select from 'react-select';
+import { getUsersOfSubject } from 'helpers/Firebase-user';
+import { Colxx } from 'components/common/CustomBootstrap';
+import { Row, ModalFooter, Button } from 'reactstrap';
+import { addDocument } from 'helpers/Firebase-db';
 
 class Mensajeria extends Component {
   constructor(props) {
@@ -16,6 +21,8 @@ class Mensajeria extends Component {
     this.state = {
       itemsSent: [],
       itemsReceive: [],
+      datosUsuarios: [],
+      selectedOptions: [],
       modalMessageOpen: false,
       modalEnviarOpen: false,
       modalResponderOpen: false,
@@ -32,6 +39,17 @@ class Mensajeria extends Component {
       esEnviado: false,
       idMensajeAResponder: '',
     };
+  }
+
+  async componentDidMount() {
+    const datos = await getUsersOfSubject(
+      this.state.materiaId,
+      this.state.usuarioId
+    );
+    this.setState({
+      datosUsuarios: datos,
+    });
+    this.getMensajes();
   }
 
   getMensajes = async () => {
@@ -54,10 +72,6 @@ class Mensajeria extends Component {
     ]);
     this.dataMessageReceivedRenderer(mensajesRecibidos);
   };
-
-  componentDidMount() {
-    this.getMensajes();
-  }
 
   dataMessageSentRenderer = async (arrayDeObjetos) => {
     let arrayDeData = arrayDeObjetos.map((elem) => ({
@@ -167,6 +181,47 @@ class Mensajeria extends Component {
     });
   };
 
+  handleChangeMulti = (selectedOptions) => {
+    this.setState({ selectedOptions });
+  };
+
+  handleSubmit = async (event) => {
+    event.preventDefault();
+
+    let receptores = this.state.selectedOptions.map(({ value }) => value);
+
+    const msg = {
+      emisor: {
+        id: this.state.usuarioId,
+        nombre: this.props.nombre + ' ' + this.props.apellido,
+      },
+      receptor: receptores,
+      contenido: this.state.contenidoMensaje,
+      asunto: this.state.asuntoMensaje,
+      formal: false,
+      general: false,
+      idMateria: this.state.materiaId,
+      responde_a: this.state.idMensajeAResponder
+        ? this.state.idMensajeAResponder
+        : '',
+    };
+    //guardar msj en bd
+    await addDocument(
+      'mensajes',
+      msg,
+      this.props.user,
+      'Mensaje reenviado',
+      'Mensaje reenviado exitosamente',
+      'Error al reenviar el mensaje'
+    );
+
+    this.toggleReenviarModal();
+    this.setState({
+      selectedOptions: [],
+    });
+    this.getMensajes();
+  };
+
   render() {
     const {
       isLoading,
@@ -184,6 +239,8 @@ class Mensajeria extends Component {
       esEnviado,
       idUsuarioAResponder,
       idMensajeAResponder,
+      datosUsuarios,
+      selectedOptions,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -211,6 +268,7 @@ class Mensajeria extends Component {
               esResponder={modalResponderOpen}
               asuntoAResponder={asuntoMensaje}
               idMensajeAResponder={idMensajeAResponder}
+              datosUsuarios={datosUsuarios}
             />
           </ModalGrande>
           <TabsDeMensajeria
@@ -240,7 +298,33 @@ class Mensajeria extends Component {
               toggleModal={this.toggleReenviarModal}
               modalHeader={'messages.resend'}
             >
-              HOLA
+              <Row>
+                <Colxx xxs="12" md="12">
+                  <Select
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    placeholder="Seleccione los destinatarios"
+                    name="form-field-name"
+                    value={selectedOptions}
+                    onChange={this.handleChangeMulti}
+                    options={datosUsuarios}
+                    required
+                  />
+                </Colxx>
+              </Row>
+              <ModalFooter>
+                <Button
+                  color="primary"
+                  disabled={selectedOptions.length === 0}
+                  onClick={this.handleSubmit}
+                >
+                  Enviar
+                </Button>
+                <Button color="secondary" onClick={this.toggleReenviarModal}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
             </ModalChico>
           )}
         </div>
@@ -250,9 +334,10 @@ class Mensajeria extends Component {
 }
 
 const mapStateToProps = ({ authUser, seleccionCurso }) => {
-  const { user } = authUser;
+  const { user, userData } = authUser;
+  const { nombre, apellido } = userData;
   const { subject } = seleccionCurso;
-  return { user, subject };
+  return { user, subject, nombre, apellido };
 };
 
 export default connect(mapStateToProps)(Mensajeria);
