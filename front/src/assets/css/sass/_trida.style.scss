@@ -9402,3 +9402,15 @@ div.rendered-file-browser{
 .react-datepicker {
   display: flex !important;
 }
+
+.row-home {
+  display: flex;
+    margin-right: -15px;
+    margin-left: -15px;
+    flex-wrap: unset;
+}
+
+.calendar-home {
+  width: 80%;
+  height: 30%;
+}

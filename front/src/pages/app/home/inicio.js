@@ -1,107 +1,43 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
+import ReactStickies from 'react-stickies';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
-import CardInicio from 'components/cards-inicio';
-import { getCourses, getInstituciones } from 'helpers/Firebase-user';
-import { updateInstitution, updateSubject, updateCourse } from 'redux/actions';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'moment/locale/es.js';
+const myEventsList = [
+  {
+    title: 'Evento',
+    start: '09/10/2020',
+    end: '09/10/2020',
+  },
+];
+const minTime = new Date();
+minTime.setHours(8, 0, 0);
+const maxTime = new Date();
+maxTime.setHours(18, 0, 0);
+
+const localizer = momentLocalizer(moment);
 
 class Inicio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      instRef: [],
-      items: [],
-      isLoading: true,
-      showCourses: false,
-      showSubjects: false,
-      instId: '',
-      instObj: {},
-      courseId: '',
-      courseObj: {},
-      courses: [],
-      subjects: [],
+      isLoading: false,
+      notas: [],
     };
   }
 
-  componentDidMount() {
-    this.getInstituciones();
-  }
-
-  getInstituciones = async () => {
-    try {
-      const items = await getInstituciones(this.props.user);
-      this.dataListRenderer(items);
-    } catch (err) {
-      console.log('Error getting documents', err);
-    }
-  };
-
-  showCourses = (institution) => {
+  onChangeNota = (notas) => {
     this.setState({
-      showCourses: true,
-      showSubjects: false,
-      isLoading: true,
-      courses: [],
-      subjects: [],
-      instId: institution.id,
-      instObj: institution,
-    });
-    this.getUserCourses(institution.id, this.props.user);
-  };
-
-  showSubjects = (course) => {
-    const [array] = this.state.courses;
-    this.setState({
-      showSubjects: true,
-      subjects: array.subjects,
-      courseId: course.id,
-      courseObj: course,
+      notas,
     });
   };
-
-  navigateToSubject = (subject) => {
-    this.props.updateInstitution(this.state.instObj);
-    this.props.updateCourse(this.state.courseObj);
-    this.props.updateSubject(subject);
-  };
-
-  async getUserCourses(institutionId, userId) {
-    let array = [];
-    this.setState({
-      isLoading: true,
-    });
-    try {
-      array = await getCourses(institutionId, userId);
-    } catch (err) {
-      console.log('Error getting documents', err);
-    } finally {
-      this.setState({
-        isLoading: false,
-        courses: array,
-      });
-    }
-  }
-
-  dataListRenderer(array) {
-    this.setState({
-      items: array,
-      isLoading: false,
-      courses: [],
-      subjects: [],
-    });
-  }
 
   render() {
-    const {
-      items,
-      isLoading,
-      showCourses,
-      courses,
-      showSubjects,
-      subjects,
-    } = this.state;
+    const { isLoading } = this.state;
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
@@ -113,73 +49,31 @@ class Inicio extends Component {
             </h1>
             <Separator className="mb-5" />
           </Colxx>
-          <Colxx xxs="12">
-            <h2>
-              <IntlMessages id="menu.mis-instituciones" />
-            </h2>
-          </Colxx>
-          <Colxx xxs="6">
-            <Row>
-              {items.map((institution) => {
-                return (
-                  <CardInicio
-                    showChildren={() => this.showCourses(institution)}
-                    key={institution.id}
-                    item={institution}
-                    itemId={institution.id}
-                  />
-                );
-              })}{' '}
-            </Row>
-          </Colxx>
-          {showCourses && (
-            <>
-              <Separator className="mb-5" />
-              <Colxx xxs="12">
-                <h2>
-                  <IntlMessages id="menu.mis-cursos" />
-                </h2>
-              </Colxx>
-              <Colxx xxs="6">
-                <Row>
-                  {courses.map((course) => {
-                    return (
-                      <CardInicio
-                        showChildren={() => this.showSubjects(course)}
-                        key={course.id}
-                        item={course}
-                        itemId={course.id}
-                      />
-                    );
-                  })}{' '}
-                </Row>
-              </Colxx>
-            </>
-          )}
-          {showSubjects && (
-            <>
-              <Separator className="mb-5" />
-              <Colxx xxs="12">
-                <h2>
-                  <IntlMessages id="menu.mis-materias" />
-                </h2>
-              </Colxx>
-              <Colxx xxs="6">
-                <Row>
-                  {subjects.map((subject) => {
-                    return (
-                      <CardInicio
-                        showChildren={() => this.navigateToSubject(subject)}
-                        key={subject.id}
-                        item={subject}
-                        itemId={subject.id}
-                      />
-                    );
-                  })}{' '}
-                </Row>
-              </Colxx>
-            </>
-          )}
+        </Row>
+        <Row className="row-home">
+          <ReactStickies
+            notes={this.state.notas}
+            onChange={this.onChangeNota}
+            footer={false}
+          />
+          <Calendar
+            culture="es-ES"
+            localizer={localizer}
+            events={myEventsList}
+            min={minTime}
+            max={maxTime}
+            startAccessor="start"
+            endAccessor="end"
+            className="calendar-home"
+            messages={{
+              next: '>',
+              previous: '<',
+              today: 'Hoy',
+              month: 'Mes',
+              week: 'Semana',
+              day: 'Día',
+            }}
+          />
         </Row>
       </Fragment>
     );
@@ -194,8 +88,4 @@ const mapStateToProps = ({ authUser }) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  updateInstitution,
-  updateCourse,
-  updateSubject,
-})(Inicio);
+export default connect(mapStateToProps)(Inicio);
