@@ -310,6 +310,7 @@ class Mensajeria extends Component {
                     value={contenidoMensaje}
                     onChange={this.handleChange}
                     className="resend-message"
+                    type="textarea"
                   />
                   <label>Destinatarios</label>
                   <Select
