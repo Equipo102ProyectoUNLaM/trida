@@ -2,6 +2,7 @@ import React from 'react';
 
 export const dataReceiveTableColumns = [
   {
+    id: 1,
     Header: 'Fecha',
     accessor: 'fecha_creacion',
     // eslint-disable-next-line react/display-name
@@ -23,6 +24,7 @@ export const dataReceiveTableColumns = [
 
 export const dataSentTableColumns = [
   {
+    id: 1,
     Header: 'Fecha',
     accessor: 'fecha_creacion',
     // eslint-disable-next-line react/display-name
