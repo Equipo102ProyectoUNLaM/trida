@@ -13,7 +13,9 @@ class FormMensaje extends Component {
 
     this.state = {
       textoMensaje: '',
-      asunto: '',
+      asunto: this.props.esResponder
+        ? 'RE: ' + this.props.asuntoAResponder
+        : '',
       selectedOptions: [],
       selectedTag: [],
       idMateria: this.props.subject.id,

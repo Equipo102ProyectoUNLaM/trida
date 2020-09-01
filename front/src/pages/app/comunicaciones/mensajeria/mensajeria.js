@@ -11,7 +11,7 @@ import { getUsernameById } from 'helpers/Firebase-db';
 import Select from 'react-select';
 import { getUsersOfSubject } from 'helpers/Firebase-user';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { Row, ModalFooter, Button } from 'reactstrap';
+import { Row, ModalFooter, Button, Input } from 'reactstrap';
 import { addDocument } from 'helpers/Firebase-db';
 
 class Mensajeria extends Component {
@@ -222,6 +222,11 @@ class Mensajeria extends Component {
     this.getMensajes();
   };
 
+  handleChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
+
   render() {
     const {
       isLoading,
@@ -300,6 +305,13 @@ class Mensajeria extends Component {
             >
               <Row>
                 <Colxx xxs="12" md="12">
+                  <label>Mensaje a reenviar</label>
+                  <Input
+                    value={contenidoMensaje}
+                    onChange={this.handleChange}
+                    className="resend-message"
+                  />
+                  <label>Destinatarios</label>
                   <Select
                     className="react-select"
                     classNamePrefix="react-select"

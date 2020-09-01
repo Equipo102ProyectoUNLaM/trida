@@ -3584,10 +3584,14 @@ nav .nomargin {
   border-right: initial;
 }
 
+.ReactTable .rt-thead .rt-th.-sort-desc,
+.ReactTable .rt-thead .rt-td.-sort-desc {
+  box-shadow: none;
+}
+
 .ReactTable .rt-thead .rt-th.-sort-asc,
 .ReactTable .rt-thead .rt-td.-sort-asc {
-  box-shadow: inset 0 3px 0 0 $theme-color-1;
-  font-style: italic;
+  box-shadow: none;
 }
 
 /* 20.Alerts */
@@ -9245,6 +9249,10 @@ tr.folder{
 
 .answer-message-title {
   margin: 1rem 0 1rem 1rem;
+}
+
+.resend-message {
+  margin: 0 0 1rem 0;
 }
 
 .general-check {
