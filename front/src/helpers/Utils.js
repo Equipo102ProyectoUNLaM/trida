@@ -97,10 +97,16 @@ export const toDateTime = (secs) => {
 
 /*  Esta función recibe un string con una fecha en cualquier formato y devuelve
  un string de la fecha en formato DD/MM/YYYY */
-export const getFormattedDate = (date, format) => {
-  return moment(date)
+export const getFormattedDate = (date, format, formatTo) => {
+  return moment(date, format ? format : null)
     .locale('es')
-    .format(format ? format : 'DD/MM/YYYY');
+    .format(formatTo ? formatTo : 'DD/MM/YYYY');
+};
+
+export const getFormattedTime = (date, format, formatTo) => {
+  return moment(date, format ? format : null)
+    .locale('es')
+    .format(formatTo ? formatTo : 'HH:mm');
 };
 
 /*  Esta función recibe un string con una fecha, y opcionalmente el formato en el que esta, y devuelve

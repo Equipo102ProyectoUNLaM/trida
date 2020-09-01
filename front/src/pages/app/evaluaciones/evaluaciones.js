@@ -6,6 +6,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalVistaPreviaEvaluacion from 'pages/app/evaluaciones/detalle-evaluacion/vista-previa-evaluacion';
+import ModalRealizarEvaluacion from 'pages/app/evaluaciones/realizar-evaluacion/realizar-evaluacion-confirmar';
 import ROLES from 'constants/roles';
 import {
   logicDeleteDocument,
@@ -25,9 +26,11 @@ class Evaluaciones extends Component {
       items: [],
       modalDeleteOpen: false,
       modalPreviewOpen: false,
+      modalMakeOpen: false,
       selectedItems: [],
       isLoading: true,
       materiaId: this.props.subject.id,
+      eval: null,
       evalId: '',
     };
   }
@@ -59,6 +62,12 @@ class Evaluaciones extends Component {
   togglePreviewModal = () => {
     this.setState({
       modalPreviewOpen: !this.state.modalPreviewOpen,
+    });
+  };
+
+  toggleMakeModal = () => {
+    this.setState({
+      modalMakeOpen: !this.state.modalMakeOpen,
     });
   };
 
@@ -96,6 +105,18 @@ class Evaluaciones extends Component {
     this.toggleDeleteModal();
   };
 
+  onMake = (evaluacion) => {
+    this.setState((prevState) => ({
+      evaluacion: evaluacion,
+      evalId: evaluacion.id,
+      modalMakeOpen: !prevState.modalMakeOpen,
+    }));
+  };
+
+  realizarEvaluacion = () => {
+    this.props.history.push(`/app/evaluaciones/realizar-evaluacion`);
+  };
+
   onPreview = (idEvaluacion) => {
     this.setState({
       evalId: idEvaluacion,
@@ -115,10 +136,12 @@ class Evaluaciones extends Component {
   render() {
     const {
       modalDeleteOpen,
+      modalMakeOpen,
       items,
       isLoading,
       modalPreviewOpen,
       evalId,
+      evaluacion,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -144,6 +167,7 @@ class Evaluaciones extends Component {
                   navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
+                  onMake={this.onMake}
                   onCancel={this.onCancel}
                   onPreview={this.onPreview}
                 />
@@ -166,6 +190,15 @@ class Evaluaciones extends Component {
               evalId={evalId}
               toggle={this.togglePreviewModal}
               isOpen={modalPreviewOpen}
+            />
+          )}
+          {modalMakeOpen && (
+            <ModalRealizarEvaluacion
+              evaluacion={evaluacion}
+              onConfirm={this.realizarEvaluacion}
+              titulo="¿Estás seguro que deseas realizar la evaluación?"
+              toggle={this.toggleMakeModal}
+              isOpen={modalMakeOpen}
             />
           )}
         </div>

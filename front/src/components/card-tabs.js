@@ -32,6 +32,7 @@ class CardTabs extends Component {
     this.state = {
       activeFirstTab: '1',
       activeSecondTab: '1',
+      modalMakeOpen: false,
     };
   }
 
@@ -91,6 +92,10 @@ class CardTabs extends Component {
       await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
       this.props.updateEvaluaciones(this.props.materiaId);
     }
+  };
+
+  handleClickMake = () => {
+    this.props.onMake(this.props.item);
   };
 
   render() {
@@ -245,7 +250,7 @@ class CardTabs extends Component {
                             {rol === ROLES.Alumno && (
                               <Button
                                 outline
-                                // onClick={this.handleClickMake}
+                                onClick={this.handleClickMake}
                                 size="sm"
                                 color="primary"
                                 className="button"
