@@ -10,8 +10,8 @@ import 'moment/locale/es.js';
 const myEventsList = [
   {
     title: 'Evento',
-    start: '09/10/2020',
-    end: '09/10/2020',
+    start: new Date('2020-09-05 08:00:00'),
+    end: new Date('2020-09-05 10:00:00'),
   },
 ];
 const minTime = new Date();
