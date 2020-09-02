@@ -56,8 +56,11 @@ const FormClase = ({ toggleModal, onClaseAgregada, subject, user }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormGroup className="mb-3">
+    <form
+      className="av-tooltip tooltip-label-right"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <FormGroup className="mb-3 error-l-150">
         <Label>Nombre de la clase</Label>
         <Controller
           as={Input}
@@ -75,7 +78,7 @@ const FormClase = ({ toggleModal, onClaseAgregada, subject, user }) => {
         )}
       </FormGroup>
 
-      <FormGroup className="mb-3">
+      <FormGroup className="mb-3 error-l-150">
         <Label>Fecha</Label>
         <Controller
           as={Input}
@@ -93,7 +96,7 @@ const FormClase = ({ toggleModal, onClaseAgregada, subject, user }) => {
         )}
       </FormGroup>
 
-      <FormGroup className="mb-3">
+      <FormGroup className="mb-3 error-l-150">
         <Label>Descripción</Label>
         <Controller
           as={Input}

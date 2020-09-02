@@ -32,7 +32,7 @@ class Login extends Component {
   validateEmail = (value) => {
     let error;
     if (!value) {
-      error = 'Por favor, ingrese su mail';
+      error = 'Por favor, ingresá tu mail';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
       error = 'Dirección de mail inválida';
     }
@@ -42,7 +42,7 @@ class Login extends Component {
   validatePassword = (value) => {
     let error;
     if (!value) {
-      error = 'Por favor, ingrese su password';
+      error = 'Por favor, ingresá tu password';
     } else if (value.length < 4) {
       error = 'El password debe ser mayor a 3 caracteres';
     }
@@ -91,8 +91,8 @@ class Login extends Component {
 
               <Formik initialValues={initialValues} onSubmit={this.onUserLogin}>
                 {({ errors, touched }) => (
-                  <Form className="av-tooltip tooltip-label-bottom">
-                    <FormGroup className="form-group has-float-label">
+                  <Form className="av-tooltip tooltip-label-right">
+                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
                       <Label>
                         <IntlMessages id="user.email" />
                       </Label>
@@ -107,7 +107,7 @@ class Login extends Component {
                         </div>
                       )}
                     </FormGroup>
-                    <FormGroup className="form-group has-float-label">
+                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
                       <Label>
                         <IntlMessages id="user.password" />
                       </Label>
