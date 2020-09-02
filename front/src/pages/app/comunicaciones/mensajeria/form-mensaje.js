@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { Input, ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { Row } from 'reactstrap';
-import { getCollection, getDocument, addDocument } from 'helpers/Firebase-db';
-import { getUsersOfSubject } from 'helpers/Firebase-user';
-
-var datos = [];
+import { addDocument } from 'helpers/Firebase-db';
+import ROLES from 'constants/roles';
 
 class FormMensaje extends Component {
   constructor(props) {
@@ -16,18 +13,20 @@ class FormMensaje extends Component {
 
     this.state = {
       textoMensaje: '',
-      asunto: '',
+      asunto: this.props.esResponder
+        ? 'RE: ' + this.props.asuntoAResponder
+        : '',
       selectedOptions: [],
       selectedTag: [],
       idMateria: this.props.subject.id,
       isLoading: true,
       idUser: this.props.user,
       esGeneral: false,
+      datos: this.props.datosUsuarios,
     };
   }
 
-  async componentDidMount() {
-    datos = await getUsersOfSubject(this.state.idMateria, this.state.idUser);
+  componentDidMount() {
     this.setState({
       isLoading: false,
     });
@@ -43,7 +42,9 @@ class FormMensaje extends Component {
   };
 
   componentWillUnmount() {
-    datos = [];
+    this.setState({
+      datos: [],
+    });
   }
 
   handleSubmit = async (event) => {
@@ -52,13 +53,17 @@ class FormMensaje extends Component {
     //Si no es un mensaje general, convierto el array de seleccionados al formato { id, nombre }
     let receptores = null;
     if (!this.state.esGeneral) {
-      receptores = this.state.selectedOptions.map(({ value, label }) => value);
+      receptores = this.state.selectedOptions.map(({ value }) => value);
+    }
+
+    if (this.props.esResponder) {
+      receptores = [this.props.idUsuarioAResponder];
     }
 
     const msg = {
       emisor: {
         id: this.state.idUser,
-        nombre: this.props.nombre + this.props.apellido,
+        nombre: this.props.nombre + ' ' + this.props.apellido,
       },
       receptor: receptores,
       contenido: this.state.textoMensaje,
@@ -66,6 +71,9 @@ class FormMensaje extends Component {
       formal: false,
       general: this.state.esGeneral,
       idMateria: this.state.idMateria,
+      responde_a: this.props.idMensajeAResponder
+        ? this.props.idMensajeAResponder
+        : '',
     };
     //guardar msj en bd
     await addDocument(
@@ -94,8 +102,15 @@ class FormMensaje extends Component {
       asunto,
       textoMensaje,
       esGeneral,
+      datos,
     } = this.state;
-    const { toggleModal } = this.props;
+    const {
+      toggleModal,
+      rol,
+      mensajeAResponder,
+      usuarioAResponder,
+      esResponder,
+    } = this.props;
 
     return isLoading ? (
       <div className="loading" />
@@ -106,32 +121,53 @@ class FormMensaje extends Component {
             <label>
               <IntlMessages id="messages.receiver" />
             </label>
-            <Row>
-              <Colxx xxs="12" md="4">
-                <Select
-                  className="react-select"
-                  classNamePrefix="react-select"
-                  isMulti
-                  placeholder="Seleccione los destinatarios"
-                  name="form-field-name"
-                  value={selectedOptions}
-                  onChange={this.handleChangeMulti}
-                  options={datos}
-                  required
-                  isDisabled={esGeneral}
-                />
-              </Colxx>
-              <Colxx xxs="12" md="6" className="receivers-general">
+            {!esResponder && (
+              <Row>
+                <Colxx xxs="12" md="4">
+                  <Select
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    placeholder="Seleccione los destinatarios"
+                    name="form-field-name"
+                    value={selectedOptions}
+                    onChange={this.handleChangeMulti}
+                    options={datos}
+                    required
+                    isDisabled={esGeneral}
+                  />
+                </Colxx>
+                {rol === ROLES.Docente && (
+                  <Colxx xxs="12" md="6" className="receivers-general">
+                    <Input
+                      name="esGeneral"
+                      className="general-check"
+                      type="checkbox"
+                      checked={esGeneral}
+                      onChange={() => this.handleCheckBoxChange()}
+                    />
+                    <label>¿Es un mensaje general?</label>
+                  </Colxx>
+                )}
+              </Row>
+            )}
+            {esResponder && (
+              <Row>
                 <Input
-                  name="esGeneral"
-                  className="general-check"
-                  type="checkbox"
-                  checked={esGeneral}
-                  onChange={() => this.handleCheckBoxChange()}
-                />
-                <label>¿Es un mensaje general?</label>
-              </Colxx>
-            </Row>
+                  value={usuarioAResponder}
+                  disabled
+                  className="answer-message"
+                ></Input>
+                <label className="answer-message-title">
+                  Mensaje a responder
+                </label>
+                <Input
+                  value={mensajeAResponder}
+                  disabled
+                  className="answer-message"
+                ></Input>
+              </Row>
+            )}
           </Colxx>
         </Row>
 
@@ -165,9 +201,9 @@ class FormMensaje extends Component {
 
 const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user, userData } = authUser;
-  const { nombre, apellido } = userData;
+  const { nombre, apellido, rol } = userData;
   const { subject } = seleccionCurso;
-  return { user, subject, nombre, apellido };
+  return { user, subject, nombre, apellido, rol };
 };
 
 export default connect(mapStateToProps)(FormMensaje);

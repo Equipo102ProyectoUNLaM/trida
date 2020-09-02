@@ -146,8 +146,10 @@ module.exports = {
 
   /* 13. Mensajeria */
   'messages.new': 'CREAR NUEVO MENSAJE',
+  'messages.answer': 'RESPONDER MENSAJE',
   'messages.receiver': 'Destinatario',
-
-  /* 14. Inicio */
+  'messages.resend': 'REENVIAR MENSAJE',
+  
+    /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
 };
