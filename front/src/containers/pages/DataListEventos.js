@@ -9,15 +9,6 @@ import { injectIntl } from 'react-intl';
 import { editDocument } from 'helpers/Firebase-db';
 
 class DataListEventos extends React.Component {
-  handleClick = async (date) => {
-    if (date) {
-      const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
-      if (date) {
-        await editDocument('practicas', this.props.id, obj, 'Práctica');
-      }
-    }
-  };
-
   render() {
     const { id, title, isSelect, navTo } = this.props;
     return (
