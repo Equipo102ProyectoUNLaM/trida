@@ -9403,6 +9403,8 @@ div.rendered-file-browser{
   display: flex !important;
 }
 
+// Home
+
 .row-home {
   display: flex;
     margin-right: -15px;
@@ -9410,7 +9412,108 @@ div.rendered-file-browser{
     flex-wrap: unset;
 }
 
+.card-home {
+  align-items: center;
+}
+
 .calendar-home {
-  width: 80%;
-  height: 30%;
+  padding: 1rem;
+  height: 650px !important;
+}
+
+.rbc-toolbar {
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 12px !important;
+    flex-wrap: unset;
+}
+
+.public-DraftEditorPlaceholder-inner {
+  visibility: hidden;
+  position: relative;
+}
+.add {
+  visibility: hidden;
+}
+
+.rbc-agenda-empty {
+  visibility: hidden;
+  position: relative;
+}
+
+.rbc-agenda-empty:before {
+  content: "No hay eventos en este rango de fechas";
+  visibility: visible;
+}
+
+.card-title-evento {
+  padding: 1rem;
+  margin-bottom: 0 !important;
+}
+
+.card-body-evento {
+  padding: 0 !important;
+}
+
+.margin-right-icon {
+  margin-right: 7px !important;
+}
+
+.react-grid-item.react-draggable.cssTransforms {
+  padding-right: 15px;
+    touch-action: none;
+    width: 100% !important;
+    height: 210px;
+    position: absolute;
+    transform: translate(10px, 10px);
+    font-family: inherit !important;
+    color: #212121 !important;
+}
+
+.react-stickies-wrapper {
+  font-family: inherit !important;
+  color: #212121 !important;
+
+  .note-wrap {
+    font-family: inherit !important;
+    color: #212121 !important;
+
+    .title{
+      color: #212121 !important;
+    }
+  }
+
+  .note-body{
+    color: #212121 !important;
+  }
+}
+
+.react-stickies-wrapper.note-wrap {
+  font-family: inherit !important;
+  color: #212121 !important;
+}
+
+.public-DraftStyleDefault-block {
+  .public-DraftStyleDefault-ltr {
+    color: #212121 !important;
+  }
+}
+
+.rbc-show-more {
+  visibility: hidden;
+}
+
+.rbc-show-more:before {
+  content: "+ eventos";
+  display: flex;
+  justify-content: flex-end;
+  visibility: visible;
+  background-color: rgba(255, 255, 255, 0.3);
+  z-index: 4;
+  font-weight: bold;
+  font-size: 85%;
+  height: auto;
+  line-height: normal;
 }
