@@ -9517,3 +9517,34 @@ div.rendered-file-browser{
   height: auto;
   line-height: normal;
 }
+
+.react-stickies-wrapper {
+    width: 100%;
+    height: 35% !important;
+    position: relative;
+}
+
+.card-notas {
+  margin-top: 1rem;
+}
+
+.card-body-notas {
+  padding: 0rem 1rem 1rem 1rem !important;
+}
+
+.card-slider {
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.notas {
+  border: 0px !important;
+  border-radius: 1rem;
+  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.mensaje-slider {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  display: block;
+}

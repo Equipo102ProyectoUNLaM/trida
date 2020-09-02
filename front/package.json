@@ -22,7 +22,7 @@
     "next": "9.3.2",
     "next-images": "^1.4.0",
     "nodemailer": "^6.4.11",
-    "rc-slider": "^8.6.1",
+    "rc-slider": "^8.7.1",
     "rc-switch": "^1.6.0",
     "react": "^16.13.1",
     "react-albus": "^2.0.0",

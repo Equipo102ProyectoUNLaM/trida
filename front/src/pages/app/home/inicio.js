@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Row, Card, CardTitle, CardBody } from 'reactstrap';
-import ReactStickies from 'react-stickies';
+import { Row, Card, CardTitle, CardBody, Input, NavLink } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
+import { SliderTooltip } from 'components/common/Slider';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import {
   getEventos,
@@ -14,23 +15,21 @@ import {
 import moment from 'moment';
 import 'moment/locale/es.js';
 import DataListEventos from 'containers/pages/DataListEventos';
-import { nota } from 'constants/notas';
-
-const minTime = new Date();
-minTime.setHours(8, 0, 0);
-const maxTime = new Date();
-maxTime.setHours(18, 0, 0);
+import { horasAgenda } from 'helpers/Utils';
+import ROLES from 'constants/roles';
 
 const localizer = momentLocalizer(moment);
+const horas = horasAgenda();
 
 class Inicio extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      notas: [],
+      notas: '',
       eventos: [],
       eventosDia: [],
+      valorSlider: 3,
     };
   }
 
@@ -40,29 +39,17 @@ class Inicio extends Component {
   }
 
   componentWillUnmount() {
-    const arrayTextos = this.state.notas.map((note) => {
-      return note.text;
-    });
-    guardarNotas(this.props.user, arrayTextos);
+    guardarNotas(this.props.user, this.state.notas);
   }
 
   setNotas = async () => {
-    const arrayDeNotas = [];
+    let notas = '';
     const { data } = await getDocument(`notas/${this.props.user}`);
     if (data) {
-      data.notas.forEach((note) => {
-        arrayDeNotas.push({
-          ...nota,
-          text: note,
-        });
-      });
-    } else {
-      arrayDeNotas.push({
-        ...nota,
-      });
+      notas = data.notas;
     }
     this.setState({
-      notas: arrayDeNotas,
+      notas,
     });
   };
 
@@ -76,14 +63,23 @@ class Inicio extends Component {
     });
   };
 
-  onChangeNota = (notas) => {
+  onChangeNota = (event) => {
     this.setState({
-      notas,
+      notas: event.target.value,
+    });
+  };
+
+  onChangeSlider = (value) => {
+    this.setState({
+      valorSlider: value,
     });
   };
 
   render() {
-    const { isLoading, eventos, eventosDia } = this.state;
+    const { isLoading, eventos, eventosDia, notas, valorSlider } = this.state;
+    const { rol } = this.props;
+    const valorCritico = valorSlider === 1 || valorSlider === 2;
+    const rolAlumno = rol === ROLES.Alumno;
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
@@ -116,11 +112,54 @@ class Inicio extends Component {
                 })}{' '}
               </CardBody>
             </Card>
-            <ReactStickies
-              notes={this.state.notas}
-              onChange={this.onChangeNota}
-              footer={false}
-            />
+            <Card className="card-notas">
+              <CardTitle className="card-title-evento">
+                <i className="margin-right-icon iconsminds-notepad" />
+                Mis Notas
+              </CardTitle>
+              <CardBody className="card-body-notas">
+                <Input
+                  placeholder={
+                    !notas ? 'Podés dejar tus anotaciones acá' : null
+                  }
+                  className="notas"
+                  onChange={this.onChangeNota}
+                  type="textarea"
+                  rows="3"
+                  defaultValue={notas}
+                />
+              </CardBody>
+            </Card>
+            {rolAlumno && (
+              <Card className="card-slider">
+                <CardBody>
+                  <Colxx>
+                    <label>
+                      <IntlMessages id="ayuda.slider-alumno" />
+                    </label>
+                    <SliderTooltip
+                      min={1}
+                      max={5}
+                      defaultValue={3}
+                      className="mb-5"
+                      onChange={this.onChangeSlider}
+                    />
+                    {valorCritico && (
+                      <span className="mensaje-slider">
+                        Si querés, podés enviarle un{' '}
+                        <a
+                          href="/app/comunicaciones/mensajeria"
+                          className="btn-link-inverse"
+                        >
+                          mensaje{' '}
+                        </a>
+                        a tu docente.
+                      </span>
+                    )}
+                  </Colxx>
+                </CardBody>
+              </Card>
+            )}
           </Colxx>
           <Colxx>
             <Row className="row-home">
@@ -129,8 +168,8 @@ class Inicio extends Component {
                   culture="es-ES"
                   localizer={localizer}
                   events={eventos}
-                  min={minTime}
-                  max={maxTime}
+                  min={horas.minTime}
+                  max={horas.maxTime}
                   startAccessor="start"
                   endAccessor="end"
                   className="calendar-home"
@@ -153,13 +192,15 @@ class Inicio extends Component {
 }
 
 const mapStateToProps = ({ authUser, seleccionCurso }) => {
-  const { user } = authUser;
+  const { user, userData } = authUser;
+  const { rol } = userData;
   const { subject } = seleccionCurso;
 
   return {
     user,
     subject,
+    rol,
   };
 };
 
-export default connect(mapStateToProps)(Inicio);
+export default withRouter(connect(mapStateToProps)(Inicio));

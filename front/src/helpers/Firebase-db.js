@@ -481,9 +481,13 @@ export const getEventos = async (subject) => {
 export const getEventosDelDia = async (subject) => {
   const arrayEventos = await getEventos(subject);
   const arrayEventosDia = arrayEventos.filter((evento) => {
-    const { start } = evento;
+    const { start, end } = evento;
     const inicio = moment(new Date(start)).format('YYYY-MM-DD');
-    return inicio === moment().format('YYYY-MM-DD');
+    const fin = moment(new Date(end)).format('YYYY-MM-DD');
+    return (
+      inicio === moment().format('YYYY-MM-DD') ||
+      fin === moment().format('YYYY-MM-DD')
+    );
   });
 
   return arrayEventosDia;
