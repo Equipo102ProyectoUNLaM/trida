@@ -213,8 +213,8 @@ class FormPractica extends React.Component {
             </FormGroup>
             <FormGroup>
               <label
+                className="practicas-adjuntar-button"
                 style={{
-                  backgroundColor: 'steelblue',
                   color: 'white',
                   padding: 10,
                   borderRadius: 4,
