@@ -1,7 +1,7 @@
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 
-export const desencriptarEjercicios = (ejercicios) => {
+export const desencriptarEjercicios = (ejercicios, sinRespuesta) => {
   let result = ejercicios;
   for (const ejercicio of result) {
     ejercicio.data.tipo = CryptoJS.AES.decrypt(
@@ -31,10 +31,12 @@ export const desencriptarEjercicios = (ejercicios) => {
         opcion.opcion = CryptoJS.AES.decrypt(opcion.opcion, secretKey).toString(
           CryptoJS.enc.Utf8
         );
-        opcion.verdadera =
-          CryptoJS.AES.decrypt(opcion.verdadera, secretKey).toString(
-            CryptoJS.enc.Utf8
-          ) === 'true';
+        if (!sinRespuesta) {
+          opcion.verdadera =
+            CryptoJS.AES.decrypt(opcion.verdadera, secretKey).toString(
+              CryptoJS.enc.Utf8
+            ) === 'true';
+        }
       }
     }
   }

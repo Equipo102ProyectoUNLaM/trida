@@ -156,7 +156,7 @@ class CardTabs extends Component {
                       <Colxx sm="12">
                         <CardBody>
                           <Row>
-                            <Colxx lg="8">
+                            <Colxx xxs="12" xs="8" lg="8">
                               <CardTitle className="mb-4">
                                 {data.base.nombre}
                               </CardTitle>
@@ -167,8 +167,8 @@ class CardTabs extends Component {
                                 <p className="mb-4">Sin descripción</p>
                               )}
                             </Colxx>
-                            <Colxx lg="4">
-                              <Row className="dropdown-calendar">
+                            <Colxx xxs="12" xs="4" lg="4">
+                              <div className="dropdown-calendar flex">
                                 <p>Fecha y Hora de Finalización&nbsp;</p>
                                 {rol === ROLES.Docente && (
                                   <Calendario
@@ -194,8 +194,8 @@ class CardTabs extends Component {
                                 {!data.base.fecha_finalizacion && (
                                   <p className="mb-4">Sin fecha</p>
                                 )}
-                              </Row>
-                              <Row className="dropdown-calendar">
+                              </div>
+                              <div className="dropdown-calendar flex">
                                 <p>Fecha y Hora de Publicación&nbsp;</p>
                                 {rol === ROLES.Docente && (
                                   <Calendario
@@ -221,7 +221,7 @@ class CardTabs extends Component {
                                 {!data.base.fecha_publicacion && (
                                   <p className="mb-4">Sin fecha</p>
                                 )}
-                              </Row>
+                              </div>
                             </Colxx>
                           </Row>
                           <Row className="button-group">

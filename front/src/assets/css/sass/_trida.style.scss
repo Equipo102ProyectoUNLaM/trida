@@ -9410,3 +9410,14 @@ div.rendered-file-browser{
 .text-red{
   color: red;
 }
+
+.background-evaluaciones{
+  background-color: $theme-color-1;
+  padding: 3rem;
+  border-radius: 1rem;
+}
+
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+}

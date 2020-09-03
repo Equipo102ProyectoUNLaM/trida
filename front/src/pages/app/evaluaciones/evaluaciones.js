@@ -114,7 +114,10 @@ class Evaluaciones extends Component {
   };
 
   realizarEvaluacion = () => {
-    this.props.history.push(`/app/evaluaciones/realizar-evaluacion`);
+    this.props.history.push({
+      pathname: '/app/evaluaciones/realizar-evaluacion',
+      evalId: this.state.evalId,
+    });
   };
 
   onPreview = (idEvaluacion) => {
