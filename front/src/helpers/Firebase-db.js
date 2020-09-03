@@ -1,6 +1,10 @@
 import { firestore } from './Firebase';
 import { NotificationManager } from 'components/common/react-notifications';
 import { getFechaHoraActual } from 'helpers/Utils';
+import moment from 'moment';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
+
 firestore.enablePersistence().catch(function (err) {
   console.log(err);
 });
@@ -416,4 +420,83 @@ export const logicDeleteDocument = async (collection, docId, message) => {
       ''
     );
   }
+};
+
+export const getEventos = async (subject) => {
+  let arrayDeEventos = [];
+  const arrayDeClases = await getCollection('clases', [
+    { field: 'idMateria', operator: '==', id: subject },
+  ]);
+  const arrayDeEvaluaciones = await getCollection('evaluaciones', [
+    { field: 'idMateria', operator: '==', id: subject },
+  ]);
+  const arrayDePracticas = await getCollection('practicas', [
+    { field: 'idMateria', operator: '==', id: subject },
+  ]);
+  arrayDeClases.forEach((clase) => {
+    const { id, data } = clase;
+    arrayDeEventos.push({
+      id,
+      tipo: `clases-virtuales/mis-clases/detalle-clase/${id}`,
+      title: 'Clase: ' + data.nombre,
+      start: new Date(`${data.fecha} 08:00:00`),
+      end: new Date(`${data.fecha} 10:00:00`),
+    });
+  });
+  arrayDeEvaluaciones.forEach((prueba) => {
+    const { id, data } = prueba;
+    const nombre = CryptoJS.AES.decrypt(data.nombre, secretKey).toString(
+      CryptoJS.enc.Utf8
+    );
+    const fechaPublicacion = CryptoJS.AES.decrypt(
+      data.fecha_publicacion,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    const fechaFinalizacion = CryptoJS.AES.decrypt(
+      data.fecha_finalizacion,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    arrayDeEventos.push({
+      id,
+      tipo: 'evaluaciones',
+      title: 'Evaluación: ' + nombre,
+      start: new Date(fechaPublicacion),
+      end: new Date(fechaFinalizacion),
+    });
+  });
+  arrayDePracticas.forEach((practica) => {
+    const { id, data } = practica;
+    arrayDeEventos.push({
+      id,
+      tipo: 'practicas',
+      title: 'Práctica: ' + data.nombre,
+      start: new Date(`${data.fechaLanzada} 08:00:00`),
+      end: new Date(`${data.fechaVencimiento} 18:00:00`),
+    });
+  });
+
+  return arrayDeEventos;
+};
+
+export const getEventosDelDia = async (subject) => {
+  const arrayEventos = await getEventos(subject);
+  const arrayEventosDia = arrayEventos.filter((evento) => {
+    const { start, end } = evento;
+    const inicio = moment(new Date(start)).format('YYYY-MM-DD');
+    const fin = moment(new Date(end)).format('YYYY-MM-DD');
+    return (
+      inicio === moment().format('YYYY-MM-DD') ||
+      fin === moment().format('YYYY-MM-DD')
+    );
+  });
+
+  return arrayEventosDia;
+};
+
+export const guardarNotas = async (user, notas) => {
+  console.log(notas);
+  return await firestore
+    .collection('notas')
+    .doc(user)
+    .set({ notas: notas }, { merge: true });
 };
