@@ -128,6 +128,7 @@ class Clase extends Component {
       salaEditada,
     } = this.state;
     const { rol } = this.props;
+    const rolDocente = rol === ROLES.Docente;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -135,8 +136,8 @@ class Clase extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.mis-clases"
-            toggleModal={rol === ROLES.Docente ? this.toggleModal : null}
-            buttonText={rol === ROLES.Docente ? 'classes.add' : null}
+            toggleModal={rolDocente ? this.toggleModal : null}
+            buttonText={rolDocente ? 'classes.add' : null}
           />
           <ModalGrande
             modalOpen={modalOpen}
@@ -158,8 +159,8 @@ class Clase extends Component {
                   isSelect={this.state.selectedItems.includes(clase.id)}
                   collect={collect}
                   navTo={`/app/clases-virtuales/mis-clases/detalle-clase/${clase.id}`}
-                  onEdit={this.onEdit}
-                  onDelete={this.onDelete}
+                  onEdit={rolDocente ? this.onEdit : null}
+                  onDelete={rolDocente ? this.onDelete : null}
                 />
               );
             })}{' '}
