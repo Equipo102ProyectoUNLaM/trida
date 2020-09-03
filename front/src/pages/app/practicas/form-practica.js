@@ -59,8 +59,12 @@ class FormPractica extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleUploadStart = () =>
+  handleUploadStart = () => {
+    if (this.state.file != '') {
+      this.handleDeleteFile();
+    }
     this.setState({ isFileUploading: true, fileUploadProgress: 0 });
+  };
 
   handleProgress = (progress) =>
     this.setState({ fileUploadProgress: progress });
@@ -82,6 +86,20 @@ class FormPractica extends React.Component {
       .child(filename)
       .getDownloadURL()
       .then((url) => this.setState({ fileURL: url }));
+  };
+
+  handleDeleteFile = async () => {
+    storage
+      .ref(this.props.subject.id + '/practicas/')
+      .child(this.state.file)
+      .delete();
+    this.setState({
+      isFileUploading: false,
+      isFileUploaded: false,
+      fileUploadProgress: 0,
+      fileURL: '',
+      file: '',
+    });
   };
 
   onPracticaSubmit = async (values) => {
@@ -109,6 +127,7 @@ class FormPractica extends React.Component {
         fechaLanzada: fechaLanzada,
         descripcion: descripcion,
         fechaVencimiento: fechaVencimiento,
+        idArchivo: this.state.file,
       };
       await editDocument('practicas', this.props.id, obj, 'Práctica');
     }
@@ -216,7 +235,15 @@ class FormPractica extends React.Component {
                   onProgress={this.handleProgress}
                 />
               </label>
-              {this.state.isFileUploaded && <p>Archivo adjuntado con éxito!</p>}
+              {this.state.file && (
+                <div>
+                  <p>1 Archivo adjunto</p>
+                  <div
+                    className="glyph-icon simple-icon-trash delete-action-icon"
+                    onClick={this.handleDeleteFile}
+                  />
+                </div>
+              )}
             </FormGroup>
             <ModalFooter>
               <Button color="primary" type="submit">
