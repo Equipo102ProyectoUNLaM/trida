@@ -98,9 +98,11 @@ class TabsDeMensajeria extends Component {
                         data={itemsReceive}
                         paginationMaxSize={3}
                         columns={dataReceiveTableColumns}
+                        sorted={[{ id: 1, desc: true }]}
                         defaultPageSize={10}
-                        showPageJump={true}
+                        showPageJump={itemsReceive.length > 0}
                         showPageSizeOptions={true}
+                        noDataText="No tienes mensajes recibidos"
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
                         getTrGroupProps={(state, rowInfo, column, instance) => {
@@ -125,11 +127,13 @@ class TabsDeMensajeria extends Component {
                         data={itemsSent}
                         paginationMaxSize={3}
                         columns={dataSentTableColumns}
+                        sorted={[{ id: 1, desc: true }]}
                         defaultPageSize={10}
-                        showPageJump={true}
+                        showPageJump={itemsSent.length > 0}
                         showPageSizeOptions={true}
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
+                        noDataText="No tienes mensajes enviados"
                         getTrGroupProps={(state, rowInfo, column, instance) => {
                           if (rowInfo !== undefined) {
                             return {

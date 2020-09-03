@@ -106,3 +106,11 @@ export const getFormattedDate = (date) => {
 export const getDate = (date, format) => {
   return moment(date, format ? format : 'DD/MM/YYYY').locale('es');
 };
+
+export const horasAgenda = () => {
+  const minTime = new Date();
+  minTime.setHours(8, 0, 0);
+  const maxTime = new Date();
+  maxTime.setHours(18, 0, 0);
+  return { minTime, maxTime };
+};

@@ -237,9 +237,11 @@ class FormPractica extends React.Component {
               </label>
               {this.state.file && (
                 <div>
-                  <p>1 Archivo adjunto</p>
+                  <div className="practica-file-element">
+                    <p>1 Archivo adjunto</p>
+                  </div>
                   <div
-                    className="glyph-icon simple-icon-trash delete-action-icon"
+                    className="glyph-icon simple-icon-trash delete-action-icon practica-file-element"
                     onClick={this.handleDeleteFile}
                   />
                 </div>
