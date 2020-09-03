@@ -53,13 +53,9 @@ class Mensajeria extends Component {
   }
 
   getMensajes = async () => {
-    const mensajesEnviados = await getCollection('mensajes', [
-      { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
-      { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'formal', operator: '==', id: false },
-    ]);
-    await this.dataMessageSentRenderer(mensajesEnviados);
-
+    this.setState({
+      itemsReceive: [],
+    });
     const mensajesRecibidos = await getCollection('mensajes', [
       {
         field: 'receptor',
@@ -71,6 +67,29 @@ class Mensajeria extends Component {
       { field: 'formal', operator: '==', id: false },
     ]);
     this.dataMessageReceivedRenderer(mensajesRecibidos);
+
+    const mensajesGeneralesRecibidos_1 = await getCollection('mensajes', [
+      { field: 'emisor.id', operator: '<', id: this.state.usuarioId },
+      { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      { field: 'general', operator: '==', id: true },
+      { field: 'formal', operator: '==', id: false },
+    ]);
+    this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_1);
+
+    const mensajesGeneralesRecibidos_2 = await getCollection('mensajes', [
+      { field: 'emisor.id', operator: '>', id: this.state.usuarioId },
+      { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      { field: 'general', operator: '==', id: true },
+      { field: 'formal', operator: '==', id: false },
+    ]);
+    this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_2);
+
+    const mensajesEnviados = await getCollection('mensajes', [
+      { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
+      { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      { field: 'formal', operator: '==', id: false },
+    ]);
+    await this.dataMessageSentRenderer(mensajesEnviados);
   };
 
   dataMessageSentRenderer = async (arrayDeObjetos) => {
@@ -84,6 +103,7 @@ class Mensajeria extends Component {
     arrayDeData = await this.getNameOfReceivers(arrayDeData);
     this.setState({
       itemsSent: arrayDeData,
+      isLoading: false,
     });
   };
 
@@ -96,9 +116,15 @@ class Mensajeria extends Component {
       remitente: elem.data.emisor.nombre,
       idRemitente: elem.data.emisor.id,
     }));
+
+    const data = this.state.itemsReceive;
+    if (arrayDeData.length > 0) {
+      arrayDeData.forEach(async (message) => {
+        data.push(message);
+      });
+    }
     this.setState({
-      itemsReceive: arrayDeData,
-      isLoading: false,
+      itemsReceive: data,
     });
   };
 

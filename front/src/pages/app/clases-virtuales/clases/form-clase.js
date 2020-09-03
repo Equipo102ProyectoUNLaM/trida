@@ -118,7 +118,6 @@ const FormClase = ({ toggleModal, onClaseAgregada, subject, user }) => {
           id="Tooltip-Switch"
           className="custom-switch custom-switch-primary"
           onChange={(value) => {
-            console.log(value);
             setSwitchVideollamada(value);
           }}
           checkedChildren="Si"
