@@ -21,21 +21,41 @@ class Register extends Component {
       isInvited: false,
     };
   }
-  onUserRegister = () => {
+  onUserRegister = (values) => {
     const userObj = {
-      email: this.state.email,
-      password: this.state.password,
+      email: values.email,
+      password: values.password,
       isInvited: this.state.isInvited,
     };
     if (!this.props.loading) {
-      if (this.state.email !== '' && this.state.password !== '') {
+      if (values.email !== '' && values.password !== '') {
         this.props.registerUser(userObj, this.props.history);
       } else {
-        enviarNotificacionError('Complete el nombre y apellido', 'Error');
+        enviarNotificacionError('Completá email y contraseña', 'Error');
       }
     }
     // En deploy a prod, descomentar esto y comentar lo de arriba
     //this.props.history.push('/en-construccion');
+  };
+
+  validateEmail = (value) => {
+    let error;
+    if (!value) {
+      error = 'Por favor, ingresá tu mail';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+      error = 'Dirección de mail inválida';
+    }
+    return error;
+  };
+
+  validatePassword = (value) => {
+    let error;
+    if (!value) {
+      error = 'Por favor, ingresá tu contraseña';
+    } else if (value.length < 4) {
+      error = 'El password debe ser mayor a 3 caracteres';
+    }
+    return error;
   };
 
   componentDidUpdate(prevProps) {
@@ -52,12 +72,9 @@ class Register extends Component {
     }
   }
 
-  handleChange = (event) => {
-    const { value, name } = event.target;
-    this.setState({ [name]: value });
-  };
-
   render() {
+    const { password, email } = this.state;
+    const initialValues = { email, password };
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -82,10 +99,13 @@ class Register extends Component {
               <CardTitle className="mb-4">
                 <IntlMessages id="user.register" />
               </CardTitle>
-              <Formik onSubmit={this.onUserRegister}>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={this.onUserRegister}
+              >
                 {({ errors, touched }) => (
-                  <Form className="av-tooltip tooltip-label-bottom">
-                    <FormGroup className="form-group has-float-label">
+                  <Form className="av-tooltip tooltip-label-right">
+                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
                       <Label>
                         <IntlMessages id="user.email" />
                       </Label>
@@ -93,7 +113,6 @@ class Register extends Component {
                         className="form-control"
                         name="email"
                         validate={this.validateEmail}
-                        onChange={this.handleChange}
                       />
                       {errors.email && touched.email && (
                         <div className="invalid-feedback d-block">
@@ -101,7 +120,7 @@ class Register extends Component {
                         </div>
                       )}
                     </FormGroup>
-                    <FormGroup className="form-group has-float-label">
+                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
                       <Label>
                         <IntlMessages id="user.password" />
                       </Label>
@@ -109,7 +128,6 @@ class Register extends Component {
                         className="form-control"
                         type="password"
                         name="password"
-                        onChange={this.handleChange}
                         validate={this.validatePassword}
                       />
                       {errors.password && touched.password && (

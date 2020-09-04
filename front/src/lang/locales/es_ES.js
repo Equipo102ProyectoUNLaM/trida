@@ -149,6 +149,7 @@ module.exports = {
   'messages.answer': 'RESPONDER MENSAJE',
   'messages.receiver': 'Destinatario',
   'messages.resend': 'REENVIAR MENSAJE',
-  /* 14. Inicio */
+
+    /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
 };
