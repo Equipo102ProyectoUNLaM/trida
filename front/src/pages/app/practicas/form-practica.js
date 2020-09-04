@@ -212,15 +212,7 @@ class FormPractica extends React.Component {
               )}
             </FormGroup>
             <FormGroup>
-              <label
-                className="practicas-adjuntar-button"
-                style={{
-                  color: 'white',
-                  padding: 10,
-                  borderRadius: 4,
-                  cursor: 'pointer',
-                }}
-              >
+              <label className="practicas-adjuntar-button">
                 Adjuntar Archivo
                 <FileUploader
                   hidden
