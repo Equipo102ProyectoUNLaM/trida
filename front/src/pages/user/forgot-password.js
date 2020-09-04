@@ -27,7 +27,7 @@ class ForgotPassword extends Component {
   validateEmail = (value) => {
     let error;
     if (!value) {
-      error = 'Por favor, ingrese su dirección de mail';
+      error = 'Por favor, ingresá tu dirección de mail';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
       error = 'Dirección de email inválida';
     }
@@ -38,7 +38,7 @@ class ForgotPassword extends Component {
     if (this.props.error) {
       NotificationManager.warning(
         this.props.error,
-        'Olvidó su password?',
+        'Olvidaste tu password?',
         3000,
         null,
         null,
@@ -47,7 +47,7 @@ class ForgotPassword extends Component {
     } else {
       if (!this.props.loading && this.props.forgotUserMail === 'success')
         NotificationManager.success(
-          'Por favor, verifique su mail',
+          'Por favor, verificá tu mail',
           'Recuperación de password exitosa',
           3000,
           null,
@@ -66,21 +66,18 @@ class ForgotPassword extends Component {
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
           <Card className="auth-card">
             <div className="position-relative image-side ">
-              <p className="text-white h2">třída</p>
+              <span className="logo-single" />
               <p className="white mb-0">
-                Por favor, use su mail para reiniciar su password.
+                Por favor, usá tu mail para reiniciar tu password.
                 <br />
-                Si todavía no es miembro, por favor{' '}
-                <NavLink to={`/register`} className="btn-link">
-                  regístrese
+                Si todavía no sos miembro, por favor{' '}
+                <NavLink to={`/user/register`} className="btn-link-inverse">
+                  registrate
                 </NavLink>
                 .
               </p>
             </div>
             <div className="form-side">
-              <NavLink to={`/`} className="white">
-                <span className="logo-single" />
-              </NavLink>
               <CardTitle className="mb-4">
                 <IntlMessages id="user.forgot-password" />
               </CardTitle>
@@ -90,8 +87,8 @@ class ForgotPassword extends Component {
                 onSubmit={this.onForgotPassword}
               >
                 {({ errors, touched }) => (
-                  <Form className="av-tooltip tooltip-label-bottom">
-                    <FormGroup className="form-group has-float-label">
+                  <Form className="av-tooltip tooltip-label-right">
+                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
                       <Label>
                         <IntlMessages id="user.email" />
                       </Label>

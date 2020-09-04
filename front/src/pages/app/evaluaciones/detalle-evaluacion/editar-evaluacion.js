@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { Row } from 'reactstrap';
-import { capitalize } from 'underscore.string';
+import { capitalizeString } from 'helpers/Utils';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 import { getDocumentWithSubCollection } from 'helpers/Firebase-db';
@@ -84,7 +84,7 @@ export default class EditarEvaluacion extends Component {
         <Row>
           <Colxx xxs="12">
             <HeaderDeModulo
-              text={capitalize(nombre)}
+              text={capitalizeString(nombre)}
               match={match}
               breadcrumb
             />

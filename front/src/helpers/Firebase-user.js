@@ -117,6 +117,5 @@ export const getUsersOfSubject = async (idMateria, currentUser) => {
 
     i++;
   }
-  console.log(datos);
   return datos;
 };
