@@ -9419,6 +9419,21 @@ div.rendered-file-browser{
   display: flex !important;
 }
 
+.practicas-list-label {
+  width: 20%;
+}
+
+.practicas-adjuntar-button {
+  background-color: $theme-color-1;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 50px;
+  cursor: 'pointer';
+}
+
+.practica-file-element {
+  display: inline-block;
+}
 // Home
 
 .row-home {

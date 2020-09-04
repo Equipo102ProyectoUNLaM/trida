@@ -22,12 +22,17 @@ class DataListView extends React.Component {
     this.props.onDelete(this.props.id);
   };
 
+  onDownloadFile = (file) => {
+    window.open(file, '_blank');
+  };
+
   render() {
     const {
       id,
       title,
       text1,
       text2,
+      file,
       isSelect,
       collect,
       onEditItem,
@@ -46,17 +51,29 @@ class DataListView extends React.Component {
             <div className="pl-2 d-flex flex-grow-1 min-width-zero">
               <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
                 <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                  <p className="list-item-heading mb-1 truncate">{title}</p>
+                  <p className="list-item-heading mb-1 truncate practicas-list-label">
+                    {title}
+                  </p>
                   {text1 && (
-                    <p className="mb-1 text-small w-15 w-sm-100">{text1}</p>
+                    <p className="mb-1 text-small w-sm-100 practicas-list-label">
+                      {text1}
+                    </p>
                   )}
                   {text2 && (
-                    <p className="mb-1 text-small w-15 w-sm-100">{text2}</p>
+                    <p className="mb-1 text-small w-sm-100 practicas-list-label">
+                      {text2}
+                    </p>
                   )}
                 </div>
               </NavLink>
-              <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
+              <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label">
                 <Row>
+                  {file !== undefined && (
+                    <div
+                      className="glyph-icon simple-icon-cloud-download edit-action-icon"
+                      onClick={() => this.onDownloadFile(file)}
+                    />
+                  )}
                   {onEditItem && (
                     <div
                       className="glyph-icon simple-icon-pencil edit-action-icon"
