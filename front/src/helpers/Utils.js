@@ -87,6 +87,10 @@ export const createRandomString = () => {
   return Math.random().toString(36).slice(-8);
 };
 
+export const capitalizeString = (cadena) => {
+  return cadena.charAt(0).toUpperCase() + cadena.slice(1).toLowerCase();
+};
+
 export const toDateTime = (secs) => {
   var t = new Date(1970, 0, 1);
   t.setSeconds(secs);

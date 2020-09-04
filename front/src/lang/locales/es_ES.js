@@ -105,7 +105,7 @@ module.exports = {
 
   /* 06.01.My Classes */
   'classes.add': 'AGREGAR CLASE',
-  'classes.edit': 'Editar',
+  'classes.edit': 'EDITAR CLASE',
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',

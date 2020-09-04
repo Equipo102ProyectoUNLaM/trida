@@ -149,7 +149,7 @@ class Inicio extends Component {
                         Si querés, podés enviarle un{' '}
                         <a
                           href="/app/comunicaciones/mensajeria"
-                          className="btn-link-inverse"
+                          className="btn-link"
                         >
                           mensaje{' '}
                         </a>
