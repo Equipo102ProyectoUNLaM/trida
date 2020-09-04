@@ -21,9 +21,9 @@ export async function getCollection(collection, filterBy, orderBy) {
     collectionRef = collectionRef.where(field, operator, id);
   });
 
-  if (orderBy) {
-    collectionRef = collectionRef.orderBy(orderBy.order, orderBy.orderCond);
-  }
+  (orderBy || []).forEach(({ order, orderCond }) => {
+    collectionRef = collectionRef.orderBy(order, orderCond);
+  });
 
   try {
     var allClasesSnapShot = await collectionRef.get();

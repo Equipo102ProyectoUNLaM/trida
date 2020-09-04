@@ -56,39 +56,61 @@ class Mensajeria extends Component {
     this.setState({
       itemsReceive: [],
     });
-    const mensajesRecibidos = await getCollection('mensajes', [
-      {
-        field: 'receptor',
-        operator: 'array-contains',
-        id: this.state.usuarioId,
-      },
-      { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'general', operator: '==', id: false },
-      { field: 'formal', operator: '==', id: false },
-    ]);
+    const mensajesRecibidos = await getCollection(
+      'mensajes',
+      [
+        {
+          field: 'receptor',
+          operator: 'array-contains',
+          id: this.state.usuarioId,
+        },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'general', operator: '==', id: false },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
+    );
     this.dataMessageReceivedRenderer(mensajesRecibidos);
 
-    const mensajesGeneralesRecibidos_1 = await getCollection('mensajes', [
-      { field: 'emisor.id', operator: '<', id: this.state.usuarioId },
-      { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'general', operator: '==', id: true },
-      { field: 'formal', operator: '==', id: false },
-    ]);
+    const mensajesGeneralesRecibidos_1 = await getCollection(
+      'mensajes',
+      [
+        { field: 'emisor.id', operator: '<', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'general', operator: '==', id: true },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [
+        { order: 'emisor.id', orderCond: 'asc' },
+        { order: 'fecha_creacion', orderCond: 'asc' },
+      ]
+    );
     this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_1);
 
-    const mensajesGeneralesRecibidos_2 = await getCollection('mensajes', [
-      { field: 'emisor.id', operator: '>', id: this.state.usuarioId },
-      { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'general', operator: '==', id: true },
-      { field: 'formal', operator: '==', id: false },
-    ]);
+    const mensajesGeneralesRecibidos_2 = await getCollection(
+      'mensajes',
+      [
+        { field: 'emisor.id', operator: '>', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'general', operator: '==', id: true },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [
+        { order: 'emisor.id', orderCond: 'asc' },
+        { order: 'fecha_creacion', orderCond: 'asc' },
+      ]
+    );
     this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_2);
 
-    const mensajesEnviados = await getCollection('mensajes', [
-      { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
-      { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'formal', operator: '==', id: false },
-    ]);
+    const mensajesEnviados = await getCollection(
+      'mensajes',
+      [
+        { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
+    );
     await this.dataMessageSentRenderer(mensajesEnviados);
   };
 
