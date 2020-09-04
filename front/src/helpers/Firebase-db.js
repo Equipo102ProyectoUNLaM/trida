@@ -426,12 +426,15 @@ export const getEventos = async (subject) => {
   let arrayDeEventos = [];
   const arrayDeClases = await getCollection('clases', [
     { field: 'idMateria', operator: '==', id: subject },
+    { field: 'activo', operator: '==', id: true },
   ]);
   const arrayDeEvaluaciones = await getCollection('evaluaciones', [
     { field: 'idMateria', operator: '==', id: subject },
+    { field: 'activo', operator: '==', id: true },
   ]);
   const arrayDePracticas = await getCollection('practicas', [
     { field: 'idMateria', operator: '==', id: subject },
+    { field: 'activo', operator: '==', id: true },
   ]);
   arrayDeClases.forEach((clase) => {
     const { id, data } = clase;
