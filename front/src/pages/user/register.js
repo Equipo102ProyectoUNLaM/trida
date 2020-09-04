@@ -31,7 +31,7 @@ class Register extends Component {
       if (this.state.email !== '' && this.state.password !== '') {
         this.props.registerUser(userObj, this.props.history);
       } else {
-        enviarNotificacionError('Completá email y password', 'Error');
+        enviarNotificacionError('Completá email y contraseña', 'Error');
       }
     }
     // En deploy a prod, descomentar esto y comentar lo de arriba

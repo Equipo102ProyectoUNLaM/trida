@@ -42,7 +42,7 @@ class Login extends Component {
   validatePassword = (value) => {
     let error;
     if (!value) {
-      error = 'Por favor, ingresá tu password';
+      error = 'Por favor, ingresá tu contraseña';
     } else if (value.length < 4) {
       error = 'El password debe ser mayor a 3 caracteres';
     }

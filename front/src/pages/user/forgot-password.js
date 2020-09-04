@@ -38,7 +38,7 @@ class ForgotPassword extends Component {
     if (this.props.error) {
       NotificationManager.warning(
         this.props.error,
-        'Olvidó su password?',
+        'Olvidaste tu password?',
         3000,
         null,
         null,
@@ -47,7 +47,7 @@ class ForgotPassword extends Component {
     } else {
       if (!this.props.loading && this.props.forgotUserMail === 'success')
         NotificationManager.success(
-          'Por favor, verifique su mail',
+          'Por favor, verificá tu mail',
           'Recuperación de password exitosa',
           3000,
           null,
