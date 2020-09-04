@@ -105,7 +105,7 @@ module.exports = {
 
   /* 06.01.My Classes */
   'classes.add': 'AGREGAR CLASE',
-  'classes.edit': 'Editar',
+  'classes.edit': 'EDITAR CLASE',
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
@@ -149,6 +149,6 @@ module.exports = {
   'messages.answer': 'RESPONDER MENSAJE',
   'messages.receiver': 'Destinatario',
   'messages.resend': 'REENVIAR MENSAJE',
-    /* 14. Inicio */
+  /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
 };

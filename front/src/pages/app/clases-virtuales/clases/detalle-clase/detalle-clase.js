@@ -4,7 +4,6 @@ import TabsDeClase from './tabs-de-clase';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { capitalize } from 'underscore.string';
 import { getDocument } from 'helpers/Firebase-db';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 
@@ -74,11 +73,7 @@ class DetalleClase extends Component {
       <Fragment>
         <Row>
           <Colxx xxs="12">
-            <HeaderDeModulo
-              text={capitalize(nombre)}
-              match={match}
-              breadcrumb
-            />
+            <HeaderDeModulo text={nombre} match={match} breadcrumb />
           </Colxx>
         </Row>
         <TabsDeClase
