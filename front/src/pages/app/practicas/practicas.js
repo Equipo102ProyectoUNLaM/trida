@@ -30,6 +30,7 @@ class Practica extends Component {
       idItemSelected: null,
       practicaId: '',
       idMateria: this.props.subject.id,
+      modalUploadFileOpen: false,
     };
   }
 
@@ -92,6 +93,18 @@ class Practica extends Component {
     this.toggleDeleteModal();
   };
 
+  toggleUploadFileModal = (id) => {
+    this.setState({
+      modalUploadFileOpen: !this.state.modalUploadFileOpen,
+      idItemSelected: id,
+    });
+  };
+
+  onFileUploaded = () => {
+    this.toggleUploadFileModal();
+    //TODO fuardar correccion
+  };
+
   deletePractice = async () => {
     await logicDeleteDocument('practicas', this.state.practicaId, 'Práctica');
     this.setState({
@@ -145,6 +158,7 @@ class Practica extends Component {
       idItemSelected,
       isLoading,
       items,
+      modalUploadFileOpen,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -191,6 +205,9 @@ class Practica extends Component {
                     rol === ROLES.Docente ? this.toggleEditModal : null
                   }
                   onDelete={rol === ROLES.Docente ? this.onDelete : null}
+                  onUploadFile={
+                    rol === ROLES.Alumno ? this.toggleUploadFileModal : null
+                  }
                   navTo="#"
                   collect={collect}
                   calendario={rol === ROLES.Docente ? true : false}
@@ -209,6 +226,20 @@ class Practica extends Component {
                 onPracticaOperacion={this.onPracticaEditada}
                 textConfirm="Editar"
                 operationType="edit"
+                id={idItemSelected}
+              />
+            </ModalGrande>
+          )}
+          {modalUploadFileOpen && (
+            <ModalGrande
+              modalOpen={modalUploadFileOpen}
+              toggleModal={this.toggleUploadFileModal}
+              modalHeader="activity.edit"
+            >
+              <FormPractica
+                toggleModal={this.toggleUploadFileModal}
+                onPracticaOperacion={this.onFileUploaded}
+                textConfirm="Subir Práctica"
                 id={idItemSelected}
               />
             </ModalGrande>

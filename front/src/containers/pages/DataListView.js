@@ -39,6 +39,7 @@ class DataListView extends React.Component {
       navTo,
       calendario,
       onDelete,
+      onUploadFile,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -72,6 +73,12 @@ class DataListView extends React.Component {
                     <div
                       className="glyph-icon simple-icon-cloud-download edit-action-icon"
                       onClick={() => this.onDownloadFile(file)}
+                    />
+                  )}
+                  {onUploadFile && (
+                    <div
+                      className="glyph-icon simple-icon-upload edit-action-icon"
+                      onClick={() => onUploadFile(id)}
                     />
                   )}
                   {onEditItem && (
