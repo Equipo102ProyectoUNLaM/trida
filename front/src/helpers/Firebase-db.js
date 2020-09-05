@@ -451,20 +451,12 @@ export const getEventos = async (subject) => {
     const nombre = CryptoJS.AES.decrypt(data.nombre, secretKey).toString(
       CryptoJS.enc.Utf8
     );
-    const fechaPublicacion = CryptoJS.AES.decrypt(
-      data.fecha_publicacion,
-      secretKey
-    ).toString(CryptoJS.enc.Utf8);
-    const fechaFinalizacion = CryptoJS.AES.decrypt(
-      data.fecha_finalizacion,
-      secretKey
-    ).toString(CryptoJS.enc.Utf8);
     arrayDeEventos.push({
       id,
       tipo: 'evaluaciones',
       title: 'Evaluación: ' + nombre,
-      start: new Date(fechaPublicacion),
-      end: new Date(fechaFinalizacion),
+      start: new Date(data.fecha_publicacion.toDate()),
+      end: new Date(data.fecha_finalizacion.toDate()),
     });
   });
   arrayDePracticas.forEach((practica) => {
