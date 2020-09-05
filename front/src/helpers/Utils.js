@@ -123,6 +123,7 @@ export const getDateTimeStringFromDate = (date, format) => {
   return moment(new Date(date.toDate())).format(
     format ? format : 'DD/MM/YYYY - HH:mm'
   );
+};
 
 export const horasAgenda = () => {
   const minTime = new Date();
@@ -130,5 +131,4 @@ export const horasAgenda = () => {
   const maxTime = new Date();
   maxTime.setHours(18, 0, 0);
   return { minTime, maxTime };
-
 };
