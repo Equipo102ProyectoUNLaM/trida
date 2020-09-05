@@ -16,6 +16,7 @@ Tabla de Contenidos
 11. Evaluaciones
 12. Contenidos
 13. Mensajería
+14. Inicio
 */
 
 module.exports = {
@@ -52,7 +53,7 @@ module.exports = {
   'menu.app': 'Inicio',
   'menu.dashboards': 'Tableros',
   'menu.inicio': 'Inicio',
-  'menu.start': '¡Hola!',
+  'menu.start': '¡Bienvenid@ a třída!',
   'menu.second-menu': 'Segundo menú',
   'menu.second': 'Segundo',
   'menu.ui': 'IU',
@@ -104,7 +105,7 @@ module.exports = {
 
   /* 06.01.My Classes */
   'classes.add': 'AGREGAR CLASE',
-  'classes.edit': 'Editar',
+  'classes.edit': 'EDITAR CLASE',
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
@@ -148,4 +149,7 @@ module.exports = {
   'messages.answer': 'RESPONDER MENSAJE',
   'messages.receiver': 'Destinatario',
   'messages.resend': 'REENVIAR MENSAJE',
+
+  /* 14. Inicio */
+  'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
 };

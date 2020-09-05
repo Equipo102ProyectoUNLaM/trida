@@ -87,6 +87,10 @@ export const createRandomString = () => {
   return Math.random().toString(36).slice(-8);
 };
 
+export const capitalizeString = (cadena) => {
+  return cadena.charAt(0).toUpperCase() + cadena.slice(1).toLowerCase();
+};
+
 export const toDateTime = (secs) => {
   var t = new Date(1970, 0, 1);
   t.setSeconds(secs);
@@ -105,4 +109,12 @@ export const getFormattedDate = (date) => {
  un moment de la fecha */
 export const getDate = (date, format) => {
   return moment(date, format ? format : 'DD/MM/YYYY').locale('es');
+};
+
+export const horasAgenda = () => {
+  const minTime = new Date();
+  minTime.setHours(8, 0, 0);
+  const maxTime = new Date();
+  maxTime.setHours(18, 0, 0);
+  return { minTime, maxTime };
 };
