@@ -1,5 +1,12 @@
 import React, { Component, Fragment } from 'react';
-import { Row, Card, CardBody, CardTitle, Button } from 'reactstrap';
+import {
+  Row,
+  Card,
+  CardBody,
+  CardTitle,
+  Button,
+  ModalFooter,
+} from 'reactstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
@@ -278,13 +285,13 @@ class RealizarEvaluacion extends Component {
                 </Row>
               ))}
             </div>
-            <div className="button-group row mt-4">
+            <ModalFooter>
               <Button color="primary" onClick={this.finalizarEvaluacion}>
                 FINALIZAR EVALUACION
               </Button>
 
               <Button color="secondary">ABANDONAR</Button>
-            </div>
+            </ModalFooter>
           </CardBody>
         </Card>
         {modalFinishOpen && (

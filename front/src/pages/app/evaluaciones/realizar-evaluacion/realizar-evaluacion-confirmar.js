@@ -11,7 +11,11 @@ import {
   ModalFooter,
 } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { getFormattedDate, getFormattedTime } from 'helpers/Utils';
+import {
+  getFormattedDate,
+  getFormattedTime,
+  getDateTimeStringFromDate,
+} from 'helpers/Utils';
 
 class ModalRealizarEvaluacion extends Component {
   render() {
@@ -42,14 +46,14 @@ class ModalRealizarEvaluacion extends Component {
                       <span className="text-primary">{subject.name}</span>.{' '}
                       <br></br>
                       La evaluación finalizará el{' '}
-                      {getFormattedDate(
+                      {getDateTimeStringFromDate(
                         evaluacion.data.base.fecha_finalizacion,
-                        'YYYY-MM-DD, HH:mm'
+                        'DD/MM/YYYY'
                       )}{' '}
                       a las{' '}
-                      {getFormattedTime(
+                      {getDateTimeStringFromDate(
                         evaluacion.data.base.fecha_finalizacion,
-                        'YYYY-MM-DD, HH:mm'
+                        'HH:mm'
                       )}{' '}
                       hs. Luego de esa fecha y horario, no podrás realizarla.
                       <h4 className="mb-4 mt-4 text-center">¡IMPORTANTE!</h4>
