@@ -82,7 +82,7 @@ class FormPractica extends React.Component {
       isFileUploaded: true,
     });
     storage
-      .ref(this.props.subject.id + '/practicas/')
+      .ref('materias/' + this.props.subject.id + '/practicas/')
       .child(filename)
       .getDownloadURL()
       .then((url) => this.setState({ fileURL: url }));
@@ -90,7 +90,7 @@ class FormPractica extends React.Component {
 
   handleDeleteFile = async () => {
     storage
-      .ref(this.props.subject.id + '/practicas/')
+      .ref('materias/' + this.props.subject.id + '/practicas/')
       .child(this.state.file)
       .delete();
     this.setState({
@@ -219,7 +219,7 @@ class FormPractica extends React.Component {
                   name="archivo"
                   randomizeFilename
                   storageRef={storage.ref(
-                    this.props.subject.id + '/practicas/'
+                    'materias/' + this.props.subject.id + '/practicas/'
                   )}
                   onUploadStart={this.handleUploadStart}
                   onUploadError={this.handleUploadError}
