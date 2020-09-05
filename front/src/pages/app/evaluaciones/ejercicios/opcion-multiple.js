@@ -7,6 +7,7 @@ class OpcionMultiple extends React.Component {
 
     this.state = {
       consigna: '',
+      respuestas: [],
       opciones: [
         {
           opcion: '',
@@ -48,6 +49,19 @@ class OpcionMultiple extends React.Component {
     this.props.onEjercicioChange({ opciones: list }, this.props.ejercicioId);
   };
 
+  handleResponseCheckBoxChange = (event, index) => {
+    const { checked } = event.target;
+    let rtas = this.state.respuestas;
+    rtas.push({ indiceOpcion: index, respuesta: checked });
+    this.setState({
+      respuestas: rtas,
+    });
+    this.props.onEjercicioChange(
+      { indiceOpcion: index, respuesta: checked },
+      this.props.value.numero
+    );
+  };
+
   handleAddOpcion = (e) => {
     let newOpciones = this.state.opciones;
     let opcion = {
@@ -69,9 +83,9 @@ class OpcionMultiple extends React.Component {
   };
 
   render() {
-    let { opciones, consigna } = this.state;
+    let { opciones, consigna, respuestas } = this.state;
 
-    const { preview } = this.props;
+    const { preview, resolve } = this.props;
 
     return (
       <Fragment>
@@ -83,7 +97,7 @@ class OpcionMultiple extends React.Component {
             {opciones.map((op, index) => (
               <Row key={'row' + index} className="opcionMultipleRow">
                 <Input
-                  name="verdadera"
+                  name="respuesta"
                   className="margin-auto checkbox"
                   type="checkbox"
                 />
@@ -95,7 +109,34 @@ class OpcionMultiple extends React.Component {
           </div>
         )}
 
-        {!preview && (
+        {resolve && (
+          <div>
+            <div className="mb-2">
+              <Label>{consigna}</Label>
+            </div>
+            {opciones.map((op, index) => (
+              <Row key={'row' + index} className="opcionMultipleRow">
+                <Input
+                  name="verdadera"
+                  className="margin-auto checkbox"
+                  type="checkbox"
+                  onChange={(e) => this.handleResponseCheckBoxChange(e, index)}
+                />
+                <Label className="opcionMultipleInput margin-auto">
+                  {op.opcion}
+                </Label>
+              </Row>
+            ))}{' '}
+            {this.props.submitted &&
+            !respuestas.find((x) => x.respuesta === true) ? (
+              <div className="invalid-feedback d-block">
+                Al menos una opción seleccionada es requerida
+              </div>
+            ) : null}
+          </div>
+        )}
+
+        {!preview && !resolve && (
           <div>
             <div className="rta-libre-container">
               <FormGroup className="error-l-75">

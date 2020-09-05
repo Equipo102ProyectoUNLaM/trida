@@ -101,14 +101,28 @@ export const toDateTime = (secs) => {
 
 /*  Esta función recibe un string con una fecha en cualquier formato y devuelve
  un string de la fecha en formato DD/MM/YYYY */
-export const getFormattedDate = (date) => {
-  return moment(date).locale('es').format('DD/MM/YYYY');
+export const getFormattedDate = (date, format, formatTo) => {
+  return moment(date, format ? format : null)
+    .locale('es')
+    .format(formatTo ? formatTo : 'DD/MM/YYYY');
+};
+
+export const getFormattedTime = (date, format, formatTo) => {
+  return moment(date, format ? format : null)
+    .locale('es')
+    .format(formatTo ? formatTo : 'HH:mm');
 };
 
 /*  Esta función recibe un string con una fecha, y opcionalmente el formato en el que esta, y devuelve
  un moment de la fecha */
 export const getDate = (date, format) => {
   return moment(date, format ? format : 'DD/MM/YYYY').locale('es');
+};
+
+export const getDateTimeStringFromDate = (date, format) => {
+  return moment(new Date(date.toDate())).format(
+    format ? format : 'DD/MM/YYYY - HH:mm'
+  );
 };
 
 export const horasAgenda = () => {

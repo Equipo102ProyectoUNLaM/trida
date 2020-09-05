@@ -19,8 +19,14 @@ import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import { connect } from 'react-redux';
+import {
+  getDateWithFormat,
+  getCurrentTime,
+  getDateTimeStringFromDate,
+} from 'helpers/Utils';
 
-export default class ModalVistaPreviaEvaluacion extends Component {
+class ModalVistaPreviaEvaluacion extends Component {
   constructor(props) {
     super(props);
 
@@ -46,13 +52,17 @@ export default class ModalVistaPreviaEvaluacion extends Component {
     );
 
     const { id, data, subCollection } = evaluacion;
-    const { nombre } = data;
+    const { nombre, descripcion, fecha_finalizacion } = data;
 
     const ejerciciosDesencriptados = desencriptarEjercicios(subCollection);
 
     this.setState({
       evaluacionId: id,
       nombre: CryptoJS.AES.decrypt(nombre, secretKey).toString(
+        CryptoJS.enc.Utf8
+      ),
+      fecha_finalizacion: fecha_finalizacion,
+      descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
       ejercicios: ejerciciosDesencriptados.sort(
@@ -63,7 +73,13 @@ export default class ModalVistaPreviaEvaluacion extends Component {
   };
 
   render() {
-    const { nombre, isLoading, ejercicios } = this.state;
+    const {
+      nombre,
+      isLoading,
+      ejercicios,
+      descripcion,
+      fecha_finalizacion,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -72,17 +88,57 @@ export default class ModalVistaPreviaEvaluacion extends Component {
         isOpen={this.props.isOpen}
         toggle={this.props.toggle}
       >
-        <ModalHeader>{nombre}</ModalHeader>
+        <ModalHeader>Vista previa de evaluación {nombre}</ModalHeader>
         <ModalBody className="modal-ejercicios-body">
+          <Row className="mb-4">
+            <Colxx xxs="12">
+              <Card>
+                <CardBody>
+                  <CardTitle>
+                    <Row>
+                      <Colxx xxs="8" xs="8" lg="8" className="col-inline">
+                        <h3 className="mb-4 text-primary margin-auto margin-left-0">
+                          {nombre}
+                        </h3>
+                      </Colxx>
+                      <Colxx xxs="4" xs="4" lg="4">
+                        <Row>
+                          <h5>
+                            Alumno/a : {this.props.nombre} {this.props.apellido}
+                          </h5>
+                        </Row>
+                        <Row>
+                          <h5>
+                            Fecha : {getDateWithFormat()}&nbsp; Hora:{' '}
+                            {getCurrentTime()} hs
+                          </h5>
+                        </Row>
+                      </Colxx>
+                    </Row>
+                  </CardTitle>
+                  <div className="mb-4">
+                    <h5>{descripcion}</h5>
+                  </div>
+                  <div>
+                    <h5 className="text-red">
+                      Fecha y hora de finalizacion:{' '}
+                      {getDateTimeStringFromDate(fecha_finalizacion)} hs
+                    </h5>
+                  </div>
+                </CardBody>
+              </Card>
+            </Colxx>
+          </Row>
+
           {ejercicios.map((ejercicio, index) => (
             <Row className="mb-4" key={index + 'ejer'}>
               <Colxx xxs="12">
                 <Card>
                   <CardBody>
                     <CardTitle>
-                      <h6 className="mb-4">
+                      <h5 className="mb-4">
                         Ejercicio N°{ejercicio.data.numero}
-                      </h6>
+                      </h5>
                     </CardTitle>
                     {ejercicio.data.tipo === TIPO_EJERCICIO.respuesta_libre && (
                       <RespuestaLibre
@@ -125,3 +181,11 @@ export default class ModalVistaPreviaEvaluacion extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ authUser }) => {
+  const { userData } = authUser;
+  const { nombre, apellido } = userData;
+  return { nombre, apellido };
+};
+
+export default connect(mapStateToProps)(ModalVistaPreviaEvaluacion);
