@@ -3,22 +3,22 @@ import { Row, Card, CardBody, CardTitle, CardImg, CardText } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
+import { getFormattedDate } from 'helpers/Utils';
 
-const ListaConImagen = ({ item, imagen, collect, navTo }) => {
+const ListaConImagen = ({ item, imagen, collect, navTo, onEdit, onDelete }) => {
   const { data } = item;
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={item.id}>
       <ContextMenuTrigger id="menu_id" data={item.id} collect={collect}>
-        <NavLink
-          to={{
-            pathname: `${navTo}`,
-            navProps: {
-              itemId: item.id,
-            },
-          }}
-          className="w-40 w-sm-100"
-        >
-          <Card className="card-img-top">
+        <Card className="card-img-top">
+          <NavLink
+            to={{
+              pathname: `${navTo}`,
+              navProps: {
+                itemId: item.id,
+              },
+            }}
+          >
             <div className="position-relative">
               <CardImg
                 top
@@ -27,7 +27,17 @@ const ListaConImagen = ({ item, imagen, collect, navTo }) => {
                 src={imagen}
               />
             </div>
-            <CardBody className="card-body">
+          </NavLink>
+          <CardBody className="card-body">
+            <NavLink
+              to={{
+                pathname: `${navTo}`,
+                navProps: {
+                  itemId: item.id,
+                },
+              }}
+              className="w-40 w-sm-100"
+            >
               <Row>
                 <Colxx xxs="10" className="mb-3">
                   <CardTitle className="mb-1">{data.nombre}</CardTitle>
@@ -35,13 +45,28 @@ const ListaConImagen = ({ item, imagen, collect, navTo }) => {
                     {data.descripcion}
                   </CardText>
                   <CardText className="text-muted text-medium mb-0 font-weight-semibold">
-                    {data.fecha}
+                    {getFormattedDate(data.fecha)}
                   </CardText>
                 </Colxx>
               </Row>
-            </CardBody>
-          </Card>
-        </NavLink>
+            </NavLink>
+
+            <Row className="button-group">
+              {onEdit && (
+                <div
+                  className="glyph-icon simple-icon-pencil edit-action-icon"
+                  onClick={() => onEdit(item.id)}
+                />
+              )}
+              {onDelete && (
+                <div
+                  className="glyph-icon simple-icon-trash delete-action-icon"
+                  onClick={() => onDelete(item.id)}
+                />
+              )}
+            </Row>
+          </CardBody>
+        </Card>
       </ContextMenuTrigger>
     </Colxx>
   );

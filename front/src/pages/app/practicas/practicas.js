@@ -10,6 +10,7 @@ import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { getFormattedDate } from 'helpers/Utils';
+import { storage } from 'helpers/Firebase';
 
 function collect(props) {
   return { data: props.data };
@@ -108,7 +109,16 @@ class Practica extends Component {
     this.getPracticas(this.state.idMateria);
   };
 
-  dataListRenderer(arrayDeObjetos) {
+  async dataListRenderer(arrayDeObjetos) {
+    for (const practica of arrayDeObjetos) {
+      if (
+        practica.data.idArchivo !== undefined &&
+        practica.data.idArchivo !== ''
+      ) {
+        practica.data.url = await this.getFileURL(practica.data.idArchivo);
+        console.log(practica.data);
+      }
+    }
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
@@ -118,6 +128,14 @@ class Practica extends Component {
       practicaId: '',
     });
   }
+
+  getFileURL = async (archivo) => {
+    const url = await storage
+      .ref(this.state.idMateria + '/practicas/')
+      .child(archivo)
+      .getDownloadURL();
+    return url;
+  };
 
   render() {
     const {
@@ -167,6 +185,7 @@ class Practica extends Component {
                     'Fecha de entrega: ' +
                     getFormattedDate(practica.data.fechaVencimiento)
                   }
+                  file={practica.data.url}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={
                     rol === ROLES.Docente ? this.toggleEditModal : null

@@ -5,8 +5,14 @@ import { getCollection } from 'helpers/Firebase-db';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ModalGrande from 'containers/pages/ModalGrande';
+import ModalChico from 'containers/pages/ModalChico';
 import FormMensaje from './form-mensaje';
 import { getUsernameById } from 'helpers/Firebase-db';
+import Select from 'react-select';
+import { getUsersOfSubject } from 'helpers/Firebase-user';
+import { Colxx } from 'components/common/CustomBootstrap';
+import { Row, ModalFooter, Button, Input } from 'reactstrap';
+import { addDocument } from 'helpers/Firebase-db';
 
 class Mensajeria extends Component {
   constructor(props) {
@@ -15,7 +21,12 @@ class Mensajeria extends Component {
     this.state = {
       itemsSent: [],
       itemsReceive: [],
+      datosUsuarios: [],
+      selectedOptions: [],
       modalMessageOpen: false,
+      modalEnviarOpen: false,
+      modalResponderOpen: false,
+      modalReenviarOpen: false,
       materiaId: this.props.subject.id,
       usuarioId: this.props.user,
       isLoading: true,
@@ -24,35 +35,84 @@ class Mensajeria extends Component {
       fechaMensaje: '',
       botonDetalle: 'Responder',
       usuariosMail: '',
-      modalEnviarOpen: false,
+      idUsuarioAResponder: '',
       esEnviado: false,
+      idMensajeAResponder: '',
     };
   }
 
-  getMensajes = async () => {
-    const mensajesEnviados = await getCollection('mensajes', [
-      { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
-      { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'formal', operator: '==', id: false },
-    ]);
-    await this.dataMessageSentRenderer(mensajesEnviados);
-
-    const mensajesRecibidos = await getCollection('mensajes', [
-      {
-        field: 'receptor',
-        operator: 'array-contains',
-        id: this.state.usuarioId,
-      },
-      { field: 'idMateria', operator: '==', id: this.state.materiaId },
-      { field: 'general', operator: '==', id: false },
-      { field: 'formal', operator: '==', id: false },
-    ]);
-    this.dataMessageReceivedRenderer(mensajesRecibidos);
-  };
-
-  componentDidMount() {
+  async componentDidMount() {
+    const datos = await getUsersOfSubject(
+      this.state.materiaId,
+      this.state.usuarioId
+    );
+    this.setState({
+      datosUsuarios: datos,
+    });
     this.getMensajes();
   }
+
+  getMensajes = async () => {
+    this.setState({
+      itemsReceive: [],
+    });
+    const mensajesRecibidos = await getCollection(
+      'mensajes',
+      [
+        {
+          field: 'receptor',
+          operator: 'array-contains',
+          id: this.state.usuarioId,
+        },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'general', operator: '==', id: false },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
+    );
+    this.dataMessageReceivedRenderer(mensajesRecibidos);
+
+    const mensajesGeneralesRecibidos_1 = await getCollection(
+      'mensajes',
+      [
+        { field: 'emisor.id', operator: '<', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'general', operator: '==', id: true },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [
+        { order: 'emisor.id', orderCond: 'asc' },
+        { order: 'fecha_creacion', orderCond: 'asc' },
+      ]
+    );
+    this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_1);
+
+    const mensajesGeneralesRecibidos_2 = await getCollection(
+      'mensajes',
+      [
+        { field: 'emisor.id', operator: '>', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'general', operator: '==', id: true },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [
+        { order: 'emisor.id', orderCond: 'asc' },
+        { order: 'fecha_creacion', orderCond: 'asc' },
+      ]
+    );
+    this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_2);
+
+    const mensajesEnviados = await getCollection(
+      'mensajes',
+      [
+        { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+        { field: 'formal', operator: '==', id: false },
+      ],
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
+    );
+    await this.dataMessageSentRenderer(mensajesEnviados);
+  };
 
   dataMessageSentRenderer = async (arrayDeObjetos) => {
     let arrayDeData = arrayDeObjetos.map((elem) => ({
@@ -65,6 +125,7 @@ class Mensajeria extends Component {
     arrayDeData = await this.getNameOfReceivers(arrayDeData);
     this.setState({
       itemsSent: arrayDeData,
+      isLoading: false,
     });
   };
 
@@ -75,10 +136,17 @@ class Mensajeria extends Component {
       contenido: elem.data.contenido,
       fecha_creacion: elem.data.fecha_creacion,
       remitente: elem.data.emisor.nombre,
+      idRemitente: elem.data.emisor.id,
     }));
+
+    const data = this.state.itemsReceive;
+    if (arrayDeData.length > 0) {
+      arrayDeData.forEach(async (message) => {
+        data.push(message);
+      });
+    }
     this.setState({
-      itemsReceive: arrayDeData,
-      isLoading: false,
+      itemsReceive: data,
     });
   };
 
@@ -104,13 +172,17 @@ class Mensajeria extends Component {
     let botonMensaje = 'Responder';
     let usuarios = null;
     let enviado = false;
+    let idUsuarioAResponder = '';
+
     if (rowInfo.original.destinatarios) {
       botonMensaje = 'Reenviar';
       usuarios = rowInfo.original.destinatarios;
       enviado = true;
     } else {
       usuarios = rowInfo.original.remitente;
+      idUsuarioAResponder = rowInfo.original.idRemitente;
     }
+
     this.setState({
       asuntoMensaje: rowInfo.original.asunto,
       contenidoMensaje: rowInfo.original.contenido,
@@ -118,6 +190,8 @@ class Mensajeria extends Component {
       botonDetalle: botonMensaje,
       usuariosMail: usuarios,
       esEnviado: enviado,
+      idUsuarioAResponder: idUsuarioAResponder,
+      idMensajeAResponder: rowInfo.original.id,
     });
     this.toggleDetailModal();
   };
@@ -130,6 +204,8 @@ class Mensajeria extends Component {
   toggleModal = () => {
     this.setState({
       modalEnviarOpen: !this.state.modalEnviarOpen,
+      modalMessageOpen: false,
+      modalResponderOpen: false,
     });
   };
 
@@ -139,19 +215,85 @@ class Mensajeria extends Component {
     });
   };
 
+  toggleResponderModal = () => {
+    this.setState({
+      modalResponderOpen: !this.state.modalResponderOpen,
+      modalEnviarOpen: !this.state.modalEnviarOpen,
+    });
+  };
+
+  toggleReenviarModal = () => {
+    this.setState({
+      modalReenviarOpen: !this.state.modalReenviarOpen,
+      modalMessageOpen: false,
+    });
+  };
+
+  handleChangeMulti = (selectedOptions) => {
+    this.setState({ selectedOptions });
+  };
+
+  handleSubmit = async (event) => {
+    event.preventDefault();
+
+    let receptores = this.state.selectedOptions.map(({ value }) => value);
+
+    const msg = {
+      emisor: {
+        id: this.state.usuarioId,
+        nombre: this.props.nombre + ' ' + this.props.apellido,
+      },
+      receptor: receptores,
+      contenido: this.state.contenidoMensaje,
+      asunto: this.state.asuntoMensaje,
+      formal: false,
+      general: false,
+      idMateria: this.state.materiaId,
+      responde_a: this.state.idMensajeAResponder
+        ? this.state.idMensajeAResponder
+        : '',
+    };
+    //guardar msj en bd
+    await addDocument(
+      'mensajes',
+      msg,
+      this.props.user,
+      'Mensaje reenviado',
+      'Mensaje reenviado exitosamente',
+      'Error al reenviar el mensaje'
+    );
+
+    this.toggleReenviarModal();
+    this.setState({
+      selectedOptions: [],
+    });
+    this.getMensajes();
+  };
+
+  handleChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
+
   render() {
     const {
       isLoading,
       itemsSent,
       itemsReceive,
       modalEnviarOpen,
+      modalMessageOpen,
+      modalReenviarOpen,
+      modalResponderOpen,
       contenidoMensaje,
       asuntoMensaje,
-      modalMessageOpen,
       fechaMensaje,
       botonDetalle,
       usuariosMail,
       esEnviado,
+      idUsuarioAResponder,
+      idMensajeAResponder,
+      datosUsuarios,
+      selectedOptions,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -166,11 +308,20 @@ class Mensajeria extends Component {
           <ModalGrande
             modalOpen={modalEnviarOpen}
             toggleModal={this.toggleModal}
-            modalHeader="messages.new"
+            modalHeader={
+              modalResponderOpen ? 'messages.answer' : 'messages.new'
+            }
           >
             <FormMensaje
               toggleModal={this.toggleModal}
               onMensajeEnviado={this.onMensajeEnviado}
+              mensajeAResponder={contenidoMensaje}
+              usuarioAResponder={usuariosMail}
+              idUsuarioAResponder={idUsuarioAResponder}
+              esResponder={modalResponderOpen}
+              asuntoAResponder={asuntoMensaje}
+              idMensajeAResponder={idMensajeAResponder}
+              datosUsuarios={datosUsuarios}
             />
           </ModalGrande>
           <TabsDeMensajeria
@@ -189,7 +340,53 @@ class Mensajeria extends Component {
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}
               isOpen={modalMessageOpen}
+              onConfirm={
+                esEnviado ? this.toggleReenviarModal : this.toggleResponderModal
+              }
             />
+          )}
+          {this.state.modalReenviarOpen && (
+            <ModalChico
+              modalOpen={modalReenviarOpen}
+              toggleModal={this.toggleReenviarModal}
+              modalHeader={'messages.resend'}
+            >
+              <Row>
+                <Colxx xxs="12" md="12">
+                  <label>Mensaje a reenviar</label>
+                  <Input
+                    value={contenidoMensaje}
+                    onChange={this.handleChange}
+                    className="resend-message"
+                    type="textarea"
+                  />
+                  <label>Destinatarios</label>
+                  <Select
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    placeholder="Seleccione los destinatarios"
+                    name="form-field-name"
+                    value={selectedOptions}
+                    onChange={this.handleChangeMulti}
+                    options={datosUsuarios}
+                    required
+                  />
+                </Colxx>
+              </Row>
+              <ModalFooter>
+                <Button
+                  color="primary"
+                  disabled={selectedOptions.length === 0}
+                  onClick={this.handleSubmit}
+                >
+                  Enviar
+                </Button>
+                <Button color="secondary" onClick={this.toggleReenviarModal}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalChico>
           )}
         </div>
       </Fragment>
@@ -198,9 +395,10 @@ class Mensajeria extends Component {
 }
 
 const mapStateToProps = ({ authUser, seleccionCurso }) => {
-  const { user } = authUser;
+  const { user, userData } = authUser;
+  const { nombre, apellido } = userData;
   const { subject } = seleccionCurso;
-  return { user, subject };
+  return { user, subject, nombre, apellido };
 };
 
 export default connect(mapStateToProps)(Mensajeria);
