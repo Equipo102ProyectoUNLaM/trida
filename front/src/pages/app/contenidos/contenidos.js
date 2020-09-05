@@ -52,7 +52,9 @@ class Contenidos extends Component {
     let arrayFiles = [];
     try {
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      const listRef = storage.ref(this.state.subjectId + '/contenidos');
+      const listRef = storage.ref(
+        'materias/' + this.state.subjectId + '/contenidos'
+      );
       // Obtenemos las referencias de carpetas y archivos
       await listRef.listAll().then(async (result) => {
         //Carpetas
@@ -68,7 +70,7 @@ class Contenidos extends Component {
               {
                 key:
                   folderRef.fullPath.replace(
-                    this.state.subjectId + '/contenidos/',
+                    'materias/' + this.state.subjectId + '/contenidos/',
                     ''
                   ) + '/',
               },
@@ -91,7 +93,7 @@ class Contenidos extends Component {
             await res.getDownloadURL().then(async (url) => {
               let obj = {
                 key: metadata.fullPath.replace(
-                  this.state.subjectId + '/contenidos/',
+                  'materias/' + this.state.subjectId + '/contenidos/',
                   ''
                 ),
                 modified: Moment(metadata.updated),
@@ -138,7 +140,7 @@ class Contenidos extends Component {
               {
                 key:
                   folderRef.fullPath.replace(
-                    this.state.subjectId + '/contenidos/',
+                    'materias/' + this.state.subjectId + '/contenidos/',
                     ''
                   ) + '/',
               },
@@ -161,7 +163,10 @@ class Contenidos extends Component {
           await res.getMetadata().then(async (metadata) => {
             await res.getDownloadURL().then(async (url) => {
               let obj = {
-                key: metadata.fullPath.replace(subjectId + '/contenidos/', ''),
+                key: metadata.fullPath.replace(
+                  'materias/' + subjectId + '/contenidos/',
+                  ''
+                ),
                 modified: Moment(metadata.updated),
                 size: metadata.size,
                 url: url,
@@ -234,7 +239,9 @@ class Contenidos extends Component {
     for (const f of filesKey) {
       if (f.slice(-1) !== '/') {
         //Si es carpeta no hago nada
-        const fileRef = storage.ref(`${this.state.subjectId}/contenidos/${f}`);
+        const fileRef = storage.ref(
+          `materias/${this.state.subjectId}/contenidos/${f}`
+        );
         fileRef
           .delete()
           .then(() => {
@@ -310,7 +317,7 @@ class Contenidos extends Component {
 
       //Si seleccionó una carpeta, lo guardo en esa carpeta
       const listRef = storage.ref(
-        `${this.state.subjectId}/contenidos/${this.state.selectedFolder}${name}`
+        `materias/${this.state.subjectId}/contenidos/${this.state.selectedFolder}${name}`
       );
 
       const task = listRef.put(file);

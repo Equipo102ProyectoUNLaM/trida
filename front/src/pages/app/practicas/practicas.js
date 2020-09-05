@@ -131,7 +131,7 @@ class Practica extends Component {
 
   getFileURL = async (archivo) => {
     const url = await storage
-      .ref(this.state.idMateria + '/practicas/')
+      .ref('materias/' + this.state.idMateria + '/practicas/')
       .child(archivo)
       .getDownloadURL();
     return url;

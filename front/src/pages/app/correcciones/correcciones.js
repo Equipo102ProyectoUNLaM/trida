@@ -32,7 +32,9 @@ class Correcciones extends Component {
 
     try {
       //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      const listRef = storage.ref(this.state.subjectId + '/correcciones');
+      const listRef = storage.ref(
+        'materias/' + this.state.subjectId + '/correcciones'
+      );
       await listRef.listAll().then(async (result) => {
         //Archivos
         let ctrFiles = 0;
@@ -45,7 +47,7 @@ class Correcciones extends Component {
               if (fileKey) {
                 let obj = {
                   fullKey: metadata.fullPath.replace(
-                    this.state.subjectId + '/correcciones/',
+                    'materias/' + this.state.subjectId + '/correcciones/',
                     ''
                   ),
                   key: fileKey,
@@ -83,7 +85,10 @@ class Correcciones extends Component {
 
   getPlainName(text) {
     //Elimino la parte de "materiaID/correcciones/" del path
-    let newText = text.replace(this.state.subjectId + '/correcciones/', '');
+    let newText = text.replace(
+      'materias/' + this.state.subjectId + '/correcciones/',
+      ''
+    );
     const pos = newText.indexOf('-'); //Busco el primer "-", que representa el idUsuario para eliminarlo
 
     if (this.props.rol === ROLES.Docente) {
