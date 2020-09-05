@@ -11,7 +11,9 @@ import ROLES from 'constants/roles';
 import {
   logicDeleteDocument,
   getCollectionWithSubCollections,
+  getCollection,
 } from 'helpers/Firebase-db';
+import firebase from 'firebase/app';
 import { desencriptarEvaluacion } from 'handlers/DecryptionHandler';
 
 function collect(props) {
@@ -39,6 +41,17 @@ class Evaluaciones extends Component {
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
       [
+        this.props.rol === ROLES.Docente
+          ? {
+              field: 'fecha_creacion',
+              operator: '>',
+              id: '',
+            }
+          : {
+              field: 'fecha_publicacion',
+              operator: '<=',
+              id: firebase.firestore.Timestamp.now(),
+            },
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
@@ -71,12 +84,19 @@ class Evaluaciones extends Component {
     });
   };
 
-  dataListRenderer(arrayDeObjetos) {
-    arrayDeObjetos.forEach((element) => {
+  async dataListRenderer(arrayDeObjetos) {
+    for (let element of arrayDeObjetos) {
+      const result = await getCollection('correcciones', [
+        { field: 'id_entrega', operator: '==', id: element.id },
+      ]);
+      element = Object.assign(
+        element,
+        result.length > 0 ? { entregada: true } : { entregada: false }
+      );
       element.data.subcollections = element.data.subcollections.sort(
         (a, b) => a.data.numero - b.data.numero
       );
-    });
+    }
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],

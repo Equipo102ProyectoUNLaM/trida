@@ -8,6 +8,7 @@ import {
   Nav,
   NavItem,
   TabContent,
+  Badge,
   TabPane,
   Button,
 } from 'reactstrap';
@@ -17,16 +18,14 @@ import ROLES from 'constants/roles';
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import Calendario from './common/Calendario';
-import moment from 'moment';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import * as CryptoJS from 'crypto-js';
-import { secretKey } from 'constants/defaultValues';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
+import { timeStamp } from 'helpers/Firebase';
 
 class CardTabs extends Component {
   constructor(props) {
     super(props);
-
     this.toggleFirstTab = this.toggleFirstTab.bind(this);
     this.toggleSecondTab = this.toggleSecondTab.bind(this);
     this.state = {
@@ -63,18 +62,10 @@ class CardTabs extends Component {
     this.props.onDelete(this.props.item.id);
   };
 
-  handleEditarEjercicio = (e, tipo) => {
-    e.preventDefault();
-    this.props.onEditarEjercicio(tipo);
-  };
-
   handleClickChangeFinalDate = async (date) => {
     if (date) {
       const obj = {
-        fecha_finalizacion: CryptoJS.AES.encrypt(
-          date.format('YYYY-MM-DD, HH:mm'),
-          secretKey
-        ).toString(),
+        fecha_finalizacion: timeStamp.fromDate(new Date(date)),
       };
       await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
       this.props.updateEvaluaciones(this.props.materiaId);
@@ -84,10 +75,7 @@ class CardTabs extends Component {
   handleClickChangePublicationDate = async (date) => {
     if (date) {
       const obj = {
-        fecha_publicacion: CryptoJS.AES.encrypt(
-          date.format('YYYY-MM-DD, HH:mm'),
-          secretKey
-        ).toString(),
+        fecha_publicacion: timeStamp.fromDate(new Date(date)),
       };
       await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
       this.props.updateEvaluaciones(this.props.materiaId);
@@ -100,7 +88,7 @@ class CardTabs extends Component {
 
   render() {
     const { item, rol } = this.props;
-    const { data } = item;
+    const { data, entregada } = item;
     return (
       <Row lg="12" className="tab-card-evaluaciones">
         <Colxx xxs="12">
@@ -185,10 +173,9 @@ class CardTabs extends Component {
                                 )}
                                 {data.base.fecha_finalizacion && (
                                   <p className="mb-4">
-                                    {moment(
-                                      data.base.fecha_finalizacion,
-                                      'YYYY-MM-DD, HH:mm'
-                                    ).format('DD/MM/YYYY - HH:mm')}
+                                    {getDateTimeStringFromDate(
+                                      data.base.fecha_finalizacion
+                                    )}
                                   </p>
                                 )}
                                 {!data.base.fecha_finalizacion && (
@@ -212,10 +199,9 @@ class CardTabs extends Component {
                                 )}
                                 {data.base.fecha_publicacion && (
                                   <p className="mb-4">
-                                    {moment(
-                                      data.base.fecha_publicacion,
-                                      'YYYY-MM-DD, HH:mm'
-                                    ).format('DD/MM/YYYY - HH:mm')}
+                                    {getDateTimeStringFromDate(
+                                      data.base.fecha_publicacion
+                                    )}
                                   </p>
                                 )}
                                 {!data.base.fecha_publicacion && (
@@ -247,7 +233,7 @@ class CardTabs extends Component {
                                 Borrar Evaluación
                               </Button>
                             )}
-                            {rol === ROLES.Alumno && (
+                            {rol === ROLES.Alumno && !entregada && (
                               <Button
                                 outline
                                 onClick={this.handleClickMake}
@@ -257,6 +243,13 @@ class CardTabs extends Component {
                               >
                                 Realizar Evaluación
                               </Button>
+                            )}
+                            {rol === ROLES.Alumno && entregada && (
+                              <div>
+                                <Badge color="primary" pill className="mb-1">
+                                  ENTREGADA
+                                </Badge>
+                              </div>
                             )}
                           </Row>
                         </CardBody>

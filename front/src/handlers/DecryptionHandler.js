@@ -54,14 +54,10 @@ export const desencriptarEvaluacion = (evaluaciones) => {
       evaluacion.data.base.nombre,
       secretKey
     ).toString(CryptoJS.enc.Utf8);
-    evaluacion.data.base.fecha_finalizacion = CryptoJS.AES.decrypt(
-      evaluacion.data.base.fecha_finalizacion,
-      secretKey
-    ).toString(CryptoJS.enc.Utf8);
-    evaluacion.data.base.fecha_publicacion = CryptoJS.AES.decrypt(
-      evaluacion.data.base.fecha_publicacion,
-      secretKey
-    ).toString(CryptoJS.enc.Utf8);
+    evaluacion.data.base.fecha_finalizacion =
+      evaluacion.data.base.fecha_finalizacion;
+    evaluacion.data.base.fecha_publicacion =
+      evaluacion.data.base.fecha_publicacion;
     if (evaluacion.data.subcollections) {
       evaluacion.data.subcollections = desencriptarEjercicios(
         evaluacion.data.subcollections

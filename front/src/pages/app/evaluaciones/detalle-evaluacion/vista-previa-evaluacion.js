@@ -19,13 +19,14 @@ import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import { connect } from 'react-redux';
 import {
   getDateWithFormat,
   getCurrentTime,
-  getFormattedDate,
+  getDateTimeStringFromDate,
 } from 'helpers/Utils';
 
-export default class ModalVistaPreviaEvaluacion extends Component {
+class ModalVistaPreviaEvaluacion extends Component {
   constructor(props) {
     super(props);
 
@@ -60,12 +61,7 @@ export default class ModalVistaPreviaEvaluacion extends Component {
       nombre: CryptoJS.AES.decrypt(nombre, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
-      fecha_finalizacion: getFormattedDate(
-        CryptoJS.AES.decrypt(fecha_finalizacion, secretKey).toString(
-          CryptoJS.enc.Utf8
-        ),
-        'DD/MM/YYYY - HH:mm'
-      ),
+      fecha_finalizacion: fecha_finalizacion,
       descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
@@ -107,7 +103,9 @@ export default class ModalVistaPreviaEvaluacion extends Component {
                       </Colxx>
                       <Colxx xxs="4" xs="4" lg="4">
                         <Row>
-                          <h5>Alumno/a : Nombre y apellido</h5>
+                          <h5>
+                            Alumno/a : {this.props.nombre} {this.props.apellido}
+                          </h5>
                         </Row>
                         <Row>
                           <h5>
@@ -123,7 +121,8 @@ export default class ModalVistaPreviaEvaluacion extends Component {
                   </div>
                   <div>
                     <h5 className="text-red">
-                      Fecha y hora de finalizacion: {fecha_finalizacion} hs
+                      Fecha y hora de finalizacion:{' '}
+                      {getDateTimeStringFromDate(fecha_finalizacion)} hs
                     </h5>
                   </div>
                 </CardBody>
@@ -182,3 +181,11 @@ export default class ModalVistaPreviaEvaluacion extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ authUser }) => {
+  const { userData } = authUser;
+  const { nombre, apellido } = userData;
+  return { nombre, apellido };
+};
+
+export default connect(mapStateToProps)(ModalVistaPreviaEvaluacion);

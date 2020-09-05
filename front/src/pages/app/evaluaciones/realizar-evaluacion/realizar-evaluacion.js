@@ -13,12 +13,14 @@ import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+
 import {
   getDateWithFormat,
   getCurrentTime,
   getFechaHoraActual,
+  getDateTimeStringFromDate,
 } from 'helpers/Utils';
-
 import { addDocument } from 'helpers/Firebase-db';
 
 class RealizarEvaluacion extends Component {
@@ -33,6 +35,7 @@ class RealizarEvaluacion extends Component {
       ejercicios: [],
       respuestas: [],
       submitted: false,
+      modalFinishOpen: false,
       isLoading: true,
     };
   }
@@ -67,7 +70,7 @@ class RealizarEvaluacion extends Component {
         tipo: ejercicio.data.tipo,
         nombre: ejercicio.data.nombre,
       };
-      if (ejercicio.data.opciones && ejercicio.data.opciones.lenght != 0) {
+      if (ejercicio.data.opciones && ejercicio.data.opciones.lenght !== 0) {
         let respuestas_choice = [];
         ejercicio.data.opciones.forEach((opcion, index) => {
           respuestas_choice.push(false);
@@ -85,14 +88,8 @@ class RealizarEvaluacion extends Component {
       nombreEval: CryptoJS.AES.decrypt(nombre, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
-      fecha_finalizacion: CryptoJS.AES.decrypt(
-        fecha_finalizacion,
-        secretKey
-      ).toString(CryptoJS.enc.Utf8),
-      fecha_publicacion: CryptoJS.AES.decrypt(
-        fecha_publicacion,
-        secretKey
-      ).toString(CryptoJS.enc.Utf8),
+      fecha_finalizacion: getDateTimeStringFromDate(fecha_finalizacion),
+      fecha_publicacion: getDateTimeStringFromDate(fecha_publicacion),
       descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
@@ -121,27 +118,32 @@ class RealizarEvaluacion extends Component {
     });
   };
 
-  finalizarEvaluacion = async () => {
+  finalizarEvaluacion = () => {
     if (this.validateRespuestas() === true) {
-      let obj = {
-        estado: ESTADO_ENTREGA.no_corregido,
-        fecha_entrega: getFechaHoraActual(),
-        id_alumno: this.props.user,
-        id_materia: this.props.subject.id,
-        id_entrega: this.state.evaluacionId,
-        tipo: TIPO_ENTREGA.evaluacion,
-        version: 0,
-        respuestas: this.state.respuestas,
-      };
-      await addDocument(
-        `correcciones`,
-        obj,
-        this.props.user,
-        'Evaluación entregada con éxito',
-        'Tu evaluación fue entregada correctamente',
-        'Tu evaluación no pudo ser entregada'
-      );
+      this.toggleModal();
     }
+  };
+
+  entregarEvaluacion = async () => {
+    let obj = {
+      estado: ESTADO_ENTREGA.no_corregido,
+      fecha_entrega: getFechaHoraActual(),
+      id_alumno: this.props.user,
+      id_materia: this.props.subject.id,
+      id_entrega: this.state.evaluacionId,
+      tipo: TIPO_ENTREGA.evaluacion,
+      version: 0,
+      respuestas: this.state.respuestas,
+    };
+    await addDocument(
+      `correcciones`,
+      obj,
+      this.props.user,
+      'Evaluación entregada con éxito',
+      'Tu evaluación fue entregada correctamente',
+      'Tu evaluación no pudo ser entregada'
+    );
+    this.props.history.push(`/app/evaluaciones`);
   };
 
   validateRespuestas = () => {
@@ -163,8 +165,13 @@ class RealizarEvaluacion extends Component {
           break;
       }
     }
-    console.log(valid);
     return valid;
+  };
+
+  toggleModal = () => {
+    this.setState({
+      modalFinishOpen: !this.state.modalFinishOpen,
+    });
   };
 
   render() {
@@ -174,6 +181,7 @@ class RealizarEvaluacion extends Component {
       ejercicios,
       descripcion,
       fecha_finalizacion,
+      modalFinishOpen,
       submitted,
     } = this.state;
     const { nombre, apellido } = this.props;
@@ -279,6 +287,17 @@ class RealizarEvaluacion extends Component {
             </div>
           </CardBody>
         </Card>
+        {modalFinishOpen && (
+          <ModalConfirmacion
+            texto="Recordá que una vez finalizada, no podrás editarla"
+            titulo="¿Estás seguro de finalizar tu evaluación?"
+            buttonPrimary="Entregar"
+            buttonSecondary="Cancelar"
+            toggle={this.toggleModal}
+            isOpen={modalFinishOpen}
+            onConfirm={this.entregarEvaluacion}
+          />
+        )}
       </Fragment>
     );
   }
