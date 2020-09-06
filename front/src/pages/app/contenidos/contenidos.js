@@ -18,6 +18,8 @@ import {
   DefaultConfirmDeletion,
   MultipleConfirmDeletion,
 } from 'constants/fileBrowser/confirmations';
+import ModalVideo from './modal-video';
+import ModalAudio from './modal-audio';
 import ROLES from 'constants/roles';
 
 class Contenidos extends Component {
@@ -32,6 +34,8 @@ class Contenidos extends Component {
       modalRenameOpen: false,
       selectedFolder: '',
       repeatedFiles: [],
+      modalVideoOpen: false,
+      modalAudioOpen: false,
     };
     this.listFolderItems = this.listFolderItems.bind(this);
     this.submitFiles = this.submitFiles.bind(this);
@@ -423,12 +427,26 @@ class Contenidos extends Component {
     }));
   };
 
+  toggleModalAudio = () => {
+    this.setState({
+      modalAudioOpen: !this.state.modalAudioOpen,
+    });
+  };
+
+  toggleModalVideo = () => {
+    this.setState({
+      modalVideoOpen: !this.state.modalVideoOpen,
+    });
+  };
+
   render() {
     const {
       isLoading,
       canSubmitFiles,
       modalRenameOpen,
       repeatedFiles,
+      modalVideoOpen,
+      modalAudioOpen,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol === ROLES.Docente;
@@ -462,6 +480,34 @@ class Contenidos extends Component {
             >
               <IntlMessages id="contenido.agregar" />
             </Button>
+            <Button
+              color="primary"
+              className="mb-2"
+              onClick={this.toggleModalVideo}
+            >
+              <IntlMessages id="contenido.grabar-video" />
+            </Button>
+            <Button
+              color="primary"
+              className="mb-2"
+              onClick={this.toggleModalAudio}
+            >
+              <IntlMessages id="contenido.grabar-audio" />
+            </Button>
+            {modalVideoOpen && (
+              <ModalVideo
+                toggleModal={this.toggleModalVideo}
+                modalOpen={modalVideoOpen}
+                modalHeader="contenido.grabar-video"
+              />
+            )}
+            {modalAudioOpen && (
+              <ModalAudio
+                toggleModal={this.toggleModalAudio}
+                modalOpen={modalAudioOpen}
+                modalHeader="contenido.grabar-audio"
+              />
+            )}
           </>
         )}
         <div className="demo-mount-nested-editable">
