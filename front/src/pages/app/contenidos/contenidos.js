@@ -21,6 +21,7 @@ import {
 import ModalVideo from './modal-video';
 import ModalAudio from './modal-audio';
 import ROLES from 'constants/roles';
+import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -336,7 +337,13 @@ class Contenidos extends Component {
           //Elimino de dropzone los archivos ya subidos
           let buttonRemove = document.getElementById('buttonRemove');
           if (buttonRemove) buttonRemove.click();
-          if (cant === 0) this.updateFilesList();
+          if (cant === 0) {
+            this.updateFilesList();
+            enviarNotificacionExitosa(
+              'Tus archivos han sido cargados correctamente',
+              '¡Carga completa!'
+            );
+          }
         }
       );
     });
@@ -389,14 +396,6 @@ class Contenidos extends Component {
   };
 
   updateFilesList() {
-    NotificationManager.success(
-      'Tus archivos han sido cargados correctamente',
-      '¡Carga completa!',
-      3000,
-      null,
-      null,
-      ''
-    );
     this.setState((state) => ({
       dropZone: [],
       files: [],
@@ -431,12 +430,18 @@ class Contenidos extends Component {
     this.setState({
       modalAudioOpen: !this.state.modalAudioOpen,
     });
+    if (!this.state.modalAudioOpen) {
+      this.updateFilesList();
+    }
   };
 
   toggleModalVideo = () => {
     this.setState({
       modalVideoOpen: !this.state.modalVideoOpen,
     });
+    if (!this.state.modalVideoOpen) {
+      this.updateFilesList();
+    }
   };
 
   render() {
@@ -447,6 +452,7 @@ class Contenidos extends Component {
       repeatedFiles,
       modalVideoOpen,
       modalAudioOpen,
+      subjectId,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol === ROLES.Docente;
@@ -482,14 +488,14 @@ class Contenidos extends Component {
             </Button>
             <Button
               color="primary"
-              className="mb-2"
+              className="mb-2 ml-1"
               onClick={this.toggleModalVideo}
             >
               <IntlMessages id="contenido.grabar-video" />
             </Button>
             <Button
               color="primary"
-              className="mb-2"
+              className="mb-2 ml-1"
               onClick={this.toggleModalAudio}
             >
               <IntlMessages id="contenido.grabar-audio" />
@@ -499,6 +505,7 @@ class Contenidos extends Component {
                 toggleModal={this.toggleModalVideo}
                 modalOpen={modalVideoOpen}
                 modalHeader="contenido.grabar-video"
+                subjectId={subjectId}
               />
             )}
             {modalAudioOpen && (
@@ -506,6 +513,7 @@ class Contenidos extends Component {
                 toggleModal={this.toggleModalAudio}
                 modalOpen={modalAudioOpen}
                 modalHeader="contenido.grabar-audio"
+                subjectId={subjectId}
               />
             )}
           </>

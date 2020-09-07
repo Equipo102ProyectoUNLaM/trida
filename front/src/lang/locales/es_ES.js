@@ -145,6 +145,8 @@ module.exports = {
   'contenido.agregar': 'AGREGAR CONTENIDO',
   'contenido.grabar-video': 'GRABAR VIDEO',
   'contenido.grabar-audio': 'GRABAR AUDIO',
+  'contenido.nombre-audio': 'Nombre del Audio',
+  'contenido.nombre-video': 'Nombre del Video',
 
   /* 13. Mensajeria */
   'messages.new': 'CREAR NUEVO MENSAJE',
