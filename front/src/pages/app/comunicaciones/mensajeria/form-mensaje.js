@@ -49,6 +49,10 @@ class FormMensaje extends Component {
     });
   }
 
+  disableEnviarButton() {
+    return this.state.selectedOptions.length === 0 && !this.state.esGeneral;
+  }
+
   handleSubmit = async (values) => {
     //Si no es un mensaje general, convierto el array de seleccionados al formato { id, nombre }
     let receptores = null;
@@ -210,7 +214,7 @@ class FormMensaje extends Component {
               <Button
                 color="primary"
                 type="submit"
-                disabled={/* selectedOptions.length === 0 */ false}
+                disabled={this.disableEnviarButton()}
               >
                 Enviar
               </Button>
