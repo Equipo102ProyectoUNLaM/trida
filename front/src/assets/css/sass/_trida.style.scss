@@ -9598,3 +9598,26 @@ div.rendered-file-browser{
   padding-top: 1rem;
   display: block;
 }
+
+// Clases virtuales
+.lista-links-clase {
+  justify-content: space-between;
+  margin: 0 0.1rem 1rem 0.1rem;
+  padding: 0.5rem 1rem;
+  border: 0px !important;
+  border-radius: .25rem;
+  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.link-clase {
+  align-self: center;
+}
+
+.agregar-btn-link {
+  display: flex;
+  justify-content: flex-end;
+  color: $theme-color-1 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin-bottom: 1rem;
+}
