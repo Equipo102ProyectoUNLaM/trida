@@ -8,6 +8,7 @@ import { addDocument } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { Formik, Form, Field } from 'formik';
 import { mensajesSchema } from './validations';
+import { encriptarTexto } from 'handlers/EncryptionHandler';
 
 class FormMensaje extends Component {
   constructor(props) {
@@ -50,7 +51,11 @@ class FormMensaje extends Component {
   }
 
   disableEnviarButton() {
-    return this.state.selectedOptions.length === 0 && !this.state.esGeneral;
+    return (
+      this.state.selectedOptions.length === 0 &&
+      !this.state.esGeneral &&
+      !this.props.esResponder
+    );
   }
 
   handleSubmit = async (values) => {
@@ -70,7 +75,7 @@ class FormMensaje extends Component {
         nombre: this.props.nombre + ' ' + this.props.apellido,
       },
       receptor: receptores,
-      contenido: values.textoMensaje,
+      contenido: encriptarTexto(values.textoMensaje),
       asunto: values.asunto,
       formal: false,
       general: this.state.esGeneral,
@@ -193,7 +198,7 @@ class FormMensaje extends Component {
 
             <FormGroup className="mb-3 asunto-msj ">
               <Label>Asunto</Label>
-              <Field name="asunto" className="form-control" />
+              <Field name="asunto" className="form-control"></Field>
             </FormGroup>
 
             <FormGroup className="mb-3">

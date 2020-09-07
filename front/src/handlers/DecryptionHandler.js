@@ -68,3 +68,7 @@ export const desencriptarEvaluacion = (evaluaciones) => {
   });
   return result;
 };
+
+export const desencriptarTexto = (texto) => {
+  return CryptoJS.AES.decrypt(texto, secretKey).toString(CryptoJS.enc.Utf8);
+};
