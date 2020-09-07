@@ -180,6 +180,7 @@ class Mensajeria extends Component {
     this.setState({
       modalReenviarOpen: !this.state.modalReenviarOpen,
       modalMessageOpen: false,
+      selectedOptions: [],
     });
   };
 
