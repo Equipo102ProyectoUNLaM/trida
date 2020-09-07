@@ -198,7 +198,10 @@ class FormMensaje extends Component {
 
             <FormGroup className="mb-3 asunto-msj ">
               <Label>Asunto</Label>
-              <Field name="asunto" className="form-control"></Field>
+              <Field name="asunto" className="form-control" />
+              {errors.asunto && touched.asunto ? (
+                <div className="invalid-feedback d-block">{errors.asunto}</div>
+              ) : null}
             </FormGroup>
 
             <FormGroup className="mb-3">
