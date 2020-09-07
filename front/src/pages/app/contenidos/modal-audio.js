@@ -86,6 +86,14 @@ const ModalAudio = ({
             Detener grabación
           </Button>
         </Row>
+        <Row className="ml-0 mt-1">
+          {isRecording && (
+            <>
+              <div className="grabando-circulo" />
+              <p className="grabando-texto">Grabando!</p>{' '}
+            </>
+          )}
+        </Row>
       </ModalBody>
       <ModalFooter>
         <Button color="primary" className="button" onClick={guardarAudio}>

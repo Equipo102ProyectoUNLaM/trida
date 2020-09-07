@@ -9623,11 +9623,11 @@ div.rendered-file-browser{
 
 // Grabaciones
 
-[data-qa=turn-on-camera] {
+[id=turn-on-camera] {
   visibility: hidden;
 }
 
-[data-qa=turn-on-camera]:after {
+[id=turn-on-camera]:after {
   visibility: visible;
   content: 'Encender cámara';
   background: $theme-color-1;
@@ -9644,18 +9644,19 @@ div.rendered-file-browser{
   box-shadow: initial !important;
 }
 
-[data-qa=start-replaying] {
+[id=start-replaying] {
   visibility: hidden;
 }
 
-[data-qa=start-replaying]:after {
+[id=start-replaying]:after {
   visibility: visible;
   content: 'Grabar otro video';
   background: $theme-color-1;
   color: white;
-  padding: 17px 18px;
+  padding: 11px 18px;
   border: none;
   margin-left: -10rem;
+  margin-bottom: -50rem;
   font-size: 18px;
   outline: none;
   cursor: pointer;
@@ -9667,6 +9668,11 @@ div.rendered-file-browser{
 
 .render-actions__ActionsWrapper-dp6lnv-0 {
   padding-bottom: 1rem !important;
+  bottom: 5rem !important;
+
+  .iJsnLG {
+    bottom: 5rem !important;
+  }
 }
 
 .record-button__InstuctionsHighlight-sc-1n5amwk-4 {
@@ -9689,7 +9695,7 @@ div.rendered-file-browser{
 }
 
 .modal-video {
-  height: 90% !important;
+  height: 120% !important;
 }
 
 .modal-video-footer {
@@ -9698,4 +9704,40 @@ div.rendered-file-browser{
 
 .modal-content {
   height: 100% !important;
+}
+
+.grabando-texto {
+  color: red;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.grabando-circulo {
+  height: 15px;
+  width: 15px;
+  background-color: red;
+  animation-name: stretch;
+  animation-duration: 1.5s; 
+  animation-timing-function: ease-out; 
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+@keyframes stretch {
+  0% {
+    transform: scale(.1);
+    background-color: red;
+    border-radius: 100%;
+  }
+  50% {
+    background-color: red;
+    border-radius: 100%;
+  }
+  100% {
+    background-color: red;
+    border-radius: 100%;
+  }
 }

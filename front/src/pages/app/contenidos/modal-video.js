@@ -69,7 +69,7 @@ const ModalVideo = ({
         )}
         <VideoRecorder
           onRecordingComplete={(videoBlob) => setVideoBlob(videoBlob)}
-          onClick
+          showReplayControls
           replayVideoAutoplayAndLoopOff
         />
       </ModalBody>
