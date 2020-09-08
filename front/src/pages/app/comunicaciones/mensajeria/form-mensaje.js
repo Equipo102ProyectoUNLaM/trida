@@ -175,21 +175,22 @@ class FormMensaje extends Component {
                   </Row>
                 )}
                 {esResponder && (
-                  <Row>
+                  <Row className="mensaje-es-responder">
                     <Field
                       value={usuarioAResponder}
                       name="usuarioAResponder"
                       disabled
                       className="form-control"
                     ></Field>
-                    <label className="answer-message-title">
+                    <Label className="label-es-responder">
                       Mensaje a responder
-                    </label>
+                    </Label>
                     <Field
                       value={mensajeAResponder}
                       name="mensajeAResponder"
                       disabled
                       className="form-control"
+                      component="textarea"
                     ></Field>
                   </Row>
                 )}
