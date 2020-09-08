@@ -373,8 +373,8 @@ export const editDocument = async (collection, docId, obj, message) => {
 
   if (message) {
     NotificationManager.success(
-      `${message} editada exitosamente`,
-      `${message} editada!`,
+      `${message} exitosamente`,
+      `${message}!`,
       3000,
       null,
       null,

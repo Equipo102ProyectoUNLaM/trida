@@ -129,7 +129,7 @@ class FormPractica extends React.Component {
         fechaVencimiento: fechaVencimiento,
         idArchivo: this.state.file,
       };
-      await editDocument('practicas', this.props.id, obj, 'Práctica');
+      await editDocument('practicas', this.props.id, obj, 'Práctica editada');
     }
 
     this.props.onPracticaOperacion();

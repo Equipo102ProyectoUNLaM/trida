@@ -70,7 +70,12 @@ class FormMateria extends Component {
         cursos: cursosObj,
       },
     ];
-    await editDocument('usuarios', user, { instituciones: instObj }, 'Materia');
+    await editDocument(
+      'usuarios',
+      user,
+      { instituciones: instObj },
+      'Materia editada'
+    );
 
     this.setState({ isLoading: false });
     this.props.history.push('/seleccion-curso');

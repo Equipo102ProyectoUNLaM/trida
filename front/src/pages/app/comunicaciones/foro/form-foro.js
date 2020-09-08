@@ -1,65 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
-import Switch from 'rc-switch';
-import { createUUID } from 'helpers/Utils';
 import { editDocument, addDocument } from 'helpers/Firebase-db';
-import * as CryptoJS from 'crypto-js';
-import { secretKey } from 'constants/defaultValues';
 import { capitalizeString } from 'helpers/Utils';
 
-const FormClase = ({
+const FormForo = ({
   toggleModal,
-  onClaseGuardada,
+  onForoGuardado,
   subject,
   user,
-  idClase,
+  idForo,
   nombre,
-  fecha,
   descripcion,
-  sala,
 }) => {
   const { handleSubmit, errors, control } = useForm();
-  const [switchVideollamada, setSwitchVideollamada] = useState(sala);
 
   const onSubmit = async (values) => {
-    let idSala = '';
-    const { nombre, fecha, descripcion } = values;
-    if (switchVideollamada) {
-      const uuid = createUUID();
-      idSala = CryptoJS.AES.encrypt(uuid, secretKey).toString();
-    }
+    const { nombre, descripcion } = values;
+
     const obj = {
       nombre: capitalizeString(nombre),
-      fecha,
       descripcion,
-      idSala,
       idMateria: subject.id,
-      contenidos: [],
     };
 
-    if (idClase) {
+    if (idForo) {
       await editDocument(
-        'clases',
-        idClase,
+        'foros',
+        idForo,
         obj,
-        'Clase editada',
-        'Clase editada',
-        'Error al guardar la clase'
+        'Tema editado',
+        'Tema editado',
+        'Error al guardar el tema'
       );
     } else {
       await addDocument(
-        'clases',
+        'foros',
         obj,
         user,
-        'Clase agregada',
-        'Clase agregada exitosamente',
-        'Error al agregar la clase'
+        'Tema agregado',
+        'Tema agregado exitosamente',
+        'Error al agregar el tema'
       );
     }
 
-    onClaseGuardada();
+    onForoGuardado();
   };
 
   return (
@@ -68,7 +54,7 @@ const FormClase = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <FormGroup className="mb-3 error-l-150">
-        <Label>Nombre de la clase</Label>
+        <Label>Nombre del tema</Label>
         <Controller
           as={Input}
           control={control}
@@ -82,24 +68,6 @@ const FormClase = ({
           <div className="invalid-feedback d-block">
             {errors.nombre.message}
           </div>
-        )}
-      </FormGroup>
-
-      <FormGroup className="mb-3 error-l-150">
-        <Label>Fecha</Label>
-        <Controller
-          as={Input}
-          control={control}
-          name="fecha"
-          defaultValue={fecha || ''}
-          type="date"
-          placeholder="DD/MM/AAAA"
-          rules={{
-            required: { value: true, message: 'La fecha es requerida' },
-          }}
-        />
-        {errors.fecha && (
-          <div className="invalid-feedback d-block">{errors.fecha.message}</div>
         )}
       </FormGroup>
 
@@ -121,23 +89,9 @@ const FormClase = ({
           </div>
         )}
       </FormGroup>
-
-      <FormGroup className="form-check-switch">
-        <Label>¿Esta clase tendrá videollamada?</Label>
-        <Switch
-          checked={switchVideollamada}
-          id="Tooltip-Switch"
-          className="custom-switch custom-switch-primary"
-          onChange={(value) => {
-            setSwitchVideollamada(value);
-          }}
-          checkedChildren="Si"
-          unCheckedChildren="No"
-        />
-      </FormGroup>
       <ModalFooter className="card-notas">
         <Button color="primary" type="submit">
-          {idClase ? 'Editar' : 'Agregar'}
+          {idForo ? 'Editar' : 'Agregar'}
         </Button>
         <Button color="secondary" onClick={toggleModal}>
           Cancelar
@@ -153,4 +107,4 @@ const mapStateToProps = ({ authUser, seleccionCurso }) => {
   return { user, subject };
 };
 
-export default connect(mapStateToProps)(FormClase);
+export default connect(mapStateToProps)(FormForo);

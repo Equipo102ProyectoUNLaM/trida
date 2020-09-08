@@ -7,8 +7,8 @@ Tabla de Contenidos
 03. Menu
 04. Página de error
 05. Páginas generales
-06.Virtual Classes
-  06.01.My Classes
+06. Clases Virtuales
+  06.01. Mis Clases
 07. Institucion
 08. Curso
 09. Materia
@@ -17,6 +17,7 @@ Tabla de Contenidos
 12. Contenidos
 13. Mensajería
 14. Inicio
+15. Foros
 */
 
 module.exports = {
@@ -87,6 +88,7 @@ module.exports = {
   'menu.mis-instituciones': 'Mis Instituciones',
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
+  'menu.mis-foros': 'Mis Temas',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -152,4 +154,8 @@ module.exports = {
 
   /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
+
+  /* 15. Foros */
+  'forums.add': 'AGREGAR TEMA',
+  'forums.edit': 'EDITAR TEMA',
 };

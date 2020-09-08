@@ -77,7 +77,7 @@ class PrimerLogin extends Component {
           'usuarios',
           this.props.loginUser,
           obj,
-          'Información'
+          'Información editada'
         );
         this.props.history.push('/seleccion-curso');
       } else {
@@ -94,7 +94,12 @@ class PrimerLogin extends Component {
       telefono,
       primerLogin: false,
     };
-    await editDocument('usuarios', this.props.loginUser, obj, 'Información');
+    await editDocument(
+      'usuarios',
+      this.props.loginUser,
+      obj,
+      'Información editada'
+    );
     this.props.history.push('/seleccion-curso');
     const userData = await getUserData(this.props.loginUser);
     this.props.updateDatosUsuario(userData);
