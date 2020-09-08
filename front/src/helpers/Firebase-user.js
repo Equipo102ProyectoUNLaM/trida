@@ -1,5 +1,5 @@
 import { firestore, storage } from 'helpers/Firebase';
-import { getDocument, getCollection } from 'helpers/Firebase-db';
+import { getDocument } from 'helpers/Firebase-db';
 
 export const getUserData = async (userId) => {
   let foto = '';

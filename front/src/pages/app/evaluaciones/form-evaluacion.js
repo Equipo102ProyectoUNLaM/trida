@@ -14,7 +14,7 @@ import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercici
 import { Formik, Form, Field } from 'formik';
 import { evaluationSchema } from 'pages/app/evaluaciones/validations';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
-import { getDate, getDateTimeStringFromDate } from 'helpers/Utils';
+import { getDate } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
