@@ -9623,11 +9623,11 @@ div.rendered-file-browser{
 
 // Grabaciones
 
-[id=turn-on-camera] {
+[data-qa=turn-on-camera] {
   visibility: hidden;
 }
 
-[id=turn-on-camera]:after {
+[data-qa=turn-on-camera]:after {
   visibility: visible;
   content: 'Encender cámara';
   background: $theme-color-1;
@@ -9644,11 +9644,11 @@ div.rendered-file-browser{
   box-shadow: initial !important;
 }
 
-[id=start-replaying] {
+[data-qa=start-replaying] {
   visibility: hidden;
 }
 
-[id=start-replaying]:after {
+[data-qa=start-replaying]:after {
   visibility: visible;
   content: 'Grabar otro video';
   background: $theme-color-1;
@@ -9695,11 +9695,19 @@ div.rendered-file-browser{
 }
 
 .modal-video {
-  height: 120% !important;
+  height: 100% !important;
 }
 
+.video-recorder__Wrapper-sc-7k20rv-0 {
+  height: 100% !important;
+
+ .gayceY {
+   height: auto !important;
+ }
+} 
+
 .modal-video-footer {
-  margin-top: 5rem;
+  margin-top: 4rem;
 }
 
 .modal-content {
