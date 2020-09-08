@@ -9140,6 +9140,12 @@ footer.page-footer {
   font-size: 90%;
 }
 
+.tip-text-cursiva {
+  font-style: italic;
+  color: rgba(33, 33, 33, 0.7);
+  font-size: 90%;
+}
+
 .tooltip-question {
   margin: 0.5rem !important;
   color: $theme-color-2;
@@ -9513,13 +9519,13 @@ div.rendered-file-browser{
 
 .react-grid-item.react-draggable.cssTransforms {
   padding-right: 15px;
-    touch-action: none;
-    width: 100% !important;
-    height: 210px;
-    position: absolute;
-    transform: translate(10px, 10px);
-    font-family: inherit !important;
-    color: #212121 !important;
+  touch-action: none;
+  width: 100% !important;
+  height: 210px;
+  position: absolute;
+  transform: translate(10px, 10px);
+  font-family: inherit !important;
+  color: #212121 !important;
 }
 
 .react-stickies-wrapper {
@@ -9613,11 +9619,17 @@ div.rendered-file-browser{
   align-self: center;
 }
 
+.agregar-btn-row {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-right: 0 !important;
+}
+
 .agregar-btn-link {
-  display: flex;
-  justify-content: flex-end;
   color: $theme-color-1 !important;
   cursor: pointer !important;
   padding: 0 !important;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0 !important;
+  border: none !important;
+  background-color: transparent !important;
 }

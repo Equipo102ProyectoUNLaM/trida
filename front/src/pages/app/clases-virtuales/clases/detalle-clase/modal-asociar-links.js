@@ -1,14 +1,7 @@
 import React from 'react';
 import { Separator } from 'components/common/CustomBootstrap';
-import {
-  Row,
-  Button,
-  Input,
-  FormGroup,
-  Label,
-  ModalBody,
-  NavLink,
-} from 'reactstrap';
+import { Row, Button, FormGroup, Label, ModalBody, NavLink } from 'reactstrap';
+import { Formik, Form, Field } from 'formik';
 import { editDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import IntlMessages from 'helpers/IntlMessages';
@@ -24,15 +17,18 @@ class ModalAsociarLinks extends React.Component {
     };
   }
 
-  agregarLink = () => {
-    if (this.state.inputLink) {
+  agregarLink = (value) => {
+    if (value.link) {
       if (this.state.links) {
         this.setState({
-          links: [...this.state.links, this.state.inputLink],
+          links: [
+            ...this.state.links,
+            { link: value.link, descripcion: value.descripcion },
+          ],
         });
       } else {
         this.setState({
-          links: [this.state.inputLink],
+          links: [{ link: value.link, descripcion: value.descripcion }],
         });
       }
     }
@@ -45,17 +41,10 @@ class ModalAsociarLinks extends React.Component {
   };
 
   editLinks = async () => {
-    let linksNormalizados = [];
-    let links = [...this.state.links];
-    links.forEach((link) => {
-      return linksNormalizados.push(
-        'https://' + link.replace('https://', '').replace('http://', '')
-      );
-    });
     await editDocument(
       'clases',
       this.props.idClase,
-      { links: linksNormalizados },
+      { links: this.state.links },
       'Clase'
     );
     this.props.toggleModalLinks();
@@ -64,34 +53,73 @@ class ModalAsociarLinks extends React.Component {
 
   deleteLink = async (index) => {
     let links = [...this.state.links];
-    links.splice(index, 1);
+    links = links.filter((link) => link.link !== index);
     this.setState({
       links,
     });
   };
 
+  validateLink = (value) => {
+    let error;
+    if (!value) {
+      error = 'El link es requerido';
+    } else if (
+      !/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(
+        value
+      )
+    ) {
+      error = 'Formato de link inválido';
+    }
+    return error;
+  };
+
   render() {
     const { toggleModalLinks, isLoading } = this.props;
-    const { links } = this.state;
+    const { links, inputLink } = this.state;
+    const initialValues = { inputLink };
     return isLoading ? (
       <ModalBody>
         <div className="loading" />
       </ModalBody>
     ) : (
       <>
-        <FormGroup className="form-group has-float-label mb-1">
-          <Label>
-            <IntlMessages id="clase.agregar-link" />
-          </Label>
-          <Input
-            className="form-control"
-            name="link"
-            onChange={(e) => this.handleInputChange(e)}
-          />
-        </FormGroup>
-        <NavLink className="agregar-btn-link" onClick={this.agregarLink}>
-          + Agregar
-        </NavLink>
+        <Formik initialValues={initialValues} onSubmit={this.agregarLink}>
+          {({ errors, touched }) => (
+            <Form className="av-tooltip tooltip-label-right">
+              <FormGroup className="form-group has-float-label mb-1 error-l-150">
+                <Label>
+                  <IntlMessages id="clase.agregar-link" />
+                </Label>
+                <Field
+                  className="form-control"
+                  name="link"
+                  validate={this.validateLink}
+                />
+                {errors.link && touched.link && (
+                  <div className="invalid-feedback d-block">{errors.link}</div>
+                )}
+              </FormGroup>
+              <p className="tip-text-cursiva">
+                Ejemplo: http://www.trida.com.ar
+              </p>
+              <FormGroup className="form-group has-float-label mb-3">
+                <Label>
+                  <IntlMessages id="clase.descripcion-link" />
+                </Label>
+                <Field className="form-control" name="descripcion" />
+              </FormGroup>
+              <Row className="agregar-btn-row">
+                <Button
+                  type="submit"
+                  className="agregar-btn-link"
+                  color="primary"
+                >
+                  + Agregar
+                </Button>
+              </Row>
+            </Form>
+          )}
+        </Formik>
         {!isEmpty(links) && (
           <>
             <Separator className="mb-2" />
@@ -101,35 +129,33 @@ class ModalAsociarLinks extends React.Component {
         {!isEmpty(links) &&
           links.map((link, index) => {
             return (
-              <Row className="lista-links-clase" key={link}>
+              <Row className="lista-links-clase" key={link.link}>
                 <a
                   className="link-clase"
-                  id={link}
-                  href={link}
+                  id={link.link}
+                  href={link.link}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  {link} <br />
+                  {link.descripcion} <br /> {link.link}
                 </a>{' '}
                 <div
                   className="glyph-icon simple-icon-trash delete-action-icon"
-                  onClick={() => this.deleteLink(index)}
+                  onClick={() => this.deleteLink(link.link)}
                 />
               </Row>
             );
           })}
         <Separator className="mb-5" />
         <Row className="button-group">
-          {!isEmpty(links) && (
-            <Button
-              onClick={this.editLinks}
-              className="button"
-              color="primary"
-              size="lg"
-            >
-              Asociar Links
-            </Button>
-          )}
+          <Button
+            onClick={this.editLinks}
+            className="button"
+            color="primary"
+            size="lg"
+          >
+            Asociar Links
+          </Button>
           <Button
             onClick={toggleModalLinks}
             className="button"
