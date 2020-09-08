@@ -62,11 +62,6 @@ const ModalVideo = ({
             onChange={(e) => setNombre(e.target.value)}
           />
         </FormGroup>
-        {videoBlob && (
-          <p className="tip-text">
-            Para previsualizar tu video, realizá un click sobre el mismo
-          </p>
-        )}
         <VideoRecorder
           onRecordingComplete={(videoBlob) => setVideoBlob(videoBlob)}
           showReplayControls
