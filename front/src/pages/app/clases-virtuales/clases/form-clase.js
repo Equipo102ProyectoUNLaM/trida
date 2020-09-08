@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from 'rc-switch';
-import { createUUID } from 'helpers/Utils';
+import { createUUID, createRandomString } from 'helpers/Utils';
 import { editDocument, addDocument } from 'helpers/Firebase-db';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
@@ -35,6 +35,7 @@ const FormClase = ({
       fecha,
       descripcion,
       idSala,
+      password: createRandomString(),
       idMateria: subject.id,
       contenidos: [],
     };

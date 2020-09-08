@@ -224,6 +224,7 @@ class TabsDeClase extends Component {
   render() {
     const {
       idSala,
+      password,
       contenidos,
       idClase,
       idMateria,
@@ -352,7 +353,10 @@ class TabsDeClase extends Component {
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <PaginaVideollamada idSala={idSala} />
+                            <PaginaVideollamada
+                              idSala={idSala}
+                              password={password}
+                            />
                           )}
                         </CardBody>
                       </Colxx>

@@ -12,9 +12,9 @@ import {
   FormGroup,
   FormText,
 } from 'reactstrap';
-import { createRandomString } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
+import ROLES from 'constants/roles';
 
 const PaginaVideollamada = (props) => {
   const { handleSubmit, register, errors } = useForm();
@@ -22,7 +22,7 @@ const PaginaVideollamada = (props) => {
     CryptoJS.enc.Utf8
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
-  const isHost = true;
+  const isHost = props.rol === ROLES.Docente;
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [name, setName] = useState(props.nombre + ' ' + props.apellido);
@@ -49,7 +49,7 @@ const PaginaVideollamada = (props) => {
       <Videollamada
         roomName={room}
         userName={name}
-        password={createRandomString()}
+        password={props.password}
         containerStyles={{ width: '100%', height: '700px' }}
         options={options}
         isHost={isHost}

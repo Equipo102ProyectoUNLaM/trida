@@ -2,15 +2,10 @@ import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
 import { Button, Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
+import { getTimestamp } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
-
-/* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
-        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone', 'security' */
-// const TOOLBAR_BUTTONS = ['microphone', 'camera', 'shortcuts', 'videoquality', 'fullscreen', 'hangup', 'tileview'];
+import INTERFACE_CONFIG from 'constants/videollamada';
 
 const Videollamada = ({
   roomName,
@@ -27,6 +22,7 @@ const Videollamada = ({
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
+  const [listaAsistencia, setListaAsistencia] = useState([]);
   const pizarronURI = '/pizarron';
 
   const setElementHeight = () => {
@@ -47,6 +43,18 @@ const Videollamada = ({
     window.open(pizarronURI, '_blank', strWindowFeatures);
   };
 
+  const guardarListaAsistencia = () => {
+    console.warn('LISTA ASISTENCIA', listaAsistencia);
+    listaAsistencia.forEach((elem) => {
+      const arr1 = listaAsistencia.filter((element) => element.id === elem.id);
+      const arr2 = listaAsistencia.filter(
+        (element) => element.displayName === elem.displayName
+      );
+      console.warn('ARR1', arr1);
+      console.warn('ARR2', arr2);
+    });
+  };
+
   useEffect(() => {
     setElementHeight();
     window.addEventListener('resize', setElementHeight);
@@ -58,28 +66,10 @@ const Videollamada = ({
   const jitsi = useJitsi({
     roomName,
     parentNode,
-    interfaceConfigOverwrite: {
-      TOOLBAR_BUTTONS: [
-        'microphone',
-        'camera',
-        'hangup',
-        'raisehand',
-        'recording',
-        'settings',
-        'tileview',
-        'desktop',
-        'chat',
-        'sharedvideo',
-        'shortcuts',
-        'mute-everyone',
-        'videobackgroundblur',
-      ],
-      SETTINGS_SECTIONS: ['devices', 'language', 'profile'],
-      SHOW_JITSI_WATERMARK: false,
-      SHOW_WATERMARK_FOR_GUESTS: false,
-      TOOLBAR_ALWAYS_VISIBLE: true,
-      DEFAULT_LOCAL_DISPLAY_NAME: userName,
-    },
+    interfaceConfigOverwrite:
+      rol === ROLES.Docente
+        ? INTERFACE_CONFIG.DOCENTE
+        : INTERFACE_CONFIG.ALUMNO,
     configOverwrite: {
       disableDeepLinking: true,
       startWithAudioMuted: microfono,
@@ -88,6 +78,7 @@ const Videollamada = ({
       disableRemoteMute: true,
       disableRemoteControl: true,
       remoteVideoMenu: { disableKick: { isHost } },
+      prejoinPageEnabled: false,
     },
   });
 
@@ -96,15 +87,26 @@ const Videollamada = ({
       jitsi.addEventListener('videoConferenceJoined', () => {
         jitsi.executeCommand('displayName', userName);
         jitsi.executeCommand('subject', subject);
-        jitsi.executeCommand('password', password);
+        //jitsi.executeCommand('password', password);
       });
       jitsi.addEventListener('readyToClose', () => {
         setCallOff();
+        guardarListaAsistencia();
       });
       jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
         on
           ? setShareScreenButtonText('Dejar de Compartir pantalla')
           : setShareScreenButtonText('Compartir pantalla');
+      });
+      jitsi.addEventListener('participantJoined', ({ id, displayName }) => {
+        setListaAsistencia(
+          listaAsistencia.push({ id, displayName, timeStamp: getTimestamp() })
+        );
+      });
+      jitsi.addEventListener('participantLeft', ({ id }) => {
+        setListaAsistencia(
+          listaAsistencia.push({ id, timeStamp: getTimestamp() })
+        );
       });
     }
     return () => {
