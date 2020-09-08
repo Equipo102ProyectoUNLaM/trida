@@ -9453,6 +9453,16 @@ div.rendered-file-browser{
 .practica-file-element {
   display: inline-block;
 }
+
+.custom-file-label::after {
+  content:"Examinar" !important;
+}
+
+.image-preview{
+  height: 5rem;
+  width: auto;
+}
+
 // Home
 
 .row-home {

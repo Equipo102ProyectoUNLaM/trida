@@ -19,6 +19,13 @@ import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
 import { timeStamp } from 'helpers/Firebase';
+import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
+import {
+  subirArchivoAStorage,
+  BaseUrl,
+  getDownloadURL,
+} from 'helpers/Firebase-storage';
+import { generateId } from 'helpers/Firebase-db';
 
 class FormEvaluacion extends React.Component {
   constructor(props) {
@@ -99,7 +106,13 @@ class FormEvaluacion extends React.Component {
 
   onSubmit = async () => {
     let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-    const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
+    console.log(ejercicios);
+    const idEval = await generateId(
+      `materias/${this.props.subject.id}/evaluaciones/`
+    );
+    let ejerciciosConUrl = await this.subirImagenesAStorage(ejercicios, idEval);
+    const ejerciciosEncriptados = encriptarEjercicios(ejerciciosConUrl);
+    console.log(ejerciciosEncriptados);
     const obj = {
       nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
       fecha_finalizacion: timeStamp.fromDate(
@@ -125,15 +138,39 @@ class FormEvaluacion extends React.Component {
       this.props.user,
       'Evaluación',
       'ejercicios',
-      'Ejercicios'
+      'Ejercicios',
+      idEval
     );
 
     this.props.onEvaluacionAgregada();
   };
 
+  subirImagenesAStorage = async (ejercicios, idEval) => {
+    let ejerConUrl = ejercicios;
+
+    for (const ej of ejerConUrl) {
+      if (ej.tipo === TIPO_EJERCICIO.opcion_multiple_imagen) {
+        let i = 0;
+        for (let opcion of ej.opciones) {
+          const path = `materias/${this.props.subject.id}/evaluaciones/${idEval}`;
+          await subirArchivoAStorage(path, opcion.file).then(() => {
+            ej.opciones[i] = {
+              opcion: BaseUrl + path + '/' + opcion.file.name,
+              verdadera: opcion.verdadera,
+            };
+            i++;
+          });
+        }
+      }
+    }
+    console.log(ejerConUrl);
+    return ejerConUrl;
+  };
+
   onEdit = async () => {
     try {
       let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+      await this.subirImagenesAStorage(ejercicios, this.state.evaluacionId);
       const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
       const obj = {
         nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
@@ -342,9 +379,10 @@ class FormEvaluacion extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user } = authUser;
-  return { user };
+  const { subject } = seleccionCurso;
+  return { user, subject };
 };
 
 export default connect(mapStateToProps)(FormEvaluacion);
