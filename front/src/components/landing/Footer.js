@@ -22,14 +22,14 @@ const Footer = () => {
                   <div className="footer-widget__social">
                     <a
                       href="https://twitter.com/trida_ar"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       target="_blank"
                     >
                       <i className="fab fa-twitter"></i>
                     </a>
                     <a
                       href="https://www.instagram.com/trida_ar/"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       target="_blank"
                     >
                       <i className="fab fa-instagram"></i>

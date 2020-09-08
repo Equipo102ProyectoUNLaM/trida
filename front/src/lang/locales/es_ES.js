@@ -53,7 +53,7 @@ module.exports = {
   'menu.app': 'Inicio',
   'menu.dashboards': 'Tableros',
   'menu.inicio': 'Inicio',
-  'menu.start': '¡Bienvenid@ a třída!',
+  'menu.start': '¡Te damos la bienvenida a třída!',
   'menu.second-menu': 'Segundo menú',
   'menu.second': 'Segundo',
   'menu.ui': 'IU',
@@ -143,6 +143,10 @@ module.exports = {
 
   /* 12. Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',
+  'contenido.grabar-video': 'GRABAR VIDEO',
+  'contenido.grabar-audio': 'GRABAR AUDIO',
+  'contenido.nombre-audio': 'Nombre del Audio',
+  'contenido.nombre-video': 'Nombre del Video',
 
   /* 13. Mensajeria */
   'messages.new': 'CREAR NUEVO MENSAJE',

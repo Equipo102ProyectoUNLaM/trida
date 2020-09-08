@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';

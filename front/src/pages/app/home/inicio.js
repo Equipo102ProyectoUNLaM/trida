@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Row, Card, CardTitle, CardBody, Input, NavLink } from 'reactstrap';
+import { Row, Card, CardTitle, CardBody, Input } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { SliderTooltip } from 'components/common/Slider';
