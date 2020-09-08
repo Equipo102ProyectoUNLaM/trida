@@ -6,6 +6,9 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { addDocument } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
+import { Formik, Form, Field } from 'formik';
+import { mensajesSchema } from './validations';
+import { encriptarTexto } from 'handlers/EncryptionHandler';
 
 class FormMensaje extends Component {
   constructor(props) {
@@ -22,7 +25,7 @@ class FormMensaje extends Component {
       isLoading: true,
       idUser: this.props.user,
       esGeneral: false,
-      datos: this.props.datosUsuarios,
+      usuariosDelSelect: this.props.datosUsuarios,
     };
   }
 
@@ -43,13 +46,19 @@ class FormMensaje extends Component {
 
   componentWillUnmount() {
     this.setState({
-      datos: [],
+      usuariosDelSelect: [],
     });
   }
 
-  handleSubmit = async (event) => {
-    event.preventDefault();
+  disableEnviarButton() {
+    return (
+      this.state.selectedOptions.length === 0 &&
+      !this.state.esGeneral &&
+      !this.props.esResponder
+    );
+  }
 
+  handleSubmit = async (values) => {
     //Si no es un mensaje general, convierto el array de seleccionados al formato { id, nombre }
     let receptores = null;
     if (!this.state.esGeneral) {
@@ -66,8 +75,8 @@ class FormMensaje extends Component {
         nombre: this.props.nombre + ' ' + this.props.apellido,
       },
       receptor: receptores,
-      contenido: this.state.textoMensaje,
-      asunto: this.state.asunto,
+      contenido: encriptarTexto(values.textoMensaje),
+      asunto: values.asunto,
       formal: false,
       general: this.state.esGeneral,
       idMateria: this.state.idMateria,
@@ -75,6 +84,7 @@ class FormMensaje extends Component {
         ? this.props.idMensajeAResponder
         : '',
     };
+
     //guardar msj en bd
     await addDocument(
       'mensajes',
@@ -102,7 +112,7 @@ class FormMensaje extends Component {
       asunto,
       textoMensaje,
       esGeneral,
-      datos,
+      usuariosDelSelect,
     } = this.state;
     const {
       toggleModal,
@@ -115,86 +125,115 @@ class FormMensaje extends Component {
     return isLoading ? (
       <div className="loading" />
     ) : (
-      <form onSubmit={this.handleSubmit}>
-        <Row>
-          <Colxx xxs="12" md="12">
-            <label>
-              <IntlMessages id="messages.receiver" />
-            </label>
-            {!esResponder && (
-              <Row>
-                <Colxx xxs="12" md="4">
-                  <Select
-                    className="react-select"
-                    classNamePrefix="react-select"
-                    isMulti
-                    placeholder="Seleccione los destinatarios"
-                    name="form-field-name"
-                    value={selectedOptions}
-                    onChange={this.handleChangeMulti}
-                    options={datos}
-                    required
-                    isDisabled={esGeneral}
-                  />
-                </Colxx>
-                {rol === ROLES.Docente && (
-                  <Colxx xxs="12" md="6" className="receivers-general">
-                    <Input
-                      name="esGeneral"
-                      className="general-check"
-                      type="checkbox"
-                      checked={esGeneral}
-                      onChange={() => this.handleCheckBoxChange()}
-                    />
-                    <label>¿Es un mensaje general?</label>
-                  </Colxx>
-                )}
-              </Row>
-            )}
-            {esResponder && (
-              <Row>
-                <Input
-                  value={usuarioAResponder}
-                  disabled
-                  className="answer-message"
-                ></Input>
-                <label className="answer-message-title">
-                  Mensaje a responder
+      <Formik
+        initialValues={{
+          textoMensaje: textoMensaje,
+          esGeneral: esGeneral,
+          asunto: asunto,
+          usuariosDelSelect: usuariosDelSelect,
+          usuarioAResponder: usuarioAResponder,
+          mensajeAResponder: mensajeAResponder,
+        }}
+        onSubmit={this.handleSubmit}
+        validationSchema={mensajesSchema}
+      >
+        {({ errors, touched }) => (
+          <Form className="av-tooltip tooltip-label-right" autoComplete="off">
+            <Row>
+              <Colxx xxs="12" md="12">
+                <label>
+                  <IntlMessages id="messages.receiver" />
                 </label>
-                <Input
-                  value={mensajeAResponder}
-                  disabled
-                  className="answer-message"
-                ></Input>
-              </Row>
-            )}
-          </Colxx>
-        </Row>
+                {!esResponder && (
+                  <Row>
+                    <Colxx xxs="12" md="4">
+                      <Select
+                        className="react-select"
+                        classNamePrefix="react-select"
+                        isMulti
+                        placeholder="Seleccione los destinatarios"
+                        name="select_usuarios"
+                        value={selectedOptions}
+                        onChange={this.handleChangeMulti}
+                        options={usuariosDelSelect}
+                        required
+                        isDisabled={esGeneral}
+                      />
+                    </Colxx>
+                    {rol === ROLES.Docente && (
+                      <Colxx xxs="12" md="6" className="receivers-general">
+                        <Field
+                          name="esGeneral"
+                          className="general-check"
+                          type="checkbox"
+                          checked={esGeneral}
+                          onChange={() => this.handleCheckBoxChange()}
+                        />
+                        <label>¿Es un mensaje general?</label>
+                      </Colxx>
+                    )}
+                  </Row>
+                )}
+                {esResponder && (
+                  <Row className="mensaje-es-responder">
+                    <Field
+                      value={usuarioAResponder}
+                      name="usuarioAResponder"
+                      disabled
+                      className="form-control"
+                    ></Field>
+                    <Label className="label-es-responder">
+                      Mensaje a responder
+                    </Label>
+                    <Field
+                      value={mensajeAResponder}
+                      name="mensajeAResponder"
+                      disabled
+                      className="form-control"
+                      component="textarea"
+                    ></Field>
+                  </Row>
+                )}
+              </Colxx>
+            </Row>
 
-        <FormGroup className="mb-3 asunto-msj ">
-          <Label>Asunto</Label>
-          <Input name="asunto" onChange={this.handleChange} value={asunto} />
-        </FormGroup>
+            <FormGroup className="mb-3 asunto-msj ">
+              <Label>Asunto</Label>
+              <Field name="asunto" className="form-control" />
+              {errors.asunto && touched.asunto ? (
+                <div className="invalid-feedback d-block">{errors.asunto}</div>
+              ) : null}
+            </FormGroup>
 
-        <FormGroup className="mb-3">
-          <Label>Mensaje</Label>
-          <Input
-            name="textoMensaje"
-            type="textarea"
-            onChange={this.handleChange}
-            value={textoMensaje}
-          />
-        </FormGroup>
+            <FormGroup className="mb-3">
+              <Label>Mensaje</Label>
+              <Field
+                name="textoMensaje"
+                component="textarea"
+                className="form-control"
+              />
+              {errors.textoMensaje && touched.textoMensaje ? (
+                <div className="invalid-feedback d-block">
+                  {errors.textoMensaje}
+                </div>
+              ) : null}
+            </FormGroup>
 
-        <ModalFooter>
-          <Button color="primary" type="submit">
-            Enviar
-          </Button>
-          <Button color="secondary" onClick={toggleModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </form>
+            <ModalFooter>
+              <Button
+                color="primary"
+                type="submit"
+                disabled={this.disableEnviarButton()}
+              >
+                Enviar
+              </Button>
+              <Button color="secondary" onClick={toggleModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Form>
+        )}
+      </Formik>
     );
   }
 }
