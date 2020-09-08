@@ -310,7 +310,7 @@ class Mensajeria extends Component {
                 <Colxx xxs="12" md="12">
                   <label>Mensaje a reenviar</label>
                   <Input
-                    value={contenidoMensaje}
+                    defaultValue={contenidoMensaje}
                     onChange={this.handleChange}
                     className="resend-message"
                     type="textarea"
