@@ -1,12 +1,10 @@
 import React from 'react';
-import { Card, Row } from 'reactstrap';
+import { Card } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { NavLink } from 'react-router-dom';
-import Calendario from 'components/common/Calendario';
 import { injectIntl } from 'react-intl';
-import { editDocument } from 'helpers/Firebase-db';
 
 class DataListEventos extends React.Component {
   render() {

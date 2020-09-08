@@ -491,7 +491,6 @@ export const getEventosDelDia = async (subject) => {
 };
 
 export const guardarNotas = async (user, notas) => {
-  console.log(notas);
   return await firestore
     .collection('notas')
     .doc(user)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Card, CardTitle, Button, FormGroup, NavLink } from 'reactstrap';
+import { Row, Card, CardTitle, Button, FormGroup } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';

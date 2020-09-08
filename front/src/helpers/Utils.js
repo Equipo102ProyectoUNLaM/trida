@@ -120,6 +120,10 @@ export const getDate = (date, format) => {
   return moment(date, format ? format : 'DD/MM/YYYY').locale('es');
 };
 
+export const getTimestamp = () => {
+  return moment().format('DD-MM-YYYY HH:mm');
+};
+
 export const getDateTimeStringFromDate = (date, format) => {
   return moment(new Date(date.toDate())).format(
     format ? format : 'DD/MM/YYYY - HH:mm'

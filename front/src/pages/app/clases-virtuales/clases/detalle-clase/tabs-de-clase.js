@@ -464,15 +464,18 @@ class TabsDeClase extends Component {
                             ) : (
                               linksDeClase.map((link) => {
                                 return (
-                                  <Row key={link} className="lista-links-clase">
+                                  <Row
+                                    key={link.link}
+                                    className="lista-links-clase"
+                                  >
                                     <a
                                       className="link-clase"
-                                      id={link}
-                                      href={link}
+                                      id={link.link}
+                                      href={link.link}
                                       rel="noopener noreferrer"
                                       target="_blank"
                                     >
-                                      {link} <br />
+                                      {link.descripcion} <br /> {link.link}
                                     </a>
                                   </Row>
                                 );
