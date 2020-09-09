@@ -16,6 +16,7 @@ import DataListView from 'containers/pages/DataListView';
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import PaginaVideollamada from './pagina-videollamada';
+import PaginaAsistencia from './pagina-asistencia';
 import { storage } from 'helpers/Firebase';
 import { getDocument, editDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
@@ -39,6 +40,7 @@ class TabsDeClase extends Component {
       isLoading: true,
       contenidoRef: '',
       propsContenidos: [],
+      asistencia: [],
     };
   }
 
@@ -50,9 +52,19 @@ class TabsDeClase extends Component {
         activeSecondTab: hash.split('')[1],
       });
     }
-
+    this.getAsistenciaDeClase();
     this.dataListRenderer();
   }
+
+  componentDidUpdate() {
+    this.getAsistenciaDeClase();
+  }
+
+  getAsistenciaDeClase = async () => {
+    const { data } = await getDocument(`clases/${this.props.idClase}`);
+    const { asistencia } = data;
+    this.setState({ asistencia });
+  };
 
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
@@ -237,6 +249,7 @@ class TabsDeClase extends Component {
       files,
       modalDeleteOpen,
       propsContenidos,
+      asistencia,
     } = this.state;
 
     return (
@@ -355,6 +368,7 @@ class TabsDeClase extends Component {
                           ) : (
                             <PaginaVideollamada
                               idSala={idSala}
+                              idClase={idClase}
                               password={password}
                             />
                           )}
@@ -469,7 +483,7 @@ class TabsDeClase extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">Asistencia</CardTitle>
+                          <PaginaAsistencia asistencia={asistencia} />
                         </CardBody>
                       </Colxx>
                     </Row>

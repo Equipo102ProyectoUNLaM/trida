@@ -55,6 +55,7 @@ const PaginaVideollamada = (props) => {
         isHost={isHost}
         setCallOff={setVideollamadaOff}
         rol={props.rol}
+        idClase={props.idClase}
       />
     </>
   ) : (

@@ -2,10 +2,11 @@ import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
 import { Button, Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { getTimestamp } from 'helpers/Utils';
+import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
+import { editDocument } from 'helpers/Firebase-db';
 
 const Videollamada = ({
   roomName,
@@ -16,6 +17,7 @@ const Videollamada = ({
   isHost,
   setCallOff,
   rol,
+  idClase,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
@@ -43,16 +45,26 @@ const Videollamada = ({
     window.open(pizarronURI, '_blank', strWindowFeatures);
   };
 
-  const guardarListaAsistencia = () => {
-    console.warn('LISTA ASISTENCIA', listaAsistencia);
-    listaAsistencia.forEach((elem) => {
-      const arr1 = listaAsistencia.filter((element) => element.id === elem.id);
-      const arr2 = listaAsistencia.filter(
-        (element) => element.displayName === elem.displayName
-      );
-      console.warn('ARR1', arr1);
-      console.warn('ARR2', arr2);
-    });
+  const guardarListaAsistencia = async () => {
+    const arrayMergeado = mergeArrayObjects(listaAsistencia, listaAsistencia);
+    const arrayFiltrado = arrayMergeado.filter(
+      (elem) => elem.timeStampConexion && elem.timeStampDesconexion
+    );
+    const asistencia = arrayFiltrado.map((elem) => ({
+      ...elem,
+      tiempoNeto: getTimestampDifference(
+        elem.timeStampConexion,
+        elem.timeStampDesconexion
+      ),
+    }));
+    await editDocument('clases', idClase, { asistencia });
+  };
+
+  const mergeArrayObjects = (a1, a2) => {
+    return a1.map((itm) => ({
+      ...a2.find((item) => item.id === itm.id && item),
+      ...itm,
+    }));
   };
 
   useEffect(() => {
@@ -90,8 +102,8 @@ const Videollamada = ({
         //jitsi.executeCommand('password', password);
       });
       jitsi.addEventListener('readyToClose', () => {
+        if (rol === ROLES.Docente) guardarListaAsistencia();
         setCallOff();
-        guardarListaAsistencia();
       });
       jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
         on
@@ -100,12 +112,16 @@ const Videollamada = ({
       });
       jitsi.addEventListener('participantJoined', ({ id, displayName }) => {
         setListaAsistencia(
-          listaAsistencia.push({ id, displayName, timeStamp: getTimestamp() })
+          listaAsistencia.push({
+            id,
+            nombre: displayName,
+            timeStampConexion: getTimestamp(),
+          })
         );
       });
       jitsi.addEventListener('participantLeft', ({ id }) => {
         setListaAsistencia(
-          listaAsistencia.push({ id, timeStamp: getTimestamp() })
+          listaAsistencia.push({ id, timeStampDesconexion: getTimestamp() })
         );
       });
     }
