@@ -52,9 +52,10 @@ const Videollamada = ({
     );
     const asistencia = arrayFiltrado.map((elem) => ({
       ...elem,
+      nombre: elem.nombre ? elem.nombre : 'Nombre',
       tiempoNeto: getTimestampDifference(
-        elem.timeStampConexion,
-        elem.timeStampDesconexion
+        elem.timeStampDesconexion,
+        elem.timeStampConexion
       ),
     }));
     await editDocument('clases', idClase, { asistencia });
@@ -96,6 +97,7 @@ const Videollamada = ({
 
   useEffect(() => {
     if (jitsi) {
+      jitsi.executeCommand('displayName', userName);
       jitsi.addEventListener('videoConferenceJoined', () => {
         jitsi.executeCommand('displayName', userName);
         jitsi.executeCommand('subject', subject);
@@ -105,25 +107,27 @@ const Videollamada = ({
         if (rol === ROLES.Docente) guardarListaAsistencia();
         setCallOff();
       });
-      jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
-        on
-          ? setShareScreenButtonText('Dejar de Compartir pantalla')
-          : setShareScreenButtonText('Compartir pantalla');
-      });
-      jitsi.addEventListener('participantJoined', ({ id, displayName }) => {
-        setListaAsistencia(
-          listaAsistencia.push({
-            id,
-            nombre: displayName,
-            timeStampConexion: getTimestamp(),
-          })
-        );
-      });
-      jitsi.addEventListener('participantLeft', ({ id }) => {
-        setListaAsistencia(
-          listaAsistencia.push({ id, timeStampDesconexion: getTimestamp() })
-        );
-      });
+      if (rol === ROLES.Docente) {
+        jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
+          on
+            ? setShareScreenButtonText('Dejar de Compartir pantalla')
+            : setShareScreenButtonText('Compartir pantalla');
+        });
+        jitsi.addEventListener('participantJoined', ({ id, displayName }) => {
+          setListaAsistencia(
+            listaAsistencia.push({
+              id,
+              nombre: displayName,
+              timeStampConexion: getTimestamp(),
+            })
+          );
+        });
+        jitsi.addEventListener('participantLeft', ({ id }) => {
+          setListaAsistencia(
+            listaAsistencia.push({ id, timeStampDesconexion: getTimestamp() })
+          );
+        });
+      }
     }
     return () => {
       jitsi && jitsi.dispose();

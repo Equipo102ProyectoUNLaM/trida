@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { useForm } from 'react-hook-form';
 import Videollamada from 'components/videollamada/videollamada';
 import {
   Container,
@@ -17,7 +16,6 @@ import { secretKey } from 'constants/defaultValues';
 import ROLES from 'constants/roles';
 
 const PaginaVideollamada = (props) => {
-  const { handleSubmit, register, errors } = useForm();
   const room = CryptoJS.AES.decrypt(props.idSala, secretKey).toString(
     CryptoJS.enc.Utf8
   );
@@ -25,12 +23,11 @@ const PaginaVideollamada = (props) => {
   const isHost = props.rol === ROLES.Docente;
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
-  const [name, setName] = useState(props.nombre + ' ' + props.apellido);
   const [call, setCall] = useState(false);
 
   const onSubmit = (event) => {
-    //event.preventDefault();
-    if (room && name) setCall(true);
+    event.preventDefault();
+    if (room) setCall(true);
   };
 
   const setVideollamadaOff = () => {
@@ -48,7 +45,7 @@ const PaginaVideollamada = (props) => {
     <>
       <Videollamada
         roomName={room}
-        userName={name}
+        userName={`${props.nombre} ${props.apellido}`}
         password={props.password}
         containerStyles={{ width: '100%', height: '700px' }}
         options={options}
@@ -62,7 +59,7 @@ const PaginaVideollamada = (props) => {
     <>
       <div>
         <Container>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={onSubmit}>
             <FormGroup className="mb-3">
               <Label>Nombre</Label>
               <Input
@@ -72,16 +69,7 @@ const PaginaVideollamada = (props) => {
                 placeholder="Nombre"
                 value={`${props.nombre} ${props.apellido}`}
                 disabled
-                onChange={(e) => setName(e.target.value)}
-                innerRef={register({
-                  required: 'El nombre es requerido!',
-                })}
               />
-              {errors.name && (
-                <FormText className="error-text-color">
-                  {errors.name.message}
-                </FormText>
-              )}
             </FormGroup>
             <FormGroup>
               <Label>Opciones de Videollamada</Label>

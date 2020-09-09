@@ -25,7 +25,7 @@ export const DATA_TABLE_COLUMNS = [
     accessor: 'tiempoNeto',
     // eslint-disable-next-line react/display-name
     Cell: (props) => (
-      <p>{props.value < 1 ? '< 1 minuto' : `${props.value} minutos`} </p>
+      <p>{props.value < 2 ? '< 2 minutos' : `${props.value} minutos`} </p>
     ),
   },
 ];

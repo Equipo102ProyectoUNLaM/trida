@@ -56,10 +56,6 @@ class TabsDeClase extends Component {
     this.dataListRenderer();
   }
 
-  componentDidUpdate() {
-    this.getAsistenciaDeClase();
-  }
-
   getAsistenciaDeClase = async () => {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
