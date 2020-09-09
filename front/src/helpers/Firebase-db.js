@@ -191,7 +191,8 @@ export const addDocumentWithSubcollection = async (
   userId,
   message,
   subCollection,
-  subCollectionMessage
+  subCollectionMessage,
+  idDoc
 ) => {
   let objectSubcollectionData = object.subcollection.data;
   let objectBaseData = {
@@ -204,12 +205,13 @@ export const addDocumentWithSubcollection = async (
 
   firestore
     .collection(collection)
-    .add(objectBaseData)
+    .doc(idDoc)
+    .set(objectBaseData)
     .then(function (docRef) {
       for (const data of objectSubcollectionData) {
         firestore
           .collection(collection)
-          .doc(docRef.id)
+          .doc(idDoc)
           .collection(subCollection)
           .add(data)
           .then(function () {})
