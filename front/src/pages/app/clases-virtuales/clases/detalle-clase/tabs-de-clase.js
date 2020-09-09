@@ -57,9 +57,10 @@ class TabsDeClase extends Component {
   }
 
   getAsistenciaDeClase = async () => {
+    this.setState({ isLoading: true });
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
-    this.setState({ asistencia });
+    this.setState({ isLoading: false, asistencia });
   };
 
   toggleSecondTab(tab) {
@@ -342,6 +343,7 @@ class TabsDeClase extends Component {
                             'nav-link': true,
                           })}
                           onClick={() => {
+                            this.getAsistenciaDeClase();
                             this.toggleSecondTab('5');
                           }}
                         >
