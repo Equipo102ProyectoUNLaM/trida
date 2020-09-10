@@ -499,7 +499,20 @@ class TabsDeClase extends Component {
                                 No hay preguntas creadas para esta clase
                               </p>
                             ) : (
-                              <p>Hay preguntas para esta clase</p>
+                              <Row>
+                                {preguntasDeClase.map((pregunta) => {
+                                  const consignaPregunta =
+                                    pregunta.data.consigna;
+
+                                  return (
+                                    <DataListView
+                                      key={pregunta.id}
+                                      id={pregunta.id}
+                                      title={consignaPregunta}
+                                    />
+                                  );
+                                })}
+                              </Row>
                             ))}
                           {rol === ROLES.Docente && (
                             <Row className="button-group">
