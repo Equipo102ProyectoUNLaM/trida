@@ -142,7 +142,7 @@ class FormPreguntas extends React.Component {
   };
 
   render() {
-    const { onCancel, evaluacion, toggleModalPreguntas } = this.props;
+    const { toggleModalPreguntas } = this.props;
     const { modalEditOpen, modalAddOpen, isLoading, preguntas } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -156,7 +156,7 @@ class FormPreguntas extends React.Component {
         />
 
         <ModalFooter>
-          {!evaluacion.preguntaId && (
+          {!preguntas && (
             <>
               <Button color="primary" onClick={this.onSubmit}>
                 Crear Preguntas
@@ -166,7 +166,7 @@ class FormPreguntas extends React.Component {
               </Button>
             </>
           )}
-          {evaluacion.preguntaId && (
+          {preguntas && (
             <>
               <Button color="primary" type="submit">
                 Guardar Preguntas

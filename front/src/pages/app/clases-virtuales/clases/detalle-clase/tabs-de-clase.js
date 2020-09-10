@@ -257,7 +257,9 @@ class TabsDeClase extends Component {
     console.log('preguntasDesencriptadas', preguntasDesencriptadas);
 
     this.setState({
-      preguntasDeClase: preguntasDesencriptadas,
+      preguntasDeClase: preguntasDesencriptadas.sort(
+        (a, b) => a.data.numero - b.data.numero
+      ),
       isLoading: false,
     });
   };

@@ -26,6 +26,7 @@ class AgregarPregunta extends React.Component {
       tema: '',
       cant: 1,
       submitted: false,
+      isLoading: true,
     };
   }
 
@@ -39,7 +40,17 @@ class AgregarPregunta extends React.Component {
         ejerciciosSeleccionados: ejercicios,
         cant: ejercicios.length,
       });
+      console.log('ejercicios', ejercicios);
+      console.log('props.preguntas', this.props.preguntas);
+      console.log(
+        'ejerciciosSeleccionados',
+        this.state.ejerciciosSeleccionados
+      );
     }
+
+    this.setState({
+      isLoading: false,
+    });
   }
 
   handleChange = (event) => {
@@ -134,8 +145,10 @@ class AgregarPregunta extends React.Component {
   };
 
   render() {
-    const { ejerciciosSeleccionados, submitted } = this.state;
-    return (
+    const { ejerciciosSeleccionados, submitted, isLoading } = this.state;
+    return isLoading ? (
+      <div className="loading" />
+    ) : (
       <FormGroup className="mb-3">
         {ejerciciosSeleccionados.map((ejercicio, index) => (
           <Row key={'row ' + index}>
@@ -150,7 +163,7 @@ class AgregarPregunta extends React.Component {
                             <h6 className="mb-4">
                               Pregunta N°{ejercicio.numero}
                             </h6>
-
+                            {console.log('ejercicio', ejercicio)}
                             <OpcionMultiple
                               ejercicioId={index}
                               value={ejercicio}
