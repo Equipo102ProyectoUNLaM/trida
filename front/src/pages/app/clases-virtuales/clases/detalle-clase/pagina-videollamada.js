@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Videollamada from 'components/videollamada/videollamada';
 import {
@@ -14,6 +14,7 @@ import {
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import ROLES from 'constants/roles';
+import { editDocument, getDatosClaseOnSnapshot } from 'helpers/Firebase-db';
 
 const PaginaVideollamada = (props) => {
   const room = CryptoJS.AES.decrypt(props.idSala, secretKey).toString(
@@ -24,14 +25,26 @@ const PaginaVideollamada = (props) => {
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [call, setCall] = useState(false);
+  const [llamadaIniciada, setIniciada] = useState(false);
 
   const onSubmit = (event) => {
     event.preventDefault();
+    editDocument('clases', props.idClase, { iniciada: true });
     if (room) setCall(true);
   };
 
   const setVideollamadaOff = () => {
     setCall(false);
+    editDocument('clases', props.idClase, { iniciada: false });
+  };
+
+  useEffect(() => {
+    getDatosClaseOnSnapshot(props.idClase, onClaseIniciada);
+  }, []);
+
+  const onClaseIniciada = (doc) => {
+    const { iniciada } = doc.data();
+    setIniciada(iniciada);
   };
 
   const handleChange = (event) => {
@@ -92,9 +105,21 @@ const PaginaVideollamada = (props) => {
                 />
               </div>
             </FormGroup>
-            <Button color="primary" size="lg" type="submit">
-              Iniciar
-            </Button>
+            {props.rol === ROLES.Docente && (
+              <Button color="primary" size="lg" type="submit">
+                Iniciar
+              </Button>
+            )}
+            {props.rol === ROLES.Alumno && (
+              <Button
+                disabled={!llamadaIniciada}
+                color="primary"
+                size="lg"
+                type="submit"
+              >
+                Ingresar
+              </Button>
+            )}
           </Form>
         </Container>
       </div>
