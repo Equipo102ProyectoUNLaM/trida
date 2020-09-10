@@ -30,8 +30,7 @@ class ModalCrearPreguntas extends React.Component {
       idMateria,
       idClase,
       toggleModalPreguntas,
-      getPreguntasDeClase,
-      onPreguntasAgregadas,
+      updatePreguntas,
     } = this.props;
     const { esPregunta } = this.state;
 
@@ -47,8 +46,7 @@ class ModalCrearPreguntas extends React.Component {
           idMateria={idMateria}
           idClase={idClase}
           toggleModalPreguntas={toggleModalPreguntas}
-          updateLinks={getPreguntasDeClase}
-          onPreguntasAgregadas={onPreguntasAgregadas}
+          updatePreguntas={updatePreguntas}
         />
       </>
     );

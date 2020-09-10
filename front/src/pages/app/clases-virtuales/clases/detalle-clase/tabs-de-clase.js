@@ -17,7 +17,11 @@ import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import PaginaVideollamada from './pagina-videollamada';
 import { storage } from 'helpers/Firebase';
-import { getDocument, editDocument } from 'helpers/Firebase-db';
+import {
+  getDocument,
+  editDocument,
+  getDocumentWithSubCollection,
+} from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
@@ -25,6 +29,7 @@ import ModalAsociarContenidos from './modal-asociar-contenidos';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalCrearPreguntas from './modal-crear-preguntas';
 import ROLES from 'constants/roles';
+import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -58,7 +63,6 @@ class TabsDeClase extends Component {
 
     this.dataListRenderer();
     this.getPreguntasDeClase();
-    console.log('tab', this.props.idClase);
   }
 
   toggleSecondTab(tab) {
@@ -234,12 +238,28 @@ class TabsDeClase extends Component {
     this.props.updateContenidos();
   };
 
-  getPreguntasDeClase() {}
-
-  onPreguntasAgregadas = () => {
-    this.props.history.push(
-      `/app/clases-virtuales/mis-clases/detalle-clase/${this.props.idClase}`
+  getPreguntasDeClase = async () => {
+    const claseConPreguntas = await getDocumentWithSubCollection(
+      `clases/${this.props.idClase}`,
+      'preguntas'
     );
+
+    const { id, data, subCollection } = claseConPreguntas;
+    //const { nombre, descripcion, fecha_finalizacion } = data;
+    console.log('subCollection', subCollection);
+
+    //Desencripto las preguntas
+    const sinRespuesta = false;
+    const preguntasDesencriptadas = desencriptarEjercicios(
+      subCollection,
+      sinRespuesta
+    );
+    console.log('preguntasDesencriptadas', preguntasDesencriptadas);
+
+    this.setState({
+      preguntasDeClase: preguntasDesencriptadas,
+      isLoading: false,
+    });
   };
 
   render() {
@@ -501,14 +521,12 @@ class TabsDeClase extends Component {
                               toggleModal={this.toggleModalPreguntas}
                               text="Preguntas de la Clase"
                             >
-                              {console.log('tabClase', idClase)}
                               <ModalCrearPreguntas
                                 isLoading={isLoading}
                                 idClase={idClase}
                                 idMateria={idMateria}
                                 toggleModalPreguntas={this.toggleModalPreguntas}
-                                updateLinks={this.getPreguntasDeClase}
-                                onPreguntasAgregadas={this.onPreguntasAgregadas}
+                                updatePreguntas={this.getPreguntasDeClase}
                               />
                             </ModalGrande>
                           )}

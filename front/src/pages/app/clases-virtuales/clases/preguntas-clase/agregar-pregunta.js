@@ -137,10 +137,6 @@ class AgregarPregunta extends React.Component {
     const { ejerciciosSeleccionados, submitted } = this.state;
     return (
       <FormGroup className="mb-3">
-        <div className="glyph-icon simple-icon-plus agregar-ejercicios-action-icon">
-          <p className="icon-text">Agregar Preguntas</p>
-        </div>
-
         {ejerciciosSeleccionados.map((ejercicio, index) => (
           <Row key={'row ' + index}>
             <Colxx xxs="12">

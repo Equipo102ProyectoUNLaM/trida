@@ -5,8 +5,7 @@ import {
   addDocument,
   editDocument,
   deleteDocument,
-  addDocumentWithSubcollection,
-  getUsernameById,
+  addArrayToSubCollection,
 } from 'helpers/Firebase-db';
 import { Colxx } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
@@ -61,23 +60,7 @@ class FormPreguntas extends React.Component {
   };
 
   componentDidMount() {
-    //VER BIEN
-    /*     if (this.state.ejercicios) {
-      const userName = await getUsernameById(this.props.user);
-      this.setState({
-        idClase: this.props.idClase,
-        creador: userName,
-        isLoading: false,
-      });
-    } else {
-      this.setState({         
-        idClase: this.props.idClase,
-        creador: userName,
-        isLoading: false, });
-    } */
-    //const userName = await getUsernameById(this.props.user);
     this.setState({
-      idClase: this.props.idClase,
       isLoading: false,
     });
   }
@@ -86,24 +69,24 @@ class FormPreguntas extends React.Component {
     let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
     const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
     const obj = {
-      idMateria: this.props.idMateria, // creo que estos 2 campos son de la coleccion padre
-      activo: true,
       subcollection: {
         data: ejerciciosEncriptados,
       },
     };
-    console.log(this.state.idClase);
-    await addDocumentWithSubcollection(
-      'preguntasDeClase',
+    console.log(obj);
+    await addArrayToSubCollection(
+      'clases',
+      this.state.idClase,
+      'preguntas',
       obj,
       this.props.user,
-      'Preguntas de la clase',
-      'preguntas',
-      'Preguntas',
-      this.state.idClase
+      'Preguntas creadas!',
+      'Preguntas creadas exitosamente',
+      'Error al crear las preguntas'
     );
 
-    this.props.onPreguntasAgregadas();
+    this.props.toggleModalPreguntas();
+    this.props.updatePreguntas();
   };
 
   onEdit = async () => {
