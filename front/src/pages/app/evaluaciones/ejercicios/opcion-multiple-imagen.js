@@ -9,6 +9,8 @@ import {
   CustomInput,
 } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 
 class OpcionMultipleImagen extends React.Component {
   constructor(props) {
@@ -23,6 +25,8 @@ class OpcionMultipleImagen extends React.Component {
           verdadera: false,
         },
       ],
+      isOpenImagePreview: false,
+      openOption: '',
     };
   }
 
@@ -104,7 +108,7 @@ class OpcionMultipleImagen extends React.Component {
   };
 
   render() {
-    let { opciones, consigna, respuestas } = this.state;
+    let { opciones, consigna, respuestas, isOpenImagePreview } = this.state;
 
     const { preview, resolve } = this.props;
 
@@ -131,6 +135,22 @@ class OpcionMultipleImagen extends React.Component {
                       alt="img"
                       className="image-preview"
                     ></img>
+                    <Colxx xxs="1" className="icon-container">
+                      <div
+                        className="margin-auto"
+                        style={{ textAlign: 'center' }}
+                      >
+                        <div
+                          className="glyph-icon simple-icon-magnifier-add zoom-icon"
+                          onClick={() =>
+                            this.setState({
+                              isOpenImagePreview: true,
+                              openOption: index,
+                            })
+                          }
+                        ></div>
+                      </div>
+                    </Colxx>
                   </Colxx>
                 </Row>
               );
@@ -157,6 +177,22 @@ class OpcionMultipleImagen extends React.Component {
                 </Colxx>
                 <Colxx xxs="10" className="flex">
                   <img className="image-preview" alt="img" src={op.opcion} />
+                  <Colxx xxs="1" className="icon-container">
+                    <div
+                      className="margin-auto"
+                      style={{ textAlign: 'center' }}
+                    >
+                      <div
+                        className="glyph-icon simple-icon-magnifier-add zoom-icon"
+                        onClick={() =>
+                          this.setState({
+                            isOpenImagePreview: true,
+                            openOption: index,
+                          })
+                        }
+                      ></div>
+                    </div>
+                  </Colxx>
                 </Colxx>
               </Row>
             ))}{' '}
@@ -205,11 +241,29 @@ class OpcionMultipleImagen extends React.Component {
                       checked={op.verdadera}
                     />
                     {op.opcion && (
-                      <img
-                        className="image-preview"
-                        alt="img"
-                        src={op.opcion}
-                      />
+                      <Fragment>
+                        <img
+                          className="image-preview"
+                          alt="img"
+                          src={op.opcion}
+                        />
+                        <Colxx xxs="1" className="icon-container">
+                          <div
+                            className="margin-auto"
+                            style={{ textAlign: 'center' }}
+                          >
+                            <div
+                              className="glyph-icon simple-icon-magnifier-add zoom-icon"
+                              onClick={() =>
+                                this.setState({
+                                  isOpenImagePreview: true,
+                                  openOption: index,
+                                })
+                              }
+                            ></div>
+                          </div>
+                        </Colxx>
+                      </Fragment>
                     )}
                     {!op.opcion && (
                       <InputGroup className="mb-3 opcionMultipleInput margin-auto">
@@ -258,6 +312,13 @@ class OpcionMultipleImagen extends React.Component {
               Agregar Opción{' '}
             </Button>
           </div>
+        )}
+
+        {isOpenImagePreview && (
+          <Lightbox
+            mainSrc={opciones[this.state.openOption].opcion}
+            onCloseRequest={() => this.setState({ isOpenImagePreview: false })}
+          />
         )}
       </Fragment>
     );
