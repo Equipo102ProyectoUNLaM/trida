@@ -537,7 +537,7 @@ class TabsDeClase extends Component {
                               <ModalCrearPreguntas
                                 isLoading={isLoading}
                                 idClase={idClase}
-                                idMateria={idMateria}
+                                preguntas={preguntasDeClase}
                                 toggleModalPreguntas={this.toggleModalPreguntas}
                                 updatePreguntas={this.getPreguntasDeClase}
                               />

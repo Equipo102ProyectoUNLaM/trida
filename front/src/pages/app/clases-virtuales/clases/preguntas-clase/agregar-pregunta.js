@@ -30,9 +30,9 @@ class AgregarPregunta extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.ejercicios) {
+    if (this.props.preguntas) {
       let ejercicios = [];
-      for (const doc of this.props.ejercicios) {
+      for (const doc of this.props.preguntas) {
         ejercicios.push(doc.data);
       }
       this.setState({

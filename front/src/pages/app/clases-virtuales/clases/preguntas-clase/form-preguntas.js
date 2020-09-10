@@ -28,7 +28,7 @@ class FormPreguntas extends React.Component {
       creador: '',
       modalEditOpen: false,
       modalAddOpen: false,
-      ejercicios: [],
+      preguntas: [],
       isLoading: true,
     };
   }
@@ -48,7 +48,7 @@ class FormPreguntas extends React.Component {
   toggleModalWithValues = async (values) => {
     const valid = await this.ejerciciosComponentRef.validateEjercicios();
     if (!valid) return;
-    if (this.state.ejercicios) {
+    if (this.state.preguntas) {
       this.setState({
         modalEditOpen: !this.state.modalEditOpen,
       });
@@ -60,17 +60,20 @@ class FormPreguntas extends React.Component {
   };
 
   componentDidMount() {
+    if (this.props.preguntas) {
+      this.setState({ preguntas: this.props.preguntas });
+    }
     this.setState({
       isLoading: false,
     });
   }
 
   onSubmit = async () => {
-    let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-    const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
+    let preguntas = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+    const preguntasEncriptadas = encriptarEjercicios(preguntas);
     const obj = {
       subcollection: {
-        data: ejerciciosEncriptados,
+        data: preguntasEncriptadas,
       },
     };
     console.log(obj);
@@ -91,8 +94,8 @@ class FormPreguntas extends React.Component {
 
   onEdit = async () => {
     try {
-      let ejercicios = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
-      const ejerciciosEncriptados = encriptarEjercicios(ejercicios);
+      let preguntas = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+      const preguntasEncriptadas = encriptarEjercicios(preguntas);
       const obj = {
         nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
         fecha_finalizacion: timeStamp.fromDate(
@@ -107,23 +110,24 @@ class FormPreguntas extends React.Component {
         ).toString(),
       };
 
+      /*    Creo que no iria, pq no necesito actualizar la clase   
       await editDocument(
         'evaluaciones',
         this.state.preguntaId,
         obj,
         'Evaluación'
-      );
+      ); */
 
-      this.state.ejercicios.forEach(async (element) => {
+      this.state.preguntas.forEach(async (element) => {
         await deleteDocument(
-          `evaluaciones/${this.state.preguntaId}/ejercicios`,
+          `clases/${this.state.idClase}/preguntas`,
           element.id
         );
       });
 
-      ejerciciosEncriptados.forEach(async (element) => {
+      preguntasEncriptadas.forEach(async (element) => {
         await addDocument(
-          `evaluaciones/${this.state.preguntaId}/ejercicios`,
+          `clases/${this.state.idClase}/preguntas`,
           element,
           this.props.user
         );
@@ -138,8 +142,8 @@ class FormPreguntas extends React.Component {
   };
 
   render() {
-    const { onCancel, evaluacion } = this.props;
-    const { modalEditOpen, modalAddOpen, isLoading, ejercicios } = this.state;
+    const { onCancel, evaluacion, toggleModalPreguntas } = this.props;
+    const { modalEditOpen, modalAddOpen, isLoading, preguntas } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -148,7 +152,7 @@ class FormPreguntas extends React.Component {
           ref={(ejer) => {
             this.ejerciciosComponentRef = ejer;
           }}
-          ejercicios={ejercicios}
+          preguntas={preguntas}
         />
 
         <ModalFooter>
@@ -157,7 +161,7 @@ class FormPreguntas extends React.Component {
               <Button color="primary" onClick={this.onSubmit}>
                 Crear Preguntas
               </Button>
-              <Button color="secondary" onClick={onCancel}>
+              <Button color="secondary" onClick={toggleModalPreguntas}>
                 Cancelar
               </Button>
             </>
@@ -167,7 +171,7 @@ class FormPreguntas extends React.Component {
               <Button color="primary" type="submit">
                 Guardar Preguntas
               </Button>
-              <Button color="secondary" onClick={onCancel}>
+              <Button color="secondary" onClick={toggleModalPreguntas}>
                 Cancelar
               </Button>
             </>

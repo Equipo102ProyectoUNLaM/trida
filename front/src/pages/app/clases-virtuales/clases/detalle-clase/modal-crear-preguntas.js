@@ -27,12 +27,11 @@ class ModalCrearPreguntas extends React.Component {
   render() {
     const {
       isLoading,
-      idMateria,
       idClase,
       toggleModalPreguntas,
       updatePreguntas,
+      preguntas,
     } = this.props;
-    const { esPregunta } = this.state;
 
     return isLoading ? (
       <ModalBody>
@@ -42,8 +41,7 @@ class ModalCrearPreguntas extends React.Component {
       <>
         <FormPreguntas
           evaluacion={this.state}
-          esPregunta={esPregunta}
-          idMateria={idMateria}
+          preguntas={preguntas}
           idClase={idClase}
           toggleModalPreguntas={toggleModalPreguntas}
           updatePreguntas={updatePreguntas}
