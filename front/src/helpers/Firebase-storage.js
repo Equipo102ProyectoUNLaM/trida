@@ -47,15 +47,11 @@ export const buscarArchivosStorage = async (subjectId, newRef) => {
 
 export const subirArchivoAStorage = async (path, file) => {
   const listRef = storage.ref(`${path}/${file.name}`);
-  const task = listRef.put(file); // upload task
-
-  task.on(
-    'state_changed',
-    (snapshot) => {},
-    (error) => {
-      console.error(error.message);
-    }
-  );
+  return await listRef.put(file).then(async (snapshot) => {
+    return await snapshot.ref.getDownloadURL().then(async (url) => {
+      return url;
+    });
+  });
 };
 
 export const eliminarArchivoStorage = async (path) => {
@@ -64,12 +60,4 @@ export const eliminarArchivoStorage = async (path) => {
     // Uh-oh, an error occurred!
     console.log('Error deleting documents', error);
   });
-};
-
-export const getDownloadURL = async (url) => {
-  if (!url) return;
-  let ref = storage.refFromURL(url);
-  const Durl = await ref.getDownloadURL();
-  console.log(Durl);
-  return Durl;
 };

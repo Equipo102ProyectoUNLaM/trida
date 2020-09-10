@@ -6,10 +6,9 @@ import {
   Label,
   FormGroup,
   InputGroup,
-  InputGroupAddon,
   CustomInput,
 } from 'reactstrap';
-import { getDownloadURL } from 'helpers/Firebase-storage';
+import { Colxx } from 'components/common/CustomBootstrap';
 
 class OpcionMultipleImagen extends React.Component {
   constructor(props) {
@@ -50,12 +49,11 @@ class OpcionMultipleImagen extends React.Component {
 
     let reader = new FileReader();
     let file = event.target.files[0];
-
     reader.onloadend = () => {
       list[index] = Object.assign(list[index], {
         [name]: value,
         file: file,
-        imagePreviewUrl: reader.result,
+        opcion: reader.result,
       });
       this.setState({ opciones: list });
     };
@@ -117,19 +115,26 @@ class OpcionMultipleImagen extends React.Component {
             <div className="mb-2">
               <Label>{consigna}</Label>
             </div>
-            {opciones.map((op, index) => (
-              <Row key={'row' + index} className="opcionMultipleRow">
-                <Input
-                  name="respuesta"
-                  className="margin-auto checkbox"
-                  type="checkbox"
-                />
-                <img
-                  src={getDownloadURL(op.opcion)}
-                  className="opcionMultipleInput margin-auto"
-                ></img>
-              </Row>
-            ))}{' '}
+            {opciones.map((op, index) => {
+              return (
+                <Row key={'row' + index} className="opcionMultipleRow">
+                  <Colxx xxs="2" className="flex">
+                    <Input
+                      name="respuesta"
+                      className="margin-auto checkbox"
+                      type="checkbox"
+                    />
+                  </Colxx>
+                  <Colxx xxs="10" className="flex">
+                    <img
+                      src={op.opcion}
+                      alt="img"
+                      className="image-preview"
+                    ></img>
+                  </Colxx>
+                </Row>
+              );
+            })}{' '}
           </div>
         )}
 
@@ -140,15 +145,19 @@ class OpcionMultipleImagen extends React.Component {
             </div>
             {opciones.map((op, index) => (
               <Row key={'row' + index} className="opcionMultipleRow">
-                <Input
-                  name="verdadera"
-                  className="margin-auto checkbox"
-                  type="checkbox"
-                  onChange={(e) => this.handleResponseCheckBoxChange(e, index)}
-                />
-                <Label className="opcionMultipleInput margin-auto">
-                  {op.opcion}
-                </Label>
+                <Colxx xxs="2" className="flex">
+                  <Input
+                    name="verdadera"
+                    className="margin-auto checkbox"
+                    type="checkbox"
+                    onChange={(e) =>
+                      this.handleResponseCheckBoxChange(e, index)
+                    }
+                  />
+                </Colxx>
+                <Colxx xxs="10" className="flex">
+                  <img className="image-preview" alt="img" src={op.opcion} />
+                </Colxx>
               </Row>
             ))}{' '}
             {this.props.submitted &&
@@ -195,26 +204,27 @@ class OpcionMultipleImagen extends React.Component {
                       onChange={(e) => this.handleCheckBoxChange(e, index)}
                       checked={op.verdadera}
                     />
-                    {op.imagePreviewUrl && (
-                      <img className="image-preview" src={op.imagePreviewUrl} />
-                    )}
-                    <InputGroup className="mb-3 opcionMultipleInput margin-auto">
-                      <CustomInput
-                        type="file"
-                        label="Seleccione una imagen"
-                        id="exampleCustomFileBrowser1"
-                        name="opcion"
-                        onInputCapture={(e) =>
-                          this.handleOptionsChange(e, index)
-                        }
+                    {op.opcion && (
+                      <img
+                        className="image-preview"
+                        alt="img"
+                        src={op.opcion}
                       />
-                    </InputGroup>
-                    {/* <Input
-                      className="opcionMultipleInput margin-auto"
-                      name="opcion"
-                      onInputCapture={(e) => this.handleOptionsChange(e, index)}
-                      defaultValue={op.opcion}
-                    /> */}
+                    )}
+                    {!op.opcion && (
+                      <InputGroup className="mb-3 opcionMultipleInput margin-auto">
+                        <CustomInput
+                          type="file"
+                          label="Seleccione una imagen"
+                          id="exampleCustomFileBrowser1"
+                          name="opcion"
+                          onInputCapture={(e) =>
+                            this.handleOptionsChange(e, index)
+                          }
+                        />
+                      </InputGroup>
+                    )}
+
                     <div
                       className="glyph-icon simple-icon-close remove-icon"
                       onClick={() => this.removeOption(index)}

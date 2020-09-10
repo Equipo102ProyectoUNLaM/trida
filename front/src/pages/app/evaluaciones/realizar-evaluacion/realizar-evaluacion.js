@@ -16,6 +16,7 @@ import { ESTADO_ENTREGA } from 'enumerators/estadoEntrega';
 import { TIPO_ENTREGA } from 'enumerators/tipoEntrega';
 import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
+import OpcionMultipleImagen from 'pages/app/evaluaciones/ejercicios/opcion-multiple-imagen';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
@@ -115,6 +116,7 @@ class RealizarEvaluacion extends Component {
         ejercicio.respuesta = e.respuesta;
         break;
       case TIPO_EJERCICIO.opcion_multiple:
+      case TIPO_EJERCICIO.opcion_multiple_imagen:
         ejercicio.respuesta[e.indiceOpcion] = e.respuesta;
         break;
       default:
@@ -262,6 +264,17 @@ class RealizarEvaluacion extends Component {
                         {ejercicio.data.tipo ===
                           TIPO_EJERCICIO.opcion_multiple && (
                           <OpcionMultiple
+                            ejercicioId={index}
+                            value={ejercicio.data}
+                            submitted={submitted}
+                            resolve={true}
+                            onEjercicioChange={this.onEjercicioChange}
+                          />
+                        )}
+
+                        {ejercicio.data.tipo ===
+                          TIPO_EJERCICIO.opcion_multiple_imagen && (
+                          <OpcionMultipleImagen
                             ejercicioId={index}
                             value={ejercicio.data}
                             submitted={submitted}

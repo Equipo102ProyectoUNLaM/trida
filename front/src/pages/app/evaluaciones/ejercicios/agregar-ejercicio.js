@@ -45,6 +45,13 @@ class AgregarEjercicio extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    // fix Warning: Can't perform a React state update on an unmounted component
+    this.setState = (state, callback) => {
+      return;
+    };
+  }
+
   handleChange = (event) => {
     const { value, name } = event.target;
     if (!name || name.length === 0) return;
@@ -78,6 +85,7 @@ class AgregarEjercicio extends React.Component {
             if (!ejer.tema) valid = false;
             break;
           case TIPO_EJERCICIO.opcion_multiple:
+          case TIPO_EJERCICIO.opcion_multiple_imagen:
             if (!ejer.opciones || ejer.opciones.length === 0) {
               valid = false;
               break;

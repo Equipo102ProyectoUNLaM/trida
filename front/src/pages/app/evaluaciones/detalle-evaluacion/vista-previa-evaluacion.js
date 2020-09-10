@@ -56,7 +56,6 @@ class ModalVistaPreviaEvaluacion extends Component {
     const { nombre, descripcion, fecha_finalizacion } = data;
 
     const ejerciciosDesencriptados = desencriptarEjercicios(subCollection);
-    console.log(ejerciciosDesencriptados);
     this.setState({
       evaluacionId: id,
       nombre: CryptoJS.AES.decrypt(nombre, secretKey).toString(
