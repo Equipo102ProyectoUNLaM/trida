@@ -23,7 +23,12 @@ class ModalAsociarLinks extends React.Component {
         this.setState({
           links: [
             ...this.state.links,
-            { link: value.link, descripcion: value.descripcion },
+            {
+              link: value.link,
+              descripcion: value.descripcion
+                ? value.descripcion
+                : 'Sin descripción',
+            },
           ],
         });
       } else {
