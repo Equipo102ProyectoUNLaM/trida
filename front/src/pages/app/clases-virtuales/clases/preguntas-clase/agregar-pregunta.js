@@ -171,7 +171,9 @@ class AgregarPregunta extends React.Component {
                               className="glyph-icon simple-icon-trash delete-icon"
                               onClick={() => this.eliminarPregunta(index)}
                             />
-                            <span className="text-center">Quitar Pregunta</span>
+                            <span className="text-center">
+                              Eliminar Pregunta
+                            </span>
                           </div>
                         </Colxx>
                       </Row>
