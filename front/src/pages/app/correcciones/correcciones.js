@@ -11,6 +11,7 @@ import { DefaultDetail } from 'constants/fileBrowser/details';
 import { DefaultActionCorrecciones } from 'constants/fileBrowser/actions';
 import { DefaultFilter } from 'constants/fileBrowser/filters';
 import ROLES from 'constants/roles';
+import CorreccionImagen from './correccion-imagen';
 
 class Correcciones extends Component {
   constructor(props) {
@@ -142,6 +143,7 @@ class Correcciones extends Component {
             filterRenderer={DefaultFilter}
           />
         </div>
+        <CorreccionImagen />
       </Fragment>
     );
   }
