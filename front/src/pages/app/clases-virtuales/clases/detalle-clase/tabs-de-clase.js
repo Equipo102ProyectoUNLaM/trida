@@ -496,10 +496,7 @@ class TabsDeClase extends Component {
                           </CardTitle>
                           {isLoading && <div className="cover-spin" />}
                           {!isLoading &&
-                            (isEmpty(
-                              preguntasDeClase
-                            ) /* && 
-                              !crearPreguntasOpened */ ? (
+                            (isEmpty(preguntasDeClase) ? (
                               <p className="mb-4">
                                 No hay preguntas creadas para esta clase
                               </p>
@@ -514,6 +511,7 @@ class TabsDeClase extends Component {
                                       key={pregunta.id}
                                       id={pregunta.id}
                                       title={consignaPregunta}
+                                      sonPreguntas={true}
                                     />
                                   );
                                 })}
