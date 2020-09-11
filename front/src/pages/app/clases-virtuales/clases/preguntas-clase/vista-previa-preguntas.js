@@ -11,21 +11,9 @@ import {
   ModalFooter,
 } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { getDocumentWithSubCollection } from 'helpers/Firebase-db';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
-import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
-import Oral from 'pages/app/evaluaciones/ejercicios/oral';
-import * as CryptoJS from 'crypto-js';
-import { secretKey } from 'constants/defaultValues';
-import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
-import { connect } from 'react-redux';
-import {
-  getDateWithFormat,
-  getCurrentTime,
-  getDateTimeStringFromDate,
-  isEmpty,
-} from 'helpers/Utils';
+import { isEmpty } from 'helpers/Utils';
 
 class ModalVistaPreviaPreguntas extends Component {
   constructor(props) {

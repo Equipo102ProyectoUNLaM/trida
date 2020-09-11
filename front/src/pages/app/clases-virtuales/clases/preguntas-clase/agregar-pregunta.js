@@ -1,19 +1,15 @@
 import React from 'react';
 import { Row, Button, FormGroup, Card, CardBody } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
-import Select from 'react-select';
-import { getCollection } from 'helpers/Firebase-db';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
-import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
-import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import { isEmpty } from 'helpers/Utils';
 
 class AgregarPregunta extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ejerciciosSeleccionados: [
+      preguntasRealizadas: [
         {
           nombre: '',
           tipo: '',
@@ -24,7 +20,6 @@ class AgregarPregunta extends React.Component {
       modalAddOpen: false,
       consigna: '',
       opciones: [],
-      tema: '',
       cant: 1,
       submitted: false,
       isLoading: true,
@@ -33,16 +28,15 @@ class AgregarPregunta extends React.Component {
 
   componentDidMount() {
     if (!isEmpty(this.props.preguntas)) {
-      let ejercicios = [];
+      let preguntas = [];
       for (const doc of this.props.preguntas) {
-        ejercicios.push(doc.data);
+        preguntas.push(doc.data);
       }
       this.setState({
-        ejerciciosSeleccionados: ejercicios,
-        cant: ejercicios.length,
+        preguntasRealizadas: preguntas,
+        cant: preguntas.length,
       });
     }
-    console.log('ejerciciosSeleccionados', this.state.ejerciciosSeleccionados);
     this.setState({
       isLoading: false,
     });
@@ -66,24 +60,24 @@ class AgregarPregunta extends React.Component {
     });
   };
 
-  validateEjercicios = () => {
+  validatePreguntas = () => {
     let valid = true;
-    if (this.state.ejerciciosSeleccionados.length === 0) return valid;
+    if (this.state.preguntasRealizadas.length === 0) return valid;
     this.setState({ submitted: true });
-    for (const ejer of this.state.ejerciciosSeleccionados) {
-      if (!ejer.tipo) {
-        ejer.tipo = TIPO_EJERCICIO.opcion_multiple;
+    for (const preg of this.state.preguntasRealizadas) {
+      if (!preg.tipo) {
+        preg.tipo = TIPO_EJERCICIO.opcion_multiple;
       }
 
-      switch (ejer.tipo) {
+      switch (preg.tipo) {
         case TIPO_EJERCICIO.opcion_multiple:
-          if (!ejer.opciones || ejer.opciones.length === 0) {
+          if (!preg.opciones || preg.opciones.length === 0) {
             valid = false;
             break;
           }
-          if (!ejer.consigna) valid = false; //Sin consigna
-          if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
-          if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
+          if (!preg.consigna) valid = false; //Sin consigna
+          if (!preg.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
+          if (preg.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
           break;
         default:
           break;
@@ -92,61 +86,61 @@ class AgregarPregunta extends React.Component {
     return valid;
   };
 
-  getEjerciciosSeleccionados = () => {
-    return this.state.ejerciciosSeleccionados;
+  getpreguntasRealizadas = () => {
+    return this.state.preguntasRealizadas;
   };
 
-  onEjercicioChange = (e, index) => {
-    let list = this.state.ejerciciosSeleccionados;
+  onPreguntaChange = (e, index) => {
+    let list = this.state.preguntasRealizadas;
     let ej = list[index];
     list[index] = Object.assign(ej, e);
     this.setState({
-      ejerciciosSeleccionados: list,
+      preguntasRealizadas: list,
     });
   };
 
-  handleAddEjercicio = (e) => {
-    let ejer = this.state.ejerciciosSeleccionados;
+  handleAddPregunta = (e) => {
+    let preg = this.state.preguntasRealizadas;
     let num = this.state.cant + 1;
-    ejer.push({ nombre: '', tipo: '', numero: num });
+    preg.push({ nombre: '', tipo: '', numero: num });
     this.setState({
-      ejerciciosSeleccionados: ejer,
+      preguntasRealizadas: preg,
       cant: num,
       submitted: false,
     });
   };
 
-  removeExcercise = (index) => {
-    let ejercicios = this.state.ejerciciosSeleccionados;
-    const numeroEjer = ejercicios[index].numero;
-    for (let index = numeroEjer - 1; index < ejercicios.length; index++) {
-      ejercicios[index].numero = ejercicios[index].numero - 1;
+  eliminarPregunta = (index) => {
+    let preguntas = this.state.preguntasRealizadas;
+    const numeroPreg = preguntas[index].numero;
+    for (let index = numeroPreg - 1; index < preguntas.length; index++) {
+      preguntas[index].numero = preguntas[index].numero - 1;
     }
-    ejercicios.splice(index, 1);
+    preguntas.splice(index, 1);
     let oldCant = this.state.cant;
     this.setState({
-      ejerciciosSeleccionados: ejercicios,
+      preguntasRealizadas: preguntas,
       cant: oldCant - 1,
       submitted: false,
     });
   };
 
   handleSelectChange = (event, index) => {
-    let ejercicios = this.state.ejerciciosSeleccionados;
-    ejercicios[index].nombre = event.label;
-    ejercicios[index].tipo = event.value;
+    let preguntas = this.state.preguntasRealizadas;
+    preguntas[index].nombre = event.label;
+    preguntas[index].tipo = event.value;
     this.setState({
-      ejerciciosSeleccionados: ejercicios,
+      preguntasRealizadas: preguntas,
     });
   };
 
   render() {
-    const { ejerciciosSeleccionados, submitted, isLoading } = this.state;
+    const { preguntasRealizadas, submitted, isLoading } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
       <FormGroup className="mb-3">
-        {ejerciciosSeleccionados.map((ejercicio, index) => (
+        {preguntasRealizadas.map((pregunta, index) => (
           <Row key={'row ' + index}>
             <Colxx xxs="12">
               <Row>
@@ -157,14 +151,14 @@ class AgregarPregunta extends React.Component {
                         <Colxx className="text-left" xxs="11">
                           <div key={index}>
                             <h6 className="mb-4">
-                              Pregunta N°{ejercicio.numero}
+                              Pregunta N°{pregunta.numero}
                             </h6>
                             <OpcionMultiple
                               ejercicioId={index}
-                              value={ejercicio}
+                              value={pregunta}
                               submitted={submitted}
                               preview={false}
-                              onEjercicioChange={this.onEjercicioChange}
+                              onEjercicioChange={this.onPreguntaChange}
                             />
                           </div>
                         </Colxx>
@@ -175,7 +169,7 @@ class AgregarPregunta extends React.Component {
                           >
                             <div
                               className="glyph-icon simple-icon-trash delete-icon"
-                              onClick={() => this.removeExcercise(index)}
+                              onClick={() => this.eliminarPregunta(index)}
                             />
                             <span className="text-center">Quitar Pregunta</span>
                           </div>
@@ -190,7 +184,7 @@ class AgregarPregunta extends React.Component {
         ))}
         <Button
           outline
-          onClick={this.handleAddEjercicio}
+          onClick={this.handleAddPregunta}
           size="sm"
           color="primary"
           className="button"

@@ -47,8 +47,6 @@ class TabsDeClase extends Component {
       contenidoRef: '',
       propsContenidos: [],
       preguntasDeClase: [],
-      //isLoadingPreguntas: true,
-      crearPreguntasOpened: false, // ver si va o lo vuelo
       modalPreguntasOpen: false,
       modalPreviewOpen: false,
     };
@@ -255,9 +253,7 @@ class TabsDeClase extends Component {
       'preguntas'
     );
 
-    const { id, data, subCollection } = claseConPreguntas;
-    //const { nombre, descripcion, fecha_finalizacion } = data;
-    console.log('subCollection', subCollection);
+    const { subCollection } = claseConPreguntas;
 
     //Desencripto las preguntas
     const sinRespuesta = false;
@@ -265,7 +261,6 @@ class TabsDeClase extends Component {
       subCollection,
       sinRespuesta
     );
-    console.log('preguntasDesencriptadas', preguntasDesencriptadas);
 
     this.setState({
       preguntasDeClase: preguntasDesencriptadas.sort(
@@ -531,8 +526,8 @@ class TabsDeClase extends Component {
                               {!isEmpty(preguntasDeClase) && (
                                 <Button
                                   outline
-                                  size="sm"
-                                  color="primary"
+                                  size="lg"
+                                  color="secondary"
                                   onClick={this.togglePreviewModal}
                                 >
                                   Vista Previa de Preguntas

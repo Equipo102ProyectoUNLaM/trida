@@ -1,23 +1,14 @@
 import React from 'react';
-import { Input, ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
+import { ModalFooter, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import {
   addDocument,
-  editDocument,
   deleteDocument,
   addArrayToSubCollection,
 } from 'helpers/Firebase-db';
-import { Colxx } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarPregunta from './agregar-pregunta';
-import { Formik, Form, Field } from 'formik';
-import { evaluationSchema } from 'pages/app/evaluaciones/validations';
-import { FormikDatePicker } from 'containers/form-validations/FormikFields';
-import { getDate, getDateTimeStringFromDate } from 'helpers/Utils';
-import * as CryptoJS from 'crypto-js';
-import { secretKey } from 'constants/defaultValues';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
-import { timeStamp } from 'helpers/Firebase';
 import { isEmpty } from 'helpers/Utils';
 
 class FormPreguntas extends React.Component {
@@ -26,14 +17,13 @@ class FormPreguntas extends React.Component {
 
     this.state = {
       idClase: this.props.idClase,
-      creador: '',
       modalEditOpen: false,
       modalAddOpen: false,
       preguntas: [],
       isLoading: true,
     };
   }
-  //todo lo que sea idClase seguro se reemplaza por preguntas
+
   toggleModalConfirmacion = () => {
     if (!isEmpty(this.state.preguntas)) {
       this.setState({
@@ -46,9 +36,8 @@ class FormPreguntas extends React.Component {
     }
   };
 
-  toggleModalWithValues = async (values) => {
-    const valid = await this.ejerciciosComponentRef.validateEjercicios();
-    console.log('valid', valid);
+  toggleModalWithValues = async () => {
+    const valid = await this.ejerciciosComponentRef.validatePreguntas();
     if (!valid) return;
     if (!isEmpty(this.state.preguntas)) {
       this.setState({
@@ -71,14 +60,14 @@ class FormPreguntas extends React.Component {
   }
 
   onSubmit = async () => {
-    let preguntas = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+    let preguntas = this.ejerciciosComponentRef.getpreguntasRealizadas();
     const preguntasEncriptadas = encriptarEjercicios(preguntas);
     const obj = {
       subcollection: {
         data: preguntasEncriptadas,
       },
     };
-    console.log(obj);
+
     await addArrayToSubCollection(
       'clases',
       this.state.idClase,
@@ -96,18 +85,10 @@ class FormPreguntas extends React.Component {
 
   onEdit = async () => {
     try {
-      let preguntas = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+      let preguntas = this.ejerciciosComponentRef.getpreguntasRealizadas();
 
-      //encripto preguntas
+      //encripto preguntas para despues almacenarlas en la DB
       const preguntasEncriptadas = encriptarEjercicios(preguntas);
-
-      /*    Creo que no iria, pq no necesito actualizar la clase   
-      await editDocument(
-        'evaluaciones',
-        this.state.preguntaId,
-        obj,
-        'Evaluación'
-      ); */
 
       this.state.preguntas.forEach(async (element) => {
         await deleteDocument(
@@ -126,9 +107,6 @@ class FormPreguntas extends React.Component {
 
       this.props.toggleModalPreguntas();
       this.props.updatePreguntas();
-
-      /*       this.toggleModalConfirmacion();
-      this.props.onEvaluacionEditada(); */
       return;
     } catch (err) {
       console.log(err);
