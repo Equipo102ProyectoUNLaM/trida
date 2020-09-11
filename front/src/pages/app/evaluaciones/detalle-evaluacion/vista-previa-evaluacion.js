@@ -25,6 +25,7 @@ import {
   getCurrentTime,
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
+import OpcionMultipleImagen from '../ejercicios/opcion-multiple-imagen';
 
 class ModalVistaPreviaEvaluacion extends Component {
   constructor(props) {
@@ -55,7 +56,6 @@ class ModalVistaPreviaEvaluacion extends Component {
     const { nombre, descripcion, fecha_finalizacion } = data;
 
     const ejerciciosDesencriptados = desencriptarEjercicios(subCollection);
-
     this.setState({
       evaluacionId: id,
       nombre: CryptoJS.AES.decrypt(nombre, secretKey).toString(
@@ -145,7 +145,6 @@ class ModalVistaPreviaEvaluacion extends Component {
                         ejercicioId={index}
                         value={ejercicio.data}
                         preview={true}
-                        onEjercicioChange={this.onEjercicioChange}
                       />
                     )}
 
@@ -154,7 +153,6 @@ class ModalVistaPreviaEvaluacion extends Component {
                         ejercicioId={index}
                         value={ejercicio.data}
                         preview={true}
-                        onEjercicioChange={this.onEjercicioChange}
                       />
                     )}
 
@@ -163,7 +161,15 @@ class ModalVistaPreviaEvaluacion extends Component {
                         ejercicioId={index}
                         value={ejercicio.data}
                         preview={true}
-                        onEjercicioChange={this.onEjercicioChange}
+                      />
+                    )}
+
+                    {ejercicio.data.tipo ===
+                      TIPO_EJERCICIO.opcion_multiple_imagen && (
+                      <OpcionMultipleImagen
+                        ejercicioId={index}
+                        value={ejercicio.data}
+                        preview={true}
                       />
                     )}
                   </CardBody>

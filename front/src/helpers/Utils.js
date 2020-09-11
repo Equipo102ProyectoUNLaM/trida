@@ -1,4 +1,5 @@
 import { defaultDirection } from '../constants/defaultValues';
+import { firestore } from './Firebase';
 import * as _moment from 'moment';
 const moment = _moment;
 

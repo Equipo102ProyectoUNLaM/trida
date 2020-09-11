@@ -9489,6 +9489,23 @@ div.rendered-file-browser{
 .practica-file-element {
   display: inline-block;
 }
+
+.custom-file-label::after {
+  content:"Examinar" !important;
+}
+
+.image-preview{
+  height: 5rem;
+  width: auto;
+}
+
+.zoom-icon{
+  margin: auto;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 // Home
 
 .row-home {

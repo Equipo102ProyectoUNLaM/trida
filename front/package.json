@@ -41,7 +41,7 @@
     "react-google-maps": "^9.4.5",
     "react-hook-form": "^6.0.1",
     "react-id-swiper": "^4.0.0",
-    "react-image-lightbox": "^5.1.0",
+    "react-image-lightbox": "^5.1.1",
     "react-intl": "2.4.0",
     "react-jutsu": "^2.1.5",
     "react-keyed-file-browser": "^1.9.0",
