@@ -77,7 +77,7 @@ class DataListView extends React.Component {
                   )}
                   {onUploadFile && (
                     <div
-                      className="glyph-icon simple-icon-upload edit-action-icon"
+                      className="glyph-icon simple-icon-cloud-upload edit-action-icon"
                       onClick={() => onUploadFile(id)}
                     />
                   )}

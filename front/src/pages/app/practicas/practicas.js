@@ -6,6 +6,7 @@ import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
+import FormSubirPractica from './form-subir-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
@@ -102,7 +103,6 @@ class Practica extends Component {
 
   onFileUploaded = () => {
     this.toggleUploadFileModal();
-    //TODO fuardar correccion
   };
 
   deletePractice = async () => {
@@ -144,7 +144,7 @@ class Practica extends Component {
 
   getFileURL = async (archivo) => {
     const url = await storage
-      .ref(this.state.idMateria + '/practicas/')
+      .ref('materias/' + this.state.idMateria + '/practicas/')
       .child(archivo)
       .getDownloadURL();
     return url;
@@ -234,11 +234,11 @@ class Practica extends Component {
             <ModalGrande
               modalOpen={modalUploadFileOpen}
               toggleModal={this.toggleUploadFileModal}
-              modalHeader="activity.edit"
+              modalHeader="activity.upload"
             >
-              <FormPractica
+              <FormSubirPractica
                 toggleModal={this.toggleUploadFileModal}
-                onPracticaOperacion={this.onFileUploaded}
+                onSubirPracticaOperacion={this.onFileUploaded}
                 textConfirm="Subir Práctica"
                 id={idItemSelected}
               />

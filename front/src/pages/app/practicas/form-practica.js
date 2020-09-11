@@ -17,6 +17,7 @@ class FormPractica extends React.Component {
       fechaLanzada: '',
       fechaVencimiento: '',
       idMateria: '',
+      estado: '',
       isLoading: true,
       isFileUploading: false,
       isFileUploaded: false,
@@ -39,6 +40,7 @@ class FormPractica extends React.Component {
         fechaLanzada,
         fechaVencimiento,
         idArchivo,
+        estado,
       } = data;
       this.setState({
         nombre,
@@ -46,6 +48,7 @@ class FormPractica extends React.Component {
         fechaLanzada,
         fechaVencimiento,
         file: idArchivo,
+        estado,
       });
     }
     this.setState({
@@ -82,7 +85,7 @@ class FormPractica extends React.Component {
       isFileUploaded: true,
     });
     storage
-      .ref(this.props.subject.id + '/practicas/')
+      .ref('materias/' + this.props.subject.id + '/practicas/')
       .child(filename)
       .getDownloadURL()
       .then((url) => this.setState({ fileURL: url }));
@@ -90,7 +93,7 @@ class FormPractica extends React.Component {
 
   handleDeleteFile = async () => {
     storage
-      .ref(this.props.subject.id + '/practicas/')
+      .ref('materias/' + this.props.subject.id + '/practicas/')
       .child(this.state.file)
       .delete();
     this.setState({
@@ -112,6 +115,7 @@ class FormPractica extends React.Component {
         fechaVencimiento: fechaVencimiento,
         idMateria: this.props.subject.id,
         idArchivo: this.state.file,
+        estado: 'pendiente',
       };
       await addDocument(
         'practicas',
@@ -128,6 +132,7 @@ class FormPractica extends React.Component {
         descripcion: descripcion,
         fechaVencimiento: fechaVencimiento,
         idArchivo: this.state.file,
+        estado: 'pendiente',
       };
       await editDocument('practicas', this.props.id, obj, 'Práctica');
     }
@@ -219,7 +224,7 @@ class FormPractica extends React.Component {
                   name="archivo"
                   randomizeFilename
                   storageRef={storage.ref(
-                    this.props.subject.id + '/practicas/'
+                    'materias/' + this.props.subject.id + '/practicas/'
                   )}
                   onUploadStart={this.handleUploadStart}
                   onUploadError={this.handleUploadError}
