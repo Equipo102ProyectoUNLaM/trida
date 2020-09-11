@@ -678,6 +678,23 @@ button {
   }
 }
 
+.button-margin {
+  margin: 0.2rem 0rem 0.2rem 0.5rem !important;
+  background-color: $theme-color-1;
+  border-color: $theme-color-1;
+  color: $button-text-color;
+
+  &:hover {
+    color: $button-text-color;
+    background-color: darken($theme-color-1, 8%);
+    border-color: darken($theme-color-1, 8%);
+  }
+}
+
+.no-margin-left {
+  margin-left: 0px !important;
+}
+
 .check-button {
   cursor: default !important;
 }
@@ -1267,6 +1284,10 @@ button {
 .mr-3
 {
   margin-right: 0.01rem !important;
+}
+
+.ml-1 {
+  margin-left: 1rem !important;
 }
 
 .float-none-xs {
@@ -3551,6 +3572,7 @@ nav .nomargin {
 
 .react-table-fixed-height {
   height: 500px;
+  cursor: pointer;
 }
 
 .ReactTable .rt-thead.-header {
@@ -9140,6 +9162,12 @@ footer.page-footer {
   font-size: 90%;
 }
 
+.tip-text-cursiva {
+  font-style: italic;
+  color: rgba(33, 33, 33, 0.7);
+  font-size: 90%;
+}
+
 .tooltip-question {
   margin: 0.5rem !important;
   color: $theme-color-2;
@@ -9337,6 +9365,14 @@ tr.folder{
   padding-bottom: 0px !important;
 }
 
+.label-es-responder {
+  margin-top: 1.5rem;
+}
+
+.mensaje-es-responder {
+  margin: auto;
+}
+
 //49 Correcciones
 div.rendered-file-browser{
   padding-right: 3rem;
@@ -9513,13 +9549,13 @@ div.rendered-file-browser{
 
 .react-grid-item.react-draggable.cssTransforms {
   padding-right: 15px;
-    touch-action: none;
-    width: 100% !important;
-    height: 210px;
-    position: absolute;
-    transform: translate(10px, 10px);
-    font-family: inherit !important;
-    color: #212121 !important;
+  touch-action: none;
+  width: 100% !important;
+  height: 210px;
+  position: absolute;
+  transform: translate(10px, 10px);
+  font-family: inherit !important;
+  color: #212121 !important;
 }
 
 .react-stickies-wrapper {
@@ -9597,4 +9633,162 @@ div.rendered-file-browser{
   margin-top: 1rem;
   padding-top: 1rem;
   display: block;
+}
+
+// Clases virtuales
+.lista-links-clase {
+  justify-content: space-between;
+  margin: 0 0.1rem 1rem 0.1rem;
+  padding: 0.5rem 1rem;
+  border: 0px !important;
+  border-radius: .25rem;
+  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.link-clase {
+  align-self: center;
+}
+
+.agregar-btn-row {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-right: 0 !important;
+}
+
+.agregar-btn-link {
+  color: $theme-color-1 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 0 1rem 0 !important;
+  border: none !important;
+  background-color: transparent !important;
+}
+
+// Grabaciones
+
+[data-qa=turn-on-camera] {
+  visibility: hidden;
+}
+
+[data-qa=turn-on-camera]:after {
+  visibility: visible;
+  content: 'Encender cámara';
+  background: $theme-color-1;
+  color: white;
+  padding: 17px 18px;
+  border: none;
+  margin-left: -10rem;
+  font-size: 18px;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50px;
+  outline: initial !important;
+  box-shadow: none !important;
+  box-shadow: initial !important;
+}
+
+[data-qa=start-replaying] {
+  visibility: hidden;
+}
+
+[data-qa=start-replaying]:after {
+  visibility: visible;
+  content: 'Grabar otro video';
+  background: $theme-color-1;
+  color: white;
+  padding: 17px 18px;
+  border: none;
+  margin-left: -10rem;
+  margin-bottom: -50rem;
+  font-size: 18px;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50px;
+  outline: initial !important;
+  box-shadow: none !important;
+  box-shadow: initial !important;
+}
+
+.render-actions__ActionsWrapper-dp6lnv-0 {
+  padding-bottom: 1rem !important;
+  bottom: 5rem !important;
+
+  .iJsnLG {
+    bottom: 5rem !important;
+  }
+}
+
+.record-button__InstuctionsHighlight-sc-1n5amwk-4 {
+  visibility: hidden;
+}
+
+.record-button__InstuctionsHighlight-sc-1n5amwk-4:after {
+  content: 'PRESIONÁ EL BOTÓN ROJO PARA EMPEZAR';
+  visibility: visible;
+  margin-left: 0rem;
+  font-family: 'Nunito';
+}
+
+.record-button__Instructions-sc-1n5amwk-3  {
+  visibility: hidden;
+}
+
+.record-button__Instructions-sc-1n5amwk-3:nth-child(1)  {
+  visibility: hidden;
+}
+
+.modal-video {
+  height: 100% !important;
+}
+
+.video-recorder__Wrapper-sc-7k20rv-0 {
+  height: 100% !important;
+
+ .gayceY {
+   height: auto !important;
+ }
+} 
+
+.modal-video-footer {
+  margin-top: 4rem;
+}
+
+.modal-content {
+  height: 100% !important;
+}
+
+.grabando-texto {
+  color: red;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.grabando-circulo {
+  height: 15px;
+  width: 15px;
+  background-color: red;
+  animation-name: stretch;
+  animation-duration: 1.5s; 
+  animation-timing-function: ease-out; 
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+@keyframes stretch {
+  0% {
+    transform: scale(.1);
+    background-color: red;
+    border-radius: 100%;
+  }
+  50% {
+    background-color: red;
+    border-radius: 100%;
+  }
+  100% {
+    background-color: red;
+    border-radius: 100%;
+  }
 }

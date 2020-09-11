@@ -38,3 +38,7 @@ export const encriptarEjercicios = (ejercicios) => {
   }
   return result;
 };
+
+export const encriptarTexto = (texto) => {
+  return CryptoJS.AES.encrypt(texto, secretKey).toString();
+};

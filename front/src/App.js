@@ -16,9 +16,9 @@ import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import { AuthRoute } from 'components/rutas/auth-route';
 
-const ViewMain = React.lazy(() =>
-  import(/* webpackChunkName: "views" */ './pages')
-);
+//const ViewMain = React.lazy(() =>
+//  import(/* webpackChunkName: "views" */ './pages')
+//);
 const ViewApp = React.lazy(() =>
   import(/* webpackChunkName: "views-app" */ './pages/app')
 );
