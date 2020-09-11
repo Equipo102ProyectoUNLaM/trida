@@ -111,6 +111,8 @@ module.exports = {
   'class.description': 'Descripción',
   'pizarron.abrir-pizarron': 'Abrir pizarrón',
   'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
+  'clase.agregar-link': 'Link *',
+  'clase.descripcion-link': 'Descripción link',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',

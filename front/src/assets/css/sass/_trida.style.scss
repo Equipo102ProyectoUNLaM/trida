@@ -3572,6 +3572,7 @@ nav .nomargin {
 
 .react-table-fixed-height {
   height: 500px;
+  cursor: pointer;
 }
 
 .ReactTable .rt-thead.-header {
@@ -9161,6 +9162,12 @@ footer.page-footer {
   font-size: 90%;
 }
 
+.tip-text-cursiva {
+  font-style: italic;
+  color: rgba(33, 33, 33, 0.7);
+  font-size: 90%;
+}
+
 .tooltip-question {
   margin: 0.5rem !important;
   color: $theme-color-2;
@@ -9358,6 +9365,14 @@ tr.folder{
   padding-bottom: 0px !important;
 }
 
+.label-es-responder {
+  margin-top: 1.5rem;
+}
+
+.mensaje-es-responder {
+  margin: auto;
+}
+
 //49 Correcciones
 div.rendered-file-browser{
   padding-right: 3rem;
@@ -9474,6 +9489,23 @@ div.rendered-file-browser{
 .practica-file-element {
   display: inline-block;
 }
+
+.custom-file-label::after {
+  content:"Examinar" !important;
+}
+
+.image-preview{
+  height: 5rem;
+  width: auto;
+}
+
+.zoom-icon{
+  margin: auto;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 // Home
 
 .row-home {
@@ -9534,13 +9566,13 @@ div.rendered-file-browser{
 
 .react-grid-item.react-draggable.cssTransforms {
   padding-right: 15px;
-    touch-action: none;
-    width: 100% !important;
-    height: 210px;
-    position: absolute;
-    transform: translate(10px, 10px);
-    font-family: inherit !important;
-    color: #212121 !important;
+  touch-action: none;
+  width: 100% !important;
+  height: 210px;
+  position: absolute;
+  transform: translate(10px, 10px);
+  font-family: inherit !important;
+  color: #212121 !important;
 }
 
 .react-stickies-wrapper {
@@ -9620,6 +9652,34 @@ div.rendered-file-browser{
   display: block;
 }
 
+// Clases virtuales
+.lista-links-clase {
+  justify-content: space-between;
+  margin: 0 0.1rem 1rem 0.1rem;
+  padding: 0.5rem 1rem;
+  border: 0px !important;
+  border-radius: .25rem;
+  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.link-clase {
+  align-self: center;
+}
+
+.agregar-btn-row {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-right: 0 !important;
+}
+
+.agregar-btn-link {
+  color: $theme-color-1 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 0 1rem 0 !important;
+  border: none !important;
+  background-color: transparent !important;
+}
 
 // Grabaciones
 

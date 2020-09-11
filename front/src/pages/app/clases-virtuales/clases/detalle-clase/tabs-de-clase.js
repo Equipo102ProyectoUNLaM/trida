@@ -14,7 +14,7 @@ import {
 import { NavLink, withRouter } from 'react-router-dom';
 import DataListView from 'containers/pages/DataListView';
 import classnames from 'classnames';
-import { Colxx } from 'components/common/CustomBootstrap';
+import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import PaginaVideollamada from './pagina-videollamada';
 import PaginaAsistencia from './pagina-asistencia';
 import { storage } from 'helpers/Firebase';
@@ -23,6 +23,7 @@ import { isEmpty } from 'helpers/Utils';
 import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
+import ModalAsociarLinks from './modal-asociar-links';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ROLES from 'constants/roles';
 
@@ -35,8 +36,10 @@ class TabsDeClase extends Component {
     this.state = {
       activeSecondTab: '1',
       modalContenidosOpen: false,
+      modalLinksOpen: false,
       modalDeleteOpen: false,
       files: [],
+      linksDeClase: [],
       isLoading: true,
       contenidoRef: '',
       propsContenidos: [],
@@ -53,6 +56,7 @@ class TabsDeClase extends Component {
       });
     }
     this.getAsistenciaDeClase();
+    this.getLinksDeClase();
     this.dataListRenderer();
   }
 
@@ -61,6 +65,13 @@ class TabsDeClase extends Component {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
     this.setState({ isLoading: false, asistencia });
+  }
+
+  getLinksDeClase = async () => {
+    const { data } = await getDocument(`clases/${this.props.idClase}`);
+    this.setState({
+      linksDeClase: data.links,
+    });
   };
 
   toggleSecondTab(tab) {
@@ -74,6 +85,12 @@ class TabsDeClase extends Component {
   toggleModalContenidos = () => {
     this.setState({
       modalContenidosOpen: !this.state.modalContenidosOpen,
+    });
+  };
+
+  toggleModalLinks = () => {
+    this.setState({
+      modalLinksOpen: !this.state.modalLinksOpen,
     });
   };
 
@@ -242,11 +259,13 @@ class TabsDeClase extends Component {
     } = this.props;
     const {
       modalContenidosOpen,
+      modalLinksOpen,
       isLoading,
       files,
       modalDeleteOpen,
       propsContenidos,
       asistencia,
+      linksDeClase,
     } = this.state;
 
     return (
@@ -448,6 +467,63 @@ class TabsDeClase extends Component {
                                 toggleModalContenidos={
                                   this.toggleModalContenidos
                                 }
+                              />
+                            </ModalGrande>
+                          )}
+                          <Separator className="mb-3 mt-3" />
+                          <CardTitle className="mb-4">
+                            Links Asociados
+                          </CardTitle>
+                          {!isLoading &&
+                            (isEmpty(linksDeClase) ? (
+                              <p className="mb-4">No hay links asociados</p>
+                            ) : (
+                              linksDeClase.map((link) => {
+                                return (
+                                  <Row
+                                    key={link.link}
+                                    className="lista-links-clase"
+                                  >
+                                    <a
+                                      className="link-clase"
+                                      id={link.link}
+                                      href={link.link}
+                                      rel="noopener noreferrer"
+                                      target="_blank"
+                                    >
+                                      {link.descripcion} <br /> {link.link}
+                                    </a>
+                                  </Row>
+                                );
+                              })
+                            ))}
+                          {rol === ROLES.Docente && (
+                            <Row className="button-group">
+                              <Button
+                                onClick={this.toggleModalLinks}
+                                color="primary"
+                                size="lg"
+                                className="button"
+                              >
+                                {isEmpty(linksDeClase)
+                                  ? 'Asociar Links'
+                                  : 'Editar Links'}
+                              </Button>
+                            </Row>
+                          )}
+                          {modalLinksOpen && (
+                            <ModalGrande
+                              modalOpen={modalLinksOpen}
+                              toggleModal={this.toggleModalLinks}
+                              text="Asociar Links"
+                            >
+                              <ModalAsociarLinks
+                                links={linksDeClase}
+                                isLoading={isLoading}
+                                idClase={idClase}
+                                idMateria={idMateria}
+                                toggleModalLinks={this.toggleModalLinks}
+                                updateLinks={this.getLinksDeClase}
                               />
                             </ModalGrande>
                           )}
