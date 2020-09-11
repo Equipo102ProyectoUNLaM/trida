@@ -28,6 +28,7 @@ import Moment from 'moment';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalCrearPreguntas from './modal-crear-preguntas';
+import ModalVistaPreviaPreguntas from '../preguntas-clase/vista-previa-preguntas';
 import ROLES from 'constants/roles';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 
@@ -49,6 +50,7 @@ class TabsDeClase extends Component {
       //isLoadingPreguntas: true,
       crearPreguntasOpened: false, // ver si va o lo vuelo
       modalPreguntasOpen: false,
+      modalPreviewOpen: false,
     };
   }
 
@@ -211,6 +213,12 @@ class TabsDeClase extends Component {
     });
   };
 
+  togglePreviewModal = () => {
+    this.setState({
+      modalPreviewOpen: !this.state.modalPreviewOpen,
+    });
+  };
+
   onDelete = (ref) => {
     this.setState({
       contenidoRef: ref,
@@ -284,6 +292,7 @@ class TabsDeClase extends Component {
       propsContenidos,
       preguntasDeClase,
       modalPreguntasOpen,
+      modalPreviewOpen,
     } = this.state;
 
     return (
@@ -519,6 +528,16 @@ class TabsDeClase extends Component {
                             ))}
                           {rol === ROLES.Docente && (
                             <Row className="button-group">
+                              {!isEmpty(preguntasDeClase) && (
+                                <Button
+                                  outline
+                                  size="sm"
+                                  color="primary"
+                                  onClick={this.togglePreviewModal}
+                                >
+                                  Vista Previa de Preguntas
+                                </Button>
+                              )}
                               <Button
                                 onClick={this.toggleModalPreguntas}
                                 color="primary"
@@ -545,6 +564,13 @@ class TabsDeClase extends Component {
                                 updatePreguntas={this.getPreguntasDeClase}
                               />
                             </ModalGrande>
+                          )}
+                          {modalPreviewOpen && (
+                            <ModalVistaPreviaPreguntas
+                              toggle={this.togglePreviewModal}
+                              isOpen={modalPreviewOpen}
+                              preguntas={preguntasDeClase}
+                            />
                           )}
                         </CardBody>
                       </Colxx>

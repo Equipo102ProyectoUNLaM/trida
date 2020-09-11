@@ -68,7 +68,7 @@ class AgregarPregunta extends React.Component {
 
   validateEjercicios = () => {
     let valid = true;
-    if (this.state.ejerciciosSeleccionados.length === 0) return !valid;
+    if (this.state.ejerciciosSeleccionados.length === 0) return valid;
     this.setState({ submitted: true });
     for (const ejer of this.state.ejerciciosSeleccionados) {
       if (!ejer.tipo) {
