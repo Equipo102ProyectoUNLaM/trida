@@ -7,6 +7,7 @@ import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
+import { isEmpty } from 'helpers/Utils';
 
 class AgregarPregunta extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class AgregarPregunta extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.preguntas) {
+    if (!isEmpty(this.props.preguntas)) {
       let ejercicios = [];
       for (const doc of this.props.preguntas) {
         ejercicios.push(doc.data);
@@ -40,14 +41,8 @@ class AgregarPregunta extends React.Component {
         ejerciciosSeleccionados: ejercicios,
         cant: ejercicios.length,
       });
-      console.log('ejercicios', ejercicios);
-      console.log('props.preguntas', this.props.preguntas);
-      console.log(
-        'ejerciciosSeleccionados',
-        this.state.ejerciciosSeleccionados
-      );
     }
-
+    console.log('ejerciciosSeleccionados', this.state.ejerciciosSeleccionados);
     this.setState({
       isLoading: false,
     });
@@ -73,24 +68,25 @@ class AgregarPregunta extends React.Component {
 
   validateEjercicios = () => {
     let valid = true;
-    if (this.state.ejerciciosSeleccionados.length === 0) return valid;
+    if (this.state.ejerciciosSeleccionados.length === 0) return !valid;
     this.setState({ submitted: true });
     for (const ejer of this.state.ejerciciosSeleccionados) {
-      if (!ejer.tipo) valid = false;
-      else {
-        switch (ejer.tipo) {
-          case TIPO_EJERCICIO.opcion_multiple:
-            if (!ejer.opciones || ejer.opciones.length === 0) {
-              valid = false;
-              break;
-            }
-            if (!ejer.consigna) valid = false; //Sin consigna
-            if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
-            if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
+      if (!ejer.tipo) {
+        ejer.tipo = TIPO_EJERCICIO.opcion_multiple;
+      }
+
+      switch (ejer.tipo) {
+        case TIPO_EJERCICIO.opcion_multiple:
+          if (!ejer.opciones || ejer.opciones.length === 0) {
+            valid = false;
             break;
-          default:
-            break;
-        }
+          }
+          if (!ejer.consigna) valid = false; //Sin consigna
+          if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
+          if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
+          break;
+        default:
+          break;
       }
     }
     return valid;
@@ -163,7 +159,6 @@ class AgregarPregunta extends React.Component {
                             <h6 className="mb-4">
                               Pregunta N°{ejercicio.numero}
                             </h6>
-                            {console.log('ejercicio', ejercicio)}
                             <OpcionMultiple
                               ejercicioId={index}
                               value={ejercicio}

@@ -18,6 +18,7 @@ import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
 import { timeStamp } from 'helpers/Firebase';
+import { isEmpty } from 'helpers/Utils';
 
 class FormPreguntas extends React.Component {
   constructor(props) {
@@ -32,9 +33,9 @@ class FormPreguntas extends React.Component {
       isLoading: true,
     };
   }
-
-  toggleModal = () => {
-    if (this.state.idClase) {
+  //todo lo que sea idClase seguro se reemplaza por preguntas
+  toggleModalConfirmacion = () => {
+    if (!isEmpty(this.state.preguntas)) {
       this.setState({
         modalEditOpen: !this.state.modalEditOpen,
       });
@@ -47,8 +48,9 @@ class FormPreguntas extends React.Component {
 
   toggleModalWithValues = async (values) => {
     const valid = await this.ejerciciosComponentRef.validateEjercicios();
+    console.log('valid', valid);
     if (!valid) return;
-    if (this.state.preguntas) {
+    if (!isEmpty(this.state.preguntas)) {
       this.setState({
         modalEditOpen: !this.state.modalEditOpen,
       });
@@ -95,20 +97,9 @@ class FormPreguntas extends React.Component {
   onEdit = async () => {
     try {
       let preguntas = this.ejerciciosComponentRef.getEjerciciosSeleccionados();
+
+      //encripto preguntas
       const preguntasEncriptadas = encriptarEjercicios(preguntas);
-      const obj = {
-        nombre: CryptoJS.AES.encrypt(this.state.nombre, secretKey).toString(),
-        fecha_finalizacion: timeStamp.fromDate(
-          new Date(this.state.fecha_finalizacion)
-        ),
-        fecha_publicacion: timeStamp.fromDate(
-          new Date(this.state.fecha_publicacion)
-        ),
-        descripcion: CryptoJS.AES.encrypt(
-          this.state.descripcion,
-          secretKey
-        ).toString(),
-      };
 
       /*    Creo que no iria, pq no necesito actualizar la clase   
       await editDocument(
@@ -133,8 +124,11 @@ class FormPreguntas extends React.Component {
         );
       });
 
-      this.toggleModal();
-      this.props.onEvaluacionEditada();
+      this.props.toggleModalPreguntas();
+      this.props.updatePreguntas();
+
+      /*       this.toggleModalConfirmacion();
+      this.props.onEvaluacionEditada(); */
       return;
     } catch (err) {
       console.log(err);
@@ -156,9 +150,9 @@ class FormPreguntas extends React.Component {
         />
 
         <ModalFooter>
-          {!preguntas && (
+          {isEmpty(preguntas) && (
             <>
-              <Button color="primary" onClick={this.onSubmit}>
+              <Button color="primary" onClick={this.toggleModalWithValues}>
                 Crear Preguntas
               </Button>
               <Button color="secondary" onClick={toggleModalPreguntas}>
@@ -166,9 +160,9 @@ class FormPreguntas extends React.Component {
               </Button>
             </>
           )}
-          {preguntas && (
+          {!isEmpty(preguntas) && (
             <>
-              <Button color="primary" type="submit">
+              <Button color="primary" onClick={this.toggleModalWithValues}>
                 Guardar Preguntas
               </Button>
               <Button color="secondary" onClick={toggleModalPreguntas}>
@@ -179,11 +173,11 @@ class FormPreguntas extends React.Component {
         </ModalFooter>
         {modalEditOpen && (
           <ModalConfirmacion
-            texto="¿Está seguro de que desea editar la evaluación?"
-            titulo="Guardar Evaluación"
+            texto="¿Está seguro de que desea editar las preguntas?"
+            titulo="Guardar Preguntas"
             buttonPrimary="Aceptar"
             buttonSecondary="Cancelar"
-            toggle={this.toggleModal}
+            toggle={this.toggleModalConfirmacion}
             isOpen={modalEditOpen}
             onConfirm={this.onEdit}
           />
@@ -194,7 +188,7 @@ class FormPreguntas extends React.Component {
             titulo="Crear Preguntas"
             buttonPrimary="Aceptar"
             buttonSecondary="Cancelar"
-            toggle={this.toggleModal}
+            toggle={this.toggleModalConfirmacion}
             isOpen={modalAddOpen}
             onConfirm={this.onSubmit}
           />

@@ -239,6 +239,9 @@ class TabsDeClase extends Component {
   };
 
   getPreguntasDeClase = async () => {
+    this.setState({ isLoading: true });
+
+    //Traigo de la DB las preguntas encriptadas
     const claseConPreguntas = await getDocumentWithSubCollection(
       `clases/${this.props.idClase}`,
       'preguntas'
