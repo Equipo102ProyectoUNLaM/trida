@@ -13,6 +13,7 @@ const FormForo = ({
   idForo,
   nombre,
   descripcion,
+  mensajes,
 }) => {
   const { handleSubmit, errors, control } = useForm();
 
@@ -23,6 +24,7 @@ const FormForo = ({
       nombre: capitalizeString(nombre),
       descripcion,
       idMateria: subject.id,
+      mensajes: mensajes.length > 0 ? mensajes : [],
     };
 
     if (idForo) {

@@ -10,7 +10,7 @@ import FormForo from './form-foro';
 import {
   getCollection,
   logicDeleteDocument,
-  getDocument,
+  getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 const publicUrl = process.env.PUBLIC_URL;
@@ -37,6 +37,7 @@ class Foro extends Component {
       nombreForoEditado: '',
       descForoEditado: '',
       fechaForoEditado: '',
+      mensajesForo: [],
     };
   }
 
@@ -58,7 +59,7 @@ class Foro extends Component {
     });
   };
 
-  onForoGuardada = () => {
+  onForoGuardado = () => {
     if (this.state.modalEditOpen) this.toggleEditModal();
     else this.toggleModal();
     this.getForos(this.state.idMateria);
@@ -92,12 +93,17 @@ class Foro extends Component {
   };
 
   onEdit = async (idForo) => {
-    const { data } = await getDocument(`foros/${idForo}`);
+    const foro = await getDocumentWithSubCollection(
+      `foros/${idForo}`,
+      'mensajes'
+    );
+    const { data, subCollection } = foro;
     const { nombre, descripcion } = data;
     this.setState({
       idForoEditado: idForo,
       nombreForoEditado: nombre,
       descForoEditado: descripcion,
+      mensajesForo: subCollection,
     });
     this.toggleEditModal();
   };
@@ -122,6 +128,7 @@ class Foro extends Component {
       nombreForoEditado: nombreForoEditado,
       descForoEditado: descForoEditado,
       fechaForoEditado: fechaForoEditado,
+      mensajes: mensajesForo,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol === ROLES.Docente;
@@ -174,6 +181,7 @@ class Foro extends Component {
                 nombre={nombreForoEditado}
                 fecha={fechaForoEditado}
                 descripcion={descForoEditado}
+                mensajes={mensajesForo}
               />
             </ModalGrande>
           )}

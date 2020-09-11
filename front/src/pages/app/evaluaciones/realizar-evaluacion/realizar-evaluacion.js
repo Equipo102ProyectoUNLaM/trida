@@ -77,7 +77,7 @@ class RealizarEvaluacion extends Component {
         tipo: ejercicio.data.tipo,
         nombre: ejercicio.data.nombre,
       };
-      if (ejercicio.data.opciones && ejercicio.data.opciones.lenght !== 0) {
+      if (ejercicio.data.opciones && ejercicio.data.opciones.length !== 0) {
         let respuestas_choice = [];
         ejercicio.data.opciones.forEach((opcion, index) => {
           respuestas_choice.push(false);
