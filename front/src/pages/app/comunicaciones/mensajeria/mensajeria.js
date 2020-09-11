@@ -13,6 +13,8 @@ import { getUsersOfSubject } from 'helpers/Firebase-user';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { Row, ModalFooter, Button, Input } from 'reactstrap';
 import { addDocument } from 'helpers/Firebase-db';
+import { desencriptarTexto } from 'handlers/DecryptionHandler';
+import { encriptarTexto } from 'handlers/EncryptionHandler';
 
 class Mensajeria extends Component {
   constructor(props) {
@@ -185,7 +187,7 @@ class Mensajeria extends Component {
 
     this.setState({
       asuntoMensaje: rowInfo.original.asunto,
-      contenidoMensaje: rowInfo.original.contenido,
+      contenidoMensaje: desencriptarTexto(rowInfo.original.contenido),
       fechaMensaje: rowInfo.original.fecha_creacion,
       botonDetalle: botonMensaje,
       usuariosMail: usuarios,
@@ -226,6 +228,7 @@ class Mensajeria extends Component {
     this.setState({
       modalReenviarOpen: !this.state.modalReenviarOpen,
       modalMessageOpen: false,
+      selectedOptions: [],
     });
   };
 
@@ -244,7 +247,7 @@ class Mensajeria extends Component {
         nombre: this.props.nombre + ' ' + this.props.apellido,
       },
       receptor: receptores,
-      contenido: this.state.contenidoMensaje,
+      contenido: encriptarTexto(this.state.contenidoMensaje),
       asunto: this.state.asuntoMensaje,
       formal: false,
       general: false,
@@ -355,7 +358,7 @@ class Mensajeria extends Component {
                 <Colxx xxs="12" md="12">
                   <label>Mensaje a reenviar</label>
                   <Input
-                    value={contenidoMensaje}
+                    defaultValue={contenidoMensaje}
                     onChange={this.handleChange}
                     className="resend-message"
                     type="textarea"

@@ -3572,6 +3572,7 @@ nav .nomargin {
 
 .react-table-fixed-height {
   height: 500px;
+  cursor: pointer;
 }
 
 .ReactTable .rt-thead.-header {
@@ -9362,6 +9363,14 @@ tr.folder{
 .ReactTable .rt-th, .ReactTable .rt-td {
   padding-top: 10px !important;
   padding-bottom: 0px !important;
+}
+
+.label-es-responder {
+  margin-top: 1.5rem;
+}
+
+.mensaje-es-responder {
+  margin: auto;
 }
 
 //49 Correcciones
