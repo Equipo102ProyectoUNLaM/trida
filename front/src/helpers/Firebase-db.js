@@ -278,6 +278,55 @@ export const addToSubCollection = async (
   }
 };
 
+/*  Este metodo es idéntico a addToSubCollection, solo que espera un array de objetos.
+    Itera por cada objeto y crea un documento por cada uno  */
+export const addArrayToSubCollection = async (
+  collection,
+  doc,
+  subcollection,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  let objectSubcollectionData = object.subcollection.data;
+  let objectBaseData = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+  delete objectBaseData.subcollection;
+
+  for (const data of objectSubcollectionData) {
+    firestore
+      .collection(collection)
+      .doc(doc)
+      .collection(subcollection)
+      .add(data)
+      .then(function () {})
+      .catch(function (error) {
+        NotificationManager.error(
+          `Error al agregar ${mensajeError}`,
+          error,
+          3000,
+          null,
+          null,
+          ''
+        );
+      });
+  }
+  NotificationManager.success(
+    `${mensajePrincipal} agregada exitosamente`,
+    `${mensajeSecundario} agregada!`,
+    3000,
+    null,
+    null,
+    ''
+  );
+};
+
 export const addToMateriasCollection = async (
   docInst,
   docCurso,
