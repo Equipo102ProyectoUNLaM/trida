@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Row } from 'reactstrap';
+import { Row, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import FileBrowser, { Icons } from 'react-keyed-file-browser';
@@ -21,12 +22,17 @@ class Correcciones extends Component {
       files: [],
       isLoading: true,
       subjectId: this.props.subject.id,
+      correccionImagen: false,
     };
   }
 
   async componentDidMount() {
     await this.getCorrecciones();
   }
+
+  toggleCorreccionImagen = () => {
+    this.setState({ correccionImagen: !this.state.correccionImagen });
+  };
 
   async getCorrecciones() {
     let arrayFiles = [];
@@ -119,7 +125,7 @@ class Correcciones extends Component {
   };
 
   render() {
-    const { isLoading, files } = this.state;
+    const { isLoading, files, correccionImagen } = this.state;
     return (
       <Fragment>
         {isLoading ? <div id="cover-spin"></div> : <span></span>}
@@ -143,7 +149,22 @@ class Correcciones extends Component {
             filterRenderer={DefaultFilter}
           />
         </div>
-        <CorreccionImagen />
+        <Button onClick={this.toggleCorreccionImagen}>Corregir Imagen</Button>
+        {correccionImagen && (
+          <Modal
+            isOpen={correccionImagen}
+            size="l"
+            toggle={this.toggleCorreccionImagen}
+            className="modal-correccion"
+          >
+            <ModalHeader toggle={this.toggleCorreccionImagen}>
+              <span>Corregir Imagen</span>
+            </ModalHeader>
+            <ModalBody className="modal-correccion">
+              <CorreccionImagen />
+            </ModalBody>
+          </Modal>
+        )}
       </Fragment>
     );
   }

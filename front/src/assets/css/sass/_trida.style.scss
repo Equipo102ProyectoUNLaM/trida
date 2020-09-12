@@ -9809,3 +9809,27 @@ div.rendered-file-browser{
     border-radius: 100%;
   }
 }
+
+// Correcciones
+
+.modal-correccion {
+  width: 100% !important;
+}
+
+.MuiTypography-h5, .MuiFormLabel-root, .MuiInputLabel-root, 
+.MuiInputLabel-formControl, .MuiInputLabel-animated, .MuiTypography-root,
+.MuiFormControlLabel-label, .MuiTypography-body1, .MuiButtonBase-root, .MuiListItem-root,
+.MuiMenuItem-root, .MuiMenuItem-gutters, .MuiListItem-gutters, .MuiListItem-button, 
+.MuiFormHelperText-root, .MuiSelect-root, .MuiSelect-select, .MuiSelect-selectMenu
+.MuiInputBase-input, .MuiInput-input {
+  font-family: "Nunito" !important;
+}
+
+.MuiCardContent-root {
+  font-size: 1rem !important;
+}
+
+.MuiPaper-root, .MuiCard-root, .MuiPaper-elevation1, .MuiPaper-rounded {
+  margin-bottom: 1rem !important;
+  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+}
