@@ -92,7 +92,11 @@ class Correcciones extends Component {
                   key={correccion.id + 'dataList'}
                   id={correccion.id}
                   title={correccion.data.nombre}
-                  text1={'Mensaje: ' + correccion.data.mensaje}
+                  text1={
+                    correccion.data.mensaje !== undefined
+                      ? 'Mensaje: ' + correccion.data.mensaje
+                      : null
+                  }
                   text2={'Alumno: ' + correccion.data.alumno}
                   file={correccion.data.url}
                   isSelect={this.state.selectedItems.includes(correccion.id)}
