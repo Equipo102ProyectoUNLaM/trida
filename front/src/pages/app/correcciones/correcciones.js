@@ -81,7 +81,7 @@ class Correcciones extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.my-activities"
+            heading="menu.my-corrections"
             toggleModal={null}
             buttonText={null}
           />
@@ -97,7 +97,11 @@ class Correcciones extends Component {
                       ? 'Mensaje: ' + correccion.data.mensaje
                       : null
                   }
-                  text2={'Alumno: ' + correccion.data.alumno}
+                  text2={
+                    rol !== ROLES.Alumno
+                      ? 'Alumno: ' + correccion.data.alumno
+                      : ' '
+                  }
                   file={correccion.data.url}
                   isSelect={this.state.selectedItems.includes(correccion.id)}
                   navTo="#"

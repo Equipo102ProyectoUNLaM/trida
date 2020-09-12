@@ -119,9 +119,9 @@ class FormSubirPractica extends React.Component {
       'correcciones',
       obj,
       this.props.user,
-      'Práctica agregada',
-      'Práctica agregada exitosamente',
-      'Error al agregar la práctica'
+      'Práctica subida',
+      'Práctica subida exitosamente',
+      'Error al subir la práctica'
     );
     await this.editPracticaEstado();
 
@@ -130,7 +130,7 @@ class FormSubirPractica extends React.Component {
 
   editPracticaEstado = async () => {
     const obj = this.getDoc();
-    await editDocument('practicas', this.props.id, obj, 'Práctica');
+    await editDocument('practicas', this.props.id, obj, null);
   };
 
   getDoc = async () => {
