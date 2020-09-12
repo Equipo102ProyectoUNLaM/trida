@@ -7,6 +7,7 @@ import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
+import OpcionMultipleImagen from './opcion-multiple-imagen';
 
 class AgregarEjercicio extends React.Component {
   constructor(props) {
@@ -44,6 +45,13 @@ class AgregarEjercicio extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    // fix Warning: Can't perform a React state update on an unmounted component
+    this.setState = (state, callback) => {
+      return;
+    };
+  }
+
   handleChange = (event) => {
     const { value, name } = event.target;
     if (!name || name.length === 0) return;
@@ -77,6 +85,7 @@ class AgregarEjercicio extends React.Component {
             if (!ejer.tema) valid = false;
             break;
           case TIPO_EJERCICIO.opcion_multiple:
+          case TIPO_EJERCICIO.opcion_multiple_imagen:
             if (!ejer.opciones || ejer.opciones.length === 0) {
               valid = false;
               break;
@@ -224,6 +233,17 @@ class AgregarEjercicio extends React.Component {
 
                             {ejercicio.tipo === TIPO_EJERCICIO.oral && (
                               <Oral
+                                ejercicioId={index}
+                                value={ejercicio}
+                                submitted={submitted}
+                                preview={false}
+                                onEjercicioChange={this.onEjercicioChange}
+                              />
+                            )}
+
+                            {ejercicio.tipo ===
+                              TIPO_EJERCICIO.opcion_multiple_imagen && (
+                              <OpcionMultipleImagen
                                 ejercicioId={index}
                                 value={ejercicio}
                                 submitted={submitted}

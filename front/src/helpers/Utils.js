@@ -1,4 +1,5 @@
 import { defaultDirection } from '../constants/defaultValues';
+import { firestore } from './Firebase';
 import * as _moment from 'moment';
 const moment = _moment;
 
@@ -120,7 +121,11 @@ export const getDate = (date, format) => {
 };
 
 export const getTimestamp = () => {
-  return moment().format('DD-MM-YYYY HH:mm');
+  return moment().format('DD-MM-YYYY HH:mm:ss');
+};
+
+export const getTimestampDifference = (date1, date2) => {
+  return moment(date1).diff(moment(date2), 'minutes');
 };
 
 export const getDateTimeStringFromDate = (date, format) => {

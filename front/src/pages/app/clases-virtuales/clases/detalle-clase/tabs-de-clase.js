@@ -16,6 +16,7 @@ import DataListView from 'containers/pages/DataListView';
 import classnames from 'classnames';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import PaginaVideollamada from './pagina-videollamada';
+import PaginaAsistencia from './pagina-asistencia';
 import { storage } from 'helpers/Firebase';
 import {
   getDocument,
@@ -52,6 +53,7 @@ class TabsDeClase extends Component {
       preguntasDeClase: [],
       modalPreguntasOpen: false,
       modalPreviewOpen: false,
+      asistencia: [],
     };
   }
 
@@ -63,10 +65,17 @@ class TabsDeClase extends Component {
         activeSecondTab: hash.split('')[1],
       });
     }
-
+    this.getAsistenciaDeClase();
     this.getLinksDeClase();
     this.dataListRenderer();
     this.getPreguntasDeClase();
+  }
+
+  getAsistenciaDeClase = async () => {
+    this.setState({ isLoading: true });
+    const { data } = await getDocument(`clases/${this.props.idClase}`);
+    const { asistencia } = data;
+    this.setState({ isLoading: false, asistencia });
   }
 
   getLinksDeClase = async () => {
@@ -290,6 +299,7 @@ class TabsDeClase extends Component {
   render() {
     const {
       idSala,
+      password,
       contenidos,
       idClase,
       idMateria,
@@ -306,6 +316,7 @@ class TabsDeClase extends Component {
       preguntasDeClase,
       modalPreguntasOpen,
       modalPreviewOpen,
+      asistencia,
       linksDeClase,
     } = this.state;
 
@@ -403,6 +414,7 @@ class TabsDeClase extends Component {
                             'nav-link': true,
                           })}
                           onClick={() => {
+                            this.getAsistenciaDeClase();
                             this.toggleSecondTab('5');
                           }}
                         >
@@ -423,7 +435,11 @@ class TabsDeClase extends Component {
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <PaginaVideollamada idSala={idSala} />
+                            <PaginaVideollamada
+                              idSala={idSala}
+                              idClase={idClase}
+                              password={password}
+                            />
                           )}
                         </CardBody>
                       </Colxx>
@@ -662,7 +678,7 @@ class TabsDeClase extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">Asistencia</CardTitle>
+                          <PaginaAsistencia asistencia={asistencia} />
                         </CardBody>
                       </Colxx>
                     </Row>

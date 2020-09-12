@@ -545,3 +545,11 @@ export const guardarNotas = async (user, notas) => {
     .doc(user)
     .set({ notas: notas }, { merge: true });
 };
+
+export const getDatosClaseOnSnapshot = (document, callback) => {
+  return firestore.collection('clases').doc(document).onSnapshot(callback);
+}
+
+export const generateId = (path) => {
+  return firestore.collection(path).doc().id;
+};
