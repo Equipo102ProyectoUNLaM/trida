@@ -8,7 +8,7 @@ import {
   addDocumentWithSubcollection,
   getUsernameById,
 } from 'helpers/Firebase-db';
-import { Colxx } from 'components/common/CustomBootstrap';
+import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercicio';
 import { Formik, Form, Field } from 'formik';
@@ -37,6 +37,9 @@ class FormEvaluacion extends React.Component {
       modalEditOpen: false,
       modalAddOpen: false,
       ejercicios: [],
+      sin_salir_de_ventana: false,
+      sin_capturas: false,
+      preguntas_aleatorias: false,
       isLoading: true,
     };
   }
@@ -92,6 +95,9 @@ class FormEvaluacion extends React.Component {
         ),
         descripcion: this.props.evaluacion.descripcion,
         ejercicios: this.props.evaluacion.ejercicios,
+        sin_capturas: this.props.evaluacion.sin_capturas,
+        sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
+        preguntas_aleatorias: this.props.evaluacion.preguntas_aleatorias,
         creador: userName,
         isLoading: false,
       });
@@ -120,6 +126,18 @@ class FormEvaluacion extends React.Component {
       ),
       descripcion: CryptoJS.AES.encrypt(
         this.state.descripcion,
+        secretKey
+      ).toString(),
+      sin_capturas: CryptoJS.AES.encrypt(
+        this.state.sin_capturas.toString(),
+        secretKey
+      ).toString(),
+      sin_salir_de_ventana: CryptoJS.AES.encrypt(
+        this.state.sin_salir_de_ventana.toString(),
+        secretKey
+      ).toString(),
+      preguntas_aleatorias: CryptoJS.AES.encrypt(
+        this.state.preguntas_aleatorias.toString(),
         secretKey
       ).toString(),
       idMateria: this.props.idMateria,
@@ -189,6 +207,18 @@ class FormEvaluacion extends React.Component {
           this.state.descripcion,
           secretKey
         ).toString(),
+        sin_capturas: CryptoJS.AES.encrypt(
+          this.state.sin_capturas.toString(),
+          secretKey
+        ).toString(),
+        sin_salir_de_ventana: CryptoJS.AES.encrypt(
+          this.state.sin_salir_de_ventana.toString(),
+          secretKey
+        ).toString(),
+        preguntas_aleatorias: CryptoJS.AES.encrypt(
+          this.state.preguntas_aleatorias.toString(),
+          secretKey
+        ).toString(),
       };
 
       await editDocument(
@@ -222,6 +252,12 @@ class FormEvaluacion extends React.Component {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  handleChange = (event) => {
+    const { checked, name } = event.target;
+    if (!name || name.length === 0) return;
+    this.setState({ [name]: checked });
   };
 
   render() {
@@ -328,7 +364,46 @@ class FormEvaluacion extends React.Component {
                 </div>
               ) : null}
             </FormGroup>
-
+            <FormGroup className="mb-3 mt-4">
+              <h4>Características especiales</h4>
+              <Row className="mt-4">
+                <Colxx xxs="12" xs="6" sm="6" md="4">
+                  <Input
+                    name="preguntas_aleatorias"
+                    className=" margin-auto checkbox"
+                    type="checkbox"
+                    onChange={this.handleChange}
+                    checked={this.state.preguntas_aleatorias}
+                  />
+                  <Label className="ml-1">Preguntas aleatorias</Label>
+                </Colxx>
+                <Colxx xxs="12" xs="6" sm="6" md="4">
+                  <Input
+                    name="sin_capturas"
+                    className="margin-auto checkbox"
+                    type="checkbox"
+                    onChange={this.handleChange}
+                    checked={this.state.sin_capturas}
+                  />
+                  <Label className="ml-1">
+                    No permitir capturas de pantalla
+                  </Label>
+                </Colxx>
+                <Colxx xxs="12" xs="6" sm="6" md="4">
+                  <Input
+                    name="sin_salir_de_ventana"
+                    className="margin-auto checkbox"
+                    type="checkbox"
+                    onChange={this.handleChange}
+                    checked={this.state.sin_salir_de_ventana}
+                  />
+                  <Label className="ml-1">
+                    No permitir salir de la ventana
+                  </Label>
+                </Colxx>
+              </Row>
+            </FormGroup>
+            <Separator className="mb-5" />
             <AgregarEjercicio
               ref={(ejer) => {
                 this.ejerciciosComponentRef = ejer;

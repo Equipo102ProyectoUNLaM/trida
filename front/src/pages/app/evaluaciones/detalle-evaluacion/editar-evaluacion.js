@@ -42,8 +42,10 @@ export default class EditarEvaluacion extends Component {
       fecha_finalizacion,
       fecha_publicacion,
       descripcion,
+      sin_capturas,
+      preguntas_aleatorias,
+      sin_salir_de_ventana,
     } = data;
-
     const ejerciciosDesencriptados = desencriptarEjercicios(subCollection);
 
     this.setState({
@@ -57,6 +59,18 @@ export default class EditarEvaluacion extends Component {
       descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
+      sin_capturas:
+        CryptoJS.AES.decrypt(sin_capturas, secretKey).toString(
+          CryptoJS.enc.Utf8
+        ) === 'true',
+      sin_salir_de_ventana:
+        CryptoJS.AES.decrypt(sin_salir_de_ventana, secretKey).toString(
+          CryptoJS.enc.Utf8
+        ) === 'true',
+      preguntas_aleatorias:
+        CryptoJS.AES.decrypt(preguntas_aleatorias, secretKey).toString(
+          CryptoJS.enc.Utf8
+        ) === 'true',
       ejercicios: ejerciciosDesencriptados.sort(
         (a, b) => a.data.numero - b.data.numero
       ),
