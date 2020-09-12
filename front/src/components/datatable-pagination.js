@@ -174,7 +174,7 @@ export default class DataTablePagination extends Component {
           </Pagination>
           {showPageSizeOptions && (
             <div className="float-right pt-2">
-              <span className="text-muted text-small mr-1">Mensajes </span>
+              <span className="text-muted text-small mr-1">Filas </span>
               <UncontrolledDropdown className="d-inline-block">
                 <DropdownToggle caret color="outline-primary" size="xs">
                   {this.state.pageSize}

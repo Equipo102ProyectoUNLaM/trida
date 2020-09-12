@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useForm } from 'react-hook-form';
 import Videollamada from 'components/videollamada/videollamada';
 import {
   Container,
@@ -12,29 +11,40 @@ import {
   FormGroup,
   FormText,
 } from 'reactstrap';
-import { createRandomString } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
+import ROLES from 'constants/roles';
+import { editDocument, getDatosClaseOnSnapshot } from 'helpers/Firebase-db';
 
 const PaginaVideollamada = (props) => {
-  const { handleSubmit, register, errors } = useForm();
   const room = CryptoJS.AES.decrypt(props.idSala, secretKey).toString(
     CryptoJS.enc.Utf8
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
-  const isHost = true;
+  const isHost = props.rol === ROLES.Docente;
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
-  const [name, setName] = useState(props.nombre + ' ' + props.apellido);
   const [call, setCall] = useState(false);
+  const [llamadaIniciada, setIniciada] = useState(false);
 
   const onSubmit = (event) => {
-    //event.preventDefault();
-    if (room && name) setCall(true);
+    event.preventDefault();
+    editDocument('clases', props.idClase, { iniciada: true });
+    if (room) setCall(true);
   };
 
   const setVideollamadaOff = () => {
     setCall(false);
+    editDocument('clases', props.idClase, { iniciada: false });
+  };
+
+  useEffect(() => {
+    getDatosClaseOnSnapshot(props.idClase, onClaseIniciada);
+  }, []);
+
+  const onClaseIniciada = (doc) => {
+    const { iniciada } = doc.data();
+    setIniciada(iniciada);
   };
 
   const handleChange = (event) => {
@@ -48,20 +58,21 @@ const PaginaVideollamada = (props) => {
     <>
       <Videollamada
         roomName={room}
-        userName={name}
-        password={createRandomString()}
+        userName={`${props.nombre} ${props.apellido}`}
+        password={props.password}
         containerStyles={{ width: '100%', height: '700px' }}
         options={options}
         isHost={isHost}
         setCallOff={setVideollamadaOff}
         rol={props.rol}
+        idClase={props.idClase}
       />
     </>
   ) : (
     <>
       <div>
         <Container>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={onSubmit}>
             <FormGroup className="mb-3">
               <Label>Nombre</Label>
               <Input
@@ -71,16 +82,7 @@ const PaginaVideollamada = (props) => {
                 placeholder="Nombre"
                 value={`${props.nombre} ${props.apellido}`}
                 disabled
-                onChange={(e) => setName(e.target.value)}
-                innerRef={register({
-                  required: 'El nombre es requerido!',
-                })}
               />
-              {errors.name && (
-                <FormText className="error-text-color">
-                  {errors.name.message}
-                </FormText>
-              )}
             </FormGroup>
             <FormGroup>
               <Label>Opciones de Videollamada</Label>
@@ -103,9 +105,21 @@ const PaginaVideollamada = (props) => {
                 />
               </div>
             </FormGroup>
-            <Button color="primary" size="lg" type="submit">
-              Iniciar
-            </Button>
+            {props.rol === ROLES.Docente && (
+              <Button color="primary" size="lg" type="submit">
+                Iniciar
+              </Button>
+            )}
+            {props.rol === ROLES.Alumno && (
+              <Button
+                disabled={!llamadaIniciada}
+                color="primary"
+                size="lg"
+                type="submit"
+              >
+                Ingresar
+              </Button>
+            )}
           </Form>
         </Container>
       </div>

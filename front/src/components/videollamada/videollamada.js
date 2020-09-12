@@ -2,15 +2,11 @@ import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
 import { Button, Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
+import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
-
-/* 'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
-        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone', 'security' */
-// const TOOLBAR_BUTTONS = ['microphone', 'camera', 'shortcuts', 'videoquality', 'fullscreen', 'hangup', 'tileview'];
+import INTERFACE_CONFIG from 'constants/videollamada';
+import { editDocument } from 'helpers/Firebase-db';
 
 const Videollamada = ({
   roomName,
@@ -21,12 +17,14 @@ const Videollamada = ({
   isHost,
   setCallOff,
   rol,
+  idClase,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
+  const [listaAsistencia, setListaAsistencia] = useState([]);
   const pizarronURI = '/pizarron';
 
   const setElementHeight = () => {
@@ -47,6 +45,29 @@ const Videollamada = ({
     window.open(pizarronURI, '_blank', strWindowFeatures);
   };
 
+  const guardarListaAsistencia = async () => {
+    const arrayMergeado = mergeArrayObjects(listaAsistencia, listaAsistencia);
+    const arrayFiltrado = arrayMergeado.filter(
+      (elem) => elem.timeStampConexion && elem.timeStampDesconexion
+    );
+    const asistencia = arrayFiltrado.map((elem) => ({
+      ...elem,
+      nombre: elem.nombre ? elem.nombre : 'Nombre',
+      tiempoNeto: getTimestampDifference(
+        elem.timeStampDesconexion,
+        elem.timeStampConexion
+      ),
+    }));
+    await editDocument('clases', idClase, { asistencia });
+  };
+
+  const mergeArrayObjects = (a1, a2) => {
+    return a1.map((itm) => ({
+      ...a2.find((item) => item.id === itm.id && item),
+      ...itm,
+    }));
+  };
+
   useEffect(() => {
     setElementHeight();
     window.addEventListener('resize', setElementHeight);
@@ -58,28 +79,10 @@ const Videollamada = ({
   const jitsi = useJitsi({
     roomName,
     parentNode,
-    interfaceConfigOverwrite: {
-      TOOLBAR_BUTTONS: [
-        'microphone',
-        'camera',
-        'hangup',
-        'raisehand',
-        'recording',
-        'settings',
-        'tileview',
-        'desktop',
-        'chat',
-        'sharedvideo',
-        'shortcuts',
-        'mute-everyone',
-        'videobackgroundblur',
-      ],
-      SETTINGS_SECTIONS: ['devices', 'language', 'profile'],
-      SHOW_JITSI_WATERMARK: false,
-      SHOW_WATERMARK_FOR_GUESTS: false,
-      TOOLBAR_ALWAYS_VISIBLE: true,
-      DEFAULT_LOCAL_DISPLAY_NAME: userName,
-    },
+    interfaceConfigOverwrite:
+      rol === ROLES.Docente
+        ? INTERFACE_CONFIG.DOCENTE
+        : INTERFACE_CONFIG.ALUMNO,
     configOverwrite: {
       disableDeepLinking: true,
       startWithAudioMuted: microfono,
@@ -88,24 +91,43 @@ const Videollamada = ({
       disableRemoteMute: true,
       disableRemoteControl: true,
       remoteVideoMenu: { disableKick: { isHost } },
+      prejoinPageEnabled: false,
     },
   });
 
   useEffect(() => {
     if (jitsi) {
+      jitsi.executeCommand('displayName', userName);
       jitsi.addEventListener('videoConferenceJoined', () => {
         jitsi.executeCommand('displayName', userName);
         jitsi.executeCommand('subject', subject);
-        jitsi.executeCommand('password', password);
+        //jitsi.executeCommand('password', password);
       });
       jitsi.addEventListener('readyToClose', () => {
+        if (rol === ROLES.Docente) guardarListaAsistencia();
         setCallOff();
       });
-      jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
-        on
-          ? setShareScreenButtonText('Dejar de Compartir pantalla')
-          : setShareScreenButtonText('Compartir pantalla');
-      });
+      if (rol === ROLES.Docente) {
+        jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
+          on
+            ? setShareScreenButtonText('Dejar de Compartir pantalla')
+            : setShareScreenButtonText('Compartir pantalla');
+        });
+        jitsi.addEventListener('participantJoined', ({ id, displayName }) => {
+          setListaAsistencia(
+            listaAsistencia.push({
+              id,
+              nombre: displayName,
+              timeStampConexion: getTimestamp(),
+            })
+          );
+        });
+        jitsi.addEventListener('participantLeft', ({ id }) => {
+          setListaAsistencia(
+            listaAsistencia.push({ id, timeStampDesconexion: getTimestamp() })
+          );
+        });
+      }
     }
     return () => {
       jitsi && jitsi.dispose();

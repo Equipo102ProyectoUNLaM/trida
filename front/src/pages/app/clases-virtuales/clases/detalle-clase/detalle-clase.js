@@ -17,6 +17,7 @@ class DetalleClase extends Component {
       fecha: '',
       descripcion: '',
       idSala: '',
+      password: '',
       isLoading: true,
     };
   }
@@ -26,7 +27,15 @@ class DetalleClase extends Component {
 
     const docObj = await getDocument(`clases/${claseId}`);
     const { data } = docObj;
-    const { nombre, fecha, descripcion, idSala, idMateria, contenidos } = data;
+    const {
+      nombre,
+      fecha,
+      descripcion,
+      idSala,
+      idMateria,
+      contenidos,
+      password,
+    } = data;
 
     this.setState({
       claseId,
@@ -36,6 +45,7 @@ class DetalleClase extends Component {
       idSala,
       idMateria,
       contenidos,
+      password,
       isLoading: false,
     });
   };
@@ -63,6 +73,7 @@ class DetalleClase extends Component {
       idMateria,
       contenidos,
       claseId,
+      password,
     } = this.state;
 
     const { match } = this.props;
@@ -80,6 +91,7 @@ class DetalleClase extends Component {
           contenidos={contenidos}
           idMateria={idMateria}
           idSala={idSala}
+          password={password}
           idClase={claseId}
           updateContenidos={this.getDetalleDeClase}
           rol={this.props.rol}
