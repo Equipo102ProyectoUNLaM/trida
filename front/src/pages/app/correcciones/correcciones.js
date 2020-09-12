@@ -72,6 +72,10 @@ class Correcciones extends Component {
     return docAlumno.data.nombre + ' ' + docAlumno.data.apellido;
   };
 
+  onCorrection = (id) => {
+    console.log('ID de correccion:', id);
+  };
+
   render() {
     const { isLoading, items } = this.state;
     const { rol } = this.props;
@@ -103,6 +107,9 @@ class Correcciones extends Component {
                       : ' '
                   }
                   file={correccion.data.url}
+                  onCorrection={
+                    rol === ROLES.Docente ? this.onCorrection : null
+                  }
                   isSelect={this.state.selectedItems.includes(correccion.id)}
                   navTo="#"
                   collect={collect}

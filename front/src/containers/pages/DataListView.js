@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row } from 'reactstrap';
+import { Card, Row, Button } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
@@ -40,6 +40,7 @@ class DataListView extends React.Component {
       calendario,
       onDelete,
       onUploadFile,
+      onCorrection,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -50,7 +51,7 @@ class DataListView extends React.Component {
             })}
           >
             <div className="pl-2 d-flex flex-grow-1 min-width-zero">
-              <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
+              <NavLink to={`${navTo}`} className="w-70 w-sm-100 active">
                 <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                   <p className="list-item-heading mb-1 truncate practicas-list-label">
                     {title}
@@ -70,16 +71,37 @@ class DataListView extends React.Component {
               <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label">
                 <Row>
                   {file !== undefined && (
-                    <div
-                      className="glyph-icon simple-icon-cloud-download edit-action-icon"
+                    <Button
+                      outline
                       onClick={() => this.onDownloadFile(file)}
-                    />
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Descargar Práctica
+                    </Button>
                   )}
                   {onUploadFile && (
-                    <div
-                      className="glyph-icon simple-icon-cloud-upload edit-action-icon"
+                    <Button
+                      outline
                       onClick={() => onUploadFile(id)}
-                    />
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Subir Práctica
+                    </Button>
+                  )}
+                  {onCorrection && (
+                    <Button
+                      outline
+                      onClick={() => onCorrection(id)}
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Corregir
+                    </Button>
                   )}
                   {onEditItem && (
                     <div
