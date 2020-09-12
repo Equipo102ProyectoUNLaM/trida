@@ -53,10 +53,32 @@ class ModalRealizarEvaluacion extends Component {
                       )}{' '}
                       hs. Luego de esa fecha y horario, no podrás realizarla.
                       <h4 className="mb-4 mt-4 text-center">¡IMPORTANTE!</h4>
-                      Durante el desarrollo de tu evaluación, no podrás salir de
-                      la pantalla, ni tomar capturas, de lo contrario la
-                      evaluación será considerada como inválida y no podrás
-                      rehacerla.
+                      {evaluacion.data.base.sin_capturas &&
+                        evaluacion.data.base.sin_salir_de_ventana && (
+                          <span>
+                            Durante el desarrollo de tu evaluación, no podrás
+                            salir de la pantalla, ni tomar capturas, de lo
+                            contrario la evaluación será considerada como
+                            inválida y no podrás rehacerla.
+                          </span>
+                        )}
+                      {evaluacion.data.base.sin_capturas &&
+                        !evaluacion.data.base.sin_salir_de_ventana && (
+                          <span>
+                            Durante el desarrollo de tu evaluación, no podrás
+                            tomar capturas, de lo contrario la evaluación será
+                            considerada como inválida y no podrás rehacerla.
+                          </span>
+                        )}
+                      {!evaluacion.data.base.sin_capturas &&
+                        evaluacion.data.base.sin_salir_de_ventana && (
+                          <span>
+                            Durante el desarrollo de tu evaluación, no podrás
+                            salir de la pantalla, de lo contrario la evaluación
+                            será considerada como inválida y no podrás
+                            rehacerla.
+                          </span>
+                        )}
                       <div className="mb-4 mt-4 text-center">
                         <h4 className="text-center bold">
                           Al comenzar la evaluacion, no podrás volver para

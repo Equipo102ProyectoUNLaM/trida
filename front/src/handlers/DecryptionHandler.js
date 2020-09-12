@@ -58,6 +58,21 @@ export const desencriptarEvaluacion = (evaluaciones) => {
       evaluacion.data.base.fecha_finalizacion;
     evaluacion.data.base.fecha_publicacion =
       evaluacion.data.base.fecha_publicacion;
+    evaluacion.data.base.sin_capturas =
+      CryptoJS.AES.decrypt(
+        evaluacion.data.base.sin_capturas,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8) === 'true';
+    evaluacion.data.base.sin_salir_de_ventana =
+      CryptoJS.AES.decrypt(
+        evaluacion.data.base.sin_salir_de_ventana,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8) === 'true';
+    evaluacion.data.base.preguntas_aleatorias =
+      CryptoJS.AES.decrypt(
+        evaluacion.data.base.preguntas_aleatorias,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8) === 'true';
     if (evaluacion.data.subcollections) {
       evaluacion.data.subcollections = desencriptarEjercicios(
         evaluacion.data.subcollections
