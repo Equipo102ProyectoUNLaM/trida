@@ -39,7 +39,6 @@ class FormEvaluacion extends React.Component {
       ejercicios: [],
       sin_salir_de_ventana: false,
       sin_capturas: false,
-      preguntas_aleatorias: false,
       isLoading: true,
     };
   }
@@ -97,7 +96,6 @@ class FormEvaluacion extends React.Component {
         ejercicios: this.props.evaluacion.ejercicios,
         sin_capturas: this.props.evaluacion.sin_capturas,
         sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
-        preguntas_aleatorias: this.props.evaluacion.preguntas_aleatorias,
         creador: userName,
         isLoading: false,
       });
@@ -134,10 +132,6 @@ class FormEvaluacion extends React.Component {
       ).toString(),
       sin_salir_de_ventana: CryptoJS.AES.encrypt(
         this.state.sin_salir_de_ventana.toString(),
-        secretKey
-      ).toString(),
-      preguntas_aleatorias: CryptoJS.AES.encrypt(
-        this.state.preguntas_aleatorias.toString(),
         secretKey
       ).toString(),
       idMateria: this.props.idMateria,
@@ -213,10 +207,6 @@ class FormEvaluacion extends React.Component {
         ).toString(),
         sin_salir_de_ventana: CryptoJS.AES.encrypt(
           this.state.sin_salir_de_ventana.toString(),
-          secretKey
-        ).toString(),
-        preguntas_aleatorias: CryptoJS.AES.encrypt(
-          this.state.preguntas_aleatorias.toString(),
           secretKey
         ).toString(),
       };
@@ -367,16 +357,6 @@ class FormEvaluacion extends React.Component {
             <FormGroup className="mb-3 mt-4">
               <h4>Características especiales</h4>
               <Row className="mt-4">
-                <Colxx xxs="12" xs="6" sm="6" md="4">
-                  <Input
-                    name="preguntas_aleatorias"
-                    className=" margin-auto checkbox"
-                    type="checkbox"
-                    onChange={this.handleChange}
-                    checked={this.state.preguntas_aleatorias}
-                  />
-                  <Label className="ml-1">Preguntas aleatorias</Label>
-                </Colxx>
                 <Colxx xxs="12" xs="6" sm="6" md="4">
                   <Input
                     name="sin_capturas"
