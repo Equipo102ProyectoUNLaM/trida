@@ -16,7 +16,6 @@ import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import MenuItem from '@material-ui/core/MenuItem';
 import Slider from '@material-ui/core/Slider';
-import Typography from '@material-ui/core/Typography/Typography';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
@@ -24,7 +23,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
-import $ from 'jquery';
+import json from './enjson.json';
 
 const URL =
   'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/materias%2FNJuvzb2birY1J4fkDMK4%2Fcontenidos%2Flogotrida.png?alt=media&token=9e738a7c-a7ac-4b76-b4ec-306cec8d41c5';
@@ -52,7 +51,10 @@ class CorreccionImagen extends React.Component {
   }
 
   componentDidMount() {
-    this.correccion.addImg(URL);
+    //this.correccion.addImg(URL);
+    console.log(json);
+    this.correccion.fromJSON(json);
+
     (function (console) {
       console.save = function (data, filename) {
         if (!data) {
@@ -117,38 +119,12 @@ class CorreccionImagen extends React.Component {
   };
 
   _download = () => {
-    /*  console.save(this.correccion.toDataURL(), 'toDataURL.txt');
-    console.save(JSON.stringify(this.correccion.toJSON()), 'toDataJSON.txt');
+    console.save(this.correccion.toJSON(), 'enjson.json');
 
-    // eslint-disable-next-line react/no-string-refs
-    let { imgDown } = this.refs;
-    let event = new Event('click', {});
-
-    imgDown.href = this.correccion.toDataURL();
-    imgDown.download = 'toPNG.png';
-    imgDown.dispatchEvent(event); */
     html2canvas(document.getElementsByClassName('canvas-area')[0], {
       useCORS: true,
     }).then(function (canvas) {
-      var imgBase64 = canvas.toDataURL();
-      var imgURL = 'data:image/' + imgBase64;
-      console.save(imgBase64, 'toDataURL.txt');
-
-      /*var triggerDownload = $('<a>')
-        .attr('href', imgURL)
-        .attr('download', 'layout_' + new Date().getTime() + '.jpeg')
-        .appendTo('body');
-      triggerDownload[0].click();
-      triggerDownload.remove(); */
-      //console.save(canvas.toDataURL(), 'toDataURL.txt');
-      //console.save(JSON.stringify(canvas.toJSON()), 'toDataJSON.txt');
-      // eslint-disable-next-line react/no-string-refs
-      /* let { imgDown } = this.refs;
-      let event = new Event('click', {});
-
-      imgDown.href = canvas.toDataURL();
-      imgDown.download = 'toPNG.png';
-      imgDown.dispatchEvent(event); */
+      console.save(canvas.toJSON(), 'enjson2.json');
     });
   };
 
