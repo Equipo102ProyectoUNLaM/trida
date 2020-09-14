@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row } from 'reactstrap';
+import { Card, Row, Button } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
@@ -39,6 +39,8 @@ class DataListView extends React.Component {
       navTo,
       calendario,
       onDelete,
+      onUploadFile,
+      onCorrection,
       sonPreguntas,
     } = this.props;
     return (
@@ -77,10 +79,37 @@ class DataListView extends React.Component {
               <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label">
                 <Row>
                   {file !== undefined && (
-                    <div
-                      className="glyph-icon simple-icon-cloud-download edit-action-icon"
+                    <Button
+                      outline
                       onClick={() => this.onDownloadFile(file)}
-                    />
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Descargar Práctica
+                    </Button>
+                  )}
+                  {onUploadFile && (
+                    <Button
+                      outline
+                      onClick={() => onUploadFile(id)}
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Subir Práctica
+                    </Button>
+                  )}
+                  {onCorrection && (
+                    <Button
+                      outline
+                      onClick={() => onCorrection(id)}
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Corregir
+                    </Button>
                   )}
                   {onEditItem && (
                     <div
