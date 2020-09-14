@@ -2530,6 +2530,7 @@ a:visited {
 .contact-one {
   padding-bottom: 120px;
   position: relative;
+  padding-top: 2rem;
 }
 
 [class*="contact-one__bg-shape"] {
@@ -3345,6 +3346,7 @@ a:visited {
 .pricing-one {
   position: relative;
   padding-bottom: 90px;
+  padding-top: 2rem;
 }
 
 .pricing-one .animated {
