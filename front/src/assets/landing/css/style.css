@@ -656,7 +656,7 @@ a:visited {
   display: flex;
   -webkit-box-align: center;
   align-items: center;
-  margin-left: 130px;
+  margin-left: 1.9rem;
 }
 
 .main-nav__main-navigation .main-nav__navigation-box > li {
