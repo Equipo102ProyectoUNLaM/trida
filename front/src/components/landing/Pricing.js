@@ -8,7 +8,7 @@ const Pricing = () => {
       <Container>
         <BlockTitle
           textAlign="center"
-          paraText="Planes"
+          paraText="Precios"
           titleText={`Elegí el plan que se ajuste \n a tus necesidades`}
         />
         <div id="month">
