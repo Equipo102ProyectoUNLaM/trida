@@ -161,7 +161,7 @@ class Foro extends Component {
                   imagen={imagenForo}
                   isSelect={this.state.selectedItems.includes(foro.id)}
                   collect={collect}
-                  navTo="#"
+                  navTo={`/app/foros/detalle-foro/${foro.id}`}
                   onEdit={rolDocente ? this.onEdit : null}
                   onDelete={rolDocente ? this.onDelete : null}
                 />
