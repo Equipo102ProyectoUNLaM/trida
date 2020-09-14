@@ -8,6 +8,7 @@ import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import OpcionMultipleImagen from './opcion-multiple-imagen';
+import PreguntasAleatorias from './preguntas_aleatorias';
 
 class AgregarEjercicio extends React.Component {
   constructor(props) {
@@ -244,6 +245,17 @@ class AgregarEjercicio extends React.Component {
                             {ejercicio.tipo ===
                               TIPO_EJERCICIO.opcion_multiple_imagen && (
                               <OpcionMultipleImagen
+                                ejercicioId={index}
+                                value={ejercicio}
+                                submitted={submitted}
+                                preview={false}
+                                onEjercicioChange={this.onEjercicioChange}
+                              />
+                            )}
+
+                            {ejercicio.tipo ===
+                              TIPO_EJERCICIO.preguntas_aleatorias && (
+                              <PreguntasAleatorias
                                 ejercicioId={index}
                                 value={ejercicio}
                                 submitted={submitted}
