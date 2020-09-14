@@ -66,6 +66,7 @@ const PaginaVideollamada = (props) => {
         setCallOff={setVideollamadaOff}
         rol={props.rol}
         idClase={props.idClase}
+        preguntas={props.preguntas}
       />
     </>
   ) : (

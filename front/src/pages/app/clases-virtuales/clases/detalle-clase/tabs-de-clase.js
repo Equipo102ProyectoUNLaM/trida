@@ -76,7 +76,7 @@ class TabsDeClase extends Component {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
     this.setState({ isLoading: false, asistencia });
-  }
+  };
 
   getLinksDeClase = async () => {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
@@ -280,6 +280,9 @@ class TabsDeClase extends Component {
     );
 
     const { subCollection } = claseConPreguntas;
+    console.log('subcollection', subCollection);
+    //subCollection[] .data -> info
+    //subCollection[] .id -> idDoc
 
     //Desencripto las preguntas
     const sinRespuesta = false;
@@ -294,6 +297,8 @@ class TabsDeClase extends Component {
       ),
       isLoading: false,
     });
+
+    console.log('pregClase', this.state.preguntasDeClase);
   };
 
   render() {
@@ -439,6 +444,7 @@ class TabsDeClase extends Component {
                               idSala={idSala}
                               idClase={idClase}
                               password={password}
+                              preguntas={preguntasDeClase}
                             />
                           )}
                         </CardBody>

@@ -1,12 +1,14 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
-import { Button, Row } from 'reactstrap';
+import { Button, Row, ModalFooter } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
 import { editDocument } from 'helpers/Firebase-db';
+import DataListView from 'containers/pages/DataListView';
+import ModalGrande from 'containers/pages/ModalGrande';
 
 const Videollamada = ({
   roomName,
@@ -18,6 +20,7 @@ const Videollamada = ({
   setCallOff,
   rol,
   idClase,
+  preguntas,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
@@ -26,6 +29,8 @@ const Videollamada = ({
   );
   const [listaAsistencia, setListaAsistencia] = useState([]);
   const pizarronURI = '/pizarron';
+  const [modalPreguntasOpen, setmodalPreguntasOpen] = useState(false);
+  const [preguntaALanzar, setpreguntaALanzar] = useState();
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -43,6 +48,14 @@ const Videollamada = ({
   const abrirPizarron = () => {
     const strWindowFeatures = 'location=yes, scrollbars=yes, status=yes';
     window.open(pizarronURI, '_blank', strWindowFeatures);
+  };
+
+  const toggleModalPreguntas = () => {
+    setmodalPreguntasOpen(!modalPreguntasOpen);
+  };
+
+  const onSelectPregunta = (idPregunta) => {
+    setpreguntaALanzar(idPregunta);
   };
 
   const guardarListaAsistencia = async () => {
@@ -141,6 +154,14 @@ const Videollamada = ({
             className="button"
             color="primary"
             size="lg"
+            onClick={toggleModalPreguntas}
+          >
+            <IntlMessages id="clase.lanzar-pregunta" />
+          </Button>
+          <Button
+            className="button"
+            color="primary"
+            size="lg"
             onClick={toggleShareScreen}
           >
             {shareButtonText}
@@ -154,6 +175,33 @@ const Videollamada = ({
             <IntlMessages id="pizarron.abrir-pizarron" />
           </Button>
         </Row>
+      )}
+      {modalPreguntasOpen && (
+        <ModalGrande
+          modalOpen={modalPreguntasOpen}
+          toggleModal={toggleModalPreguntas}
+          text="Preguntas de la Clase"
+        >
+          {preguntas.map((pregunta) => {
+            const consignaPregunta = pregunta.data.consigna;
+            return (
+              <DataListView
+                key={pregunta.id}
+                id={pregunta.id}
+                title={consignaPregunta}
+                modalLanzarPreguntas={true}
+                preguntaALanzar={preguntaALanzar}
+                onSelectPregunta={onSelectPregunta}
+              />
+            );
+          })}
+          <ModalFooter>
+            <Button color="primary" disabled={!preguntaALanzar}>
+              Lanzar Pregunta
+            </Button>
+            <Button color="secondary">Cancelar</Button>
+          </ModalFooter>
+        </ModalGrande>
       )}
       <div id={parentNode}></div>
     </Fragment>
