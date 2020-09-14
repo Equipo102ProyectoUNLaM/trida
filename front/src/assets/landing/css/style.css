@@ -2664,6 +2664,32 @@ a:visited {
   transform: rotate(2deg);
 }
 
+.contact-button-wrapper {
+    width: 100%;
+    flex: 1 0 100%;
+    position: relative;
+    padding-right: 15px;
+    padding-left: 15px;
+    text-align: center;
+}
+
+.contact-button {
+  width: 100%;
+  cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    border: none;
+    margin: 2px;
+    background-image: linear-gradient( 90deg, var(--thm-primary) 0%, var(--thm-base) 100% );
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    padding: 13px 50px;
+    position: relative;
+    transition: all 0.4s ease;
+}
+
 /*--------------------------------------------------------------
 # Services
 --------------------------------------------------------------*/

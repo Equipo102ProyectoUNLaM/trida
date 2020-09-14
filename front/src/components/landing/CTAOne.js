@@ -56,9 +56,11 @@ const CTAOne = (props) => {
                   Cantidad de usuarios ilimitados
                 </li>
               </ul>
-              <a onClick={handleRegister} className="thm-btn cta-one__btn">
-                <span>Registrá tu Institución Pública</span>
-              </a>
+              <div className="contact-button-wrapper">
+                <a onClick={handleRegister} className="thm-btn cta-one__btn">
+                  <span>Registrá tu Institución Pública</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
