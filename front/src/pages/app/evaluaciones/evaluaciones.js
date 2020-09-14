@@ -15,7 +15,10 @@ import {
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
 import firebase from 'firebase/app';
-import { desencriptarEvaluacion } from 'handlers/DecryptionHandler';
+import {
+  desencriptarEvaluacion,
+  desencriptarTexto,
+} from 'handlers/DecryptionHandler';
 
 function collect(props) {
   return { data: props.data };
@@ -136,7 +139,8 @@ class Evaluaciones extends Component {
       type: 'text/plain',
     });
     element.href = URL.createObjectURL(blob);
-    element.download = 'trida.txt';
+    const nombre = desencriptarTexto(obj.data.nombre);
+    element.download = nombre + '.txt';
     element.click();
   };
 
