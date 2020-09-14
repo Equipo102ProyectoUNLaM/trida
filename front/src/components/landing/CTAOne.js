@@ -24,9 +24,6 @@ const CTAOne = (props) => {
     <section id="publicas" className="cta-one">
       <img src={CtaShape1} className="cta-one__bg-shape-1" alt="" />
       <img src={CtaShape2} className="cta-one__bg-shape-2" alt="" />
-      <div className="cta-one__moc">
-        <img src={CtaMoc1} className="cta-one__moc-img" alt="" />
-      </div>
       <div className="container">
         <div className="row justify-content-start">
           <div className="cta-one-text">
