@@ -3626,7 +3626,7 @@ a:visited {
 }
 
 .pricing-card {
-  flex: 0 0 25%;
+  flex: 1 0 25%;
   position: relative;
     width: 100%;
     padding-right: 15px;
@@ -4131,7 +4131,7 @@ a:visited {
 }
 
 .team-card {
-  flex: 0 0 20%;
+  flex: 1 0 20%;
   position: relative;
     width: 100%;
     padding-right: 15px;
