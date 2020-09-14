@@ -114,6 +114,8 @@ module.exports = {
   'clase.agregar-link': 'Link *',
   'clase.descripcion-link': 'Descripción link',
 
+  'clase.crear-pregunta': 'Crear Preguntas para la Clase',
+
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',
   'institucion.complete-datos': 'Completá los datos de la Institución',
@@ -137,6 +139,7 @@ module.exports = {
   /* 10. Prácticas */
   'activity.add': 'AGREGAR PRÁCTICA',
   'activity.edit': 'EDITAR PRÁCTICA',
+  'activity.upload': 'SUBIR PRÁCTICA',
   'activity.delete': 'ELIMINAR PRÁCTICA',
   'fecha.modificar': 'Modificar fecha de entrega',
 

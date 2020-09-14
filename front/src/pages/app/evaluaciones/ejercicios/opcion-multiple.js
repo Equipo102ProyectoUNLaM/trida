@@ -138,7 +138,7 @@ class OpcionMultiple extends React.Component {
 
         {!preview && !resolve && (
           <div>
-            <div className="rta-libre-container">
+            <div>
               <FormGroup className="error-l-75">
                 <Label>Pregunta</Label>
                 <Input
@@ -153,7 +153,7 @@ class OpcionMultiple extends React.Component {
                 ) : null}
               </FormGroup>
             </div>
-            <div className="rta-libre-container">
+            <div>
               <FormGroup className="error-l-275">
                 <Label>Opciones (Marque con un tilde las correctas)</Label>
                 {this.props.submitted &&

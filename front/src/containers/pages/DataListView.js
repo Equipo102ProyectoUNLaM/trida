@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row } from 'reactstrap';
+import { Card, Row, Button, Badge } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
@@ -29,6 +29,7 @@ class DataListView extends React.Component {
   render() {
     const {
       id,
+      idArchivo,
       title,
       text1,
       text2,
@@ -39,6 +40,11 @@ class DataListView extends React.Component {
       navTo,
       calendario,
       onDelete,
+      onUploadFile,
+      onCorrection,
+      onCorrectionAlumno,
+      sonPreguntas,
+      estado,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -49,30 +55,85 @@ class DataListView extends React.Component {
             })}
           >
             <div className="pl-2 d-flex flex-grow-1 min-width-zero">
-              <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
-                <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                  <p className="list-item-heading mb-1 truncate practicas-list-label">
-                    {title}
-                  </p>
-                  {text1 && (
-                    <p className="mb-1 text-small w-sm-100 practicas-list-label">
-                      {text1}
+              {sonPreguntas && (
+                <p className=" list-item-heading mb-1 truncate card-body">
+                  {title}
+                </p>
+              )}
+              {!sonPreguntas && (
+                <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
+                  <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                    <p className="list-item-heading mb-1 truncate practicas-list-label">
+                      {title}
                     </p>
-                  )}
-                  {text2 && (
-                    <p className="mb-1 text-small w-sm-100 practicas-list-label">
-                      {text2}
-                    </p>
-                  )}
-                </div>
-              </NavLink>
+                    {text1 && (
+                      <p className="mb-1 mr-2 text-small w-sm-100 practicas-list-label">
+                        {text1}
+                      </p>
+                    )}
+                    {text2 && (
+                      <p className="mb-1 text-small w-sm-100 practicas-list-label">
+                        {text2}
+                      </p>
+                    )}
+                  </div>
+                </NavLink>
+              )}
               <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label">
-                <Row>
+                <Row className="correcciones-data-list-row">
+                  {estado && (
+                    <Badge
+                      key={id + 'badge'}
+                      color="primary"
+                      pill
+                      className="badge-data-list"
+                    >
+                      {estado.toUpperCase()}
+                    </Badge>
+                  )}
                   {file !== undefined && (
-                    <div
-                      className="glyph-icon simple-icon-cloud-download edit-action-icon"
+                    <Button
+                      outline
                       onClick={() => this.onDownloadFile(file)}
-                    />
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Descargar Práctica
+                    </Button>
+                  )}
+                  {onUploadFile && (
+                    <Button
+                      outline
+                      onClick={() => onUploadFile(id)}
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Subir Práctica
+                    </Button>
+                  )}
+                  {onCorrection && (
+                    <Button
+                      outline
+                      onClick={() => onCorrection(id, idArchivo, file)}
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Corregir
+                    </Button>
+                  )}
+                  {onCorrectionAlumno && (
+                    <Button
+                      outline
+                      onClick={() => onCorrectionAlumno(id, idArchivo, file)}
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                    >
+                      Ver Corrección
+                    </Button>
                   )}
                   {onEditItem && (
                     <div

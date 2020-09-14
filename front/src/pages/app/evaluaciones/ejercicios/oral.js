@@ -43,7 +43,7 @@ class Oral extends React.Component {
         )}
 
         {!preview && !resolve && (
-          <div className="rta-libre-container">
+          <div>
             <FormGroup className="mb-3 error-l-50">
               <Label>Tema</Label>
               <Input
