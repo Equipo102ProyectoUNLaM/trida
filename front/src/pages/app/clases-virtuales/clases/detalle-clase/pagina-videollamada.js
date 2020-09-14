@@ -39,7 +39,7 @@ const PaginaVideollamada = (props) => {
   };
 
   useEffect(() => {
-    getDatosClaseOnSnapshot(props.idClase, onClaseIniciada);
+    getDatosClaseOnSnapshot('clases', props.idClase, onClaseIniciada);
   }, []);
 
   const onClaseIniciada = (doc) => {

@@ -6,7 +6,7 @@ import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
-import { editDocument } from 'helpers/Firebase-db';
+import { editDocument, getDatosClaseOnSnapshot } from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 
@@ -31,6 +31,7 @@ const Videollamada = ({
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setmodalPreguntasOpen] = useState(false);
   const [preguntaALanzar, setpreguntaALanzar] = useState();
+  const [preguntaLanzada, setpreguntaLanzada] = useState();
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -56,6 +57,36 @@ const Videollamada = ({
 
   const onSelectPregunta = (idPregunta) => {
     setpreguntaALanzar(idPregunta);
+  };
+
+  const onLanzarPregunta = () => {
+    editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
+      lanzada: true,
+    });
+    setpreguntaLanzada(preguntaALanzar);
+    setpreguntaALanzar(null);
+    toggleModalPreguntas();
+  };
+
+  useEffect(() => {
+    if (preguntaLanzada) {
+      getDatosClaseOnSnapshot(
+        `clases/${idClase}/preguntas`,
+        preguntaLanzada,
+        getPreguntaLanzada
+      );
+    }
+  }, []);
+
+  const getPreguntaLanzada = (doc) => {
+    console.log('doc', doc);
+    const { lanzada } = doc.data();
+    //setLanzada(lanzada);
+  };
+
+  const closeModalPreguntas = () => {
+    setpreguntaALanzar(null);
+    toggleModalPreguntas();
   };
 
   const guardarListaAsistencia = async () => {
@@ -196,10 +227,16 @@ const Videollamada = ({
             );
           })}
           <ModalFooter>
-            <Button color="primary" disabled={!preguntaALanzar}>
+            <Button
+              color="primary"
+              disabled={!preguntaALanzar}
+              onClick={onLanzarPregunta}
+            >
               Lanzar Pregunta
             </Button>
-            <Button color="secondary">Cancelar</Button>
+            <Button color="secondary" onClick={closeModalPreguntas}>
+              Cancelar
+            </Button>
           </ModalFooter>
         </ModalGrande>
       )}
