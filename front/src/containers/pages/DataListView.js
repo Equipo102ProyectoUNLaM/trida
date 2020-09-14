@@ -52,14 +52,6 @@ class DataListView extends React.Component {
             })}
           >
             <div className="pl-2 d-flex flex-grow-1 min-width-zero">
-              <NavLink to={`${navTo}`} className="w-70 w-sm-100 active">
-                <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                  <p className="list-item-heading mb-1 truncate practicas-list-label">
-                    {title}
-                  </p>
-                  {text1 && (
-                    <p className="mb-1 text-small w-sm-100 practicas-list-label">
-                      {text1}
               {sonPreguntas && (
                 <p className=" list-item-heading mb-1 truncate card-body">
                   {title}
