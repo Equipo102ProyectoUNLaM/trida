@@ -6,11 +6,14 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalVistaPreviaEvaluacion from 'pages/app/evaluaciones/detalle-evaluacion/vista-previa-evaluacion';
+import ModalRealizarEvaluacion from 'pages/app/evaluaciones/realizar-evaluacion/realizar-evaluacion-confirmar';
 import ROLES from 'constants/roles';
 import {
   logicDeleteDocument,
   getCollectionWithSubCollections,
+  getCollection,
 } from 'helpers/Firebase-db';
+import firebase from 'firebase/app';
 import { desencriptarEvaluacion } from 'handlers/DecryptionHandler';
 
 function collect(props) {
@@ -25,9 +28,11 @@ class Evaluaciones extends Component {
       items: [],
       modalDeleteOpen: false,
       modalPreviewOpen: false,
+      modalMakeOpen: false,
       selectedItems: [],
       isLoading: true,
       materiaId: this.props.subject.id,
+      eval: null,
       evalId: '',
     };
   }
@@ -36,6 +41,17 @@ class Evaluaciones extends Component {
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
       [
+        this.props.rol === ROLES.Docente
+          ? {
+              field: 'fecha_creacion',
+              operator: '>',
+              id: '',
+            }
+          : {
+              field: 'fecha_publicacion',
+              operator: '<=',
+              id: firebase.firestore.Timestamp.now(),
+            },
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
@@ -62,12 +78,25 @@ class Evaluaciones extends Component {
     });
   };
 
-  dataListRenderer(arrayDeObjetos) {
-    arrayDeObjetos.forEach((element) => {
+  toggleMakeModal = () => {
+    this.setState({
+      modalMakeOpen: !this.state.modalMakeOpen,
+    });
+  };
+
+  async dataListRenderer(arrayDeObjetos) {
+    for (let element of arrayDeObjetos) {
+      const result = await getCollection('correcciones', [
+        { field: 'id_entrega', operator: '==', id: element.id },
+      ]);
+      element = Object.assign(
+        element,
+        result.length > 0 ? { entregada: true } : { entregada: false }
+      );
       element.data.subcollections = element.data.subcollections.sort(
         (a, b) => a.data.numero - b.data.numero
       );
-    });
+    }
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
@@ -96,6 +125,21 @@ class Evaluaciones extends Component {
     this.toggleDeleteModal();
   };
 
+  onMake = (evaluacion) => {
+    this.setState((prevState) => ({
+      evaluacion: evaluacion,
+      evalId: evaluacion.id,
+      modalMakeOpen: !prevState.modalMakeOpen,
+    }));
+  };
+
+  realizarEvaluacion = () => {
+    this.props.history.push({
+      pathname: '/app/evaluaciones/realizar-evaluacion',
+      evalId: this.state.evalId,
+    });
+  };
+
   onPreview = (idEvaluacion) => {
     this.setState({
       evalId: idEvaluacion,
@@ -115,10 +159,12 @@ class Evaluaciones extends Component {
   render() {
     const {
       modalDeleteOpen,
+      modalMakeOpen,
       items,
       isLoading,
       modalPreviewOpen,
       evalId,
+      evaluacion,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -144,6 +190,7 @@ class Evaluaciones extends Component {
                   navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
+                  onMake={this.onMake}
                   onCancel={this.onCancel}
                   onPreview={this.onPreview}
                 />
@@ -166,6 +213,15 @@ class Evaluaciones extends Component {
               evalId={evalId}
               toggle={this.togglePreviewModal}
               isOpen={modalPreviewOpen}
+            />
+          )}
+          {modalMakeOpen && (
+            <ModalRealizarEvaluacion
+              evaluacion={evaluacion}
+              onConfirm={this.realizarEvaluacion}
+              titulo="¿Estás seguro que deseas realizar la evaluación?"
+              toggle={this.toggleMakeModal}
+              isOpen={modalMakeOpen}
             />
           )}
         </div>

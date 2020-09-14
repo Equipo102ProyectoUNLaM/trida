@@ -1,7 +1,18 @@
 import React, { Fragment } from 'react';
-import { Row, Input, Button, Label, FormGroup } from 'reactstrap';
+import {
+  Row,
+  Input,
+  Button,
+  Label,
+  FormGroup,
+  InputGroup,
+  CustomInput,
+} from 'reactstrap';
+import { Colxx } from 'components/common/CustomBootstrap';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 
-class OpcionMultiple extends React.Component {
+class OpcionMultipleImagen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -14,6 +25,8 @@ class OpcionMultiple extends React.Component {
           verdadera: false,
         },
       ],
+      isOpenImagePreview: false,
+      openOption: '',
     };
   }
 
@@ -34,10 +47,22 @@ class OpcionMultiple extends React.Component {
   };
 
   handleOptionsChange = (event, index) => {
+    event.preventDefault();
     const { value, name } = event.target;
     let list = this.state.opciones;
-    list[index] = Object.assign(list[index], { [name]: value });
-    this.setState({ opciones: list });
+
+    let reader = new FileReader();
+    let file = event.target.files[0];
+    reader.onloadend = () => {
+      list[index] = Object.assign(list[index], {
+        [name]: value,
+        file: file,
+        opcion: reader.result,
+      });
+      this.setState({ opciones: list });
+    };
+
+    reader.readAsDataURL(file);
     this.props.onEjercicioChange({ opciones: list }, this.props.ejercicioId);
   };
 
@@ -83,7 +108,7 @@ class OpcionMultiple extends React.Component {
   };
 
   render() {
-    let { opciones, consigna, respuestas } = this.state;
+    let { opciones, consigna, respuestas, isOpenImagePreview } = this.state;
 
     const { preview, resolve } = this.props;
 
@@ -94,18 +119,42 @@ class OpcionMultiple extends React.Component {
             <div className="mb-2">
               <Label>{consigna}</Label>
             </div>
-            {opciones.map((op, index) => (
-              <Row key={'row' + index} className="opcionMultipleRow">
-                <Input
-                  name="respuesta"
-                  className="margin-auto checkbox"
-                  type="checkbox"
-                />
-                <Label className="opcionMultipleInput margin-auto">
-                  {op.opcion}
-                </Label>
-              </Row>
-            ))}{' '}
+            {opciones.map((op, index) => {
+              return (
+                <Row key={'row' + index} className="opcionMultipleRow">
+                  <Colxx xxs="2" className="flex">
+                    <Input
+                      name="respuesta"
+                      className="margin-auto checkbox"
+                      type="checkbox"
+                    />
+                  </Colxx>
+                  <Colxx xxs="10" className="flex">
+                    <img
+                      src={op.opcion}
+                      alt="img"
+                      className="image-preview"
+                    ></img>
+                    <Colxx xxs="1" className="icon-container">
+                      <div
+                        className="margin-auto"
+                        style={{ textAlign: 'center' }}
+                      >
+                        <div
+                          className="glyph-icon simple-icon-magnifier-add zoom-icon"
+                          onClick={() =>
+                            this.setState({
+                              isOpenImagePreview: true,
+                              openOption: index,
+                            })
+                          }
+                        ></div>
+                      </div>
+                    </Colxx>
+                  </Colxx>
+                </Row>
+              );
+            })}{' '}
           </div>
         )}
 
@@ -116,15 +165,35 @@ class OpcionMultiple extends React.Component {
             </div>
             {opciones.map((op, index) => (
               <Row key={'row' + index} className="opcionMultipleRow">
-                <Input
-                  name="verdadera"
-                  className="margin-auto checkbox"
-                  type="checkbox"
-                  onChange={(e) => this.handleResponseCheckBoxChange(e, index)}
-                />
-                <Label className="opcionMultipleInput margin-auto">
-                  {op.opcion}
-                </Label>
+                <Colxx xxs="2" className="flex">
+                  <Input
+                    name="verdadera"
+                    className="margin-auto checkbox"
+                    type="checkbox"
+                    onChange={(e) =>
+                      this.handleResponseCheckBoxChange(e, index)
+                    }
+                  />
+                </Colxx>
+                <Colxx xxs="10" className="flex">
+                  <img className="image-preview" alt="img" src={op.opcion} />
+                  <Colxx xxs="1" className="icon-container">
+                    <div
+                      className="margin-auto"
+                      style={{ textAlign: 'center' }}
+                    >
+                      <div
+                        className="glyph-icon simple-icon-magnifier-add zoom-icon"
+                        onClick={() =>
+                          this.setState({
+                            isOpenImagePreview: true,
+                            openOption: index,
+                          })
+                        }
+                      ></div>
+                    </div>
+                  </Colxx>
+                </Colxx>
               </Row>
             ))}{' '}
             {this.props.submitted &&
@@ -138,7 +207,7 @@ class OpcionMultiple extends React.Component {
 
         {!preview && !resolve && (
           <div>
-            <div>
+            <div className="rta-libre-container">
               <FormGroup className="error-l-75">
                 <Label>Pregunta</Label>
                 <Input
@@ -153,7 +222,7 @@ class OpcionMultiple extends React.Component {
                 ) : null}
               </FormGroup>
             </div>
-            <div>
+            <div className="rta-libre-container">
               <FormGroup className="error-l-275">
                 <Label>Opciones (Marque con un tilde las correctas)</Label>
                 {this.props.submitted &&
@@ -171,12 +240,45 @@ class OpcionMultiple extends React.Component {
                       onChange={(e) => this.handleCheckBoxChange(e, index)}
                       checked={op.verdadera}
                     />
-                    <Input
-                      className="opcionMultipleInput margin-auto"
-                      name="opcion"
-                      onInputCapture={(e) => this.handleOptionsChange(e, index)}
-                      defaultValue={op.opcion}
-                    />
+                    {op.opcion && (
+                      <Fragment>
+                        <img
+                          className="image-preview"
+                          alt="img"
+                          src={op.opcion}
+                        />
+                        <Colxx xxs="1" className="icon-container">
+                          <div
+                            className="margin-auto"
+                            style={{ textAlign: 'center' }}
+                          >
+                            <div
+                              className="glyph-icon simple-icon-magnifier-add zoom-icon"
+                              onClick={() =>
+                                this.setState({
+                                  isOpenImagePreview: true,
+                                  openOption: index,
+                                })
+                              }
+                            ></div>
+                          </div>
+                        </Colxx>
+                      </Fragment>
+                    )}
+                    {!op.opcion && (
+                      <InputGroup className="mb-3 opcionMultipleInput margin-auto">
+                        <CustomInput
+                          type="file"
+                          label="Seleccione una imagen"
+                          id="exampleCustomFileBrowser1"
+                          name="opcion"
+                          onInputCapture={(e) =>
+                            this.handleOptionsChange(e, index)
+                          }
+                        />
+                      </InputGroup>
+                    )}
+
                     <div
                       className="glyph-icon simple-icon-close remove-icon"
                       onClick={() => this.removeOption(index)}
@@ -211,9 +313,16 @@ class OpcionMultiple extends React.Component {
             </Button>
           </div>
         )}
+
+        {isOpenImagePreview && (
+          <Lightbox
+            mainSrc={opciones[this.state.openOption].opcion}
+            onCloseRequest={() => this.setState({ isOpenImagePreview: false })}
+          />
+        )}
       </Fragment>
     );
   }
 }
 
-export default OpcionMultiple;
+export default OpcionMultipleImagen;

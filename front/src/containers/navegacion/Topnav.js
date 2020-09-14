@@ -291,11 +291,14 @@ class TopNav extends Component {
               <DropdownToggle className="p-0" color="empty">
                 {foto ? (
                   <span>
-                    <img src={foto} />
+                    <img src={foto} alt="foto-usuario" />
                   </span>
                 ) : (
                   <span>
-                    <img src={imagenDefaultUsuario} />
+                    <img
+                      src={imagenDefaultUsuario}
+                      alt="foto-default-usuario"
+                    />
                   </span>
                 )}
               </DropdownToggle>

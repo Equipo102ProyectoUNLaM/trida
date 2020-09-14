@@ -26,7 +26,7 @@ class Oral extends React.Component {
   };
 
   render() {
-    const { preview } = this.props;
+    const { preview, resolve } = this.props;
     const { tema } = this.state;
     return (
       <Fragment>
@@ -36,8 +36,14 @@ class Oral extends React.Component {
           </div>
         )}
 
-        {!preview && (
-          <div className="rta-libre-container">
+        {resolve && (
+          <div>
+            <Label>Exposición oral: {this.state.tema}</Label>
+          </div>
+        )}
+
+        {!preview && !resolve && (
+          <div>
             <FormGroup className="mb-3 error-l-50">
               <Label>Tema</Label>
               <Input

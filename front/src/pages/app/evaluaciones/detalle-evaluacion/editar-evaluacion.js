@@ -52,14 +52,8 @@ export default class EditarEvaluacion extends Component {
         CryptoJS.enc.Utf8
       ),
       fecha_creacion: fecha_creacion,
-      fecha_finalizacion: CryptoJS.AES.decrypt(
-        fecha_finalizacion,
-        secretKey
-      ).toString(CryptoJS.enc.Utf8),
-      fecha_publicacion: CryptoJS.AES.decrypt(
-        fecha_publicacion,
-        secretKey
-      ).toString(CryptoJS.enc.Utf8),
+      fecha_finalizacion: fecha_finalizacion,
+      fecha_publicacion: fecha_publicacion,
       descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
         CryptoJS.enc.Utf8
       ),

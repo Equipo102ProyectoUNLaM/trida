@@ -6,6 +6,7 @@ class RespuestaLibre extends React.Component {
     super(props);
     this.state = {
       consigna: '',
+      respuesta: '',
     };
   }
 
@@ -24,9 +25,16 @@ class RespuestaLibre extends React.Component {
     this.props.onEjercicioChange({ [name]: value }, this.props.ejercicioId);
   };
 
+  handleRespuestaChange = (event) => {
+    const { value, name } = event.target;
+    if (!name || name.length === 0) return;
+    this.setState({ [name]: value });
+    this.props.onEjercicioChange({ [name]: value }, this.props.value.numero);
+  };
+
   render() {
-    const { consigna } = this.state;
-    const { preview } = this.props;
+    const { consigna, respuesta } = this.state;
+    const { preview, resolve } = this.props;
     return (
       <Fragment>
         {preview && (
@@ -34,8 +42,25 @@ class RespuestaLibre extends React.Component {
             <Label>{consigna}</Label>
           </div>
         )}
-        {!preview && (
-          <div className="rta-libre-container">
+        {resolve && (
+          <div>
+            <FormGroup className="mb-3 error-l-75">
+              <Label>{consigna}</Label>
+              <Input
+                name="respuesta"
+                defaultValue={respuesta}
+                onInputCapture={this.handleRespuestaChange}
+              />
+              {this.props.submitted && !respuesta ? (
+                <div className="invalid-feedback d-block">
+                  La respuesta es requerida
+                </div>
+              ) : null}
+            </FormGroup>
+          </div>
+        )}
+        {!preview && !resolve && (
+          <div>
             <FormGroup className="mb-3 error-l-75">
               <Label>Consigna</Label>
               <Input

@@ -14,16 +14,25 @@ import {
 import { NavLink, withRouter } from 'react-router-dom';
 import DataListView from 'containers/pages/DataListView';
 import classnames from 'classnames';
-import { Colxx } from 'components/common/CustomBootstrap';
+import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import PaginaVideollamada from './pagina-videollamada';
+import PaginaAsistencia from './pagina-asistencia';
 import { storage } from 'helpers/Firebase';
-import { getDocument, editDocument } from 'helpers/Firebase-db';
+import {
+  getDocument,
+  editDocument,
+  getDocumentWithSubCollection,
+} from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
+import ModalAsociarLinks from './modal-asociar-links';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import ModalCrearPreguntas from './modal-crear-preguntas';
+import ModalVistaPreviaPreguntas from '../preguntas-clase/vista-previa-preguntas';
 import ROLES from 'constants/roles';
+import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -34,11 +43,17 @@ class TabsDeClase extends Component {
     this.state = {
       activeSecondTab: '1',
       modalContenidosOpen: false,
+      modalLinksOpen: false,
       modalDeleteOpen: false,
       files: [],
+      linksDeClase: [],
       isLoading: true,
       contenidoRef: '',
       propsContenidos: [],
+      preguntasDeClase: [],
+      modalPreguntasOpen: false,
+      modalPreviewOpen: false,
+      asistencia: [],
     };
   }
 
@@ -50,9 +65,25 @@ class TabsDeClase extends Component {
         activeSecondTab: hash.split('')[1],
       });
     }
-
+    this.getAsistenciaDeClase();
+    this.getLinksDeClase();
     this.dataListRenderer();
+    this.getPreguntasDeClase();
   }
+
+  getAsistenciaDeClase = async () => {
+    this.setState({ isLoading: true });
+    const { data } = await getDocument(`clases/${this.props.idClase}`);
+    const { asistencia } = data;
+    this.setState({ isLoading: false, asistencia });
+  }
+
+  getLinksDeClase = async () => {
+    const { data } = await getDocument(`clases/${this.props.idClase}`);
+    this.setState({
+      linksDeClase: data.links,
+    });
+  };
 
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
@@ -65,6 +96,12 @@ class TabsDeClase extends Component {
   toggleModalContenidos = () => {
     this.setState({
       modalContenidosOpen: !this.state.modalContenidosOpen,
+    });
+  };
+
+  toggleModalLinks = () => {
+    this.setState({
+      modalLinksOpen: !this.state.modalLinksOpen,
     });
   };
 
@@ -194,6 +231,18 @@ class TabsDeClase extends Component {
     });
   };
 
+  toggleModalPreguntas = () => {
+    this.setState({
+      modalPreguntasOpen: !this.state.modalPreguntasOpen,
+    });
+  };
+
+  togglePreviewModal = () => {
+    this.setState({
+      modalPreviewOpen: !this.state.modalPreviewOpen,
+    });
+  };
+
   onDelete = (ref) => {
     this.setState({
       contenidoRef: ref,
@@ -221,9 +270,36 @@ class TabsDeClase extends Component {
     this.props.updateContenidos();
   };
 
+  getPreguntasDeClase = async () => {
+    this.setState({ isLoading: true });
+
+    //Traigo de la DB las preguntas encriptadas
+    const claseConPreguntas = await getDocumentWithSubCollection(
+      `clases/${this.props.idClase}`,
+      'preguntas'
+    );
+
+    const { subCollection } = claseConPreguntas;
+
+    //Desencripto las preguntas
+    const sinRespuesta = false;
+    const preguntasDesencriptadas = desencriptarEjercicios(
+      subCollection,
+      sinRespuesta
+    );
+
+    this.setState({
+      preguntasDeClase: preguntasDesencriptadas.sort(
+        (a, b) => a.data.numero - b.data.numero
+      ),
+      isLoading: false,
+    });
+  };
+
   render() {
     const {
       idSala,
+      password,
       contenidos,
       idClase,
       idMateria,
@@ -232,10 +308,16 @@ class TabsDeClase extends Component {
     } = this.props;
     const {
       modalContenidosOpen,
+      modalLinksOpen,
       isLoading,
       files,
       modalDeleteOpen,
       propsContenidos,
+      preguntasDeClase,
+      modalPreguntasOpen,
+      modalPreviewOpen,
+      asistencia,
+      linksDeClase,
     } = this.state;
 
     return (
@@ -332,6 +414,7 @@ class TabsDeClase extends Component {
                             'nav-link': true,
                           })}
                           onClick={() => {
+                            this.getAsistenciaDeClase();
                             this.toggleSecondTab('5');
                           }}
                         >
@@ -352,7 +435,11 @@ class TabsDeClase extends Component {
                               No hay videollamada asociada
                             </CardTitle>
                           ) : (
-                            <PaginaVideollamada idSala={idSala} />
+                            <PaginaVideollamada
+                              idSala={idSala}
+                              idClase={idClase}
+                              password={password}
+                            />
                           )}
                         </CardBody>
                       </Colxx>
@@ -435,6 +522,63 @@ class TabsDeClase extends Component {
                               />
                             </ModalGrande>
                           )}
+                          <Separator className="mb-3 mt-3" />
+                          <CardTitle className="mb-4">
+                            Links Asociados
+                          </CardTitle>
+                          {!isLoading &&
+                            (isEmpty(linksDeClase) ? (
+                              <p className="mb-4">No hay links asociados</p>
+                            ) : (
+                              linksDeClase.map((link) => {
+                                return (
+                                  <Row
+                                    key={link.link}
+                                    className="lista-links-clase"
+                                  >
+                                    <a
+                                      className="link-clase"
+                                      id={link.link}
+                                      href={link.link}
+                                      rel="noopener noreferrer"
+                                      target="_blank"
+                                    >
+                                      {link.descripcion} <br /> {link.link}
+                                    </a>
+                                  </Row>
+                                );
+                              })
+                            ))}
+                          {rol === ROLES.Docente && (
+                            <Row className="button-group">
+                              <Button
+                                onClick={this.toggleModalLinks}
+                                color="primary"
+                                size="lg"
+                                className="button"
+                              >
+                                {isEmpty(linksDeClase)
+                                  ? 'Asociar Links'
+                                  : 'Editar Links'}
+                              </Button>
+                            </Row>
+                          )}
+                          {modalLinksOpen && (
+                            <ModalGrande
+                              modalOpen={modalLinksOpen}
+                              toggleModal={this.toggleModalLinks}
+                              text="Asociar Links"
+                            >
+                              <ModalAsociarLinks
+                                links={linksDeClase}
+                                isLoading={isLoading}
+                                idClase={idClase}
+                                idMateria={idMateria}
+                                toggleModalLinks={this.toggleModalLinks}
+                                updateLinks={this.getLinksDeClase}
+                              />
+                            </ModalGrande>
+                          )}
                         </CardBody>
                       </Colxx>
                     </Row>
@@ -444,8 +588,77 @@ class TabsDeClase extends Component {
                       <Colxx sm="12" lg="12">
                         <CardBody>
                           <CardTitle className="mb-4">
-                            Crear preguntas
+                            Preguntas de la clase
                           </CardTitle>
+                          {isLoading && <div className="cover-spin" />}
+                          {!isLoading &&
+                            (isEmpty(preguntasDeClase) ? (
+                              <p className="mb-4">
+                                No hay preguntas creadas para esta clase
+                              </p>
+                            ) : (
+                              <Row>
+                                {preguntasDeClase.map((pregunta) => {
+                                  const consignaPregunta =
+                                    pregunta.data.consigna;
+
+                                  return (
+                                    <DataListView
+                                      key={pregunta.id}
+                                      id={pregunta.id}
+                                      title={consignaPregunta}
+                                      sonPreguntas={true}
+                                    />
+                                  );
+                                })}
+                              </Row>
+                            ))}
+                          {rol === ROLES.Docente && (
+                            <Row className="button-group">
+                              {!isEmpty(preguntasDeClase) && (
+                                <Button
+                                  outline
+                                  size="lg"
+                                  color="secondary"
+                                  onClick={this.togglePreviewModal}
+                                >
+                                  Vista Previa de Preguntas
+                                </Button>
+                              )}
+                              <Button
+                                onClick={this.toggleModalPreguntas}
+                                color="primary"
+                                size="lg"
+                                className="button"
+                              >
+                                {isEmpty(preguntasDeClase)
+                                  ? 'Crear Preguntas'
+                                  : 'Editar Preguntas'}
+                              </Button>
+                            </Row>
+                          )}
+                          {modalPreguntasOpen && (
+                            <ModalGrande
+                              modalOpen={modalPreguntasOpen}
+                              toggleModal={this.toggleModalPreguntas}
+                              text="Preguntas de la Clase"
+                            >
+                              <ModalCrearPreguntas
+                                isLoading={isLoading}
+                                idClase={idClase}
+                                preguntas={preguntasDeClase}
+                                toggleModalPreguntas={this.toggleModalPreguntas}
+                                updatePreguntas={this.getPreguntasDeClase}
+                              />
+                            </ModalGrande>
+                          )}
+                          {modalPreviewOpen && (
+                            <ModalVistaPreviaPreguntas
+                              toggle={this.togglePreviewModal}
+                              isOpen={modalPreviewOpen}
+                              preguntas={preguntasDeClase}
+                            />
+                          )}
                         </CardBody>
                       </Colxx>
                     </Row>
@@ -465,7 +678,7 @@ class TabsDeClase extends Component {
                     <Row>
                       <Colxx sm="12" lg="12">
                         <CardBody>
-                          <CardTitle className="mb-4">Asistencia</CardTitle>
+                          <PaginaAsistencia asistencia={asistencia} />
                         </CardBody>
                       </Colxx>
                     </Row>

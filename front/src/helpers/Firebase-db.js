@@ -191,7 +191,8 @@ export const addDocumentWithSubcollection = async (
   userId,
   message,
   subCollection,
-  subCollectionMessage
+  subCollectionMessage,
+  idDoc
 ) => {
   let objectSubcollectionData = object.subcollection.data;
   let objectBaseData = {
@@ -204,12 +205,13 @@ export const addDocumentWithSubcollection = async (
 
   firestore
     .collection(collection)
-    .add(objectBaseData)
+    .doc(idDoc)
+    .set(objectBaseData)
     .then(function (docRef) {
       for (const data of objectSubcollectionData) {
         firestore
           .collection(collection)
-          .doc(docRef.id)
+          .doc(idDoc)
           .collection(subCollection)
           .add(data)
           .then(function () {})
@@ -274,6 +276,55 @@ export const addToSubCollection = async (
       NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
     }
   }
+};
+
+/*  Este metodo es idéntico a addToSubCollection, solo que espera un array de objetos.
+    Itera por cada objeto y crea un documento por cada uno  */
+export const addArrayToSubCollection = async (
+  collection,
+  doc,
+  subcollection,
+  object,
+  userId,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
+  let objectSubcollectionData = object.subcollection.data;
+  let objectBaseData = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: userId,
+  };
+  delete objectBaseData.subcollection;
+
+  for (const data of objectSubcollectionData) {
+    firestore
+      .collection(collection)
+      .doc(doc)
+      .collection(subcollection)
+      .add(data)
+      .then(function () {})
+      .catch(function (error) {
+        NotificationManager.error(
+          `Error al agregar ${mensajeError}`,
+          error,
+          3000,
+          null,
+          null,
+          ''
+        );
+      });
+  }
+  NotificationManager.success(
+    `${mensajePrincipal} agregada exitosamente`,
+    `${mensajeSecundario} agregada!`,
+    3000,
+    null,
+    null,
+    ''
+  );
 };
 
 export const addToMateriasCollection = async (
@@ -451,20 +502,12 @@ export const getEventos = async (subject) => {
     const nombre = CryptoJS.AES.decrypt(data.nombre, secretKey).toString(
       CryptoJS.enc.Utf8
     );
-    const fechaPublicacion = CryptoJS.AES.decrypt(
-      data.fecha_publicacion,
-      secretKey
-    ).toString(CryptoJS.enc.Utf8);
-    const fechaFinalizacion = CryptoJS.AES.decrypt(
-      data.fecha_finalizacion,
-      secretKey
-    ).toString(CryptoJS.enc.Utf8);
     arrayDeEventos.push({
       id,
       tipo: 'evaluaciones',
       title: 'Evaluación: ' + nombre,
-      start: new Date(fechaPublicacion),
-      end: new Date(fechaFinalizacion),
+      start: new Date(data.fecha_publicacion.toDate()),
+      end: new Date(data.fecha_finalizacion.toDate()),
     });
   });
   arrayDePracticas.forEach((practica) => {
@@ -497,9 +540,16 @@ export const getEventosDelDia = async (subject) => {
 };
 
 export const guardarNotas = async (user, notas) => {
-  console.log(notas);
   return await firestore
     .collection('notas')
     .doc(user)
     .set({ notas: notas }, { merge: true });
+};
+
+export const getDatosClaseOnSnapshot = (document, callback) => {
+  return firestore.collection('clases').doc(document).onSnapshot(callback);
+}
+
+export const generateId = (path) => {
+  return firestore.collection(path).doc().id;
 };

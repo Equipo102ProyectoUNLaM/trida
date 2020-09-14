@@ -129,7 +129,6 @@ class Practica extends Component {
         practica.data.idArchivo !== ''
       ) {
         practica.data.url = await this.getFileURL(practica.data.idArchivo);
-        console.log(practica.data);
       }
     }
     this.setState({
