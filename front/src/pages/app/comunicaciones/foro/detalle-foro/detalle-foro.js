@@ -3,16 +3,10 @@ import { connect } from 'react-redux';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Row } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { withRouter } from 'react-router-dom';
-
-import {
-  getConversations,
-  changeConversation,
-  addMessageToConversation,
-} from '../../../redux/actions';
 import EncabezadoForo from './encabezado-foro';
 import DetalleMensaje from './detalle-mensaje';
 import InputMensajeForo from './input-mensaje-foro';
+import { injectIntl } from 'react-intl';
 
 class DetalleForo extends Component {
   constructor(props) {
@@ -27,19 +21,16 @@ class DetalleForo extends Component {
     };
   }
 
-  componentDidMount() {
-    const currentUserId = 0;
-    this.props.getConversations(currentUserId);
-  }
+  componentDidMount() {}
 
   componentDidUpdate() {
-    if (
-      this.props.chatApp.loadingConversations &&
-      this.state.loading &&
-      this.props.chatApp.selectedUser == null
-    ) {
-      this.props.changeConversation(this.props.chatApp.selectedUserId);
-    }
+    // if (
+    //   this.props.chatApp.loadingConversations &&
+    //   this.state.loading &&
+    //   this.props.chatApp.selectedUser == null
+    // ) {
+    //   this.props.changeConversation(this.props.chatApp.selectedUserId);
+    // }
 
     if (this._scrollBarRef) {
       this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
@@ -49,11 +40,12 @@ class DetalleForo extends Component {
   handleChatInputPress = (e) => {
     if (e.key === 'Enter') {
       if (this.state.messageInput.length > 0) {
-        this.props.addMessageToConversation(
-          this.props.chatApp.currentUser.id,
-          this.props.chatApp.selectedUser.id,
+        this.addMessageToForum(
+          this.state.idForo,
+          this.props.id,
           this.state.messageInput,
-          this.props.chatApp.conversations
+          this.props.nombre,
+          this.props.apellido
         );
         this.setState({
           messageInput: '',
@@ -70,11 +62,12 @@ class DetalleForo extends Component {
 
   handleSendButtonClick = () => {
     if (this.state.messageInput.length > 0) {
-      this.props.addMessageToConversation(
+      this.addMessageToForum(
         this.state.idForo,
         this.props.id,
         this.state.messageInput,
-        this.props.nombre + ' ' + this.props.apellido
+        this.props.nombre,
+        this.props.apellido
       );
       this.setState({
         messageInput: '',
@@ -82,59 +75,34 @@ class DetalleForo extends Component {
     }
   };
 
+  addMessageToForum = () => {};
+
   render() {
-    const {
-      allContacts,
-      conversations,
-      loadingConversations,
-      loadingContacts,
-      currentUser,
-      selectedUser,
-    } = this.props.chatApp;
-
     const { nombre, apellido, id } = this.props;
-
     const { mensajes, titulo, descripcion, loading, messageInput } = this.state;
 
-    const selectedConversation =
-      loadingConversations && loadingContacts && selectedUser
-        ? conversations.find(
-            (x) =>
-              x.users.includes(currentUser.id) &&
-              x.users.includes(selectedUser.id)
-          )
-        : null;
     return !loading ? (
       <Fragment>
         <Row className="app-row">
           <Colxx xxs="12" className="chat-app">
-            {loadingConversations && selectedUser && (
-              <EncabezadoForo
-                nombre={titulo}
-                thumb={selectedUser.thumb}
-                descripcionForo={descripcion}
-              />
-            )}
-
-            {selectedConversation && (
-              <PerfectScrollbar
-                ref={(ref) => {
-                  this._scrollBarRef = ref;
-                }}
-                containerRef={(ref) => {}}
-                options={{ suppressScrollX: true, wheelPropagation: false }}
-              >
-                {mensajes.map((item, index) => {
-                  return (
-                    <DetalleMensaje
-                      key={index}
-                      item={item}
-                      idUsuarioActual={id}
-                    />
-                  );
-                })}
-              </PerfectScrollbar>
-            )}
+            <EncabezadoForo nombre={titulo} descripcionForo={descripcion} />
+            <PerfectScrollbar
+              ref={(ref) => {
+                this._scrollBarRef = ref;
+              }}
+              containerRef={(ref) => {}}
+              options={{ suppressScrollX: true, wheelPropagation: false }}
+            >
+              {mensajes.map((item, index) => {
+                return (
+                  <DetalleMensaje
+                    key={index}
+                    item={item}
+                    idUsuarioActual={id}
+                  />
+                );
+              })}
+            </PerfectScrollbar>
           </Colxx>
         </Row>
         <InputMensajeForo
@@ -158,4 +126,4 @@ const mapStateToProps = ({ authUser }) => {
   return { rol, nombre, apellido, id };
 };
 
-export default connect(mapStateToProps)(withRouter(DetalleForo));
+export default injectIntl(connect(mapStateToProps)(DetalleForo));

@@ -1,14 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Row,
-  Card,
-  CardTitle,
-  Label,
-  Button,
-  FormGroup,
-  NavLink,
-} from 'reactstrap';
+import { Row, Card, CardTitle, Label, Button, FormGroup } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';

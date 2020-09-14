@@ -11,11 +11,7 @@ import {
   ModalFooter,
 } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
-import {
-  getFormattedDate,
-  getFormattedTime,
-  getDateTimeStringFromDate,
-} from 'helpers/Utils';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
 
 class ModalRealizarEvaluacion extends Component {
   render() {

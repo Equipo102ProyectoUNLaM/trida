@@ -4,7 +4,12 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Foro = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './foro')
 );
-const DetalleForo = React.lazy(() => import('./detalle-foro/detalle-foro'));
+// const DetalleForo = React.lazy(() => import('./detalle-foro/detalle-foro'));
+const DetalleForo = React.lazy(() =>
+  import(
+    /* webpackChunkName: "application-todo" */ './detalle-foro/detalle-foro'
+  )
+);
 const MenuForo = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
