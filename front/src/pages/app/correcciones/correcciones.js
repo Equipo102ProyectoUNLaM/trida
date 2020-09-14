@@ -28,7 +28,10 @@ class Correcciones extends Component {
       materiaId: this.props.subject.id,
       idACorregir: '',
       archivoACorregir: '',
+      idStorage: '',
       rolDocente: this.props.rol === ROLES.Docente,
+      correccionAlumnoUrl: '',
+      verCorreccionDocente: false,
     };
   }
 
@@ -81,9 +84,11 @@ class Correcciones extends Component {
 
   onCorrection = (id, idArchivo, file) => {
     const extension = idArchivo.split('.')[1];
+    const idStorage = idArchivo.split('.')[0];
     if (extension === 'jpeg' || 'png' || 'jpg') {
       this.setState({
         archivoACorregir: file,
+        idStorage,
         idACorregir: id,
       });
       return this.toggleCorreccionImagen();
@@ -92,14 +97,34 @@ class Correcciones extends Component {
     if (extension === 'pdf' || 'doc' || 'docx') {
       this.setState({
         archivoACorregir: file,
+        idStorage,
         idACorregir: id,
       });
       return console.log('correccion texto');
     }
   };
 
-  onCorrectionAlumno = (id, idArchivo, file) => {
-    return this.toggleCorreccionImagen();
+  onCorrectionAlumno = async (idArchivo) => {
+    const idStorage = idArchivo.split('.')[0];
+    const correccionAlumnoUrl = await this.getFileURL(
+      idStorage + '-correccion'
+    );
+    if (correccionAlumnoUrl) {
+      this.setState({ correccionAlumnoUrl });
+      return this.toggleCorreccionImagen();
+    }
+  };
+
+  onVerCorrectionDocente = async (idArchivo) => {
+    const idStorage = idArchivo.split('.')[0];
+    const correccionAlumnoUrl = await this.getFileURL(
+      idStorage + '-correccion'
+    );
+    if (correccionAlumnoUrl) {
+      this.setState({ correccionAlumnoUrl, verCorreccionDocente: true });
+      this.toggleCorreccionImagen();
+      this.setState({ verCorreccionDocente: false });
+    }
   };
 
   toggleCorreccionImagen = () => {
@@ -113,7 +138,10 @@ class Correcciones extends Component {
       correccionImagen,
       idACorregir,
       archivoACorregir,
+      idStorage,
       rolDocente,
+      correccionAlumnoUrl,
+      verCorreccionDocente,
     } = this.state;
     return isLoading ? (
       <div className="loading" />
@@ -145,6 +173,9 @@ class Correcciones extends Component {
                   onCorrectionAlumno={
                     !rolDocente ? this.onCorrectionAlumno : null
                   }
+                  onVerCorrectionDocente={
+                    rolDocente ? this.onVerCorrectionDocente : null
+                  }
                   isSelect={this.state.selectedItems.includes(correccion.id)}
                   navTo="#"
                   collect={collect}
@@ -156,7 +187,7 @@ class Correcciones extends Component {
         {correccionImagen && (
           <Modal
             isOpen={correccionImagen}
-            size="l"
+            size="xl"
             toggle={this.toggleCorreccionImagen}
             className="modal-correccion"
           >
@@ -167,6 +198,10 @@ class Correcciones extends Component {
               <CorreccionImagen
                 idACorregir={idACorregir}
                 archivoACorregir={archivoACorregir}
+                idStorage={idStorage}
+                correccionAlumnoUrl={correccionAlumnoUrl}
+                toggle={this.toggleCorreccionImagen}
+                verCorreccionDocente={verCorreccionDocente}
               />
             </ModalBody>
           </Modal>

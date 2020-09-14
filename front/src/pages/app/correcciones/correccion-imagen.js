@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { storage } from 'helpers/Firebase';
+import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import html2canvas from 'html2canvas';
 import { SketchField, Tools } from 'react-sketch';
 import { Button } from 'reactstrap';
@@ -23,7 +25,11 @@ import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
 import DeleteIcon from '@material-ui/icons/Delete';
 import json from './enjson.json';
+import * as $ from 'jquery';
 import ROLES from 'constants/roles';
+import { editDocument } from 'helpers/Firebase-db';
+const URL =
+  'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/materias%2FNJuvzb2birY1J4fkDMK4%2Fcorrecciones%2F644f0c87-26fe-444c-9348-2a1d1b43578b-correccion?alt=media&token=e73c422f-4ab7-40f5-b9d7-aefebb015e72';
 
 class CorreccionImagen extends React.Component {
   constructor(props) {
@@ -32,8 +38,8 @@ class CorreccionImagen extends React.Component {
     this.state = {
       lineColor: '#ffc600',
       fillWithColor: '',
-      width: 400,
-      height: 400,
+      width: 800,
+      height: 600,
       brushRadius: 5,
       lazyRadius: 0,
       colorPicker: false,
@@ -45,15 +51,18 @@ class CorreccionImagen extends React.Component {
       expandTools: false,
       drawings: [],
       url: this.props.archivoACorregir,
+      idACorregir: this.props.idACorregir,
+      idStorage: this.props.idStorage,
       rolDocente: this.props.rol === ROLES.Docente,
+      correccionAlumnoUrl: this.props.correccionAlumnoUrl,
     };
   }
 
   componentDidMount() {
-    if (this.state.rolDocente) {
+    if (this.state.rolDocente && !this.props.verCorreccionDocente) {
       this.correccion.addImg(this.state.url);
     } else {
-      this.correccion.fromJSON(json);
+      this.loadFromJSON();
     }
 
     (function (console) {
@@ -94,6 +103,16 @@ class CorreccionImagen extends React.Component {
     })(console);
   }
 
+  loadFromJSON = async () => {
+    try {
+      const res = await fetch(this.state.correccionAlumnoUrl);
+      const data = await res.json();
+      this.correccion.fromJSON(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   handleChangeComplete = (color) => {
     this.setState({ color: color.hex });
     this.toggleColorPicker();
@@ -119,14 +138,27 @@ class CorreccionImagen extends React.Component {
     this.setState({ drawings: drawings });
   };
 
-  _download = () => {
-    console.save(this.correccion.toJSON(), 'enjson.json');
-
-    /* html2canvas(document.getElementsByClassName('canvas-area')[0], {
-      useCORS: true,
-    }).then(function (canvas) {
-      console.save(canvas.toJSON(), 'enjson2.json');
-    }); */
+  _download = async () => {
+    const jsonCorreccion = this.correccion.toJSON();
+    var bb = new Blob([JSON.stringify(jsonCorreccion, null, 2)], {
+      type: 'application/json',
+    });
+    const listRef = storage.ref(
+      `materias/${this.props.subject.id}/correcciones/${this.props.idStorage}-correccion`
+    );
+    try {
+      await listRef.put(bb);
+      await editDocument('correcciones', this.state.idACorregir, {
+        estado: 'Corregido',
+      });
+      enviarNotificacionExitosa(
+        'La corrección fue subida exitosamente',
+        'Corrección subida!'
+      );
+      this.props.toggle();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   _removeMe = (index) => {
@@ -364,11 +396,12 @@ class CorreccionImagen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
+  const { subject } = seleccionCurso;
   const { userData } = authUser;
   const { rol } = userData;
 
-  return { rol };
+  return { subject, rol };
 };
 
 export default connect(mapStateToProps)(CorreccionImagen);
