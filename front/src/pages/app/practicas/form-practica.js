@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 import { formPracticaSchema } from './validations';
@@ -60,7 +60,7 @@ class FormPractica extends React.Component {
   };
 
   handleUploadStart = () => {
-    if (this.state.file != '') {
+    if (this.state.file !== '') {
       this.handleDeleteFile();
     }
     this.setState({ isFileUploading: true, fileUploadProgress: 0 });

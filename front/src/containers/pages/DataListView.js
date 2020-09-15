@@ -39,6 +39,7 @@ class DataListView extends React.Component {
       navTo,
       calendario,
       onDelete,
+      sonPreguntas,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -49,23 +50,30 @@ class DataListView extends React.Component {
             })}
           >
             <div className="pl-2 d-flex flex-grow-1 min-width-zero">
-              <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
-                <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                  <p className="list-item-heading mb-1 truncate practicas-list-label">
-                    {title}
-                  </p>
-                  {text1 && (
-                    <p className="mb-1 text-small w-sm-100 practicas-list-label">
-                      {text1}
+              {sonPreguntas && (
+                <p className=" list-item-heading mb-1 truncate card-body">
+                  {title}
+                </p>
+              )}
+              {!sonPreguntas && (
+                <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
+                  <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                    <p className="list-item-heading mb-1 truncate practicas-list-label">
+                      {title}
                     </p>
-                  )}
-                  {text2 && (
-                    <p className="mb-1 text-small w-sm-100 practicas-list-label">
-                      {text2}
-                    </p>
-                  )}
-                </div>
-              </NavLink>
+                    {text1 && (
+                      <p className="mb-1 text-small w-sm-100 practicas-list-label">
+                        {text1}
+                      </p>
+                    )}
+                    {text2 && (
+                      <p className="mb-1 text-small w-sm-100 practicas-list-label">
+                        {text2}
+                      </p>
+                    )}
+                  </div>
+                </NavLink>
+              )}
               <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label">
                 <Row>
                   {file !== undefined && (

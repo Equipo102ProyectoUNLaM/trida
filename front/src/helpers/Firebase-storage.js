@@ -1,6 +1,8 @@
 import { storage } from 'helpers/Firebase';
 import Moment from 'moment';
 
+export const BaseUrl = 'gs://trida-7f28f.appspot.com/';
+
 export const buscarArchivosStorage = async (subjectId, newRef) => {
   let arrayFiles = [];
 
@@ -41,4 +43,21 @@ export const buscarArchivosStorage = async (subjectId, newRef) => {
   } catch (err) {
     console.log('Error getting documents', err);
   }
+};
+
+export const subirArchivoAStorage = async (path, file) => {
+  const listRef = storage.ref(`${path}/${file.name}`);
+  return await listRef.put(file).then(async (snapshot) => {
+    return await snapshot.ref.getDownloadURL().then(async (url) => {
+      return url;
+    });
+  });
+};
+
+export const eliminarArchivoStorage = async (path) => {
+  const fileRef = storage.ref(path);
+  fileRef.delete().catch(function (error) {
+    // Uh-oh, an error occurred!
+    console.log('Error deleting documents', error);
+  });
 };

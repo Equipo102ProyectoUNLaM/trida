@@ -43,7 +43,7 @@ class RespuestaLibre extends React.Component {
           </div>
         )}
         {resolve && (
-          <div className="rta-libre-container">
+          <div>
             <FormGroup className="mb-3 error-l-75">
               <Label>{consigna}</Label>
               <Input
@@ -60,7 +60,7 @@ class RespuestaLibre extends React.Component {
           </div>
         )}
         {!preview && !resolve && (
-          <div className="rta-libre-container">
+          <div>
             <FormGroup className="mb-3 error-l-75">
               <Label>Consigna</Label>
               <Input
