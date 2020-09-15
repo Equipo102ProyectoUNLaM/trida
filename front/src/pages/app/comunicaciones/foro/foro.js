@@ -8,7 +8,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormForo from './form-foro';
 import {
-  getCollection,
+  getCollectionWithSubCollections,
   logicDeleteDocument,
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
@@ -42,10 +42,15 @@ class Foro extends Component {
   }
 
   getForos = async (materiaId) => {
-    const arrayDeObjetos = await getCollection('foros', [
-      { field: 'idMateria', operator: '==', id: materiaId },
-      { field: 'activo', operator: '==', id: true },
-    ]);
+    const arrayDeObjetos = await getCollectionWithSubCollections(
+      'foros',
+      [
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'activo', operator: '==', id: true },
+      ],
+      false,
+      'mensajes'
+    );
     this.dataListRenderer(arrayDeObjetos);
   };
 
@@ -66,8 +71,18 @@ class Foro extends Component {
   };
 
   dataListRenderer(arrayDeObjetos) {
+    let arrayDeData = [];
+    for (let element of arrayDeObjetos) {
+      const data = element.data;
+      const item = {
+        id: element.id,
+        data: data.base,
+        mensajes: data.subCollections,
+      };
+      arrayDeData.push(item);
+    }
     this.setState({
-      items: arrayDeObjetos,
+      items: arrayDeData,
       selectedItems: [],
       isLoading: false,
     });
