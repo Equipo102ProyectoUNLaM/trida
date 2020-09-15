@@ -1,161 +1,134 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
-import IntlMessages from 'helpers/IntlMessages';
-import { Colxx, Separator } from 'components/common/CustomBootstrap';
-import FileBrowser, { Icons } from 'react-keyed-file-browser';
-import { storage } from 'helpers/Firebase';
-import Moment from 'moment';
-import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
-import { DefaultDetail } from 'constants/fileBrowser/details';
-import { DefaultActionCorrecciones } from 'constants/fileBrowser/actions';
-import { DefaultFilter } from 'constants/fileBrowser/filters';
 import ROLES from 'constants/roles';
+import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import DataListView from 'containers/pages/DataListView';
+import { getDocument, getCollection } from 'helpers/Firebase-db';
+import { storage } from 'helpers/Firebase';
+
+function collect(props) {
+  return { data: props.data };
+}
 
 class Correcciones extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      items: [],
+      selectedItems: [],
       files: [],
       isLoading: true,
-      subjectId: this.props.subject.id,
+      materiaId: this.props.subject.id,
     };
   }
 
   async componentDidMount() {
-    await this.getCorrecciones();
+    await this.getCorrecciones(this.state.materiaId);
   }
 
-  async getCorrecciones() {
-    let arrayFiles = [];
+  getCorrecciones = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('correcciones', [
+      { field: 'idMateria', operator: '==', id: materiaId },
+    ]);
+    this.dataListRenderer(arrayDeObjetos);
+  };
 
-    try {
-      //Obtenemos la referencia de la carpeta que quiero listar (La de la materia)
-      const listRef = storage.ref(
-        'materias/' + this.state.subjectId + '/correcciones'
-      );
-      await listRef.listAll().then(async (result) => {
-        //Archivos
-        let ctrFiles = 0;
-        result.items.forEach(async (res) => {
-          ctrFiles++;
-          await res.getMetadata().then(async (metadata) => {
-            await res.getDownloadURL().then(async (url) => {
-              const fileKey = this.getPlainName(metadata.fullPath);
-
-              if (fileKey) {
-                let obj = {
-                  fullKey: metadata.fullPath.replace(
-                    'materias/' + this.state.subjectId + '/correcciones/',
-                    ''
-                  ),
-                  key: fileKey,
-                  modified: Moment(metadata.updated),
-                  size: metadata.size,
-                  url: url,
-                };
-
-                arrayFiles.push(obj);
-              }
-
-              if (ctrFiles === result.items.length) {
-                this.setState((state) => ({
-                  files: state.files.concat(arrayFiles),
-                }));
-
-                arrayFiles = [];
-              }
-            });
-          });
-        });
-      });
-    } catch (error) {
-      console.log('Error getting documents of Correciones', error);
-    } finally {
-      this.setState({
-        isLoading: false,
-      });
-    }
-  }
-
-  /*Esta funcion la uso para eliminar el id_usuario de la key de la correccion
-    ya que tiene la forma "idUsuario-nombreCorreccion", ya que la Key es el campo
-    que se muestra en la lista de correcciones */
-
-  getPlainName(text) {
-    //Elimino la parte de "materiaID/correcciones/" del path
-    let newText = text.replace(
-      'materias/' + this.state.subjectId + '/correcciones/',
-      ''
-    );
-    const pos = newText.indexOf('-'); //Busco el primer "-", que representa el idUsuario para eliminarlo
-
-    if (this.props.rol === ROLES.Docente) {
-      if (pos) {
-        return newText.slice(pos + 1);
-      } else {
-        return newText;
+  async dataListRenderer(arrayDeObjetos) {
+    for (const correccion of arrayDeObjetos) {
+      if (
+        correccion.data.idArchivo !== undefined &&
+        correccion.data.idArchivo !== ''
+      ) {
+        correccion.data.url = await this.getFileURL(correccion.data.idArchivo);
+        console.log(correccion.data);
       }
-    } else {
-      // si es alumno, devolver solo correcciones del usuario logueado
-      const usuarioCorreccion = newText.slice(0, pos);
-      if (usuarioCorreccion === this.props.user) {
-        if (pos) {
-          return newText.slice(pos + 1);
-        } else {
-          return newText;
-        }
-      } else return '';
     }
+
+    for (let obj of arrayDeObjetos) {
+      const alumno = await this.getAlumno(obj.data.idUsuario);
+      obj.data.alumno = alumno;
+    }
+
+    this.setState({
+      items: arrayDeObjetos,
+      selectedItems: [],
+      isLoading: false,
+      correccionId: '',
+    });
   }
 
-  handleDownloadFile = (fileKeys) => {
-    fileKeys.forEach((fileKey) => {
-      const file = this.state.files.find((i) => i.key === fileKey);
-      window.open(file.url, '_blank'); //to open new page
-    });
+  getFileURL = async (archivo) => {
+    const url = await storage
+      .ref('materias/' + this.state.materiaId + '/correcciones/')
+      .child(archivo)
+      .getDownloadURL();
+    return url;
+  };
+
+  getAlumno = async (id) => {
+    const docAlumno = await getDocument(`usuarios/${id}`);
+    return docAlumno.data.nombre + ' ' + docAlumno.data.apellido;
+  };
+
+  onCorrection = (id) => {
+    console.log('ID de correccion:', id);
   };
 
   render() {
-    const { isLoading, files } = this.state;
-    return (
+    const { isLoading, items } = this.state;
+    const { rol } = this.props;
+    return isLoading ? (
+      <div className="loading" />
+    ) : (
       <Fragment>
-        {isLoading ? <div id="cover-spin"></div> : <span></span>}
-
-        <Row>
-          <Colxx xxs="8">
-            <h1>
-              <IntlMessages id="menu.my-corrections" />
-            </h1>
-            <Separator className="mb-5" />
-          </Colxx>
-        </Row>
-
-        <div className="demo-mount-nested-editable">
-          <FileBrowser
-            files={files}
-            icons={Icons.FontAwesome(4)}
-            detailRenderer={DefaultDetail}
-            actionRenderer={DefaultActionCorrecciones}
-            onDownloadFile={this.handleDownloadFile}
-            filterRenderer={DefaultFilter}
+        <div className="disable-text-selection">
+          <HeaderDeModulo
+            heading="menu.my-corrections"
+            toggleModal={null}
+            buttonText={null}
           />
+          <Row>
+            {items.map((correccion) => {
+              return (
+                <DataListView
+                  key={correccion.id + 'dataList'}
+                  id={correccion.id}
+                  title={correccion.data.nombre}
+                  text1={
+                    correccion.data.mensaje !== undefined
+                      ? 'Mensaje: ' + correccion.data.mensaje
+                      : null
+                  }
+                  text2={
+                    rol !== ROLES.Alumno
+                      ? 'Alumno: ' + correccion.data.alumno
+                      : ' '
+                  }
+                  file={correccion.data.url}
+                  onCorrection={
+                    rol === ROLES.Docente ? this.onCorrection : null
+                  }
+                  isSelect={this.state.selectedItems.includes(correccion.id)}
+                  navTo="#"
+                  collect={collect}
+                />
+              );
+            })}{' '}
+          </Row>
         </div>
       </Fragment>
     );
   }
 }
+
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { user, userData } = authUser;
+  const { userData } = authUser;
   const { rol } = userData;
-  return {
-    subject,
-    user,
-    rol,
-  };
+
+  return { subject, rol };
 };
 
-const mount = document.querySelectorAll('div.demo-mount-nested-editable');
-export default connect(mapStateToProps)(Correcciones, mount[0]);
+export default connect(mapStateToProps)(Correcciones);
