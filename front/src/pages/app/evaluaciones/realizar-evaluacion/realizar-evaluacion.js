@@ -131,7 +131,9 @@ class RealizarEvaluacion extends Component {
         ejercicio.respuesta[e.indiceOpcion] = e.respuesta;
         break;
       case TIPO_EJERCICIO.preguntas_aleatorias:
-        ejercicio.respuesta.push(e);
+        {
+          ejercicio.respuesta = e;
+        }
         break;
       default:
         break;

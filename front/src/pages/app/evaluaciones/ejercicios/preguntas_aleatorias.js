@@ -33,6 +33,7 @@ class PreguntasAleatorias extends React.Component {
         isLoading: false,
       });
     }
+    this.setState({ isLoading: false });
   }
 
   handleChange = (event) => {
@@ -63,10 +64,7 @@ class PreguntasAleatorias extends React.Component {
     this.setState({
       respuestas: rtas,
     });
-    this.props.onEjercicioChange(
-      { indiceOpcion: index, respuesta: value },
-      this.props.value.numero
-    );
+    this.props.onEjercicioChange(rtas, this.props.value.numero);
   };
 
   handleAddOpcion = (e) => {
@@ -114,6 +112,7 @@ class PreguntasAleatorias extends React.Component {
                 <Label>{preguntas[indice].opcion}</Label>
                 <Input
                   name="respuesta"
+                  autoComplete="off"
                   onInputCapture={(e) => this.handleRespuestaChange(e, indice)}
                 />
               </FormGroup>
@@ -162,6 +161,7 @@ class PreguntasAleatorias extends React.Component {
                     <Input
                       className="opcionMultipleInput margin-auto"
                       name="opcion"
+                      autoComplete="off"
                       onInputCapture={(e) => this.handleOptionsChange(e, index)}
                       defaultValue={pr.opcion}
                     />
