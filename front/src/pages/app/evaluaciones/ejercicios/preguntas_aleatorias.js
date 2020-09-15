@@ -13,14 +13,24 @@ class PreguntasAleatorias extends React.Component {
           opcion: '',
         },
       ],
+      isLoading: true,
     };
   }
 
   componentDidMount() {
-    if (this.props.value.opciones) {
+    if (this.props.value.preguntas) {
+      let aleatorias = [];
+      while (aleatorias.length != this.props.value.cantidad) {
+        const number = Math.floor(
+          Math.random() * this.props.value.preguntas.length
+        );
+        if (!aleatorias.find((x) => x === number)) aleatorias.push(number);
+      }
       this.setState({
-        consigna: this.props.value.consigna,
-        opciones: this.props.value.opciones,
+        cantidad: this.props.value.cantidad,
+        preguntas: this.props.value.preguntas,
+        aleatorias: aleatorias,
+        isLoading: false,
       });
     }
   }
@@ -40,23 +50,21 @@ class PreguntasAleatorias extends React.Component {
     this.props.onEjercicioChange({ preguntas: list }, this.props.ejercicioId);
   };
 
-  handleCheckBoxChange = (event, index) => {
-    const { name, checked } = event.target;
-    let list = this.state.opciones;
-    list[index] = Object.assign(list[index], { [name]: checked });
-    this.setState({ opciones: list });
-    this.props.onEjercicioChange({ opciones: list }, this.props.ejercicioId);
-  };
-
-  handleResponseCheckBoxChange = (event, index) => {
-    const { checked } = event.target;
+  handleRespuestaChange = (event, index) => {
+    const { value } = event.target;
     let rtas = this.state.respuestas;
-    rtas.push({ indiceOpcion: index, respuesta: checked });
+    const indiceRta = rtas.findIndex((x) => x.indiceOpcion === index);
+    if (indiceRta === -1) rtas.push({ indiceOpcion: index, respuesta: value });
+    else
+      rtas[indiceRta] = Object.assign(rtas[indiceRta], {
+        indiceOpcion: index,
+        respuesta: value,
+      });
     this.setState({
       respuestas: rtas,
     });
     this.props.onEjercicioChange(
-      { indiceOpcion: index, respuesta: checked },
+      { indiceOpcion: index, respuesta: value },
       this.props.value.numero
     );
   };
@@ -81,54 +89,40 @@ class PreguntasAleatorias extends React.Component {
   };
 
   render() {
-    let { opciones, consigna, cantidad, respuestas, preguntas } = this.state;
+    let { cantidad, respuestas, preguntas, aleatorias, isLoading } = this.state;
 
     const { preview, resolve } = this.props;
 
-    return (
+    return isLoading ? (
+      <div className="loading" />
+    ) : (
       <Fragment>
         {preview && (
           <div>
-            <div className="mb-2">
-              <Label>{consigna}</Label>
-            </div>
-            {opciones.map((op, index) => (
-              <Row key={'row' + index} className="opcionMultipleRow">
-                <Input
-                  name="respuesta"
-                  className="margin-auto checkbox"
-                  type="checkbox"
-                />
-                <Label className="opcionMultipleInput margin-auto">
-                  {op.opcion}
-                </Label>
-              </Row>
+            {aleatorias.map((indice) => (
+              <div className="mb-2" key={'rowlabel' + indice}>
+                <Label>{preguntas[indice].opcion}</Label>
+              </div>
             ))}{' '}
           </div>
         )}
 
         {resolve && (
           <div>
-            <div className="mb-2">
-              <Label>{consigna}</Label>
-            </div>
-            {opciones.map((op, index) => (
-              <Row key={'row' + index} className="opcionMultipleRow">
+            {aleatorias.map((indice) => (
+              <FormGroup className="error-l-75" key={'form' + indice}>
+                <Label>{preguntas[indice].opcion}</Label>
                 <Input
-                  name="verdadera"
-                  className="margin-auto checkbox"
-                  type="checkbox"
-                  onChange={(e) => this.handleResponseCheckBoxChange(e, index)}
+                  name="respuesta"
+                  onInputCapture={(e) => this.handleRespuestaChange(e, indice)}
                 />
-                <Label className="opcionMultipleInput margin-auto">
-                  {op.opcion}
-                </Label>
-              </Row>
+              </FormGroup>
             ))}{' '}
             {this.props.submitted &&
-            !respuestas.find((x) => x.respuesta === true) ? (
+            (respuestas.length != cantidad ||
+              respuestas.find((x) => !x.respuesta)) ? (
               <div className="invalid-feedback d-block">
-                Al menos una opción seleccionada es requerida
+                Las respuestas son requeridas
               </div>
             ) : null}
           </div>
@@ -137,7 +131,7 @@ class PreguntasAleatorias extends React.Component {
         {!preview && !resolve && (
           <div>
             <div>
-              <FormGroup className="error-l-75">
+              <FormGroup className="error-l-325">
                 <Label>
                   Cantidad de preguntas a seleccionar aleatoriamente
                 </Label>
@@ -147,46 +141,43 @@ class PreguntasAleatorias extends React.Component {
                   onInputCapture={this.handleChange}
                   defaultValue={cantidad}
                 />
-                {this.props.submitted && !consigna ? (
+                {this.props.submitted && !cantidad ? (
                   <div className="invalid-feedback d-block">
-                    Ingresar una pregunta
+                    Ingresar la cantidad de preguntas
                   </div>
                 ) : null}
               </FormGroup>
             </div>
             <div>
-              <FormGroup className="error-l-275">
+              <FormGroup className="error-l-75">
                 <Label>Preguntas</Label>
                 {this.props.submitted &&
-                (!opciones || opciones.length === 0) ? (
+                (!preguntas || preguntas.length === 0) ? (
                   <div className="invalid-feedback d-block">
-                    Opciones requeridas
+                    Preguntas requeridas
                   </div>
                 ) : null}
-                {preguntas.map((op, index) => (
+                {preguntas.map((pr, index) => (
                   <Row key={'row' + index} className="opcionMultipleRow">
                     <Input
                       className="opcionMultipleInput margin-auto"
                       name="opcion"
                       onInputCapture={(e) => this.handleOptionsChange(e, index)}
-                      defaultValue={op.opcion}
+                      defaultValue={pr.opcion}
                     />
                     <div
                       className="glyph-icon simple-icon-close remove-icon"
                       onClick={() => this.removeOption(index)}
                     />
                     {this.props.submitted &&
-                    !opciones.find((x) => x.verdadera === true) ? (
-                      <div
-                        className="invalid-feedback d-block"
-                        style={{ left: '525px' }}
-                      >
-                        Una respuesta verdadera es requerida
+                    preguntas.find((x) => !x.opcion) ? (
+                      <div className="invalid-feedback d-block">
+                        Todas las preguntas son requeridas
                       </div>
                     ) : null}
-                    {this.props.submitted && opciones.find((x) => !x.opcion) ? (
+                    {this.props.submitted && preguntas.length < cantidad ? (
                       <div className="invalid-feedback d-block">
-                        Todas las opciones son requeridas
+                        Debe ingresar al menos {cantidad} preguntas
                       </div>
                     ) : null}
                   </Row>

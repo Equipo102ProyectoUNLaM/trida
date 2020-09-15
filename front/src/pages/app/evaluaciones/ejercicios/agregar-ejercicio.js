@@ -95,6 +95,19 @@ class AgregarEjercicio extends React.Component {
             if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
             if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
             break;
+          case TIPO_EJERCICIO.preguntas_aleatorias:
+            if (!ejer.preguntas || ejer.preguntas.length === 0) {
+              valid = false;
+              break;
+            }
+            if (!ejer.cantidad) {
+              valid = false;
+              break;
+            }
+            if (ejer.preguntas.length < ejer.cantidad) {
+              valid = false;
+              break;
+            }
           default:
             break;
         }

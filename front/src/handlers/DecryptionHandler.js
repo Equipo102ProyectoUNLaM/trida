@@ -39,6 +39,19 @@ export const desencriptarEjercicios = (ejercicios, sinRespuesta) => {
         }
       }
     }
+    if (ejercicio.data.preguntas) {
+      for (const pr of ejercicio.data.preguntas) {
+        pr.opcion = CryptoJS.AES.decrypt(pr.opcion, secretKey).toString(
+          CryptoJS.enc.Utf8
+        );
+      }
+    }
+    if (ejercicio.data.cantidad) {
+      ejercicio.data.cantidad = CryptoJS.AES.decrypt(
+        ejercicio.data.cantidad.toString(),
+        secretKey
+      ).toString(CryptoJS.enc.Utf8);
+    }
   }
   return result;
 };
