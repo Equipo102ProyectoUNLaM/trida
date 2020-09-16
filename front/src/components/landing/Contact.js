@@ -94,8 +94,8 @@ const Contact = () => {
                     }}
                   ></textarea>
                 </div>
-                <div className="col-lg-12 text-left">
-                  <button type="submit" className="thm-btn contact-one__btn">
+                <div className="contact-button-wrapper">
+                  <button type="submit" className="contact-button">
                     <span>Enviar Mensaje</span>
                   </button>
                 </div>
