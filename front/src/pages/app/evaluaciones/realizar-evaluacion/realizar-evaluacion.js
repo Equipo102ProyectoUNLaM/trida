@@ -22,6 +22,7 @@ import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import Countdown from 'components/common/Countdown';
 
 import {
   getDateWithFormat,
@@ -63,7 +64,7 @@ class RealizarEvaluacion extends Component {
     );
 
     const { id, data, subCollection } = evaluacion;
-    const { nombre, fecha_finalizacion, fecha_publicacion, descripcion } = data;
+    const { nombre, fecha_finalizacion, descripcion } = data;
 
     const ejerciciosDesencriptados = desencriptarEjercicios(
       subCollection,
@@ -96,8 +97,7 @@ class RealizarEvaluacion extends Component {
       nombreEval: CryptoJS.AES.decrypt(nombre, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
-      fecha_finalizacion: getDateTimeStringFromDate(fecha_finalizacion),
-      fecha_publicacion: getDateTimeStringFromDate(fecha_publicacion),
+      fecha_finalizacion: fecha_finalizacion,
       descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
@@ -194,6 +194,7 @@ class RealizarEvaluacion extends Component {
       submitted,
     } = this.state;
     const { nombre, apellido } = this.props;
+
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -232,7 +233,8 @@ class RealizarEvaluacion extends Component {
                       </div>
                       <div>
                         <h5 className="text-red">
-                          Fecha y hora de finalizacion: {fecha_finalizacion} hs
+                          Fecha y hora de finalizacion:{' '}
+                          {getDateTimeStringFromDate(fecha_finalizacion)} hs
                         </h5>
                       </div>
                     </CardBody>
@@ -318,6 +320,7 @@ class RealizarEvaluacion extends Component {
             onConfirm={this.entregarEvaluacion}
           />
         )}
+        <Countdown end={fecha_finalizacion} />
       </Fragment>
     );
   }

@@ -53,6 +53,7 @@ Table of Contents
 48.Mensajeria
 49.Correcciones
 50.Evaluaciones
+51.Countdown
 
 */
 
@@ -126,6 +127,7 @@ html {
   --primary-color: #{$primary-color};
   --foreground-color: #{$foreground-color};
   --separator-color: #{$separator-color};
+  --inverse-theme-color: '#{$inverse-theme-color}';
 }
 
 #root {
@@ -9809,4 +9811,32 @@ div.rendered-file-browser{
     background-color: red;
     border-radius: 100%;
   }
+}
+
+// 51 Countdown
+.countdown{
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1030;
+  display: flex;
+  justify-content: space-around;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.card-countdown{
+  flex-direction: row;
+  margin-top: 5rem;
+  padding: 1rem;
+}
+
+.card-countdown-body{
+  padding: 1rem !important;
+}
+
+.text-countdown{
+  text-align: center;
+  margin: auto;
+  padding-right: 10px;
 }
