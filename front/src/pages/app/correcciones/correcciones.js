@@ -1,17 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Modal, ModalHeader, ModalBody, Button, Row } from 'reactstrap';
+import { Row } from 'reactstrap';
 import { storage } from 'helpers/Firebase';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import ROLES from 'constants/roles';
-import CorreccionImagen from './correccion-imagen';
-import CorreccionTexto from './correccion-texto';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import DataListView from 'containers/pages/DataListView';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
-import { NavLink } from 'react-router-dom';
-import ModalGrande from 'containers/pages/ModalGrande';
 
 function collect(props) {
   return { data: props.data };
@@ -35,7 +31,7 @@ class Correcciones extends Component {
       idStorage: '',
       rolDocente: this.props.rol === ROLES.Docente,
       correccionAlumnoUrl: '',
-      verCorreccionDocente: false,
+      verCorreccion: false,
     };
   }
 
@@ -98,54 +94,31 @@ class Correcciones extends Component {
       subjectId: this.props.subject.id,
       url: file,
       idStorage,
+      id,
+      verCorreccion: false,
     });
   };
 
-  onCorrectionAlumno = async (idArchivo) => {
+  onVerCorrection = async (idArchivo) => {
     const idStorage = idArchivo.split('.')[0];
     const correccionAlumnoUrl = await this.getFileURL(
       idStorage + '-correccion'
     );
     if (correccionAlumnoUrl) {
-      this.setState({ correccionAlumnoUrl });
-      return this.toggleCorreccionImagen();
+      this.setState({ correccionAlumnoUrl, verCorreccion: true });
+      this.props.history.push({
+        pathname: '/app/correcciones/correccion',
+        subjectId: this.props.subject.id,
+        url: correccionAlumnoUrl,
+        idStorage,
+        verCorreccion: true,
+      });
+      this.setState({ verCorreccion: false });
     }
-  };
-
-  onVerCorrectionDocente = async (idArchivo) => {
-    const idStorage = idArchivo.split('.')[0];
-    const correccionAlumnoUrl = await this.getFileURL(
-      idStorage + '-correccion'
-    );
-    if (correccionAlumnoUrl) {
-      this.setState({ correccionAlumnoUrl, verCorreccionDocente: true });
-      this.toggleCorreccionImagen();
-      this.setState({ verCorreccionDocente: false });
-    }
-  };
-
-  toggleCorreccionImagen = () => {
-    this.setState({ correccionImagen: !this.state.correccionImagen });
-  };
-
-  toggleCorreccionTexto = () => {
-    //this.props.history.push('/correccion-texto');
-    this.setState({ correccionTexto: !this.state.correccionTexto });
   };
 
   render() {
-    const {
-      isLoading,
-      items,
-      correccionImagen,
-      correccionTexto,
-      idACorregir,
-      archivoACorregir,
-      idStorage,
-      rolDocente,
-      correccionAlumnoUrl,
-      verCorreccionDocente,
-    } = this.state;
+    const { isLoading, items, rolDocente } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -173,12 +146,7 @@ class Correcciones extends Component {
                   estado={correccion.data.estado}
                   file={correccion.data.url}
                   onCorrection={rolDocente ? this.onCorrection : null}
-                  onCorrectionAlumno={
-                    !rolDocente ? this.onCorrectionAlumno : null
-                  }
-                  onVerCorrectionDocente={
-                    rolDocente ? this.onVerCorrectionDocente : null
-                  }
+                  onVerCorrection={this.onVerCorrection}
                   isSelect={this.state.selectedItems.includes(correccion.id)}
                   navTo="#"
                   collect={collect}
@@ -187,8 +155,7 @@ class Correcciones extends Component {
             })}{' '}
           </Row>
         </div>
-        <NavLink to="/app/correcciones/correccion"> Text </NavLink>
-        {correccionImagen && (
+        {/* {correccionImagen && (
           <Modal
             isOpen={correccionImagen}
             size="xl"
@@ -209,20 +176,7 @@ class Correcciones extends Component {
               />
             </ModalBody>
           </Modal>
-        )}
-        {correccionTexto && (
-          <ModalGrande
-            modalOpen={correccionTexto}
-            toggleModal={this.toggleCorreccionTexto}
-            text={rolDocente ? 'Corregir' : 'Ver corrección'}
-          >
-            <CorreccionTexto
-              subjectId={this.props.subject.id}
-              url={this.state.archivoACorregir}
-              idStorage={this.state.idStorage}
-            />
-          </ModalGrande>
-        )}
+        )} */}
       </Fragment>
     );
   }

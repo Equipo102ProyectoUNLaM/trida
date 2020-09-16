@@ -1,15 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { storage } from 'helpers/Firebase';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { injectIntl } from 'react-intl';
 import WebViewer from '@pdftron/webviewer';
 import { Button, Row } from 'reactstrap';
-import ROLES from 'constants/roles';
+import { editDocument } from 'helpers/Firebase-db';
+import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 const publicUrl = process.env.PUBLIC_URL;
 
 const CorreccionTexto = ({ location }, rol) => {
-  const { url, subjectId, idStorage } = location;
+  const history = useHistory();
+  const { url, subjectId, idStorage, verCorreccion, id } = location;
+  const [verCorr, setVerCorreccion] = useState(verCorreccion);
   const viewer = useRef(null);
 
   useEffect(() => {
@@ -21,6 +25,15 @@ const CorreccionTexto = ({ location }, rol) => {
       viewer.current
     ).then((instance) => {
       instance.setLanguage('es');
+      if (verCorr) {
+        instance.disableElements([
+          'header',
+          'viewControlsOverlay',
+          'menuOverlay',
+          'toolsOverlay',
+          'toolsHeader',
+        ]);
+      }
       instance.loadDocument(url, { documentId: 'id2' });
       const { docViewer, Annotations } = instance;
       const annotManager = docViewer.getAnnotationManager();
@@ -39,33 +52,55 @@ const CorreccionTexto = ({ location }, rol) => {
         //annotManager.redrawAnnotation(rectangleAnnot);
       });
 
-      document.getElementById('guardar').addEventListener('click', async () => {
-        const doc = docViewer.getDocument();
-        const xfdfString = await annotManager.exportAnnotations();
-        const options = { xfdfString, flatten: true };
-        const data = await doc.getFileData(options);
-        const arr = new Uint8Array(data);
-        const blob = new Blob([arr], { type: 'application/pdf' });
-        const listRef = storage.ref(
-          `materias/${subjectId}/correcciones/${idStorage}-correccion`
-        );
-        await listRef.put(blob);
-      });
+      if (!verCorr) {
+        document
+          .getElementById('guardar')
+          .addEventListener('click', async () => {
+            const doc = docViewer.getDocument();
+            const xfdfString = await annotManager.exportAnnotations();
+            const options = { xfdfString, flatten: true };
+            const data = await doc.getFileData(options);
+            const arr = new Uint8Array(data);
+            const blob = new Blob([arr], { type: 'application/pdf' });
+            const listRef = storage.ref(
+              `materias/${subjectId}/correcciones/${idStorage}-correccion`
+            );
+            await listRef.put(blob);
+            await editDocument('correcciones', id, {
+              estado: 'Corregido',
+            });
+            enviarNotificacionExitosa(
+              'La corrección fue subida exitosamente',
+              'Corrección subida!'
+            );
+            history.push('/app/correcciones');
+          });
+      }
     });
   }, []);
 
   return (
     <div>
-      <HeaderDeModulo heading="correcciones.corregir" />
+      <HeaderDeModulo
+        heading={verCorr ? 'correcciones.ver' : 'correcciones.corregir'}
+        toggleModal={() => history.push('/app/correcciones')}
+        buttonText="correcciones.volver"
+      />
       <div className="webviewer" ref={viewer}></div>
-      <Row className="button-group">
-        <Button color="primary" className="button" id="guardar">
-          Guardar
-        </Button>
-        <Button className="button" id="cancelar">
-          Cancelar
-        </Button>
-      </Row>
+      {!verCorr && (
+        <Row className="button-group">
+          <Button color="primary" className="button" id="guardar">
+            Guardar
+          </Button>
+          <Button
+            className="button"
+            id="cancelar"
+            onClick={() => history.push('/app/correcciones')}
+          >
+            Cancelar
+          </Button>
+        </Row>
+      )}
     </div>
   );
 };
@@ -78,4 +113,6 @@ const mapStateToProps = ({ seleccionCurso, authUser }) => {
   return { subject, rol };
 };
 
-export default injectIntl(connect(mapStateToProps)(CorreccionTexto));
+export default withRouter(
+  injectIntl(connect(mapStateToProps)(CorreccionTexto))
+);

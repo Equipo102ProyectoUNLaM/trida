@@ -42,8 +42,7 @@ class DataListView extends React.Component {
       onDelete,
       onUploadFile,
       onCorrection,
-      onCorrectionAlumno,
-      onVerCorrectionDocente,
+      onVerCorrection,
       sonPreguntas,
       estado,
     } = this.props;
@@ -125,22 +124,10 @@ class DataListView extends React.Component {
                       Corregir
                     </Button>
                   )}
-                  {onCorrectionAlumno && (
+                  {onVerCorrection && (
                     <Button
                       outline
-                      onClick={() => onCorrectionAlumno(idArchivo)}
-                      size="sm"
-                      color="primary"
-                      className="button datalist-button"
-                      disabled={estado === 'Corregido' ? false : true}
-                    >
-                      Ver Corrección
-                    </Button>
-                  )}
-                  {onVerCorrectionDocente && (
-                    <Button
-                      outline
-                      onClick={() => onVerCorrectionDocente(idArchivo)}
+                      onClick={() => onVerCorrection(idArchivo)}
                       size="sm"
                       color="primary"
                       className="button datalist-button"

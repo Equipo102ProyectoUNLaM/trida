@@ -114,6 +114,7 @@ class FormSubirPractica extends React.Component {
       idMateria: this.props.subject.id,
       idArchivo: this.state.file,
       tipo: 'practica',
+      estado: 'No Corregido',
     };
     await addDocument(
       'correcciones',

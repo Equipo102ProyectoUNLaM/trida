@@ -164,4 +164,6 @@ module.exports = {
 
   /* 15. Correcciones */
   'correcciones.corregir': 'Corregir',
+  'correcciones.ver': 'Ver Corrección',
+  'correcciones.volver': 'VOLVER',
 };

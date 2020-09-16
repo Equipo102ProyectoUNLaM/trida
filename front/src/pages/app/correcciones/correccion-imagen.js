@@ -27,8 +27,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import * as $ from 'jquery';
 import ROLES from 'constants/roles';
 import { editDocument } from 'helpers/Firebase-db';
-const URL =
-  'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/materias%2FNJuvzb2birY1J4fkDMK4%2Fcorrecciones%2F644f0c87-26fe-444c-9348-2a1d1b43578b-correccion?alt=media&token=e73c422f-4ab7-40f5-b9d7-aefebb015e72';
 
 class CorreccionImagen extends React.Component {
   constructor(props) {
