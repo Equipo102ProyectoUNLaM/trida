@@ -161,4 +161,7 @@ module.exports = {
 
   /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
+
+  /* 15. Correcciones */
+  'correcciones.corregir': 'Corregir',
 };

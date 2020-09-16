@@ -24,7 +24,6 @@ import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
 import DeleteIcon from '@material-ui/icons/Delete';
-import json from './enjson.json';
 import * as $ from 'jquery';
 import ROLES from 'constants/roles';
 import { editDocument } from 'helpers/Firebase-db';

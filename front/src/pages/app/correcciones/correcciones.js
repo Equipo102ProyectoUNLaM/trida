@@ -1,14 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Row } from 'reactstrap';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
+import { Modal, ModalHeader, ModalBody, Button, Row } from 'reactstrap';
 import { storage } from 'helpers/Firebase';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import ROLES from 'constants/roles';
 import CorreccionImagen from './correccion-imagen';
+import CorreccionTexto from './correccion-texto';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import DataListView from 'containers/pages/DataListView';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
+import { NavLink } from 'react-router-dom';
+import ModalGrande from 'containers/pages/ModalGrande';
 
 function collect(props) {
   return { data: props.data };
@@ -25,6 +28,7 @@ class Correcciones extends Component {
       isLoading: true,
       subjectId: this.props.subject.id,
       correccionImagen: false,
+      correccionTexto: false,
       materiaId: this.props.subject.id,
       idACorregir: '',
       archivoACorregir: '',
@@ -83,25 +87,18 @@ class Correcciones extends Component {
   };
 
   onCorrection = (id, idArchivo, file) => {
-    const extension = idArchivo.split('.')[1];
     const idStorage = idArchivo.split('.')[0];
-    if (extension === 'jpeg' || 'png' || 'jpg') {
-      this.setState({
-        archivoACorregir: file,
-        idStorage,
-        idACorregir: id,
-      });
-      return this.toggleCorreccionImagen();
-    }
-
-    if (extension === 'pdf' || 'doc' || 'docx') {
-      this.setState({
-        archivoACorregir: file,
-        idStorage,
-        idACorregir: id,
-      });
-      return console.log('correccion texto');
-    }
+    this.setState({
+      archivoACorregir: file,
+      idStorage,
+      idACorregir: id,
+    });
+    return this.props.history.push({
+      pathname: '/app/correcciones/correccion',
+      subjectId: this.props.subject.id,
+      url: file,
+      idStorage,
+    });
   };
 
   onCorrectionAlumno = async (idArchivo) => {
@@ -131,11 +128,17 @@ class Correcciones extends Component {
     this.setState({ correccionImagen: !this.state.correccionImagen });
   };
 
+  toggleCorreccionTexto = () => {
+    //this.props.history.push('/correccion-texto');
+    this.setState({ correccionTexto: !this.state.correccionTexto });
+  };
+
   render() {
     const {
       isLoading,
       items,
       correccionImagen,
+      correccionTexto,
       idACorregir,
       archivoACorregir,
       idStorage,
@@ -184,6 +187,7 @@ class Correcciones extends Component {
             })}{' '}
           </Row>
         </div>
+        <NavLink to="/app/correcciones/correccion"> Text </NavLink>
         {correccionImagen && (
           <Modal
             isOpen={correccionImagen}
@@ -206,6 +210,19 @@ class Correcciones extends Component {
             </ModalBody>
           </Modal>
         )}
+        {correccionTexto && (
+          <ModalGrande
+            modalOpen={correccionTexto}
+            toggleModal={this.toggleCorreccionTexto}
+            text={rolDocente ? 'Corregir' : 'Ver corrección'}
+          >
+            <CorreccionTexto
+              subjectId={this.props.subject.id}
+              url={this.state.archivoACorregir}
+              idStorage={this.state.idStorage}
+            />
+          </ModalGrande>
+        )}
       </Fragment>
     );
   }
@@ -219,4 +236,4 @@ const mapStateToProps = ({ seleccionCurso, authUser }) => {
   return { subject, rol };
 };
 
-export default connect(mapStateToProps)(Correcciones);
+export default withRouter(connect(mapStateToProps)(Correcciones));
