@@ -26,6 +26,7 @@ class ModalVistaPreviaPreguntas extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     if (!isEmpty(this.props.preguntas)) {
       this.setState({ preguntas: this.props.preguntas });
     }
@@ -33,7 +34,9 @@ class ModalVistaPreviaPreguntas extends Component {
   }
 
   render() {
-    const { preguntas, isLoading } = this.state;
+    const { isLoading } = this.state;
+    const { preguntas } = this.props;
+    console.log(this.props);
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -44,28 +47,30 @@ class ModalVistaPreviaPreguntas extends Component {
       >
         <ModalHeader>Vista previa de las preguntas</ModalHeader>
         <ModalBody className="modal-ejercicios-body">
-          {preguntas.map((pregunta, index) => (
-            <Row className="mb-4" key={index + 'ejer'}>
-              <Colxx xxs="12">
-                <Card>
-                  <CardBody>
-                    <CardTitle>
-                      <h5 className="mb-4">
-                        Pregunta N°{pregunta.data.numero}
-                      </h5>
-                    </CardTitle>
-                    {pregunta.data.tipo === TIPO_EJERCICIO.opcion_multiple && (
-                      <OpcionMultiple
-                        ejercicioId={index}
-                        value={pregunta.data}
-                        preview={true}
-                      />
-                    )}
-                  </CardBody>
-                </Card>
-              </Colxx>
-            </Row>
-          ))}
+          {preguntas &&
+            preguntas.map((pregunta, index) => (
+              <Row className="mb-4" key={index + 'ejer'}>
+                <Colxx xxs="12">
+                  <Card>
+                    <CardBody>
+                      <CardTitle>
+                        <h5 className="mb-4">
+                          Pregunta N°{pregunta.data.numero}
+                        </h5>
+                      </CardTitle>
+                      {pregunta.data.tipo ===
+                        TIPO_EJERCICIO.opcion_multiple && (
+                        <OpcionMultiple
+                          ejercicioId={index}
+                          value={pregunta.data}
+                          preview={true}
+                        />
+                      )}
+                    </CardBody>
+                  </Card>
+                </Colxx>
+              </Row>
+            ))}
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={this.props.toggle}>

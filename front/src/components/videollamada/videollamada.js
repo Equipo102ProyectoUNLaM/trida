@@ -46,9 +46,9 @@ const Videollamada = ({
   const [listaAsistencia, setListaAsistencia] = useState([]);
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setmodalPreguntasOpen] = useState(false);
-  const [modalPreviewOpen, setModalPreviewOpen] = useState(true);
+  const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setpreguntaALanzar] = useState();
-  const [preguntaLanzada, setpreguntaLanzada] = useState({}); // ver si hago andar este y vuelo la var preguntaLanzadaGlobal
+  const [preguntaLanzada, setpreguntaLanzada] = useState([]); // ver si hago andar este y vuelo la var preguntaLanzadaGlobal
 
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
 
@@ -127,7 +127,10 @@ const Videollamada = ({
         sinRespuesta
       );
     }
-    console.log('preguntaLanzadaGlobal', preguntaLanzadaGlobal);
+    setpreguntaLanzada(preguntaLanzadaGlobal);
+    console.log(preguntaLanzadaGlobal);
+    console.log(preguntaLanzada);
+    toggleModalPreview();
   };
 
   const closeModalPreguntas = () => {
@@ -286,16 +289,11 @@ const Videollamada = ({
           </ModalFooter>
         </ModalGrande>
       )}
-      {console.log('modalPreviewOpen', modalPreviewOpen)}
-      {console.log(
-        'preguntaLanzadaGlobalPreVistaPrevia',
-        preguntaLanzadaGlobal
-      )}
-      {rol === ROLES.Alumno && preguntaLanzadaGlobal.length > 0 && (
+      {rol === ROLES.Alumno && (
         <ModalVistaPreviaPreguntas
           toggle={toggleModalPreview}
           isOpen={modalPreviewOpen}
-          preguntas={preguntaLanzadaGlobal}
+          preguntas={preguntaLanzada}
         />
       )}
 
