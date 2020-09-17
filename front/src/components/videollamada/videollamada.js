@@ -6,9 +6,25 @@ import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
-import { editDocument, getDatosClaseOnSnapshot } from 'helpers/Firebase-db';
+import { editDocument, getCollectionOnSnapshot } from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
+import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
+import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+
+const initialState = { id: '', data: '' };
+
+const reducer = (state, action) => {
+  if (action.type === 'reset') {
+    return initialState;
+  }
+
+  const result = { ...state };
+  result[action.type] = action.value;
+  return result;
+};
+
+var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
 const Videollamada = ({
   roomName,
@@ -30,8 +46,11 @@ const Videollamada = ({
   const [listaAsistencia, setListaAsistencia] = useState([]);
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setmodalPreguntasOpen] = useState(false);
+  const [modalPreviewOpen, setModalPreviewOpen] = useState(true);
   const [preguntaALanzar, setpreguntaALanzar] = useState();
-  const [preguntaLanzada, setpreguntaLanzada] = useState();
+  const [preguntaLanzada, setpreguntaLanzada] = useState({}); // ver si hago andar este y vuelo la var preguntaLanzadaGlobal
+
+  const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -55,6 +74,10 @@ const Videollamada = ({
     setmodalPreguntasOpen(!modalPreguntasOpen);
   };
 
+  const toggleModalPreview = () => {
+    setModalPreviewOpen(!modalPreviewOpen);
+  };
+
   const onSelectPregunta = (idPregunta) => {
     setpreguntaALanzar(idPregunta);
   };
@@ -63,25 +86,48 @@ const Videollamada = ({
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
     });
-    setpreguntaLanzada(preguntaALanzar);
+    setpreguntaLanzada(preguntaALanzar); // aca no se si va xq ya tengo el preguntaLanzadaGlobal
     setpreguntaALanzar(null);
     toggleModalPreguntas();
   };
 
   useEffect(() => {
-    if (preguntaLanzada) {
-      getDatosClaseOnSnapshot(
-        `clases/${idClase}/preguntas`,
-        preguntaLanzada,
-        getPreguntaLanzada
-      );
-    }
+    getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
   }, []);
 
-  const getPreguntaLanzada = (doc) => {
-    console.log('doc', doc);
-    const { lanzada } = doc.data();
-    //setLanzada(lanzada);
+  const getPreguntaLanzada = (documents) => {
+    preguntasOnSnapshot.length = 0; // Reinicio el array de las preguntas que escucho en RT de firestore
+    documents.forEach((doc) => {
+      //Appendeo las preguntas que cambiaron en preguntasOnSnapshot
+      setPreguntasOnSnapshot(
+        preguntasOnSnapshot.push({
+          id: doc.id,
+          data: doc.data(),
+        })
+      );
+    });
+
+    console.log('preguntasOnSnapshot', preguntasOnSnapshot);
+
+    const preguntaLanzadaEncriptada = [];
+    const preguntaLanzada = preguntasOnSnapshot.find(
+      (pregunta) => pregunta.data.lanzada
+    );
+
+    //Me quedo con la pregunta lanzada, si la hay (lanzada == true)
+    if (preguntaLanzada) {
+      preguntaLanzadaEncriptada.push(preguntaLanzada);
+    }
+
+    //Desencripto la pregunta lanzada (si la hay)
+    if (preguntaLanzadaEncriptada.length > 0) {
+      const sinRespuesta = true;
+      preguntaLanzadaGlobal = desencriptarEjercicios(
+        preguntaLanzadaEncriptada,
+        sinRespuesta
+      );
+    }
+    console.log('preguntaLanzadaGlobal', preguntaLanzadaGlobal);
   };
 
   const closeModalPreguntas = () => {
@@ -240,6 +286,19 @@ const Videollamada = ({
           </ModalFooter>
         </ModalGrande>
       )}
+      {console.log('modalPreviewOpen', modalPreviewOpen)}
+      {console.log(
+        'preguntaLanzadaGlobalPreVistaPrevia',
+        preguntaLanzadaGlobal
+      )}
+      {rol === ROLES.Alumno && preguntaLanzadaGlobal.length > 0 && (
+        <ModalVistaPreviaPreguntas
+          toggle={toggleModalPreview}
+          isOpen={modalPreviewOpen}
+          preguntas={preguntaLanzadaGlobal}
+        />
+      )}
+
       <div id={parentNode}></div>
     </Fragment>
   );

@@ -285,7 +285,7 @@ class TabsDeClase extends Component {
     //subCollection[] .id -> idDoc
 
     //Desencripto las preguntas
-    const sinRespuesta = false;
+    const sinRespuesta = true;
     const preguntasDesencriptadas = desencriptarEjercicios(
       subCollection,
       sinRespuesta
