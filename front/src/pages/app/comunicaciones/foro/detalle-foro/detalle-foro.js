@@ -71,13 +71,9 @@ class DetalleForo extends Component {
   };
 
   componentDidUpdate() {
-    // if (
-    //   this.props.chatApp.loadingConversations &&
-    //   this.state.loading &&
-    //   this.props.chatApp.selectedUser == null
-    // ) {
-    //   this.props.changeConversation(this.props.chatApp.selectedUserId);
-    // }
+    if (this.state.loading) {
+      this.getTemaForo();
+    }
 
     if (this._scrollBarRef) {
       this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
