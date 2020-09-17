@@ -7,21 +7,68 @@ import EncabezadoForo from './encabezado-foro';
 import DetalleMensaje from './detalle-mensaje';
 import InputMensajeForo from './input-mensaje-foro';
 import { injectIntl } from 'react-intl';
+import {
+  getDocumentWithSubCollection,
+  addToSubCollection,
+} from 'helpers/Firebase-db';
 
 class DetalleForo extends Component {
   constructor(props) {
     super(props);
     this.state = {
       messageInput: '',
-      mensajes: this.props.mensajes,
-      idForo: this.props.id,
-      titulo: this.props.nombre,
-      descripcion: this.props.descripcion,
+      mensajes: [],
+      idForo: this.props.location.id,
+      titulo: '',
+      descripcion: '',
       loading: true,
     };
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    this.setState(
+      {
+        isLoading: true,
+      },
+      () => {
+        this.getTemaForo();
+      }
+    );
+  }
+
+  getTemaForo = async () => {
+    if (!this.props.match.params.foroId) {
+      this.setState({ isLoading: false });
+      this.props.history.push(`/app/foros`);
+    }
+    const { foroId } = this.props.match.params;
+
+    const temaForo = await getDocumentWithSubCollection(
+      `foros/${foroId}`,
+      'mensajes'
+    );
+    console.log(temaForo);
+
+    const { id, data, subCollection } = temaForo;
+    const {
+      nombre,
+      fecha_creacion,
+      descripcion,
+      creador,
+      nombreCreador,
+    } = data;
+
+    this.setState({
+      creador: creador,
+      nombreCreador: nombreCreador,
+      nombre: nombre,
+      descripcion: descripcion,
+      fecha_creacion: fecha_creacion,
+      idForo: foroId,
+      mensajes: subCollection,
+      loading: false,
+    });
+  };
 
   componentDidUpdate() {
     // if (
@@ -75,7 +122,29 @@ class DetalleForo extends Component {
     }
   };
 
-  addMessageToForum = () => {};
+  addMessageToForum = async (idForo, idUsuario, mensaje, nombre, apellido) => {
+    this.setState({
+      isLoading: true,
+    });
+    const obj = {
+      idCreador: idUsuario,
+      nombreCreador: nombre + ' ' + apellido,
+      contenido: mensaje,
+    };
+    await addToSubCollection(
+      'foros',
+      idForo,
+      'mensajes',
+      obj,
+      idUsuario,
+      'Mensaje enviado!',
+      'Mensaje enviado exitosamente',
+      'Error al enviar el mensaje'
+    );
+    this.setState({
+      isLoading: false,
+    });
+  };
 
   render() {
     const { nombre, apellido, id } = this.props;
@@ -83,7 +152,7 @@ class DetalleForo extends Component {
 
     return !loading ? (
       <Fragment>
-        <Row className="app-row">
+        <Row>
           <Colxx xxs="12" className="chat-app">
             <EncabezadoForo nombre={titulo} descripcionForo={descripcion} />
             <PerfectScrollbar
@@ -103,15 +172,14 @@ class DetalleForo extends Component {
                 );
               })}
             </PerfectScrollbar>
+            <InputMensajeForo
+              messageInput={messageInput}
+              handleChatInputPress={this.handleChatInputPress}
+              handleChatInputChange={this.handleChatInputChange}
+              handleSendButtonClick={this.handleSendButtonClick}
+            />
           </Colxx>
         </Row>
-        <InputMensajeForo
-          placeholder="forums.send"
-          messageInput={messageInput}
-          handleChatInputPress={this.handleChatInputPress}
-          handleChatInputChange={this.handleChatInputChange}
-          handleSendButtonClick={this.handleSendButtonClick}
-        />
       </Fragment>
     ) : (
       <div className="loading" />

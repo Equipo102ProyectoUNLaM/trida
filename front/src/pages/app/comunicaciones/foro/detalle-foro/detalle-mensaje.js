@@ -6,7 +6,7 @@ const DetalleMensaje = ({ item, idUsuarioActual }) => {
     <Fragment>
       <Card
         className={`d-inline-block mb-3 float-${
-          item.idCreador !== idUsuarioActual ? 'left' : 'right'
+          item.creador !== idUsuarioActual ? 'left' : 'right'
         }`}
       >
         <div className="position-absolute  pt-1 pr-2 r-0">

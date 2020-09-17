@@ -4,7 +4,6 @@ import { Input, Button } from 'reactstrap';
 class InputMensajeForo extends Component {
   render() {
     const {
-      placeholder,
       messageInput,
       handleChatInputPress,
       handleChatInputChange,
@@ -15,7 +14,7 @@ class InputMensajeForo extends Component {
         <Input
           className="form-control flex-grow-1"
           type="text"
-          placeholder={placeholder}
+          placeholder="Ingrese el mensaje a enviar"
           value={messageInput}
           onKeyPress={(e) => handleChatInputPress(e)}
           onChange={(e) => handleChatInputChange(e)}

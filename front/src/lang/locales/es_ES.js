@@ -167,5 +167,4 @@ module.exports = {
   /* 15. Foros */
   'forums.add': 'AGREGAR TEMA',
   'forums.edit': 'EDITAR TEMA',
-  'forums.send': 'Ingrese el mensaje a enviar',
 };
