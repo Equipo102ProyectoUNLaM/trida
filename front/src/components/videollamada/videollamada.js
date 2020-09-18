@@ -12,18 +12,6 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 
-const initialState = { id: '', data: '' };
-
-const reducer = (state, action) => {
-  if (action.type === 'reset') {
-    return initialState;
-  }
-
-  const result = { ...state };
-  result[action.type] = action.value;
-  return result;
-};
-
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
 const Videollamada = ({
@@ -46,7 +34,7 @@ const Videollamada = ({
   const [listaAsistencia, setListaAsistencia] = useState([]);
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setmodalPreguntasOpen] = useState(false);
-  const [modalPreviewOpen, setModalPreviewOpen] = useState(true);
+  const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setpreguntaALanzar] = useState();
   const [preguntaLanzada, setpreguntaLanzada] = useState({}); // ver si hago andar este y vuelo la var preguntaLanzadaGlobal
 
@@ -121,11 +109,13 @@ const Videollamada = ({
 
     //Desencripto la pregunta lanzada (si la hay)
     if (preguntaLanzadaEncriptada.length > 0) {
+      preguntaLanzadaGlobal = [];
       const sinRespuesta = true;
       preguntaLanzadaGlobal = desencriptarEjercicios(
         preguntaLanzadaEncriptada,
         sinRespuesta
       );
+      toggleModalPreview();
     }
     console.log('preguntaLanzadaGlobal', preguntaLanzadaGlobal);
   };
