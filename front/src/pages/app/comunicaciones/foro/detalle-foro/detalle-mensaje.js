@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
 import { Card, CardBody } from 'reactstrap';
+const publicUrl = process.env.PUBLIC_URL;
+const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
 const DetalleMensaje = ({ item, idUsuarioActual }) => {
   return (
@@ -18,7 +20,11 @@ const DetalleMensaje = ({ item, idUsuarioActual }) => {
           <div className="d-flex flex-row pb-1">
             <img
               alt={item.data.nombreCreador}
-              src={item.data.fotoCreador}
+              src={
+                item.data.fotoCreador
+                  ? item.data.fotoCreador
+                  : imagenDefaultUsuario
+              }
               className="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall"
             />
             <div className=" d-flex flex-grow-1 min-width-zero">
