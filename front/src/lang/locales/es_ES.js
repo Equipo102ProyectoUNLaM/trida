@@ -17,6 +17,7 @@ Tabla de Contenidos
 12. Contenidos
 13. Mensajería
 14. Inicio
+15. Evaluaciones
 */
 
 module.exports = {
@@ -161,4 +162,7 @@ module.exports = {
 
   /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
+
+  /* 15. Evaluaciones */
+  'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',
 };

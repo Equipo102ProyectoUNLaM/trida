@@ -23,6 +23,7 @@ import { secretKey } from 'constants/defaultValues';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import Countdown from 'components/common/Countdown';
+import ModalChico from 'containers/pages/ModalChico';
 
 import {
   getDateWithFormat,
@@ -45,6 +46,7 @@ class RealizarEvaluacion extends Component {
       respuestas: [],
       submitted: false,
       modalFinishOpen: false,
+      sinTiempo: false,
       isLoading: true,
     };
   }
@@ -127,13 +129,20 @@ class RealizarEvaluacion extends Component {
     });
   };
 
+  tiempoTerminado = () => {
+    if (!this.state.sinTiempo) {
+      this.entregarEvaluacion(false);
+      this.setState({ sinTiempo: true });
+    }
+  };
+
   finalizarEvaluacion = () => {
     if (this.validateRespuestas() === true) {
       this.toggleModal();
     }
   };
 
-  entregarEvaluacion = async () => {
+  entregarEvaluacion = async (navigate = true) => {
     let obj = {
       estado: ESTADO_ENTREGA.no_corregido,
       fecha_entrega: getFechaHoraActual(),
@@ -152,6 +161,12 @@ class RealizarEvaluacion extends Component {
       'Tu evaluación fue entregada correctamente',
       'Tu evaluación no pudo ser entregada'
     );
+    console.log(navigate);
+    if (navigate) this.volverAEvaluaciones();
+  };
+
+  volverAEvaluaciones = (e) => {
+    e.preventDefault();
     this.props.history.push(`/app/evaluaciones`);
   };
 
@@ -192,6 +207,7 @@ class RealizarEvaluacion extends Component {
       fecha_finalizacion,
       modalFinishOpen,
       submitted,
+      sinTiempo,
     } = this.state;
     const { nombre, apellido } = this.props;
 
@@ -320,7 +336,26 @@ class RealizarEvaluacion extends Component {
             onConfirm={this.entregarEvaluacion}
           />
         )}
-        <Countdown end={fecha_finalizacion} />
+        <Countdown end={fecha_finalizacion} onFinish={this.tiempoTerminado} />
+        {sinTiempo && (
+          <ModalChico
+            modalOpen={sinTiempo}
+            modalHeader={'evaluacion.sinTiempo'}
+          >
+            <Colxx xxs="12" md="12">
+              <h4>Ya no tenés más tiempo para seguir con la evaluación :( </h4>
+              <h4>
+                Pero no te preocupes, tu evaluación fue entregada con lo que
+                llegaste a completar hasta ahora
+              </h4>
+            </Colxx>
+            <ModalFooter>
+              <Button color="primary" onClick={this.volverAEvaluaciones}>
+                Aceptar
+              </Button>
+            </ModalFooter>
+          </ModalChico>
+        )}
       </Fragment>
     );
   }

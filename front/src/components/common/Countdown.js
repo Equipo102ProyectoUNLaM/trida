@@ -4,52 +4,6 @@ import { Card } from 'reactstrap';
 
 import * as _moment from 'moment';
 
-// const renderTime = ({ remainingTime }) => {
-//     const hours = Math.floor(remainingTime / 3600);
-//     const minutes = Math.floor((remainingTime % 3600) / 60);
-//     const seconds = remainingTime % 60;
-
-//     if (remainingTime === 0) {
-//       return <div className="timer">Too lale...</div>;
-//     }
-
-//     return (
-//       <div className="timer">
-//         <div className="text">Te quedan</div>
-//         <div className="value">
-//           {hours} hs :{minutes} min :{seconds} seg
-//         </div>
-//         {/* <div className="text">seconds</div> */}
-//       </div>
-//     );
-//   };
-
-//   export default function Countdown() {
-//     return (
-//       <div className="App">
-//         <h1>
-//           CountdownCircleTimer
-//           <br />
-//           React Component
-//         </h1>
-//         <div className="timer-wrapper">
-//           <CountdownCircleTimer
-//             isPlaying
-//             duration={5000}
-//             colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
-//             onComplete={() => [true, 1000]}
-//           >
-//             {renderTime}
-//           </CountdownCircleTimer>
-//         </div>
-//         <p className="info">
-//           Change component properties in the code filed on the right to try
-//           difference functionalities
-//         </p>
-//       </div>
-//     );
-//   }
-
 const minuteSeconds = 60;
 const hourSeconds = 3600;
 const daySeconds = 86400;
@@ -75,9 +29,9 @@ const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
 const getTimeDays = (time) => (time / daySeconds) | 0;
 
 export default function Countdown(props) {
-  const stratTime = props.start ? props.start.seconds : Date.now() / 1000; // use UNIX timestamp in seconds
+  const startTime = props.start ? props.start.seconds : Date.now() / 1000; // use UNIX timestamp in seconds
   const endTime = props.end.seconds; // use UNIX timestamp in seconds
-  const remainingTime = endTime - stratTime;
+  const remainingTime = endTime - startTime;
   const days = Math.ceil(remainingTime / daySeconds);
   const daysDuration = days * daySeconds;
   return (
@@ -89,6 +43,7 @@ export default function Countdown(props) {
           colors={[['#e2863b']]}
           duration={daysDuration}
           initialRemainingTime={remainingTime}
+          onComplete={props.onFinish}
         >
           {({ elapsedTime }) =>
             renderTime('días', getTimeDays(daysDuration - elapsedTime / 1000))
