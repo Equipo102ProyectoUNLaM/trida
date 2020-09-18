@@ -39,13 +39,14 @@ class DetalleForo extends Component {
   getTemaForo = async () => {
     if (!this.props.match.params.foroId) {
       this.setState({ isLoading: false });
-      this.props.history.push(`/app/foros`);
+      this.props.history.push(`/app/comunicaciones/foro/`);
     }
     const { foroId } = this.props.match.params;
 
     const temaForo = await getDocumentWithSubCollection(
       `foros/${foroId}`,
-      'mensajes'
+      'mensajes',
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
     );
     console.log(temaForo);
 
@@ -83,13 +84,7 @@ class DetalleForo extends Component {
   handleChatInputPress = (e) => {
     if (e.key === 'Enter') {
       if (this.state.messageInput.length > 0) {
-        this.addMessageToForum(
-          this.state.idForo,
-          this.props.id,
-          this.state.messageInput,
-          this.props.nombre,
-          this.props.apellido
-        );
+        this.addMessageToForum(this.state.idForo, this.state.messageInput);
         this.setState({
           messageInput: '',
         });
@@ -105,34 +100,29 @@ class DetalleForo extends Component {
 
   handleSendButtonClick = () => {
     if (this.state.messageInput.length > 0) {
-      this.addMessageToForum(
-        this.state.idForo,
-        this.props.id,
-        this.state.messageInput,
-        this.props.nombre,
-        this.props.apellido
-      );
+      this.addMessageToForum(this.state.idForo, this.state.messageInput);
       this.setState({
         messageInput: '',
       });
     }
   };
 
-  addMessageToForum = async (idForo, idUsuario, mensaje, nombre, apellido) => {
+  addMessageToForum = async (idForo, mensaje) => {
     this.setState({
       isLoading: true,
     });
     const obj = {
-      idCreador: idUsuario,
-      nombreCreador: nombre + ' ' + apellido,
+      idCreador: this.props.id,
+      nombreCreador: this.props.nombre + ' ' + this.props.apellido,
       contenido: mensaje,
+      fotoCreador: this.props.foto,
     };
     await addToSubCollection(
       'foros',
       idForo,
       'mensajes',
       obj,
-      idUsuario,
+      this.props.id,
       'Mensaje enviado!',
       'Mensaje enviado exitosamente',
       'Error al enviar el mensaje'
@@ -140,17 +130,27 @@ class DetalleForo extends Component {
     this.setState({
       isLoading: false,
     });
+
+    this.getTemaForo();
+  };
+
+  goToForos = () => {
+    this.props.history.push(`/app/comunicaciones/foro/`);
   };
 
   render() {
-    const { nombre, apellido, id } = this.props;
+    const { id } = this.props;
     const { mensajes, titulo, descripcion, loading, messageInput } = this.state;
     console.log(titulo);
     return !loading ? (
       <Fragment>
         <Row>
           <Colxx xxs="12" className="chat-app">
-            <EncabezadoForo nombre={titulo} descripcionForo={descripcion} />
+            <EncabezadoForo
+              nombre={titulo}
+              descripcionForo={descripcion}
+              goToForos={this.goToForos}
+            />
             <PerfectScrollbar
               ref={(ref) => {
                 this._scrollBarRef = ref;
@@ -185,9 +185,9 @@ class DetalleForo extends Component {
 
 const mapStateToProps = ({ authUser }) => {
   const { userData } = authUser;
-  const { rol, nombre, apellido, id } = userData;
+  const { rol, nombre, apellido, id, foto } = userData;
 
-  return { rol, nombre, apellido, id };
+  return { rol, nombre, apellido, id, foto };
 };
 
 export default injectIntl(connect(mapStateToProps)(DetalleForo));
