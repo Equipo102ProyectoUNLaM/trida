@@ -39,7 +39,7 @@ class DetalleForo extends Component {
   getTemaForo = async () => {
     if (!this.props.match.params.foroId) {
       this.setState({ isLoading: false });
-      this.props.history.push(`/app/foros`);
+      this.props.history.push(`/app/comunicaciones/foro/`);
     }
     const { foroId } = this.props.match.params;
 
@@ -134,6 +134,10 @@ class DetalleForo extends Component {
     this.getTemaForo();
   };
 
+  goToForos = () => {
+    this.props.history.push(`/app/comunicaciones/foro/`);
+  };
+
   render() {
     const { id } = this.props;
     const { mensajes, titulo, descripcion, loading, messageInput } = this.state;
@@ -142,7 +146,11 @@ class DetalleForo extends Component {
       <Fragment>
         <Row>
           <Colxx xxs="12" className="chat-app">
-            <EncabezadoForo nombre={titulo} descripcionForo={descripcion} />
+            <EncabezadoForo
+              nombre={titulo}
+              descripcionForo={descripcion}
+              goToForos={this.goToForos}
+            />
             <PerfectScrollbar
               ref={(ref) => {
                 this._scrollBarRef = ref;

@@ -7,12 +7,12 @@ const DetalleMensaje = ({ item, idUsuarioActual }) => {
   return (
     <Fragment>
       <Card
-        className={`d-inline-block mb-3 float-${
+        className={`chat-message d-inline-block mb-3 float-${
           item.data.creador !== idUsuarioActual ? 'left' : 'right'
         }`}
       >
         <div className="position-absolute  pt-1 pr-2 r-0">
-          <span className="text-extra-small text-muted">
+          <span className="text-small text-muted">
             {item.data.fecha_creacion}
           </span>
         </div>
