@@ -24,7 +24,8 @@ class PreguntasAleatorias extends React.Component {
         const number = Math.floor(
           Math.random() * this.props.value.preguntas.length
         );
-        if (!aleatorias.find((x) => x === number)) aleatorias.push(number);
+        if (aleatorias.findIndex((x) => x === number) === -1)
+          aleatorias.push(number);
       }
       this.setState({
         cantidad: this.props.value.cantidad,
