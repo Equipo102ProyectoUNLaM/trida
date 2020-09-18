@@ -45,7 +45,8 @@ class DetalleForo extends Component {
 
     const temaForo = await getDocumentWithSubCollection(
       `foros/${foroId}`,
-      'mensajes'
+      'mensajes',
+      [{ order: 'fecha_creacion', orderCond: 'desc' }]
     );
     console.log(temaForo);
 
