@@ -45,6 +45,7 @@ class DataListView extends React.Component {
       onVerCorrection,
       sonPreguntas,
       estado,
+      dataCorreccion,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -113,8 +114,9 @@ class DataListView extends React.Component {
                       Subir Práctica
                     </Button>
                   )}
-                  {onCorrection && (
+                  {onCorrection && estado === 'No Corregido' && (
                     <Button
+                      style={{ width: '7rem' }}
                       outline
                       onClick={() => onCorrection(id, idArchivo, file)}
                       size="sm"
@@ -124,10 +126,17 @@ class DataListView extends React.Component {
                       Corregir
                     </Button>
                   )}
-                  {onVerCorrection && (
+                  {onVerCorrection && estado === 'Corregido' && (
                     <Button
                       outline
-                      onClick={() => onVerCorrection(idArchivo)}
+                      onClick={() =>
+                        onVerCorrection(
+                          idArchivo,
+                          dataCorreccion.estadoCorreccion,
+                          dataCorreccion.notaCorreccion,
+                          dataCorreccion.comentarioCorreccion
+                        )
+                      }
                       size="sm"
                       color="primary"
                       className="button datalist-button"

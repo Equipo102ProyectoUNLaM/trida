@@ -99,7 +99,7 @@ class Correcciones extends Component {
     });
   };
 
-  onVerCorrection = async (idArchivo) => {
+  onVerCorrection = async (idArchivo, estado, nota, comentario) => {
     const idStorage = idArchivo.split('.')[0];
     const correccionAlumnoUrl = await this.getFileURL(
       idStorage + '-correccion'
@@ -112,6 +112,9 @@ class Correcciones extends Component {
         url: correccionAlumnoUrl,
         idStorage,
         verCorreccion: true,
+        estadoCorreccionVer: estado,
+        notaCorreccionVer: nota,
+        comentarioVer: comentario,
       });
       this.setState({ verCorreccion: false });
     }
@@ -136,6 +139,7 @@ class Correcciones extends Component {
                   key={correccion.id + 'dataList'}
                   id={correccion.id}
                   idArchivo={correccion.data.idArchivo}
+                  dataCorreccion={correccion.data}
                   title={correccion.data.nombre}
                   text1={
                     correccion.data.mensaje !== undefined

@@ -166,4 +166,7 @@ module.exports = {
   'correcciones.corregir': 'Corregir',
   'correcciones.ver': 'Ver Corrección',
   'correcciones.volver': 'VOLVER',
+  'correcciones.estado': 'Estado de Corrección *',
+  'correcciones.calificacion': 'Calificación de Corrección',
+  'correcciones.comentario': 'Agregar Comentario',
 };

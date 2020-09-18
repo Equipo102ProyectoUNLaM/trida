@@ -6474,6 +6474,11 @@ input:-webkit-autofill {
   margin-left: 1rem !important;
 }
 
+.without-tooltip {
+  width: 93% !important;
+  margin-left: 1rem !important;
+}
+
 .has-float-label label::after,
 .has-float-label > span::after {
   background: $foreground-color !important;
@@ -9502,6 +9507,20 @@ div.rendered-file-browser{
   font-size: 74%;
 }
 
+
+.badge-correccion {
+  width: 15%;
+  height: 50%;
+  margin-right: 2%;
+  margin-left: 1%;
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
+  background-color: $theme-color-1 !important;
+  color: #fff;
+  padding: 0.55em 0.75em 0.6em 0.75em;
+  font-size: 74%;
+}
+
 .correcciones-data-list-row {
   display: flex;
   flex-wrap: wrap;
@@ -9862,4 +9881,9 @@ div.rendered-file-browser{
 .webviewer {
   height: 800px !important;
   margin-bottom: 1rem !important;
+}
+
+.status-correccion {
+  margin-left: 0;
+  margin-bottom: 1rem;
 }
