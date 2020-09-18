@@ -1,19 +1,11 @@
 import React, { Fragment } from 'react';
 import { Button, Row } from 'reactstrap';
-const publicUrl = process.env.PUBLIC_URL;
-const imagenForo = `${publicUrl}/assets/img/imagen-clase-2.png`;
 
 const EncabezadoForo = ({ nombre, descripcionForo, goToForos }) => {
   return (
     <Fragment>
       <Row className="row-space-between">
         <Row>
-          <div className="d-flex">
-            <img
-              src={imagenForo}
-              className="img-thumbnail border-0 rounded-circle ml-0 mr-4 list-thumbnail align-self-center small"
-            />
-          </div>
           <div className=" d-flex min-width-zero">
             <div className="card-body pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
               <div className="min-width-zero">
