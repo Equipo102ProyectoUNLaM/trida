@@ -61,7 +61,7 @@ class DetalleForo extends Component {
     this.setState({
       creador: creador,
       nombreCreador: nombreCreador,
-      nombre: nombre,
+      titulo: nombre,
       descripcion: descripcion,
       fecha_creacion: fecha_creacion,
       idForo: foroId,
@@ -145,7 +145,7 @@ class DetalleForo extends Component {
   render() {
     const { nombre, apellido, id } = this.props;
     const { mensajes, titulo, descripcion, loading, messageInput } = this.state;
-
+    console.log(titulo);
     return !loading ? (
       <Fragment>
         <Row>

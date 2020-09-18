@@ -2602,13 +2602,13 @@ nav .nomargin {
 }
 
 .chat-input-container {
+  bottom: 3rem !important;
   width: 100%;
   height: 90px;
   background: $input-background;
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
   @include depth(1);
   transition: padding $menu-collapse-time;
   padding-left: $main-menu-width + $sub-menu-width + $main-margin;
@@ -2786,7 +2786,7 @@ nav .nomargin {
 /* 15.Main*/
 .main-app {
   margin-left: $sub-menu-width + $main-menu-width + $main-margin;
-  margin-top: $navbar-height + $main-margin - 15;
+  margin-top: $navbar-height + $main-margin - 30;
   margin-right: $main-margin;
   margin-bottom: $main-margin - 20;
   transition: margin-left $menu-collapse-time;

@@ -9,7 +9,7 @@ const DetalleMensaje = ({ item, idUsuarioActual }) => {
           item.data.creador !== idUsuarioActual ? 'left' : 'right'
         }`}
       >
-        <div className="position-absolute  pt-1 pr-2 r-0">
+        <div className="position-absolute  pt-1 pr-2 r-0 mr-2 mt-2">
           <span className="text-extra-small text-muted">
             {item.data.fecha_creacion}
           </span>
