@@ -38,7 +38,7 @@ const CorreccionTexto = ({ location }, rol) => {
   const [verCorr, setVerCorreccion] = useState(verCorreccion);
   const [modalConfirmacion, setModalConfirmacion] = useState(false);
   const [estadoCorreccion, setEstado] = useState('');
-  const [notaCorreccion, setNotaCorreccion] = useState('');
+  const [notaCorreccion, setNotaCorreccion] = useState({ value: 0 });
   const [comentario, setComentario] = useState('-');
   const [showNotas, setShowNotas] = useState(false);
   const [blob, setBlob] = useState([]);
@@ -59,11 +59,13 @@ const CorreccionTexto = ({ location }, rol) => {
   };
 
   const handleNotaChange = (selectedOption) => {
+    console.log(selectedOption);
     if (selectedOption) {
       setNotaCorreccion(selectedOption);
     } else {
-      setNotaCorreccion('');
+      setNotaCorreccion({ value: 0 });
     }
+    console.log(notaCorreccion);
   };
 
   const handleChange = (event) => {
