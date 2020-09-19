@@ -2549,6 +2549,10 @@ nav .nomargin {
 /* 12.Chat App*/
 .chat-app {
 
+  .back-forums {
+    align-self: center;
+  }
+
   .chat-message {
     width: auto;
     min-width: 20rem;
@@ -2666,7 +2670,7 @@ nav .nomargin {
 
     @include respond-below(sm) {
       padding-right: 2rem;
-      padding-left: 2rem; 
+      padding-left: 2rem;
     }
   }
 }

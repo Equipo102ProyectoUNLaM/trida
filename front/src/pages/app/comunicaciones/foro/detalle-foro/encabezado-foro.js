@@ -21,7 +21,7 @@ const EncabezadoForo = ({ nombre, descripcionForo, goToForos }) => {
           <Button
             color="primary"
             size="lg"
-            className="top-right-button half-height"
+            className="top-right-button half-height back-forums"
             onClick={goToForos}
           >
             VOLVER A MIS TEMAS
