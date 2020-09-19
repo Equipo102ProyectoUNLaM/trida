@@ -53,7 +53,6 @@ class DetalleForo extends Component {
       'mensajes',
       [{ order: 'fecha_creacion', orderCond: 'asc' }]
     );
-    console.log(temaForo);
 
     const { id, data, subCollection } = temaForo;
     const {
@@ -146,7 +145,6 @@ class DetalleForo extends Component {
   render() {
     const { id } = this.props;
     const { mensajes, titulo, descripcion, loading, messageInput } = this.state;
-    console.log(titulo);
     return !loading ? (
       <Fragment>
         <Row>
