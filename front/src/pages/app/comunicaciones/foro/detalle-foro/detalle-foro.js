@@ -34,6 +34,11 @@ class DetalleForo extends Component {
         this.getTemaForo();
       }
     );
+    document.body.classList.add('no-footer');
+  }
+
+  componentWillUnmount() {
+    document.body.classList.remove('no-footer');
   }
 
   getTemaForo = async () => {

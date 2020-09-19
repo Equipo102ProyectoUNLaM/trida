@@ -2611,28 +2611,28 @@ nav .nomargin {
 .chat-input-container {
   width: 100%;
   height: 70px;
+  border-radius: 1rem;
   background: $input-background;
-  position: fixed;
   left: 0;
   right: 0;
   @include depth(1);
   transition: padding $menu-collapse-time;
-  padding-left: $main-menu-width + $sub-menu-width + $main-margin;
-  padding-right: $app-menu-width + $main-margin;
+  padding-left: 2rem;
+  padding-right: 2rem;
 
   @include respond-below(xl) {
-    padding-left: $main-menu-width-lg + $main-margin-lg;
-    padding-right: $app-menu-width + $main-margin-lg;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   @include respond-below(lg) {
-    padding-left: $main-menu-width-md + $main-margin-md;
-    padding-right: $main-margin-md;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   @include respond-below(sm) {
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 2rem;
+    padding-left: 2rem;
   }
 
   input {
@@ -2654,19 +2654,19 @@ nav .nomargin {
 .menu-sub-hidden,
 .sub-hidden {
   .chat-input-container {
-    padding-left: $main-menu-width + $main-margin;
+    padding-left: 2rem;
 
     @include respond-below(xl) {
-      padding-left: $main-menu-width-lg + $main-margin-lg;
+      padding-left: 2rem;
     }
 
     @include respond-below(lg) {
-      padding-left: $main-menu-width-md + $main-margin-md;
+      padding-left: 2rem;
     }
 
     @include respond-below(sm) {
-      padding-right: 15px;
-      padding-left: 15px;
+      padding-right: 2rem;
+      padding-left: 2rem; 
     }
   }
 }
@@ -2675,19 +2675,19 @@ nav .nomargin {
 .menu-hidden,
 .main-hidden {
   .chat-input-container {
-    padding-left: $main-margin;
+    padding-left: 2rem;
 
     @include respond-below(xl) {
-      padding-left: $main-margin-lg;
+      padding-left: 2rem;
     }
 
     @include respond-below(lg) {
-      padding-left: $main-margin-md;
+      padding-left: 2rem;
     }
 
     @include respond-below(sm) {
-      padding-right: 15px;
-      padding-left: 15px;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
   }
 }
@@ -8753,41 +8753,41 @@ i.large-icon {
 
   /*Chat Input Container*/
   .chat-input-container {
-    padding-right: $main-menu-width + $main-margin + $sub-menu-width;
-    padding-left: $app-menu-width + $main-margin;
+    padding-right: 2rem;
+    padding-left: 2rem;
 
     @include respond-below(xl) {
-      padding-right: $main-menu-width-lg + $main-margin-lg + $sub-menu-width-lg;
-      padding-left: $app-menu-width + $main-margin-lg;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
 
     @include respond-below(lg) {
-      padding-right: $main-menu-width-md + $main-margin-md + $sub-menu-width-md;
-      padding-left: $main-margin-md;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
 
     @include respond-below(sm) {
-      padding-right: 15px;
-      padding-left: 15px;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
   }
 
   .menu-sub-hidden,
   .sub-hidden {
     .chat-input-container {
-      padding-right: $main-menu-width + $main-margin;
+      padding-right: 2rem;
 
       @include respond-below(xl) {
-        padding-right: $main-menu-width-lg + $main-margin-lg;
+        padding-right: 2rem;
       }
 
       @include respond-below(lg) {
-        padding-right: $main-menu-width-md + $main-margin-md;
+        padding-right: 2rem;
       }
 
       @include respond-below(sm) {
-        padding-right: 15px;
-        padding-left: 15px;
+        padding-right: 2rem;
+        padding-left: 2rem;
       }
     }
   }
@@ -8796,19 +8796,19 @@ i.large-icon {
   .menu-hidden,
   .main-hidden {
     .chat-input-container {
-      padding-right: $main-margin;
+      padding-right: 2rem;
 
       @include respond-below(xl) {
-        padding-right: $main-margin-lg;
+        padding-right: 2rem;
       }
 
       @include respond-below(lg) {
-        padding-right: $main-margin-md;
+        padding-right: 2rem;
       }
 
       @include respond-below(sm) {
-        padding-right: 15px;
-        padding-left: 15px;
+        padding-right: 2rem;
+        padding-left: 2rem;
       }
     }
   }
