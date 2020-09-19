@@ -4011,6 +4011,10 @@ div[data-notify="container"] {
   left: 275px;
 }
 
+.error-l-325 .invalid-feedback {
+  left: 325px;
+}
+
 .error-t-negative .invalid-feedback {
   top: -10px;
 }
@@ -8102,6 +8106,11 @@ i.large-icon {
   .error-l-275 .invalid-feedback {
     left: initial;
     right: 275px;
+  }
+
+  .error-l-325 .invalid-feedback {
+    left: initial;
+    right: 325px;
   }
 
   .app-menu {
