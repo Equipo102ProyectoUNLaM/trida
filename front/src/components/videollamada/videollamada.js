@@ -33,10 +33,9 @@ const Videollamada = ({
   );
   const [listaAsistencia, setListaAsistencia] = useState([]);
   const pizarronURI = '/pizarron';
-  const [modalPreguntasOpen, setmodalPreguntasOpen] = useState(false);
+  const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
-  const [preguntaALanzar, setpreguntaALanzar] = useState();
-  const [preguntaLanzada, setpreguntaLanzada] = useState({}); // ver si hago andar este y vuelo la var preguntaLanzadaGlobal
+  const [preguntaALanzar, setPreguntaALanzar] = useState();
 
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
 
@@ -59,23 +58,19 @@ const Videollamada = ({
   };
 
   const toggleModalPreguntas = () => {
-    setmodalPreguntasOpen(!modalPreguntasOpen);
-  };
-
-  const toggleModalPreview = () => {
-    setModalPreviewOpen(!modalPreviewOpen);
+    setModalPreguntasOpen(!modalPreguntasOpen);
   };
 
   const onSelectPregunta = (idPregunta) => {
-    setpreguntaALanzar(idPregunta);
+    setPreguntaALanzar(idPregunta);
   };
 
+  // Metodo para lanzar pregunta cuando estás con rol de profesor
   const onLanzarPregunta = () => {
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
     });
-    setpreguntaLanzada(preguntaALanzar); // aca no se si va xq ya tengo el preguntaLanzadaGlobal
-    setpreguntaALanzar(null);
+    setPreguntaALanzar(null);
     toggleModalPreguntas();
   };
 
@@ -83,6 +78,7 @@ const Videollamada = ({
     getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
   }, []);
 
+  // Obtengo la pregunta que lanzó el profe y la muestro en el modal Preview al alumno
   const getPreguntaLanzada = (documents) => {
     preguntasOnSnapshot.length = 0; // Reinicio el array de las preguntas que escucho en RT de firestore
     documents.forEach((doc) => {
@@ -94,8 +90,6 @@ const Videollamada = ({
         })
       );
     });
-
-    console.log('preguntasOnSnapshot', preguntasOnSnapshot);
 
     const preguntaLanzadaEncriptada = [];
     const preguntaLanzada = preguntasOnSnapshot.find(
@@ -115,14 +109,31 @@ const Videollamada = ({
         preguntaLanzadaEncriptada,
         sinRespuesta
       );
-      toggleModalPreview();
+      toggleModalPreviewPreguntaAlumno();
     }
-    console.log('preguntaLanzadaGlobal', preguntaLanzadaGlobal);
   };
 
   const closeModalPreguntas = () => {
-    setpreguntaALanzar(null);
+    setPreguntaALanzar(null);
     toggleModalPreguntas();
+  };
+
+  //Metodo que se ejecuta cuando el alumno responde una pregunta
+  const respuestaDeAlumno = () => {
+    // NOTA: POR AHORA, PONGO EN FALSE EL LANZADA CUANDO EL ALUMNO CLICKEA EN "CERRAR", DESPUÉS AGREGO LA LÓGICA DE QUE SE HAGA CON TIMER
+    editDocument(`clases/${idClase}/preguntas`, preguntaLanzadaGlobal[0].id, {
+      lanzada: false,
+    });
+
+    // Limpio la pregunta lanzada
+    preguntaLanzadaGlobal = [];
+    //Cierro modal
+    toggleModalPreviewPreguntaAlumno();
+  };
+
+  //Este metodo se ejecuta cuando se clickea en Cerrar en la modal de Preview de la pregunta
+  const toggleModalPreviewPreguntaAlumno = () => {
+    setModalPreviewOpen(!modalPreviewOpen);
   };
 
   const guardarListaAsistencia = async () => {
@@ -276,19 +287,16 @@ const Videollamada = ({
           </ModalFooter>
         </ModalGrande>
       )}
-      {console.log('modalPreviewOpen', modalPreviewOpen)}
-      {console.log(
-        'preguntaLanzadaGlobalPreVistaPrevia',
-        preguntaLanzadaGlobal
-      )}
+      {/* CUANDO SE HAGA LOGICA DE LA RTA, SE AGREGA LA VALIDACIÓN DE QUE NO ESTÉ RESPONDIDA PARA MOSTRAR EL MODAL */}
       {rol === ROLES.Alumno && preguntaLanzadaGlobal.length > 0 && (
         <ModalVistaPreviaPreguntas
-          toggle={toggleModalPreview}
+          toggle={toggleModalPreviewPreguntaAlumno}
           isOpen={modalPreviewOpen}
           preguntas={preguntaLanzadaGlobal}
+          esRespuestaDeAlumno={true}
+          onRespuestaDeAlumno={respuestaDeAlumno}
         />
       )}
-
       <div id={parentNode}></div>
     </Fragment>
   );

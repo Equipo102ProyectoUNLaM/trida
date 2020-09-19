@@ -280,9 +280,6 @@ class TabsDeClase extends Component {
     );
 
     const { subCollection } = claseConPreguntas;
-    console.log('subcollection', subCollection);
-    //subCollection[] .data -> info
-    //subCollection[] .id -> idDoc
 
     //Desencripto las preguntas
     const sinRespuesta = true;
@@ -291,14 +288,13 @@ class TabsDeClase extends Component {
       sinRespuesta
     );
 
+    //Ordeno preguntas por número
     this.setState({
       preguntasDeClase: preguntasDesencriptadas.sort(
         (a, b) => a.data.numero - b.data.numero
       ),
       isLoading: false,
     });
-
-    console.log('pregClase', this.state.preguntasDeClase);
   };
 
   render() {
