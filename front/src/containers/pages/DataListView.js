@@ -66,15 +66,12 @@ class DataListView extends React.Component {
       sonPreguntas,
     } = this.props;
     return (
-      <Colxx
-        xxs="12"
-        className={`mb-3 ${this.state.focused ? 'focused' : ''}`}
-        id={id}
-      >
+      <Colxx xxs="12" className="mb-3" id={id}>
         <ContextMenuTrigger id="menu_id" data={id} collect={collect}>
           <Card
             className={classnames('d-flex flex-row', {
               active: isSelect,
+              focused: this.state.focused,
             })}
           >
             <div className="pl-2 d-flex flex-grow-1 min-width-zero">
