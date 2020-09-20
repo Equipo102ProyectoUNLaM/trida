@@ -34,6 +34,7 @@ const CorreccionTexto = ({ location }, rol) => {
     estadoCorreccionVer,
     notaCorreccionVer,
     comentarioVer,
+    extension,
   } = location;
   const [verCorr, setVerCorreccion] = useState(verCorreccion);
   const [modalConfirmacion, setModalConfirmacion] = useState(false);
@@ -122,7 +123,7 @@ const CorreccionTexto = ({ location }, rol) => {
           'toolsHeader',
         ]);
       }
-      instance.loadDocument(url, { documentId: 'id2' });
+      instance.loadDocument(url, { documentId: 'id2', extension: extension });
       const { docViewer, Annotations } = instance;
       const annotManager = docViewer.getAnnotationManager();
 
@@ -141,6 +142,20 @@ const CorreccionTexto = ({ location }, rol) => {
       });
 
       if (!verCorr) {
+        let type = 'application/pdf';
+        if (extension === 'docx') {
+          type =
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        }
+        if (extension === 'xlsx') {
+          type =
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        }
+        if (extension === 'pptx') {
+          type =
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+        }
+
         document
           .getElementById('guardar')
           .addEventListener('click', async () => {
@@ -149,7 +164,7 @@ const CorreccionTexto = ({ location }, rol) => {
             const options = { xfdfString, flatten: true };
             const data = await doc.getFileData(options);
             const arr = new Uint8Array(data);
-            const blob = new Blob([arr], { type: 'application/pdf' });
+            const blob = new Blob([arr], { type });
             setBlob(blob);
             setModalConfirmacion(true);
           });

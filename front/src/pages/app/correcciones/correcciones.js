@@ -84,6 +84,7 @@ class Correcciones extends Component {
 
   onCorrection = (id, idArchivo, file) => {
     const idStorage = idArchivo.split('.')[0];
+    const extension = idArchivo.split('.')[1];
     this.setState({
       archivoACorregir: file,
       idStorage,
@@ -94,6 +95,7 @@ class Correcciones extends Component {
       subjectId: this.props.subject.id,
       url: file,
       idStorage,
+      extension,
       id,
       verCorreccion: false,
     });
@@ -101,6 +103,7 @@ class Correcciones extends Component {
 
   onVerCorrection = async (idArchivo, estado, nota, comentario) => {
     const idStorage = idArchivo.split('.')[0];
+    const extension = idArchivo.split('.')[1];
     const correccionAlumnoUrl = await this.getFileURL(
       idStorage + '-correccion'
     );
@@ -115,6 +118,7 @@ class Correcciones extends Component {
         estadoCorreccionVer: estado,
         notaCorreccionVer: nota,
         comentarioVer: comentario,
+        extension,
       });
       this.setState({ verCorreccion: false });
     }
