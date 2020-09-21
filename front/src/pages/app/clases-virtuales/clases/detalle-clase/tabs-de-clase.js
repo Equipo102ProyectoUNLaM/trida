@@ -282,7 +282,7 @@ class TabsDeClase extends Component {
     const { subCollection } = claseConPreguntas;
 
     //Desencripto las preguntas
-    const sinRespuesta = true;
+    const sinRespuesta = false;
     const preguntasDesencriptadas = desencriptarEjercicios(
       subCollection,
       sinRespuesta
