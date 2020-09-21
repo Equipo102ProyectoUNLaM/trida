@@ -215,7 +215,7 @@ class FormEvaluacion extends React.Component {
         'evaluaciones',
         this.state.evaluacionId,
         obj,
-        'Evaluación'
+        'Evaluación editada'
       );
 
       this.state.ejercicios.forEach(async (element) => {

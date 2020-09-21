@@ -13,7 +13,7 @@ class DataListView extends React.Component {
     if (date) {
       const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
       if (date) {
-        await editDocument('practicas', this.props.id, obj, 'Práctica');
+        await editDocument('practicas', this.props.id, obj, 'Práctica editada');
       }
     }
   };
