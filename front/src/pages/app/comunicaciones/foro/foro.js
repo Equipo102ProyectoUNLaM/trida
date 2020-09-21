@@ -14,7 +14,7 @@ import {
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 const publicUrl = process.env.PUBLIC_URL;
-const imagenForo = `${publicUrl}/assets/img/imagen-clase.jpeg`;
+const imagenForo = `${publicUrl}/assets/img/imagen-foro.jpeg`;
 
 function collect(props) {
   return { data: props.data };
