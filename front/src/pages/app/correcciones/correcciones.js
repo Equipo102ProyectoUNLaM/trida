@@ -90,32 +90,44 @@ class Correcciones extends Component {
             buttonText={null}
           />
           <Row>
-            {items.map((correccion) => {
-              return (
-                <DataListView
-                  key={correccion.id + 'dataList'}
-                  id={correccion.id}
-                  title={correccion.data.nombre}
-                  text1={
-                    correccion.data.mensaje !== undefined
-                      ? 'Mensaje: ' + correccion.data.mensaje
-                      : null
-                  }
-                  text2={
-                    rol !== ROLES.Alumno
-                      ? 'Alumno: ' + correccion.data.alumno
-                      : ' '
-                  }
-                  file={correccion.data.url}
-                  onCorrection={
-                    rol === ROLES.Docente ? this.onCorrection : null
-                  }
-                  isSelect={this.state.selectedItems.includes(correccion.id)}
-                  navTo="#"
-                  collect={collect}
+            {rolDocente && (
+              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                <input
+                  type="text"
+                  name="keyword"
+                  id="search"
+                  placeholder="Búsqueda por alumno, estado, nombre de actividad, tipo de actividad..."
+                  onChange={(e) => this.onSearchKey(e)}
                 />
-              );
-            })}{' '}
+              </div>
+            )}
+            {!isEmpty(items) &&
+              items.map((correccion) => {
+                return (
+                  <DataListView
+                    key={correccion.id + 'dataList'}
+                    id={correccion.id}
+                    idArchivo={correccion.data.idArchivo}
+                    dataCorreccion={correccion.data}
+                    title={correccion.data.nombre}
+                    text1={
+                      correccion.data.mensaje !== undefined
+                        ? 'Mensaje: ' + correccion.data.mensaje
+                        : null
+                    }
+                    text2={
+                      rolDocente ? 'Alumno: ' + correccion.data.alumno : ' '
+                    }
+                    estado={correccion.data.estado}
+                    file={correccion.data.url}
+                    onCorrection={rolDocente ? this.onCorrection : null}
+                    onVerCorrection={this.onVerCorrection}
+                    isSelect={this.state.selectedItems.includes(correccion.id)}
+                    navTo="#"
+                    collect={collect}
+                  />
+                );
+              })}{' '}
           </Row>
         </div>
       </Fragment>
