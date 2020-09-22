@@ -8,6 +8,7 @@ import ROLES from 'constants/roles';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import DataListView from 'containers/pages/DataListView';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
+import { isEmpty } from 'helpers/Utils';
 
 function collect(props) {
   return { data: props.data };
@@ -32,6 +33,7 @@ class Correcciones extends Component {
       rolDocente: this.props.rol === ROLES.Docente,
       correccionAlumnoUrl: '',
       verCorreccion: false,
+      arrayItemsFiltrado: [],
     };
   }
 
@@ -63,6 +65,7 @@ class Correcciones extends Component {
 
     this.setState({
       items: arrayDeObjetos,
+      arrayOriginal: arrayDeObjetos,
       selectedItems: [],
       isLoading: false,
       correccionId: '',
@@ -124,6 +127,25 @@ class Correcciones extends Component {
     }
   };
 
+  onSearchKey = (search) => {
+    const { target } = search;
+    const { value } = target;
+    const busqueda = value.toLowerCase();
+
+    const itemsArray = [...this.state.arrayOriginal];
+    const arrayFiltrado = itemsArray.filter((elem) => {
+      return (
+        elem.data.alumno.toLowerCase().includes(busqueda) ||
+        elem.data.nombre.toLowerCase().includes(busqueda) ||
+        elem.data.tipo.toLowerCase().includes(busqueda) ||
+        elem.data.estado.toLowerCase() === busqueda
+      );
+    });
+    this.setState({
+      items: arrayFiltrado,
+    });
+  };
+
   render() {
     const { isLoading, items, rolDocente } = this.state;
     return isLoading ? (
@@ -137,31 +159,48 @@ class Correcciones extends Component {
             buttonText={null}
           />
           <Row>
-            {items.map((correccion) => {
-              return (
-                <DataListView
-                  key={correccion.id + 'dataList'}
-                  id={correccion.id}
-                  idArchivo={correccion.data.idArchivo}
-                  dataCorreccion={correccion.data}
-                  title={correccion.data.nombre}
-                  text1={
-                    correccion.data.mensaje !== undefined
-                      ? 'Mensaje: ' + correccion.data.mensaje
-                      : null
-                  }
-                  text2={rolDocente ? 'Alumno: ' + correccion.data.alumno : ' '}
-                  estado={correccion.data.estado}
-                  file={correccion.data.url}
-                  onCorrection={rolDocente ? this.onCorrection : null}
-                  onVerCorrection={this.onVerCorrection}
-                  isSelect={this.state.selectedItems.includes(correccion.id)}
-                  navTo="#"
-                  collect={collect}
-                />
-              );
-            })}{' '}
+            <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+              <input
+                type="text"
+                name="keyword"
+                id="search"
+                placeholder="Búsqueda por alumno, estado, nombre de actividad, tipo de actividad..."
+                onChange={(e) => this.onSearchKey(e)}
+              />
+            </div>
+            {!isEmpty(items) &&
+              items.map((correccion) => {
+                return (
+                  <DataListView
+                    key={correccion.id + 'dataList'}
+                    id={correccion.id}
+                    idArchivo={correccion.data.idArchivo}
+                    dataCorreccion={correccion.data}
+                    title={correccion.data.nombre}
+                    text1={
+                      correccion.data.mensaje !== undefined
+                        ? 'Mensaje: ' + correccion.data.mensaje
+                        : null
+                    }
+                    text2={
+                      rolDocente ? 'Alumno: ' + correccion.data.alumno : ' '
+                    }
+                    estado={correccion.data.estado}
+                    file={correccion.data.url}
+                    onCorrection={rolDocente ? this.onCorrection : null}
+                    onVerCorrection={this.onVerCorrection}
+                    isSelect={this.state.selectedItems.includes(correccion.id)}
+                    navTo="#"
+                    collect={collect}
+                  />
+                );
+              })}{' '}
           </Row>
+          {isEmpty(items) && (
+            <Row className="ml-0">
+              <span>No hay resultados</span>
+            </Row>
+          )}
         </div>
         {/* {correccionImagen && (
           <Modal
