@@ -40,10 +40,14 @@ class CardTabs extends Component {
     const { focused } = this.state;
     if (focused) {
       const el = document.querySelector(`[id='${this.props.item.id}']`);
-      el.scrollIntoView({
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
         behavior: 'smooth',
-        block: 'start',
       });
+
       setTimeout(() => {
         this.setState({ focused: null });
       }, 3000);

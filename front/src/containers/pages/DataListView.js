@@ -21,9 +21,12 @@ class DataListView extends React.Component {
     const { focused } = this.state;
     if (focused) {
       const el = document.querySelector(`[id='${this.props.id}']`);
-      el.scrollIntoView({
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
         behavior: 'smooth',
-        block: 'start',
       });
       setTimeout(() => {
         this.setState({ focused: null });
