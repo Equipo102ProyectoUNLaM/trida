@@ -560,6 +560,7 @@ export const getDatosClaseOnSnapshot = (collection, document, callback) => {
 
 export const getCollectionOnSnapshot = async (collection, callback) => {
   return await firestore.collection(collection).onSnapshot(callback);
+};
 
 export const generateId = (path) => {
   return firestore.collection(path).doc().id;
