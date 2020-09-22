@@ -14,7 +14,6 @@ class DataListView extends React.Component {
     this.state = {
       focused: window.location.hash.replace('#', '') === this.props.id,
     };
-    console.log(this.state.focused);
   }
 
   componentDidMount() {
