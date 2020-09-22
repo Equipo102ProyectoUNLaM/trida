@@ -159,15 +159,17 @@ class Correcciones extends Component {
             buttonText={null}
           />
           <Row>
-            <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-              <input
-                type="text"
-                name="keyword"
-                id="search"
-                placeholder="Búsqueda por alumno, estado, nombre de actividad, tipo de actividad..."
-                onChange={(e) => this.onSearchKey(e)}
-              />
-            </div>
+            {rolDocente && (
+              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                <input
+                  type="text"
+                  name="keyword"
+                  id="search"
+                  placeholder="Búsqueda por alumno, estado, nombre de actividad, tipo de actividad..."
+                  onChange={(e) => this.onSearchKey(e)}
+                />
+              </div>
+            )}
             {!isEmpty(items) &&
               items.map((correccion) => {
                 return (
