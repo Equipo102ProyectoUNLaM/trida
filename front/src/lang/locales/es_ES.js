@@ -115,8 +115,8 @@ module.exports = {
   'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
   'clase.agregar-link': 'Link *',
   'clase.descripcion-link': 'Descripción link',
-
   'clase.crear-pregunta': 'Crear Preguntas para la Clase',
+  'clase.lanzar-pregunta': 'Lanzar Pregunta',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',

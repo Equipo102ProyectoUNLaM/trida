@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Button } from 'reactstrap';
+import { Card, Row, Button, Badge } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
@@ -42,6 +42,10 @@ class DataListView extends React.Component {
       onUploadFile,
       onCorrection,
       sonPreguntas,
+      modalLanzarPreguntas,
+      preguntaALanzar,
+      onSelectPregunta,
+      seLanzo,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -51,13 +55,36 @@ class DataListView extends React.Component {
               active: isSelect,
             })}
           >
-            <div className="pl-2 d-flex flex-grow-1 min-width-zero">
+            <div
+              className={
+                preguntaALanzar === id
+                  ? 'pl-2 d-flex flex-grow-1 min-width-zero preguntaSeleccionada'
+                  : 'pl-2 d-flex flex-grow-1 min-width-zero'
+              }
+            >
               {sonPreguntas && (
                 <p className=" list-item-heading mb-1 truncate card-body">
                   {title}
                 </p>
               )}
-              {!sonPreguntas && (
+              {modalLanzarPreguntas && (
+                <p
+                  className="list-item-heading mb-1 truncate card-body modalLanzarPreguntas"
+                  onClick={() => onSelectPregunta(id)}
+                >
+                  {title}
+                </p>
+              )}
+              {modalLanzarPreguntas && seLanzo && (
+                <Badge
+                  color="danger"
+                  pill
+                  className="mb-1 position-absolute badge-top-right-1"
+                >
+                  LANZADA
+                </Badge>
+              )}
+              {!sonPreguntas && !modalLanzarPreguntas && (
                 <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
                   <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                     <p className="list-item-heading mb-1 truncate practicas-list-label">
