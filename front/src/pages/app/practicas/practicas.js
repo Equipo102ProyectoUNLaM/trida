@@ -6,6 +6,7 @@ import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormPractica from './form-practica';
+import FormSubirPractica from './form-subir-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
@@ -30,6 +31,7 @@ class Practica extends Component {
       idItemSelected: null,
       practicaId: '',
       idMateria: this.props.subject.id,
+      modalUploadFileOpen: false,
     };
   }
 
@@ -92,6 +94,17 @@ class Practica extends Component {
     this.toggleDeleteModal();
   };
 
+  toggleUploadFileModal = (id) => {
+    this.setState({
+      modalUploadFileOpen: !this.state.modalUploadFileOpen,
+      idItemSelected: id,
+    });
+  };
+
+  onFileUploaded = () => {
+    this.toggleUploadFileModal();
+  };
+
   deletePractice = async () => {
     await logicDeleteDocument('practicas', this.state.practicaId, 'Práctica');
     this.setState({
@@ -144,6 +157,7 @@ class Practica extends Component {
       idItemSelected,
       isLoading,
       items,
+      modalUploadFileOpen,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -190,6 +204,9 @@ class Practica extends Component {
                     rol === ROLES.Docente ? this.toggleEditModal : null
                   }
                   onDelete={rol === ROLES.Docente ? this.onDelete : null}
+                  onUploadFile={
+                    rol === ROLES.Alumno ? this.toggleUploadFileModal : null
+                  }
                   navTo="#"
                   collect={collect}
                   calendario={rol === ROLES.Docente ? true : false}
@@ -208,6 +225,20 @@ class Practica extends Component {
                 onPracticaOperacion={this.onPracticaEditada}
                 textConfirm="Editar"
                 operationType="edit"
+                id={idItemSelected}
+              />
+            </ModalGrande>
+          )}
+          {modalUploadFileOpen && (
+            <ModalGrande
+              modalOpen={modalUploadFileOpen}
+              toggleModal={this.toggleUploadFileModal}
+              modalHeader="activity.upload"
+            >
+              <FormSubirPractica
+                toggleModal={this.toggleUploadFileModal}
+                onSubirPracticaOperacion={this.onFileUploaded}
+                textConfirm="Subir Práctica"
                 id={idItemSelected}
               />
             </ModalGrande>

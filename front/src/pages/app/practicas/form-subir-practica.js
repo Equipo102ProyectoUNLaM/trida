@@ -1,23 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 import { formPracticaSchema } from './validations';
 import { storage } from 'helpers/Firebase';
 import FileUploader from 'react-firebase-file-uploader';
 
-class FormPractica extends React.Component {
+class FormSubirPractica extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       nombre: '',
-      descripcion: '',
-      fechaLanzada: '',
-      fechaVencimiento: '',
+      mensaje: '',
       idMateria: '',
-      estado: '',
       isLoading: true,
       isFileUploading: false,
       isFileUploaded: false,
@@ -28,11 +25,14 @@ class FormPractica extends React.Component {
   }
 
   componentDidMount() {
-    this.getDoc();
+    //this.getDoc();
+    this.setState({
+      isLoading: false,
+    });
   }
 
   getDoc = async () => {
-    if (this.props.id) {
+    /* if (this.props.id) {
       const { data } = await getDocument(`practicas/${this.props.id}`);
       const {
         nombre,
@@ -40,7 +40,6 @@ class FormPractica extends React.Component {
         fechaLanzada,
         fechaVencimiento,
         idArchivo,
-        estado,
       } = data;
       this.setState({
         nombre,
@@ -48,13 +47,12 @@ class FormPractica extends React.Component {
         fechaLanzada,
         fechaVencimiento,
         file: idArchivo,
-        estado,
       });
     }
     this.setState({
       isLoading: false,
     });
-    return;
+    return;*/
   };
 
   handleChange = (event) => {
@@ -63,7 +61,7 @@ class FormPractica extends React.Component {
   };
 
   handleUploadStart = () => {
-    if (this.state.file !== '') {
+    if (this.state.file != '') {
       this.handleDeleteFile();
     }
     this.setState({ isFileUploading: true, fileUploadProgress: 0 });
@@ -85,7 +83,7 @@ class FormPractica extends React.Component {
       isFileUploaded: true,
     });
     storage
-      .ref('materias/' + this.props.subject.id + '/practicas/')
+      .ref('materias/' + this.props.subject.id + '/correcciones/')
       .child(filename)
       .getDownloadURL()
       .then((url) => this.setState({ fileURL: url }));
@@ -93,7 +91,7 @@ class FormPractica extends React.Component {
 
   handleDeleteFile = async () => {
     storage
-      .ref('materias/' + this.props.subject.id + '/practicas/')
+      .ref('materias/' + this.props.subject.id + '/correcciones/')
       .child(this.state.file)
       .delete();
     this.setState({
@@ -105,117 +103,90 @@ class FormPractica extends React.Component {
     });
   };
 
-  onPracticaSubmit = async (values) => {
-    const { nombre, descripcion, fechaLanzada, fechaVencimiento } = values;
-    if (this.props.operationType === 'add') {
-      const obj = {
-        nombre: nombre,
-        fechaLanzada: fechaLanzada,
-        descripcion: descripcion,
-        fechaVencimiento: fechaVencimiento,
-        idMateria: this.props.subject.id,
-        idArchivo: this.state.file,
-        estado: 'pendiente',
-      };
-      await addDocument(
-        'practicas',
-        obj,
-        this.props.user,
-        'Práctica agregada',
-        'Práctica agregada exitosamente',
-        'Error al agregar la práctica'
-      );
-    } else {
-      const obj = {
-        nombre: nombre,
-        fechaLanzada: fechaLanzada,
-        descripcion: descripcion,
-        fechaVencimiento: fechaVencimiento,
-        idArchivo: this.state.file,
-        estado: 'pendiente',
-      };
-      await editDocument('practicas', this.props.id, obj, 'Práctica editada');
-    }
+  onFileSubmit = async (values) => {
+    const nombrePractica = await this.getNombrePractica();
+    const { mensaje } = values;
+    const obj = {
+      nombre: nombrePractica,
+      mensaje: mensaje,
+      idPractica: this.props.id,
+      idUsuario: this.props.user,
+      idMateria: this.props.subject.id,
+      idArchivo: this.state.file,
+      tipo: 'practica',
+    };
+    await addDocument(
+      'correcciones',
+      obj,
+      this.props.user,
+      'Práctica subida',
+      'Práctica subida exitosamente',
+      'Error al subir la práctica'
+    );
+    await this.editPracticaEstado();
 
-    this.props.onPracticaOperacion();
+    this.props.onSubirPracticaOperacion();
   };
 
-  render() {
-    const { toggleModal, textConfirm } = this.props;
+  editPracticaEstado = async () => {
+    const obj = this.getDoc();
+    await editDocument('practicas', this.props.id, obj, null);
+  };
+
+  getDoc = async () => {
+    const { data } = await getDocument(`practicas/${this.props.id}`);
     const {
-      isLoading,
       nombre,
       descripcion,
       fechaLanzada,
       fechaVencimiento,
-    } = this.state;
+      idArchivo,
+      estado,
+    } = data;
+    const obj = {
+      nombre: nombre,
+      fechaLanzada: fechaLanzada,
+      descripcion: descripcion,
+      fechaVencimiento: fechaVencimiento,
+      idMateria: this.props.subject.id,
+      idArchivo: idArchivo,
+      estado: 'subida',
+    };
+
+    return obj;
+  };
+
+  getNombrePractica = async () => {
+    const { data } = await getDocument(`practicas/${this.props.id}`);
+    const { nombre } = data;
+    return nombre;
+  };
+
+  render() {
+    const { toggleModal, textConfirm } = this.props;
+    const { isLoading, nombre, mensaje } = this.state;
     const initialValues = {
       nombre: nombre,
-      descripcion: descripcion,
-      fechaLanzada: fechaLanzada,
-      fechaVencimiento: fechaVencimiento,
+      mensaje: mensaje,
     };
     return isLoading ? (
       <div className="loading" />
     ) : (
       <Formik
         initialValues={initialValues}
-        onSubmit={this.onPracticaSubmit}
-        validationSchema={formPracticaSchema}
+        onSubmit={this.onFileSubmit}
+        //validationSchema={formSubirPracticaSchema}
       >
         {({ errors, touched }) => (
           <Form className="av-tooltip tooltip-label-right">
-            <FormGroup className="mb-3 error-l-150">
-              <Label>Nombre de la practica</Label>
-              <Field className="form-control" name="nombre" type="textarea" />
-              {errors.nombre && touched.nombre && (
-                <div className="invalid-feedback d-block">{errors.nombre}</div>
-              )}
-            </FormGroup>
-
             <FormGroup className="mb-3 error-l-75">
-              <Label>Descripción</Label>
-              <Field
-                className="form-control"
-                name="descripcion"
-                type="textarea"
-              />
-              {errors.descripcion && touched.descripcion && (
-                <div className="invalid-feedback d-block">
-                  {errors.descripcion}
-                </div>
+              <Label>Mensaje</Label>
+              <Field className="form-control" name="mensaje" type="textarea" />
+              {errors.mensaje && touched.mensaje && (
+                <div className="invalid-feedback d-block">{errors.mensaje}</div>
               )}
             </FormGroup>
 
-            <FormGroup className="mb-3 error-l-100">
-              <Label>Fecha Lanzada</Label>
-              <Field
-                className="form-control"
-                name="fechaLanzada"
-                type="date"
-                placeholder="DD/MM/AAAA"
-              />
-              {errors.fechaLanzada && touched.fechaLanzada && (
-                <div className="invalid-feedback d-block">
-                  {errors.fechaLanzada}
-                </div>
-              )}
-            </FormGroup>
-
-            <FormGroup className="mb-3 error-l-125">
-              <Label>Fecha Vencimiento</Label>
-              <Field
-                className="form-control"
-                name="fechaVencimiento"
-                type="date"
-                placeholder="DD/MM/AAAA"
-              />
-              {errors.fechaVencimiento && touched.fechaVencimiento && (
-                <div className="invalid-feedback d-block">
-                  {errors.fechaVencimiento}
-                </div>
-              )}
-            </FormGroup>
             <FormGroup>
               <label className="practicas-adjuntar-button">
                 Adjuntar Archivo
@@ -224,7 +195,7 @@ class FormPractica extends React.Component {
                   name="archivo"
                   randomizeFilename
                   storageRef={storage.ref(
-                    'materias/' + this.props.subject.id + '/practicas/'
+                    'materias/' + this.props.subject.id + '/correcciones/'
                   )}
                   onUploadStart={this.handleUploadStart}
                   onUploadError={this.handleUploadError}
@@ -265,4 +236,4 @@ const mapStateToProps = ({ authUser, seleccionCurso }) => {
   return { user, subject };
 };
 
-export default connect(mapStateToProps)(FormPractica);
+export default connect(mapStateToProps)(FormSubirPractica);

@@ -2548,6 +2548,17 @@ nav .nomargin {
 
 /* 12.Chat App*/
 .chat-app {
+
+  .back-forums {
+    align-self: center;
+  }
+
+  .chat-message {
+    width: auto;
+    min-width: 20rem;
+    max-width: 100rem;
+  }
+
   .scrollbar-container {
     padding-left: 10px;
     margin-left: -10px;
@@ -2573,11 +2584,11 @@ nav .nomargin {
   }
 
   .chat-text-left {
-    padding-left: 64px;
+    padding-left: 3rem;
   }
 
   .chat-text-right {
-    padding-right: 64px;
+    padding-right: 3rem;
   }
 
   .list-item-heading {
@@ -2603,36 +2614,35 @@ nav .nomargin {
 
 .chat-input-container {
   width: 100%;
-  height: 90px;
+  height: 70px;
+  border-radius: 1rem;
   background: $input-background;
-  position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
   @include depth(1);
   transition: padding $menu-collapse-time;
-  padding-left: $main-menu-width + $sub-menu-width + $main-margin;
-  padding-right: $app-menu-width + $main-margin;
+  padding-left: 2rem;
+  padding-right: 2rem;
 
   @include respond-below(xl) {
-    padding-left: $main-menu-width-lg + $main-margin-lg;
-    padding-right: $app-menu-width + $main-margin-lg;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   @include respond-below(lg) {
-    padding-left: $main-menu-width-md + $main-margin-md;
-    padding-right: $main-margin-md;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   @include respond-below(sm) {
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 2rem;
+    padding-left: 2rem;
   }
 
   input {
     border: initial;
     width: unset;
-    height: 90px;
+    height: 70px;
     padding-left: 0;
     display: inline-block;
   }
@@ -2648,19 +2658,19 @@ nav .nomargin {
 .menu-sub-hidden,
 .sub-hidden {
   .chat-input-container {
-    padding-left: $main-menu-width + $main-margin;
+    padding-left: 2rem;
 
     @include respond-below(xl) {
-      padding-left: $main-menu-width-lg + $main-margin-lg;
+      padding-left: 2rem;
     }
 
     @include respond-below(lg) {
-      padding-left: $main-menu-width-md + $main-margin-md;
+      padding-left: 2rem;
     }
 
     @include respond-below(sm) {
-      padding-right: 15px;
-      padding-left: 15px;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
   }
 }
@@ -2669,19 +2679,19 @@ nav .nomargin {
 .menu-hidden,
 .main-hidden {
   .chat-input-container {
-    padding-left: $main-margin;
+    padding-left: 2rem;
 
     @include respond-below(xl) {
-      padding-left: $main-margin-lg;
+      padding-left: 2rem;
     }
 
     @include respond-below(lg) {
-      padding-left: $main-margin-md;
+      padding-left: 2rem;
     }
 
     @include respond-below(sm) {
-      padding-right: 15px;
-      padding-left: 15px;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
   }
 }
@@ -2786,7 +2796,7 @@ nav .nomargin {
 /* 15.Main*/
 .main-app {
   margin-left: $sub-menu-width + $main-menu-width + $main-margin;
-  margin-top: $navbar-height + $main-margin - 15;
+  margin-top: $navbar-height + $main-margin - 30;
   margin-right: $main-margin;
   margin-bottom: $main-margin - 20;
   transition: margin-left $menu-collapse-time;
@@ -4009,6 +4019,10 @@ div[data-notify="container"] {
 
 .error-l-275 .invalid-feedback {
   left: 275px;
+}
+
+.error-l-325 .invalid-feedback {
+  left: 325px;
 }
 
 .error-t-negative .invalid-feedback {
@@ -8104,6 +8118,11 @@ i.large-icon {
     right: 275px;
   }
 
+  .error-l-325 .invalid-feedback {
+    left: initial;
+    right: 325px;
+  }
+
   .app-menu {
     left: 0;
     right: initial;
@@ -8747,41 +8766,41 @@ i.large-icon {
 
   /*Chat Input Container*/
   .chat-input-container {
-    padding-right: $main-menu-width + $main-margin + $sub-menu-width;
-    padding-left: $app-menu-width + $main-margin;
+    padding-right: 2rem;
+    padding-left: 2rem;
 
     @include respond-below(xl) {
-      padding-right: $main-menu-width-lg + $main-margin-lg + $sub-menu-width-lg;
-      padding-left: $app-menu-width + $main-margin-lg;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
 
     @include respond-below(lg) {
-      padding-right: $main-menu-width-md + $main-margin-md + $sub-menu-width-md;
-      padding-left: $main-margin-md;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
 
     @include respond-below(sm) {
-      padding-right: 15px;
-      padding-left: 15px;
+      padding-right: 2rem;
+      padding-left: 2rem;
     }
   }
 
   .menu-sub-hidden,
   .sub-hidden {
     .chat-input-container {
-      padding-right: $main-menu-width + $main-margin;
+      padding-right: 2rem;
 
       @include respond-below(xl) {
-        padding-right: $main-menu-width-lg + $main-margin-lg;
+        padding-right: 2rem;
       }
 
       @include respond-below(lg) {
-        padding-right: $main-menu-width-md + $main-margin-md;
+        padding-right: 2rem;
       }
 
       @include respond-below(sm) {
-        padding-right: 15px;
-        padding-left: 15px;
+        padding-right: 2rem;
+        padding-left: 2rem;
       }
     }
   }
@@ -8790,19 +8809,19 @@ i.large-icon {
   .menu-hidden,
   .main-hidden {
     .chat-input-container {
-      padding-right: $main-margin;
+      padding-right: 2rem;
 
       @include respond-below(xl) {
-        padding-right: $main-margin-lg;
+        padding-right: 2rem;
       }
 
       @include respond-below(lg) {
-        padding-right: $main-margin-md;
+        padding-right: 2rem;
       }
 
       @include respond-below(sm) {
-        padding-right: 15px;
-        padding-left: 15px;
+        padding-right: 2rem;
+        padding-left: 2rem;
       }
     }
   }
@@ -9471,7 +9490,11 @@ div.rendered-file-browser{
 }
 
 .practicas-list-label {
-  width: 20%;
+  width: 25%;
+}
+
+.datalist-button{
+  margin-right: 5%;
 }
 
 .practicas-adjuntar-button {
@@ -9479,7 +9502,7 @@ div.rendered-file-browser{
   color: #ffffff;
   padding: 10px;
   border-radius: 50px;
-  cursor: 'pointer';
+  cursor: pointer;
 }
 
 .practica-file-element {
@@ -9771,7 +9794,7 @@ div.rendered-file-browser{
  .gayceY {
    height: auto !important;
  }
-} 
+}
 
 .modal-video-footer {
   margin-top: 4rem;
@@ -9793,8 +9816,8 @@ div.rendered-file-browser{
   margin-top: 4px;
   background-color: red;
   animation-name: stretch;
-  animation-duration: 1s; 
-  animation-timing-function: ease-out; 
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
   animation-delay: 0;
   animation-direction: alternate;
   animation-iteration-count: infinite;
@@ -9816,4 +9839,17 @@ div.rendered-file-browser{
     background-color: red;
     border-radius: 100%;
   }
+}
+
+// Foro
+.row-space-between {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 2rem;
+    padding-right: 1rem;
+    margin-right: 1rem;
+}
+
+.half-height {
+  height: 60% !important;
 }

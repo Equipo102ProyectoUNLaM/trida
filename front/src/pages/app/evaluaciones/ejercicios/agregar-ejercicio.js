@@ -8,6 +8,7 @@ import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import OpcionMultipleImagen from './opcion-multiple-imagen';
+import PreguntasAleatorias from './preguntas_aleatorias';
 
 class AgregarEjercicio extends React.Component {
   constructor(props) {
@@ -94,6 +95,19 @@ class AgregarEjercicio extends React.Component {
             if (!ejer.opciones.find((x) => x.verdadera === true)) valid = false; //Ninguna verdadera
             if (ejer.opciones.find((x) => !x.opcion)) valid = false; //Alguna sin cargar opcion
             break;
+          case TIPO_EJERCICIO.preguntas_aleatorias:
+            if (!ejer.preguntas || ejer.preguntas.length === 0) {
+              valid = false;
+              break;
+            }
+            if (!ejer.cantidad) {
+              valid = false;
+              break;
+            }
+            if (ejer.preguntas.length < ejer.cantidad) {
+              valid = false;
+              break;
+            }
           default:
             break;
         }
@@ -244,6 +258,17 @@ class AgregarEjercicio extends React.Component {
                             {ejercicio.tipo ===
                               TIPO_EJERCICIO.opcion_multiple_imagen && (
                               <OpcionMultipleImagen
+                                ejercicioId={index}
+                                value={ejercicio}
+                                submitted={submitted}
+                                preview={false}
+                                onEjercicioChange={this.onEjercicioChange}
+                              />
+                            )}
+
+                            {ejercicio.tipo ===
+                              TIPO_EJERCICIO.preguntas_aleatorias && (
+                              <PreguntasAleatorias
                                 ejercicioId={index}
                                 value={ejercicio}
                                 submitted={submitted}

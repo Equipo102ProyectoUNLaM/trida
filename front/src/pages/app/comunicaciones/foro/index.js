@@ -4,12 +4,22 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Foro = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './foro')
 );
+const DetalleForo = React.lazy(() =>
+  import(
+    /* webpackChunkName: "application-todo" */ './detalle-foro/detalle-foro'
+  )
+);
 const MenuForo = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
         path={`${match.url}/`}
-        render={props => <Foro {...props} />}
+        render={(props) => <Foro {...props} />}
+        exact
+      />
+      <Route
+        path={`${match.url}/detalle-foro/:foroId`}
+        render={(props) => <DetalleForo {...props} />}
       />
       <Redirect to="/error" />
     </Switch>

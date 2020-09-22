@@ -129,11 +129,19 @@ export const getDocument = async (docRef) => {
 // trae un documento en formato objeto (id + data (objeto con datos del documento))
 // junto con la coleccion interior
 // parámetro: referencia al documento y nombre de la sub coleccion
-export const getDocumentWithSubCollection = async (docRef, subCollection) => {
+export const getDocumentWithSubCollection = async (
+  docRef,
+  subCollection,
+  orderBy = false
+) => {
   try {
     const docObj = await getDocument(docRef);
     const { id, data } = docObj;
-    const subColObj = await getCollection(docRef + '/' + subCollection);
+    const subColObj = await getCollection(
+      docRef + '/' + subCollection,
+      false,
+      orderBy
+    );
     return { id: id, data: data, subCollection: subColObj };
   } catch (err) {
     console.log('Error getting documents', err);
@@ -424,8 +432,8 @@ export const editDocument = async (collection, docId, obj, message) => {
 
   if (message) {
     NotificationManager.success(
-      `${message} editada exitosamente`,
-      `${message} editada!`,
+      `${message} exitosamente`,
+      `${message}!`,
       3000,
       null,
       null,
@@ -552,7 +560,6 @@ export const getDatosClaseOnSnapshot = (collection, document, callback) => {
 
 export const getCollectionOnSnapshot = async (collection, callback) => {
   return await firestore.collection(collection).onSnapshot(callback);
-};
 
 export const generateId = (path) => {
   return firestore.collection(path).doc().id;

@@ -218,9 +218,14 @@ class TabsDeClase extends Component {
           isLoading: false,
         },
         async () =>
-          await editDocument('clases', this.props.idClase, {
-            contenidos: contenidos,
-          })
+          await editDocument(
+            'clases',
+            this.props.idClase,
+            {
+              contenidos: contenidos,
+            },
+            'Clase editada'
+          )
       );
     }
   };
@@ -261,7 +266,7 @@ class TabsDeClase extends Component {
         'clases',
         this.props.idClase,
         { contenidos: arrayFiltrado },
-        'Clase'
+        'Clase editada'
       );
     } catch (err) {
       console.log('Error', err);
