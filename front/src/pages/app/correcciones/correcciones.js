@@ -6,6 +6,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import DataListView from 'containers/pages/DataListView';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
 import { storage } from 'helpers/Firebase';
+import { isEmpty } from 'helpers/Utils';
 
 function collect(props) {
   return { data: props.data };
@@ -21,6 +22,13 @@ class Correcciones extends Component {
       files: [],
       isLoading: true,
       materiaId: this.props.subject.id,
+      idACorregir: '',
+      archivoACorregir: '',
+      idStorage: '',
+      rolDocente: this.props.rol === ROLES.Docente,
+      correccionAlumnoUrl: '',
+      verCorreccion: false,
+      arrayItemsFiltrado: [],
     };
   }
 
@@ -53,6 +61,7 @@ class Correcciones extends Component {
 
     this.setState({
       items: arrayDeObjetos,
+      arrayOriginal: arrayDeObjetos,
       selectedItems: [],
       isLoading: false,
       correccionId: '',
@@ -76,9 +85,27 @@ class Correcciones extends Component {
     console.log('ID de correccion:', id);
   };
 
+  onSearchKey = (search) => {
+    const { target } = search;
+    const { value } = target;
+    const busqueda = value.toLowerCase();
+
+    const itemsArray = [...this.state.arrayOriginal];
+    const arrayFiltrado = itemsArray.filter((elem) => {
+      return (
+        elem.data.alumno.toLowerCase().includes(busqueda) ||
+        elem.data.nombre.toLowerCase().includes(busqueda) ||
+        elem.data.tipo.toLowerCase().includes(busqueda) ||
+        elem.data.estado.toLowerCase() === busqueda
+      );
+    });
+    this.setState({
+      items: arrayFiltrado,
+    });
+  };
+
   render() {
-    const { isLoading, items } = this.state;
-    const { rol } = this.props;
+    const { isLoading, items, rolDocente } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -129,6 +156,11 @@ class Correcciones extends Component {
                 );
               })}{' '}
           </Row>
+          {isEmpty(items) && (
+            <Row className="ml-0">
+              <span>No hay resultados</span>
+            </Row>
+          )}
         </div>
       </Fragment>
     );
