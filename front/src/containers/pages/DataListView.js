@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row } from 'reactstrap';
+import { Card, Row, Badge } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
@@ -43,6 +43,7 @@ class DataListView extends React.Component {
       modalLanzarPreguntas,
       preguntaALanzar,
       onSelectPregunta,
+      seLanzo,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3">
@@ -71,6 +72,15 @@ class DataListView extends React.Component {
                 >
                   {title}
                 </p>
+              )}
+              {modalLanzarPreguntas && seLanzo && (
+                <Badge
+                  color="danger"
+                  pill
+                  className="mb-1 position-absolute badge-top-right-1"
+                >
+                  LANZADA
+                </Badge>
               )}
               {!sonPreguntas && !modalLanzarPreguntas && (
                 <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">

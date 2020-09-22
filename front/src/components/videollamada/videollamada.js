@@ -69,6 +69,7 @@ const Videollamada = ({
   const onLanzarPregunta = () => {
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
+      seLanzo: true,
     });
     setPreguntaALanzar(null);
     toggleModalPreguntas();
@@ -262,6 +263,7 @@ const Videollamada = ({
         >
           {preguntas.map((pregunta) => {
             const consignaPregunta = pregunta.data.consigna;
+            const preguntaLanzadaAlmenosUnaVez = pregunta.data.seLanzo;
             return (
               <DataListView
                 key={pregunta.id}
@@ -270,6 +272,7 @@ const Videollamada = ({
                 modalLanzarPreguntas={true}
                 preguntaALanzar={preguntaALanzar}
                 onSelectPregunta={onSelectPregunta}
+                seLanzo={preguntaLanzadaAlmenosUnaVez}
               />
             );
           })}
