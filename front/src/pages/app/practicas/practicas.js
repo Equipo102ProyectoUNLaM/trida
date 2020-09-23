@@ -10,7 +10,7 @@ import FormSubirPractica from './form-subir-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
-import { getFormattedDate } from 'helpers/Utils';
+import { getFormattedDate, isEmpty } from 'helpers/Utils';
 import { storage } from 'helpers/Firebase';
 
 function collect(props) {
@@ -23,6 +23,7 @@ class Practica extends Component {
 
     this.state = {
       items: [],
+      arrayOriginal: [],
       modalCreateOpen: false,
       modalEditOpen: false,
       modalDeleteOpen: false,
@@ -32,6 +33,7 @@ class Practica extends Component {
       practicaId: '',
       idMateria: this.props.subject.id,
       modalUploadFileOpen: false,
+      rolDocente: this.props.rol === ROLES.Docente,
     };
   }
 
@@ -133,6 +135,7 @@ class Practica extends Component {
     }
     this.setState({
       items: arrayDeObjetos,
+      arrayOriginal: arrayDeObjetos,
       selectedItems: [],
       isLoading: false,
       modalCreateOpen: false,
@@ -149,6 +152,33 @@ class Practica extends Component {
     return url;
   };
 
+  onSearchKey = (search) => {
+    const { target } = search;
+    const { value } = target;
+    let busqueda = value.toLowerCase();
+    const itemsArray = [...this.state.arrayOriginal];
+
+    busqueda = busqueda.replace(/\//g, '');
+    busqueda = busqueda.replace(/-/g, '');
+
+    const arrayFiltrado = itemsArray.filter((elem) => {
+      const fechaLanzada = elem.data.fechaLanzada.split('-');
+      const fechaLanzadaString =
+        fechaLanzada[2] + fechaLanzada[1] + fechaLanzada[0];
+      const fechaVto = elem.data.fechaVencimiento.split('-');
+      const fechaVtoString = fechaVto[2] + fechaVto[1] + fechaVto[0];
+
+      return (
+        elem.data.nombre.toLowerCase().includes(busqueda) ||
+        fechaLanzadaString.includes(busqueda) ||
+        fechaVtoString.includes(busqueda)
+      );
+    });
+    this.setState({
+      items: arrayFiltrado,
+    });
+  };
+
   render() {
     const {
       modalCreateOpen,
@@ -158,6 +188,7 @@ class Practica extends Component {
       isLoading,
       items,
       modalUploadFileOpen,
+      rolDocente,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -167,8 +198,8 @@ class Practica extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.my-activities"
-            toggleModal={rol === ROLES.Docente ? this.toggleCreateModal : null}
-            buttonText={rol === ROLES.Docente ? 'activity.add' : null}
+            toggleModal={rolDocente ? this.toggleCreateModal : null}
+            buttonText={rolDocente ? 'activity.add' : null}
           />
           <ModalGrande
             modalOpen={modalCreateOpen}
@@ -184,36 +215,51 @@ class Practica extends Component {
             />
           </ModalGrande>
           <Row>
-            {items.map((practica) => {
-              return (
-                <DataListView
-                  key={practica.id + 'dataList'}
-                  id={practica.id}
-                  title={practica.data.nombre}
-                  text1={
-                    'Fecha de publicación: ' +
-                    getFormattedDate(practica.data.fechaLanzada)
-                  }
-                  text2={
-                    'Fecha de entrega: ' +
-                    getFormattedDate(practica.data.fechaVencimiento)
-                  }
-                  file={practica.data.url}
-                  isSelect={this.state.selectedItems.includes(practica.id)}
-                  onEditItem={
-                    rol === ROLES.Docente ? this.toggleEditModal : null
-                  }
-                  onDelete={rol === ROLES.Docente ? this.onDelete : null}
-                  onUploadFile={
-                    rol === ROLES.Alumno ? this.toggleUploadFileModal : null
-                  }
-                  navTo="#"
-                  collect={collect}
-                  calendario={rol === ROLES.Docente ? true : false}
+            {rolDocente && (
+              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                <input
+                  type="text"
+                  name="keyword"
+                  id="search"
+                  placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
+                  onChange={(e) => this.onSearchKey(e)}
                 />
-              );
-            })}{' '}
+              </div>
+            )}
+            {!isEmpty(items) &&
+              items.map((practica) => {
+                return (
+                  <DataListView
+                    key={practica.id + 'dataList'}
+                    id={practica.id}
+                    title={practica.data.nombre}
+                    text1={
+                      'Fecha de publicación: ' +
+                      getFormattedDate(practica.data.fechaLanzada)
+                    }
+                    text2={
+                      'Fecha de entrega: ' +
+                      getFormattedDate(practica.data.fechaVencimiento)
+                    }
+                    file={practica.data.url}
+                    isSelect={this.state.selectedItems.includes(practica.id)}
+                    onEditItem={rolDocente ? this.toggleEditModal : null}
+                    onDelete={rolDocente ? this.onDelete : null}
+                    onUploadFile={
+                      rol === ROLES.Alumno ? this.toggleUploadFileModal : null
+                    }
+                    navTo="#"
+                    collect={collect}
+                    calendario={rolDocente ? true : false}
+                  />
+                );
+              })}{' '}
           </Row>
+          {isEmpty(items) && (
+            <Row className="ml-0">
+              <span>No hay resultados</span>
+            </Row>
+          )}
           {modalEditOpen && (
             <ModalGrande
               modalOpen={modalEditOpen}
