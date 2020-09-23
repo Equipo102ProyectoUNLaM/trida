@@ -19,6 +19,7 @@ import {
   desencriptarEvaluacion,
   desencriptarTexto,
 } from 'handlers/DecryptionHandler';
+import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 
 function collect(props) {
   return { data: props.data };
@@ -30,6 +31,7 @@ class Evaluaciones extends Component {
 
     this.state = {
       items: [],
+      arrayOriginal: [],
       modalDeleteOpen: false,
       modalPreviewOpen: false,
       modalMakeOpen: false,
@@ -38,6 +40,7 @@ class Evaluaciones extends Component {
       materiaId: this.props.subject.id,
       eval: null,
       evalId: '',
+      rolDocente: this.props.rol === ROLES.Docente,
     };
   }
 
@@ -103,6 +106,7 @@ class Evaluaciones extends Component {
     }
     this.setState({
       items: arrayDeObjetos,
+      arrayOriginal: arrayDeObjetos,
       selectedItems: [],
       isLoading: false,
     });
@@ -175,6 +179,35 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
+  onSearchKey = (search) => {
+    const { target } = search;
+    const { value } = target;
+    let busqueda = value.toLowerCase();
+    const itemsArray = [...this.state.arrayOriginal];
+
+    busqueda = busqueda.replace(/\//g, '');
+    busqueda = busqueda.replace(/-/g, '');
+
+    const arrayFiltrado = itemsArray.filter((elem) => {
+      let fechaPublicacion = getDateTimeStringFromDate(
+        elem.data.base.fecha_publicacion
+      ).split(' ')[0];
+      let fechaFin = getDateTimeStringFromDate(
+        elem.data.base.fecha_finalizacion
+      ).split(' ')[0];
+      fechaPublicacion = fechaPublicacion.replace(/\//g, '');
+      fechaFin = fechaFin.replace(/\//g, '');
+      return (
+        elem.data.base.nombre.toLowerCase().includes(busqueda) ||
+        fechaPublicacion.includes(busqueda) ||
+        fechaFin.includes(busqueda)
+      );
+    });
+    this.setState({
+      items: arrayFiltrado,
+    });
+  };
+
   render() {
     const {
       modalDeleteOpen,
@@ -184,8 +217,8 @@ class Evaluaciones extends Component {
       modalPreviewOpen,
       evalId,
       evaluacion,
+      rolDocente,
     } = this.state;
-    const { rol } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -193,10 +226,22 @@ class Evaluaciones extends Component {
         <div className="disable-text-selection">
           <HeaderDeModulo
             heading="menu.evaluations"
-            toggleModal={rol === ROLES.Docente ? this.onAdd : null}
-            buttonText={rol === ROLES.Docente ? 'evaluation.add' : null}
+            toggleModal={rolDocente ? this.onAdd : null}
+            buttonText={rolDocente ? 'evaluation.add' : null}
           />
           <Row>
+            {rolDocente && (
+              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                <input
+                  type="text"
+                  name="keyword"
+                  id="search"
+                  placeholder="Búsqueda por nombre de evaluación, fecha de publicación, fecha de finalización..."
+                  onChange={(e) => this.onSearchKey(e)}
+                  autoComplete="off"
+                />
+              </div>
+            )}
             {items.map((evaluacion) => {
               return (
                 <CardTabs
@@ -217,6 +262,11 @@ class Evaluaciones extends Component {
               );
             })}{' '}
           </Row>
+          {isEmpty(items) && (
+            <Row className="ml-0">
+              <span>No hay resultados</span>
+            </Row>
+          )}
           {modalDeleteOpen && (
             <ModalConfirmacion
               texto="¿Está seguro de que desea borrar la evaluación?"
