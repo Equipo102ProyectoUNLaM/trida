@@ -93,6 +93,7 @@ class Evaluaciones extends Component {
     for (let element of arrayDeObjetos) {
       const result = await getCollection('correcciones', [
         { field: 'id_entrega', operator: '==', id: element.id },
+        { field: 'id_alumno', operator: '==', id: this.props.user },
       ]);
       element = Object.assign(
         element,

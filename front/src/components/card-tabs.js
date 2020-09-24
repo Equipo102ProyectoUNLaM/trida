@@ -255,7 +255,7 @@ class CardTabs extends Component {
                                   firebase.firestore.Timestamp.now() && (
                                   <div>
                                     <Badge color="danger" pill className="mb-1">
-                                      VENCIDA
+                                      SIN ENTREGAR
                                     </Badge>
                                   </div>
                                 )}
