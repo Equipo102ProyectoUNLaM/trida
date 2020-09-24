@@ -33,22 +33,6 @@ import {
 } from 'helpers/Utils';
 import { addDocument, editDocument } from 'helpers/Firebase-db';
 
-function copyToClipboard() {
-  // Create a "hidden" input
-  var aux = document.createElement('input');
-  // Assign it the value of the specified element
-  aux.setAttribute('value', '¡No podés sacar capturas de pantalla!');
-  // Append it to the body
-  document.body.appendChild(aux);
-  // Highlight its content
-  aux.select();
-  // Copy the highlighted text
-  document.execCommand('copy');
-  // Remove it from the body
-  document.body.removeChild(aux);
-  this.toggleCapturaModel();
-}
-
 class RealizarEvaluacion extends Component {
   constructor(props) {
     super(props);
@@ -69,30 +53,58 @@ class RealizarEvaluacion extends Component {
   }
 
   async componentDidMount() {
-    window.addEventListener('beforeunload', (ev) => {
+    await this.getEvaluacion();
+    //Cerrar ventana
+    if (this.state.sin_salir_de_ventana) this.configurarSinVentana();
+
+    //Captura de pantalla
+    if (this.state.sin_capturas) this.configurarSinCaptura();
+  }
+
+  configurarSinVentana = () => {
+    window.addEventListener('beforeunload', async (ev) => {
       ev.preventDefault();
-      return (ev.returnValue = 'Seguro desea abandonew?');
+      await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
+      return (ev.returnValue = 'Seguro desea abandonar?');
     });
     window.addEventListener('unload', async (ev) => {
       ev.preventDefault();
       await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
       return;
     });
+  };
 
-    window.onkeyup = function (e) {
-      if (e.keyCode == 44) {
-        copyToClipboard();
+  configurarSinCaptura = () => {
+    window.addEventListener('keyup', (ev) => {
+      ev.preventDefault();
+      if (ev.keyCode === 44) {
+        this.copyToClipboard();
       }
-    };
-    window.focus = function () {
-      document.body.getElementsByClassName('body').show();
-    };
+      window.focus = function () {
+        document.body.getElementsByClassName('body').show();
+      };
 
-    window.blur = function () {
-      document.body.getElementsByClassName('body').hide();
-    };
-    await this.getEvaluacion();
-  }
+      window.blur = function () {
+        document.body.getElementsByClassName('body').hide();
+      };
+    });
+  };
+
+  copyToClipboard = () => {
+    // Create a "hidden" input
+    var aux = document.createElement('input');
+    // Assign it the value of the specified element
+    aux.setAttribute('value', '¡No podés sacar capturas de pantalla!');
+    // Append it to the body
+    document.body.appendChild(aux);
+    // Highlight its content
+    aux.select();
+    // Copy the highlighted text
+    document.execCommand('copy');
+    // Remove it from the body
+    document.body.removeChild(aux);
+    this.toggleCapturaModel();
+  };
 
   async componentWillUnmount() {
     await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
@@ -102,6 +114,7 @@ class RealizarEvaluacion extends Component {
     if (!this.props.location.evalId) {
       this.setState({ isLoading: false });
       this.props.history.push(`/app/evaluaciones`);
+      return;
     }
     const evaluacion = await getDocumentWithSubCollection(
       `evaluaciones/${this.props.location.evalId}`,
@@ -109,7 +122,13 @@ class RealizarEvaluacion extends Component {
     );
 
     const { id, data, subCollection } = evaluacion;
-    const { nombre, fecha_finalizacion, descripcion } = data;
+    const {
+      nombre,
+      fecha_finalizacion,
+      descripcion,
+      sin_capturas,
+      sin_salir_de_ventana,
+    } = data;
 
     const ejerciciosDesencriptados = desencriptarEjercicios(
       subCollection,
@@ -139,6 +158,14 @@ class RealizarEvaluacion extends Component {
     this.setState({
       respuestas: respuestas,
       evaluacionId: id,
+      sin_capturas:
+        CryptoJS.AES.decrypt(sin_capturas, secretKey).toString(
+          CryptoJS.enc.Utf8
+        ) === 'true',
+      sin_salir_de_ventana:
+        CryptoJS.AES.decrypt(sin_salir_de_ventana, secretKey).toString(
+          CryptoJS.enc.Utf8
+        ) === 'true',
       nombreEval: CryptoJS.AES.decrypt(nombre, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
@@ -414,6 +441,7 @@ class RealizarEvaluacion extends Component {
           <ModalChico
             modalOpen={modalCapturaOpen}
             toggleModal={this.toggleCapturaModel}
+            modalHeader={'evaluacion.sinCapturas'}
           >
             <h3>¡No podés sacar capturas de pantalla!</h3>
           </ModalChico>

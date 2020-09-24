@@ -2,8 +2,6 @@ import React from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Card } from 'reactstrap';
 
-import * as _moment from 'moment';
-
 const minuteSeconds = 60;
 const hourSeconds = 3600;
 const daySeconds = 86400;
