@@ -22,6 +22,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
 import { timeStamp } from 'helpers/Firebase';
+import firebase from 'firebase/app';
 
 class CardTabs extends Component {
   constructor(props) {
@@ -249,15 +250,28 @@ class CardTabs extends Component {
                               </Button>
                             )}
                             {rol === ROLES.Alumno && !entregada && (
-                              <Button
-                                outline
-                                onClick={this.handleClickMake}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Realizar Evaluación
-                              </Button>
+                              <div>
+                                {data.base.fecha_finalizacion <
+                                  firebase.firestore.Timestamp.now() && (
+                                  <div>
+                                    <Badge color="danger" pill className="mb-1">
+                                      VENCIDA
+                                    </Badge>
+                                  </div>
+                                )}
+                                {data.base.fecha_finalizacion >=
+                                  firebase.firestore.Timestamp.now() && (
+                                  <Button
+                                    outline
+                                    onClick={this.handleClickMake}
+                                    size="sm"
+                                    color="primary"
+                                    className="button"
+                                  >
+                                    Realizar Evaluación
+                                  </Button>
+                                )}
+                              </div>
                             )}
                             {rol === ROLES.Alumno && entregada && (
                               <div>

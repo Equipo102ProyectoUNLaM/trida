@@ -13,6 +13,7 @@ import {
   getCollectionWithSubCollections,
   getCollection,
   getDocumentWithSubCollection,
+  editDocument,
 } from 'helpers/Firebase-db';
 import firebase from 'firebase/app';
 import {
@@ -152,7 +153,8 @@ class Evaluaciones extends Component {
     }));
   };
 
-  realizarEvaluacion = () => {
+  realizarEvaluacion = async () => {
+    await editDocument(`usuarios`, this.props.user, { enEvaluacion: true });
     this.props.history.push({
       pathname: '/app/evaluaciones/realizar-evaluacion',
       evalId: this.state.evalId,
@@ -252,10 +254,10 @@ class Evaluaciones extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { userData, user } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default connect(mapStateToProps)(withRouter(Evaluaciones));

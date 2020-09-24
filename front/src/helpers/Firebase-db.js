@@ -548,7 +548,11 @@ export const guardarNotas = async (user, notas) => {
 
 export const getDatosClaseOnSnapshot = (document, callback) => {
   return firestore.collection('clases').doc(document).onSnapshot(callback);
-}
+};
+
+export const getEnEvaluacionOnSnapshot = (document, callback) => {
+  return firestore.collection('usuarios').doc(document).onSnapshot(callback);
+};
 
 export const generateId = (path) => {
   return firestore.collection(path).doc().id;

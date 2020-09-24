@@ -31,6 +31,7 @@ const getTimeDays = (time) => (time / daySeconds) | 0;
 export default function Countdown(props) {
   const startTime = props.start ? props.start.seconds : Date.now() / 1000; // use UNIX timestamp in seconds
   const endTime = props.end.seconds; // use UNIX timestamp in seconds
+
   const remainingTime = endTime - startTime;
   const days = Math.ceil(remainingTime / daySeconds);
   const daysDuration = days * daySeconds;

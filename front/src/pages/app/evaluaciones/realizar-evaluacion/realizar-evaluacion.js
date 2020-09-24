@@ -31,7 +31,23 @@ import {
   getFechaHoraActual,
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
-import { addDocument } from 'helpers/Firebase-db';
+import { addDocument, editDocument } from 'helpers/Firebase-db';
+
+function copyToClipboard() {
+  // Create a "hidden" input
+  var aux = document.createElement('input');
+  // Assign it the value of the specified element
+  aux.setAttribute('value', '¡No podés sacar capturas de pantalla!');
+  // Append it to the body
+  document.body.appendChild(aux);
+  // Highlight its content
+  aux.select();
+  // Copy the highlighted text
+  document.execCommand('copy');
+  // Remove it from the body
+  document.body.removeChild(aux);
+  this.toggleCapturaModel();
+}
 
 class RealizarEvaluacion extends Component {
   constructor(props) {
@@ -46,13 +62,40 @@ class RealizarEvaluacion extends Component {
       respuestas: [],
       submitted: false,
       modalFinishOpen: false,
+      modalCapturaOpen: false,
       sinTiempo: false,
       isLoading: true,
     };
   }
 
   async componentDidMount() {
+    window.addEventListener('beforeunload', (ev) => {
+      ev.preventDefault();
+      return (ev.returnValue = 'Seguro desea abandonew?');
+    });
+    window.addEventListener('unload', async (ev) => {
+      ev.preventDefault();
+      await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
+      return;
+    });
+
+    window.onkeyup = function (e) {
+      if (e.keyCode == 44) {
+        copyToClipboard();
+      }
+    };
+    window.focus = function () {
+      document.body.getElementsByClassName('body').show();
+    };
+
+    window.blur = function () {
+      document.body.getElementsByClassName('body').hide();
+    };
     await this.getEvaluacion();
+  }
+
+  async componentWillUnmount() {
+    await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
   }
 
   getEvaluacion = async () => {
@@ -161,12 +204,16 @@ class RealizarEvaluacion extends Component {
       'Tu evaluación fue entregada correctamente',
       'Tu evaluación no pudo ser entregada'
     );
-    console.log(navigate);
+    await this.reiniciarEstadoEvaluacion();
     if (navigate) this.volverAEvaluaciones();
   };
 
+  reiniciarEstadoEvaluacion = async () => {
+    await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
+  };
+
   volverAEvaluaciones = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     this.props.history.push(`/app/evaluaciones`);
   };
 
@@ -198,6 +245,12 @@ class RealizarEvaluacion extends Component {
     });
   };
 
+  toggleCapturaModel = () => {
+    this.setState({
+      modalCapturaOpen: !this.state.modalCapturaOpen,
+    });
+  };
+
   render() {
     const {
       nombreEval,
@@ -206,6 +259,7 @@ class RealizarEvaluacion extends Component {
       descripcion,
       fecha_finalizacion,
       modalFinishOpen,
+      modalCapturaOpen,
       submitted,
       sinTiempo,
     } = this.state;
@@ -354,6 +408,14 @@ class RealizarEvaluacion extends Component {
                 Aceptar
               </Button>
             </ModalFooter>
+          </ModalChico>
+        )}
+        {modalCapturaOpen && (
+          <ModalChico
+            modalOpen={modalCapturaOpen}
+            toggleModal={this.toggleCapturaModel}
+          >
+            <h3>¡No podés sacar capturas de pantalla!</h3>
           </ModalChico>
         )}
       </Fragment>
