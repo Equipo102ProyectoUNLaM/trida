@@ -79,9 +79,10 @@ module.exports = {
   'menu.mis-clases': 'Mis Clases',
   'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
-  'menu.my-activities': 'Mis Prácticas actuales',
-  'menu.my-old-activities': 'Mis Prácticas vencidas',
-  'menu.my-evaluations': 'Mis Evaluaciones',
+  'menu.my-activities': 'Mis Prácticas Actuales',
+  'menu.my-old-activities': 'Mis Prácticas Vencidas',
+  'menu.my-evaluations': 'Mis Evaluaciones Actuales',
+  'menu.my-old-evaluations': 'Mis Evaluaciones Vencidas',
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
   'menu.agregar': 'Agregar Evaluación',
@@ -150,6 +151,8 @@ module.exports = {
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluation.old': 'VER EVALUACIONES VENCIDAS',
+  'evaluation.active': 'VER EVALUACIONES ACTUALES',
 
   /* 12. Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',

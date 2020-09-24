@@ -8,6 +8,7 @@ import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalVistaPreviaEvaluacion from 'pages/app/evaluaciones/detalle-evaluacion/vista-previa-evaluacion';
 import ModalRealizarEvaluacion from 'pages/app/evaluaciones/realizar-evaluacion/realizar-evaluacion-confirmar';
 import ROLES from 'constants/roles';
+import moment from 'moment';
 import {
   logicDeleteDocument,
   getCollectionWithSubCollections,
@@ -38,6 +39,7 @@ class Evaluaciones extends Component {
       materiaId: this.props.subject.id,
       eval: null,
       evalId: '',
+      oldTestActive: false,
     };
   }
 
@@ -56,6 +58,32 @@ class Evaluaciones extends Component {
               operator: '<=',
               id: firebase.firestore.Timestamp.now(),
             },
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'activo', operator: '==', id: true },
+      ],
+      false,
+      'ejercicios'
+    );
+    const evaluaciones = await desencriptarEvaluacion(arrayDeObjetos);
+    console.log(evaluaciones);
+    const evaluacionesActuales = evaluaciones.filter((elem) => {
+      console.log(moment(elem.data.base.fecha_finalizacion));
+      return moment(elem.data.base.fecha_finalizacion).isAfter(
+        moment(new Date())
+      );
+    });
+    this.dataListRenderer(evaluacionesActuales);
+  };
+
+  getEvaluacionesVencidas = async (materiaId) => {
+    const arrayDeObjetos = await getCollectionWithSubCollections(
+      'evaluaciones',
+      [
+        {
+          field: 'fecha_finalizacion',
+          operator: '<',
+          id: firebase.firestore.Timestamp.now(),
+        },
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
@@ -175,6 +203,18 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
+  toggleOldPracticesModal = async () => {
+    await this.setState({
+      oldTestActive: !this.state.oldTestActive,
+      isLoading: true,
+    });
+    if (this.state.oldTestActive) {
+      this.getEvaluacionesVencidas(this.state.materiaId);
+    } else {
+      this.getEvaluaciones(this.state.materiaId);
+    }
+  };
+
   render() {
     const {
       modalDeleteOpen,
@@ -184,6 +224,7 @@ class Evaluaciones extends Component {
       modalPreviewOpen,
       evalId,
       evaluacion,
+      oldTestActive,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -192,9 +233,19 @@ class Evaluaciones extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.evaluations"
-            toggleModal={rol === ROLES.Docente ? this.onAdd : null}
-            buttonText={rol === ROLES.Docente ? 'evaluation.add' : null}
+            heading={
+              oldTestActive ? 'menu.my-old-evaluations' : 'menu.my-evaluations'
+            }
+            toggleModal={
+              rol === ROLES.Docente && !oldTestActive ? this.onAdd : null
+            }
+            buttonText={
+              rol === ROLES.Docente && !oldTestActive ? 'evaluation.add' : null
+            }
+            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryButtonText={
+              oldTestActive ? 'evaluation.active' : 'evaluation.old'
+            }
           />
           <Row>
             {items.map((evaluacion) => {
@@ -203,6 +254,7 @@ class Evaluaciones extends Component {
                   key={evaluacion.id}
                   item={evaluacion}
                   materiaId={this.state.materiaId}
+                  isOldTest={this.state.oldTestActive}
                   updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}

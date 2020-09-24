@@ -172,19 +172,20 @@ class CardTabs extends Component {
                             <Colxx xxs="12" xs="4" lg="4">
                               <div className="dropdown-calendar flex">
                                 <p>Fecha y Hora de Finalización&nbsp;</p>
-                                {rol === ROLES.Docente && (
-                                  <Calendario
-                                    handleClick={
-                                      this.handleClickChangeFinalDate
-                                    }
-                                    text="Modificar fecha de evaluación"
-                                    evalCalendar={true}
-                                    dateFormat={'DD/MM/YYYY - HH:mm'}
-                                    timeCaption="Hora"
-                                    timeIntervals={60}
-                                    timeFormat={'HH:mm'}
-                                  />
-                                )}
+                                {rol === ROLES.Docente &&
+                                  !this.props.isOldTest && (
+                                    <Calendario
+                                      handleClick={
+                                        this.handleClickChangeFinalDate
+                                      }
+                                      text="Modificar fecha de evaluación"
+                                      evalCalendar={true}
+                                      dateFormat={'DD/MM/YYYY - HH:mm'}
+                                      timeCaption="Hora"
+                                      timeIntervals={60}
+                                      timeFormat={'HH:mm'}
+                                    />
+                                  )}
                                 {data.base.fecha_finalizacion && (
                                   <p className="mb-4">
                                     {getDateTimeStringFromDate(
@@ -198,19 +199,20 @@ class CardTabs extends Component {
                               </div>
                               <div className="dropdown-calendar flex">
                                 <p>Fecha y Hora de Publicación&nbsp;</p>
-                                {rol === ROLES.Docente && (
-                                  <Calendario
-                                    handleClick={
-                                      this.handleClickChangePublicationDate
-                                    }
-                                    text="Modificar fecha de publicación"
-                                    evalCalendar={true}
-                                    dateFormat={'DD/MM/YYYY - HH:mm'}
-                                    timeCaption="Hora"
-                                    timeIntervals={60}
-                                    timeFormat={'HH:mm'}
-                                  />
-                                )}
+                                {rol === ROLES.Docente &&
+                                  !this.props.isOldTest && (
+                                    <Calendario
+                                      handleClick={
+                                        this.handleClickChangePublicationDate
+                                      }
+                                      text="Modificar fecha de publicación"
+                                      evalCalendar={true}
+                                      dateFormat={'DD/MM/YYYY - HH:mm'}
+                                      timeCaption="Hora"
+                                      timeIntervals={60}
+                                      timeFormat={'HH:mm'}
+                                    />
+                                  )}
                                 {data.base.fecha_publicacion && (
                                   <p className="mb-4">
                                     {getDateTimeStringFromDate(
@@ -225,7 +227,7 @@ class CardTabs extends Component {
                             </Colxx>
                           </Row>
                           <Row className="button-group">
-                            {rol === ROLES.Docente && (
+                            {rol === ROLES.Docente && !this.props.isOldTest && (
                               <Button
                                 outline
                                 onClick={this.handleClickEdit}
@@ -236,7 +238,7 @@ class CardTabs extends Component {
                                 Editar Evaluación
                               </Button>
                             )}
-                            {rol === ROLES.Docente && (
+                            {rol === ROLES.Docente && !this.props.isOldTest && (
                               <Button
                                 outline
                                 onClick={this.handleClickDelete}
