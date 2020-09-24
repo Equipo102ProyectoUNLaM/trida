@@ -152,26 +152,43 @@ class Practica extends Component {
     return url;
   };
 
-  onSearchKey = (search) => {
+  normalizarFecha = (fecha) => {
+    const fechaNormal = fecha.split('-');
+    return fechaNormal[2] + fechaNormal[1] + fechaNormal[0];
+  };
+
+  normalizarNombre = (nombre) => {
+    let nombreNormal = nombre.replace(/á/g, 'a');
+    nombreNormal = nombreNormal.replace(/é/g, 'e');
+    nombreNormal = nombreNormal.replace(/í/g, 'i');
+    nombreNormal = nombreNormal.replace(/ó/g, 'o');
+    nombreNormal = nombreNormal.replace(/ú/g, 'u');
+    return nombreNormal;
+  };
+
+  normalizarBusqueda = (search) => {
     const { target } = search;
     const { value } = target;
     let busqueda = value.toLowerCase();
-    const itemsArray = [...this.state.arrayOriginal];
-
     busqueda = busqueda.replace(/\//g, '');
     busqueda = busqueda.replace(/-/g, '');
+    busqueda = this.normalizarNombre(busqueda);
+    return busqueda;
+  };
+
+  onSearchKey = (search) => {
+    const busqueda = this.normalizarBusqueda(search);
+    const itemsArray = [...this.state.arrayOriginal];
 
     const arrayFiltrado = itemsArray.filter((elem) => {
-      const fechaLanzada = elem.data.fechaLanzada.split('-');
-      const fechaLanzadaString =
-        fechaLanzada[2] + fechaLanzada[1] + fechaLanzada[0];
-      const fechaVto = elem.data.fechaVencimiento.split('-');
-      const fechaVtoString = fechaVto[2] + fechaVto[1] + fechaVto[0];
+      const fechaLanzada = this.normalizarFecha(elem.data.fechaLanzada);
+      const fechaVto = this.normalizarFecha(elem.data.fechaVencimiento);
+      const nombre = this.normalizarNombre(elem.data.nombre);
 
       return (
-        elem.data.nombre.toLowerCase().includes(busqueda) ||
-        fechaLanzadaString.includes(busqueda) ||
-        fechaVtoString.includes(busqueda)
+        nombre.toLowerCase().includes(busqueda) ||
+        fechaLanzada.includes(busqueda) ||
+        fechaVto.includes(busqueda)
       );
     });
     this.setState({
@@ -215,17 +232,15 @@ class Practica extends Component {
             />
           </ModalGrande>
           <Row>
-            {rolDocente && (
-              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-                <input
-                  type="text"
-                  name="keyword"
-                  id="search"
-                  placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
-                  onChange={(e) => this.onSearchKey(e)}
-                />
-              </div>
-            )}
+            <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+              <input
+                type="text"
+                name="keyword"
+                id="search"
+                placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
+                onChange={(e) => this.onSearchKey(e)}
+              />
+            </div>
             {!isEmpty(items) &&
               items.map((practica) => {
                 return (
