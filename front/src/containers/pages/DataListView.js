@@ -9,6 +9,30 @@ import { injectIntl } from 'react-intl';
 import { editDocument } from 'helpers/Firebase-db';
 
 class DataListView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      focused: window.location.hash.replace('#', '') === this.props.id,
+    };
+  }
+
+  componentDidMount() {
+    const { focused } = this.state;
+    if (focused) {
+      const el = document.querySelector(`[id='${this.props.id}']`);
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+      setTimeout(() => {
+        this.setState({ focused: null });
+      }, 3000);
+    }
+  }
+
   handleClick = async (date) => {
     if (date) {
       const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
@@ -48,11 +72,12 @@ class DataListView extends React.Component {
       seLanzo,
     } = this.props;
     return (
-      <Colxx xxs="12" className="mb-3">
+      <Colxx xxs="12" className="mb-3" id={id}>
         <ContextMenuTrigger id="menu_id" data={id} collect={collect}>
           <Card
             className={classnames('d-flex flex-row', {
               active: isSelect,
+              focused: this.state.focused,
             })}
           >
             <div

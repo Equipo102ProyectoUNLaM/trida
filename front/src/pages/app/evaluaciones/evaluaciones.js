@@ -201,6 +201,7 @@ class Evaluaciones extends Component {
               return (
                 <CardTabs
                   key={evaluacion.id}
+                  id={evaluacion.id}
                   item={evaluacion}
                   materiaId={this.state.materiaId}
                   updateEvaluaciones={this.getEvaluaciones}

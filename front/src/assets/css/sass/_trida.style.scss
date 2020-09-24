@@ -9451,7 +9451,15 @@ div.rendered-file-browser{
 }
 
 .tab-card-evaluaciones {
-  display:contents;
+  display: contents;
+}
+
+.card {
+  transition: all ease-in-out 500ms;
+
+  &.focused {
+    background: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .modal-ejercicios{
