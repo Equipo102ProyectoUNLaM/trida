@@ -90,7 +90,12 @@ class CardTabs extends Component {
       const obj = {
         fecha_finalizacion: timeStamp.fromDate(new Date(date)),
       };
-      await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
+      await editDocument(
+        'evaluaciones',
+        this.props.item.id,
+        obj,
+        'Evaluación editada'
+      );
       this.props.updateEvaluaciones(this.props.materiaId);
     }
   };
@@ -100,7 +105,12 @@ class CardTabs extends Component {
       const obj = {
         fecha_publicacion: timeStamp.fromDate(new Date(date)),
       };
-      await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
+      await editDocument(
+        'evaluaciones',
+        this.props.item.id,
+        obj,
+        'Evaluación editada'
+      );
       this.props.updateEvaluaciones(this.props.materiaId);
     }
   };

@@ -134,7 +134,7 @@ class FormPractica extends React.Component {
         idArchivo: this.state.file,
         estado: 'pendiente',
       };
-      await editDocument('practicas', this.props.id, obj, 'Práctica');
+      await editDocument('practicas', this.props.id, obj, 'Práctica editada');
     }
 
     this.props.onPracticaOperacion();

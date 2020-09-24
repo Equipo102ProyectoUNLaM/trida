@@ -3,6 +3,7 @@ export const TIPO_EJERCICIO_VALUE = {
   opcion_multiple: 'Múltiple Choice',
   oral: 'Oral',
   opcion_multiple_imagen: 'Múltiple Choice de imágenes',
+  preguntas_aleatorias: 'Preguntas Aleatorias',
 };
 
 export const TIPO_EJERCICIO = {
@@ -10,4 +11,5 @@ export const TIPO_EJERCICIO = {
   opcion_multiple: 'opcion_multiple',
   oral: 'oral',
   opcion_multiple_imagen: 'opcion_multiple_imagen',
+  preguntas_aleatorias: 'preguntas_aleatorias',
 };

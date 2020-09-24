@@ -1,16 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import {
-  Row,
-  Card,
-  CardBody,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from 'reactstrap';
-import { Colxx } from 'components/common/CustomBootstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
 
 class ModalRealizarEvaluacion extends Component {
