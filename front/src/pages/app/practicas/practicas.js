@@ -54,16 +54,9 @@ class Practica extends Component {
       { field: 'activo', operator: '==', id: true },
     ]);
 
-    let practicasActuales = arrayDeObjetos;
-    for (const item of arrayDeObjetos) {
-      const fechaVencimiento = moment(item.data.fechaVencimiento);
-      const hoy = moment(new Date());
-      if (fechaVencimiento.isBefore(hoy)) {
-        console.log(item.data);
-        practicasActuales.splice(arrayDeObjetos.indexOf(item), 1);
-      }
-    }
-    console.log(practicasActuales);
+    let practicasActuales = arrayDeObjetos.filter((elem) => {
+      return moment(elem.data.fechaVencimiento).isAfter(moment(new Date()));
+    });
 
     this.dataListRenderer(practicasActuales);
   };
@@ -128,8 +121,8 @@ class Practica extends Component {
     });
   };
 
-  toggleOldPracticesModal = () => {
-    this.setState({
+  toggleOldPracticesModal = async () => {
+    await this.setState({
       oldPracticesActive: !this.state.oldPracticesActive,
       isLoading: true,
     });
@@ -257,15 +250,23 @@ class Practica extends Component {
                   file={practica.data.url}
                   isSelect={this.state.selectedItems.includes(practica.id)}
                   onEditItem={
-                    rol === ROLES.Docente ? this.toggleEditModal : null
+                    rol === ROLES.Docente && !oldPracticesActive
+                      ? this.toggleEditModal
+                      : null
                   }
-                  onDelete={rol === ROLES.Docente ? this.onDelete : null}
+                  onDelete={
+                    rol === ROLES.Docente && !oldPracticesActive
+                      ? this.onDelete
+                      : null
+                  }
                   onUploadFile={
                     rol === ROLES.Alumno ? this.toggleUploadFileModal : null
                   }
                   navTo="#"
                   collect={collect}
-                  calendario={rol === ROLES.Docente ? true : false}
+                  calendario={
+                    rol === ROLES.Docente && !oldPracticesActive ? true : false
+                  }
                 />
               );
             })}{' '}
