@@ -1,6 +1,7 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
-import { Button, Row, ModalFooter } from 'reactstrap';
+import { Button, Row, ModalFooter, Input, Label } from 'reactstrap';
+import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
@@ -16,6 +17,8 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ContestarPregunta from './contestar-pregunta';
+import { timeStamp } from 'helpers/Firebase';
+import { getDate } from 'helpers/Utils';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -42,7 +45,7 @@ const Videollamada = ({
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState();
-
+  const [tiempoPregunta, setTiempoPregunta] = useState('00:05');
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
 
   const setElementHeight = () => {
@@ -76,9 +79,11 @@ const Videollamada = ({
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
+      tiempoDuracion: timeStamp.fromDate(new Date(tiempoPregunta)), // CAMBIAR A FORMATO FECHA DE FIREBASE PARA MANEJAR EN COUNTDOWN
     });
 
     //La lógica anda, tengo que ver donde hacer el llamado (useEffect?)
+
     const existe = await documentExistsOnSnapshot(
       `clases/${idClase}/preguntas/${
         /* preguntaLanzadaGlobal[0].id */ preguntaALanzar
@@ -86,6 +91,8 @@ const Videollamada = ({
       userId
     );
     console.log('existe', existe);
+
+    //
 
     setPreguntaALanzar(null);
     toggleModalPreguntas();
@@ -151,6 +158,18 @@ const Videollamada = ({
   //Este metodo se ejecuta cuando se clickea en Cerrar en la modal de Preview de la pregunta
   const toggleModalPreviewPreguntaAlumno = () => {
     setModalPreviewOpen(!modalPreviewOpen);
+  };
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    //setTiempoPregunta(value);
+
+    setTiempoPregunta(getDate(value, 'HH:mm'));
+    console.log(tiempoPregunta);
+  };
+
+  const lanzamientoPreguntaValido = () => {
+    return preguntaALanzar && tiempoPregunta && tiempoPregunta !== '00:00';
   };
 
   const guardarListaAsistencia = async () => {
@@ -277,6 +296,20 @@ const Videollamada = ({
           toggleModal={toggleModalPreguntas}
           text="Preguntas de la Clase"
         >
+          {/* ver si cambiar a seleccionar a que hora finalizar la pregunta */}
+          <Label className="timer-pregunta-clase">
+            Seleccione durante cuanto tiempo lanzar la pregunta
+          </Label>
+          <Row className="mb-3 mr-3">
+            <Colxx xxs="4" md="5">
+              <Input
+                className="timer-pregunta-clase"
+                type="time"
+                defaultValue={tiempoPregunta}
+                onChange={handleChange}
+              />
+            </Colxx>
+          </Row>
           {preguntas.map((pregunta) => {
             const consignaPregunta = pregunta.data.consigna;
             const preguntaLanzadaAlmenosUnaVez = pregunta.data.seLanzo;
@@ -295,7 +328,7 @@ const Videollamada = ({
           <ModalFooter>
             <Button
               color="primary"
-              disabled={!preguntaALanzar}
+              disabled={!lanzamientoPreguntaValido()}
               onClick={onLanzarPregunta}
             >
               Lanzar Pregunta

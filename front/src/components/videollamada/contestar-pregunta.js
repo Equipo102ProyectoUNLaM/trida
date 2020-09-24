@@ -49,20 +49,13 @@ class ContestarPregunta extends Component {
       );
     } else {
       // si la deselecciona, lo saco del array
-      this.setState(
-        {
-          respuestas: this.state.respuestas.filter(
-            (rta) => rta !== e.indiceOpcion
-          ),
-        },
-        this.log
-      );
+      this.setState({
+        respuestas: this.state.respuestas.filter(
+          (rta) => rta !== e.indiceOpcion
+        ),
+      });
     }
   };
-
-  log() {
-    console.log('rtas', this.state.respuestas);
-  }
 
   respuestaValida = () => {
     return this.state.respuestas.length > 0;

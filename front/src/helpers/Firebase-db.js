@@ -580,7 +580,6 @@ export const documentExistsOnSnapshot = (collection, document) => {
     //si por algún motivo queremos tener la rta completa, devolver un docSnapshot.data()
     if (docSnapshot.exists) {
       usersRef.onSnapshot((doc) => {
-        console.log('fb', doc);
         return true;
       });
     } else {
