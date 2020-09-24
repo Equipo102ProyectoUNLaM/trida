@@ -179,26 +179,43 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
-  onSearchKey = (search) => {
+  normalizarFecha = (fecha) => {
+    let fechaNormal = getDateTimeStringFromDate(fecha).split(' ')[0];
+    fechaNormal = fechaNormal.replace(/\//g, '');
+    return fechaNormal;
+  };
+
+  normalizarNombre = (nombre) => {
+    let nombreNormal = nombre.replace(/á/g, 'a');
+    nombreNormal = nombreNormal.replace(/é/g, 'e');
+    nombreNormal = nombreNormal.replace(/í/g, 'i');
+    nombreNormal = nombreNormal.replace(/ó/g, 'o');
+    nombreNormal = nombreNormal.replace(/ú/g, 'u');
+    return nombreNormal.toLowerCase();
+  };
+
+  normalizarBusqueda = (search) => {
     const { target } = search;
     const { value } = target;
     let busqueda = value.toLowerCase();
-    const itemsArray = [...this.state.arrayOriginal];
-
     busqueda = busqueda.replace(/\//g, '');
     busqueda = busqueda.replace(/-/g, '');
+    busqueda = this.normalizarNombre(busqueda);
+    return busqueda;
+  };
+
+  onSearchKey = (search) => {
+    const busqueda = this.normalizarBusqueda(search);
+    const itemsArray = [...this.state.arrayOriginal];
 
     const arrayFiltrado = itemsArray.filter((elem) => {
-      let fechaPublicacion = getDateTimeStringFromDate(
+      const fechaPublicacion = this.normalizarFecha(
         elem.data.base.fecha_publicacion
-      ).split(' ')[0];
-      let fechaFin = getDateTimeStringFromDate(
-        elem.data.base.fecha_finalizacion
-      ).split(' ')[0];
-      fechaPublicacion = fechaPublicacion.replace(/\//g, '');
-      fechaFin = fechaFin.replace(/\//g, '');
+      );
+      const fechaFin = this.normalizarFecha(elem.data.base.fecha_finalizacion);
+      const nombre = this.normalizarNombre(elem.data.base.nombre);
       return (
-        elem.data.base.nombre.toLowerCase().includes(busqueda) ||
+        nombre.includes(busqueda) ||
         fechaPublicacion.includes(busqueda) ||
         fechaFin.includes(busqueda)
       );
@@ -230,18 +247,16 @@ class Evaluaciones extends Component {
             buttonText={rolDocente ? 'evaluation.add' : null}
           />
           <Row>
-            {rolDocente && (
-              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-                <input
-                  type="text"
-                  name="keyword"
-                  id="search"
-                  placeholder="Búsqueda por nombre de evaluación, fecha de publicación, fecha de finalización..."
-                  onChange={(e) => this.onSearchKey(e)}
-                  autoComplete="off"
-                />
-              </div>
-            )}
+            <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+              <input
+                type="text"
+                name="keyword"
+                id="search"
+                placeholder="Búsqueda por nombre de evaluación, fecha de publicación, fecha de finalización..."
+                onChange={(e) => this.onSearchKey(e)}
+                autoComplete="off"
+              />
+            </div>
             {items.map((evaluacion) => {
               return (
                 <CardTabs
