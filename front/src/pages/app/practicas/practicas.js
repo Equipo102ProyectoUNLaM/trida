@@ -260,7 +260,9 @@ class Practica extends Component {
                       : null
                   }
                   onUploadFile={
-                    rol === ROLES.Alumno ? this.toggleUploadFileModal : null
+                    rol === ROLES.Alumno && !oldPracticesActive
+                      ? this.toggleUploadFileModal
+                      : null
                   }
                   navTo="#"
                   collect={collect}
