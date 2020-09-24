@@ -58,6 +58,7 @@ const PaginaVideollamada = (props) => {
     <>
       <Videollamada
         roomName={room}
+        userId={props.user}
         userName={`${props.nombre} ${props.apellido}`}
         password={props.password}
         containerStyles={{ width: '100%', height: '700px' }}
@@ -129,12 +130,13 @@ const PaginaVideollamada = (props) => {
 };
 
 const mapStateToProps = ({ authUser }) => {
-  const { userData } = authUser;
+  const { user, userData } = authUser;
   const { nombre, apellido, rol } = userData;
   return {
     nombre,
     apellido,
     rol,
+    user,
   };
 };
 

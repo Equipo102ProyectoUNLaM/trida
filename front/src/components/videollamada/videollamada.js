@@ -6,11 +6,16 @@ import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
-import { editDocument, getCollectionOnSnapshot } from 'helpers/Firebase-db';
+import {
+  editDocument,
+  getCollectionOnSnapshot,
+  documentExistsOnSnapshot,
+} from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import ContestarPregunta from './contestar-pregunta';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -18,6 +23,7 @@ const Videollamada = ({
   roomName,
   subject = 'Clase Virtual',
   userName,
+  userId,
   password,
   options,
   isHost,
@@ -66,11 +72,21 @@ const Videollamada = ({
   };
 
   // Metodo para lanzar pregunta cuando estás con rol de profesor
-  const onLanzarPregunta = () => {
+  const onLanzarPregunta = async () => {
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
     });
+
+    //La lógica anda, tengo que ver donde hacer el llamado (useEffect?)
+    const existe = await documentExistsOnSnapshot(
+      `clases/${idClase}/preguntas/${
+        /* preguntaLanzadaGlobal[0].id */ preguntaALanzar
+      }/respuestas`,
+      userId
+    );
+    console.log('existe', existe);
+
     setPreguntaALanzar(null);
     toggleModalPreguntas();
   };
@@ -292,12 +308,12 @@ const Videollamada = ({
       )}
       {/* CUANDO SE HAGA LOGICA DE LA RTA, SE AGREGA LA VALIDACIÓN DE QUE NO ESTÉ RESPONDIDA PARA MOSTRAR EL MODAL */}
       {rol === ROLES.Alumno && preguntaLanzadaGlobal.length > 0 && (
-        <ModalVistaPreviaPreguntas
+        <ContestarPregunta
           toggle={toggleModalPreviewPreguntaAlumno}
           isOpen={modalPreviewOpen}
           preguntas={preguntaLanzadaGlobal}
-          esRespuestaDeAlumno={true}
           onRespuestaDeAlumno={respuestaDeAlumno}
+          idClase={idClase}
         />
       )}
       <div id={parentNode}></div>
