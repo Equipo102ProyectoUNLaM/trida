@@ -127,18 +127,39 @@ class Correcciones extends Component {
     }
   };
 
-  onSearchKey = (search) => {
+  normalizarString = (nombre) => {
+    let nombreNormal = nombre.replace(/á/g, 'a');
+    nombreNormal = nombreNormal.replace(/é/g, 'e');
+    nombreNormal = nombreNormal.replace(/í/g, 'i');
+    nombreNormal = nombreNormal.replace(/ó/g, 'o');
+    nombreNormal = nombreNormal.replace(/ú/g, 'u');
+    return nombreNormal.toLowerCase();
+  };
+
+  normalizarBusqueda = (search) => {
     const { target } = search;
     const { value } = target;
-    const busqueda = value.toLowerCase();
+    let busqueda = value.toLowerCase();
+    busqueda = busqueda.replace(/\//g, '');
+    busqueda = busqueda.replace(/-/g, '');
+    busqueda = this.normalizarString(busqueda);
+    return busqueda;
+  };
 
+  onSearchKey = (search) => {
+    const busqueda = this.normalizarBusqueda(search);
     const itemsArray = [...this.state.arrayOriginal];
+
     const arrayFiltrado = itemsArray.filter((elem) => {
+      const alumno = this.normalizarString(elem.data.alumno);
+      const nombre = this.normalizarString(elem.data.nombre);
+      const tipo = this.normalizarString(elem.data.tipo);
+      const estado = this.normalizarString(elem.data.estado);
       return (
-        elem.data.alumno.toLowerCase().includes(busqueda) ||
-        elem.data.nombre.toLowerCase().includes(busqueda) ||
-        elem.data.tipo.toLowerCase().includes(busqueda) ||
-        elem.data.estado.toLowerCase() === busqueda
+        alumno.includes(busqueda) ||
+        nombre.includes(busqueda) ||
+        tipo.includes(busqueda) ||
+        estado === busqueda
       );
     });
     this.setState({
@@ -159,17 +180,19 @@ class Correcciones extends Component {
             buttonText={null}
           />
           <Row>
-            {rolDocente && (
-              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-                <input
-                  type="text"
-                  name="keyword"
-                  id="search"
-                  placeholder="Búsqueda por alumno, estado, nombre de actividad, tipo de actividad..."
-                  onChange={(e) => this.onSearchKey(e)}
-                />
-              </div>
-            )}
+            <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+              <input
+                type="text"
+                name="keyword"
+                id="search"
+                placeholder={
+                  rolDocente
+                    ? 'Búsqueda por alumno, estado, nombre de actividad, tipo de actividad...'
+                    : 'Búsqueda por estado, nombre de actividad, tipo de actividad...'
+                }
+                onChange={(e) => this.onSearchKey(e)}
+              />
+            </div>
             {!isEmpty(items) &&
               items.map((correccion) => {
                 return (
