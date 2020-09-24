@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
-import { formPracticaSchema } from './validations';
 import { storage } from 'helpers/Firebase';
 import FileUploader from 'react-firebase-file-uploader';
+import '@pdftron/webviewer/public/core/CoreControls';
 
 class FormSubirPractica extends React.Component {
   constructor(props) {
@@ -75,18 +75,35 @@ class FormSubirPractica extends React.Component {
     console.error(error);
   };
 
-  handleUploadSuccess = (filename) => {
+  handleUploadSuccess = async (filename) => {
     this.setState({
       file: filename,
       fileUploadProgress: 100,
       isFileUploading: false,
       isFileUploaded: true,
     });
-    storage
+    await storage
       .ref('materias/' + this.props.subject.id + '/correcciones/')
       .child(filename)
       .getDownloadURL()
       .then((url) => this.setState({ fileURL: url }));
+    //window.convertOfficeToPDF(this.state.fileURL, 'test');
+    // perform the conversion with no optional parameters
+    const { PDFNet, CoreControls } = window;
+    const buf = await CoreControls.office2PDFBuffer(this.state.fileURL);
+    console.log('buffer', buf);
+
+    /*  const { PDFNet } = window;
+
+    console.log(PDFNet);
+    console.log(PDFNet.Convert);
+    const buf = await PDFNet.Convert.office2PDF(
+      this.state.fileUrl,
+    ); */
+
+    // end with a PDFDoc (the conversion destination)
+    const doc = await PDFNet.PDFDoc.createFromBuffer(buf);
+    console.log(doc);
   };
 
   handleDeleteFile = async () => {
