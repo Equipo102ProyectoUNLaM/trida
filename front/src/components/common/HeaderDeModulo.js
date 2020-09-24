@@ -49,7 +49,7 @@ class HeaderDeModulo extends Component {
                   <Button
                     color="primary"
                     size="lg"
-                    className="top-right-button"
+                    className="top-right-button ml-1"
                     onClick={() => secondaryToggleModal()}
                   >
                     <IntlMessages id={secondaryButtonText} />
