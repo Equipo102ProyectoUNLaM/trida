@@ -12,6 +12,7 @@ import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { getFormattedDate } from 'helpers/Utils';
 import { storage } from 'helpers/Firebase';
+import moment from 'moment';
 
 function collect(props) {
   return { data: props.data };
@@ -32,6 +33,7 @@ class Practica extends Component {
       practicaId: '',
       idMateria: this.props.subject.id,
       modalUploadFileOpen: false,
+      oldPracticesActive: false,
     };
   }
 
@@ -48,6 +50,31 @@ class Practica extends Component {
             operator: '<=',
             id: new Date().toISOString().slice(0, 10),
           },
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ]);
+
+    let practicasActuales = arrayDeObjetos;
+    for (const item of arrayDeObjetos) {
+      const fechaVencimiento = moment(item.data.fechaVencimiento);
+      const hoy = moment(new Date());
+      if (fechaVencimiento.isBefore(hoy)) {
+        console.log(item.data);
+        practicasActuales.splice(arrayDeObjetos.indexOf(item), 1);
+      }
+    }
+    console.log(practicasActuales);
+
+    this.dataListRenderer(practicasActuales);
+  };
+
+  getPracticasVencidas = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('practicas', [
+      {
+        field: 'fechaVencimiento',
+        operator: '<',
+        id: new Date().toISOString().slice(0, 10),
+      },
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
     ]);
@@ -99,6 +126,18 @@ class Practica extends Component {
       modalUploadFileOpen: !this.state.modalUploadFileOpen,
       idItemSelected: id,
     });
+  };
+
+  toggleOldPracticesModal = () => {
+    this.setState({
+      oldPracticesActive: !this.state.oldPracticesActive,
+      isLoading: true,
+    });
+    if (this.state.oldPracticesActive) {
+      this.getPracticasVencidas(this.state.idMateria);
+    } else {
+      this.getPracticas(this.state.idMateria);
+    }
   };
 
   onFileUploaded = () => {
@@ -158,6 +197,7 @@ class Practica extends Component {
       isLoading,
       items,
       modalUploadFileOpen,
+      oldPracticesActive,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -166,9 +206,25 @@ class Practica extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.my-activities"
-            toggleModal={rol === ROLES.Docente ? this.toggleCreateModal : null}
-            buttonText={rol === ROLES.Docente ? 'activity.add' : null}
+            heading={
+              oldPracticesActive
+                ? 'menu.my-old-activities'
+                : 'menu.my-activities'
+            }
+            toggleModal={
+              rol === ROLES.Docente && !oldPracticesActive
+                ? this.toggleCreateModal
+                : null
+            }
+            buttonText={
+              rol === ROLES.Docente && !oldPracticesActive
+                ? 'activity.add'
+                : null
+            }
+            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryButtonText={
+              oldPracticesActive ? 'activity.active' : 'activity.old'
+            }
           />
           <ModalGrande
             modalOpen={modalCreateOpen}

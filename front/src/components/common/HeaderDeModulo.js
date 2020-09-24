@@ -26,6 +26,8 @@ class HeaderDeModulo extends Component {
       heading,
       toggleModal,
       buttonText,
+      secondaryToggleModal,
+      secondaryButtonText,
       match,
       breadcrumb,
       text,
@@ -41,6 +43,21 @@ class HeaderDeModulo extends Component {
             )}
             {text && <h1>{text}</h1>}
             {breadcrumb && <Breadcrumb match={match} />}
+            <>
+              {secondaryButtonText && (
+                <div className="text-zero top-right-button-container">
+                  <Button
+                    color="primary"
+                    size="lg"
+                    className="top-right-button"
+                    onClick={() => secondaryToggleModal()}
+                  >
+                    <IntlMessages id={secondaryButtonText} />
+                  </Button>
+                  {'  '}
+                </div>
+              )}
+            </>
             <>
               {buttonText && (
                 <div className="text-zero top-right-button-container">
