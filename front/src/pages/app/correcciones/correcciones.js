@@ -6,6 +6,7 @@ import { storage } from 'helpers/Firebase';
 import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import ROLES from 'constants/roles';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import { Colxx } from 'components/common/CustomBootstrap';
 import DataListView from 'containers/pages/DataListView';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
@@ -163,37 +164,41 @@ class Correcciones extends Component {
             buttonText={null}
           />
           <Row>
-            <ButtonGroup className="filtros-button-group">
-              <Button
-                color="primary"
-                className="filtros-button"
-                onClick={() => this.onCheckboxBtnClick(1)}
-                active={cSelected.includes(1)}
-              >
-                Corregido
-              </Button>
-              <Button
-                color="primary"
-                className="filtros-button"
-                onClick={() => this.onCheckboxBtnClick(2)}
-                active={cSelected.includes(2)}
-              >
-                No Corregido
-              </Button>
-            </ButtonGroup>
-            <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-              <input
-                type="text"
-                name="keyword"
-                id="search"
-                placeholder={
-                  rolDocente
-                    ? 'Búsqueda por alumno, estado, nombre de actividad, tipo de actividad...'
-                    : 'Búsqueda por estado, nombre de actividad, tipo de actividad...'
-                }
-                onChange={(e) => this.onSearchKey(e)}
-              />
-            </div>
+            <Colxx xxs="8" md="8">
+              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                <input
+                  type="text"
+                  name="keyword"
+                  id="search"
+                  placeholder={
+                    rolDocente
+                      ? 'Búsqueda por alumno, estado, nombre de actividad, tipo de actividad...'
+                      : 'Búsqueda por estado, nombre de actividad, tipo de actividad...'
+                  }
+                  onChange={(e) => this.onSearchKey(e)}
+                />
+              </div>
+            </Colxx>
+            <Colxx xxs="4" md="4" className="columna-filtro-badge">
+              <ButtonGroup className="filtros-button-group">
+                <Button
+                  color="primary"
+                  className="filtros-button"
+                  onClick={() => this.onCheckboxBtnClick(1)}
+                  active={cSelected.includes(1)}
+                >
+                  Corregido
+                </Button>
+                <Button
+                  color="primary"
+                  className="filtros-button"
+                  onClick={() => this.onCheckboxBtnClick(2)}
+                  active={cSelected.includes(2)}
+                >
+                  No Corregido
+                </Button>
+              </ButtonGroup>
+            </Colxx>
             {!isEmpty(items) &&
               items.map((correccion) => {
                 return (

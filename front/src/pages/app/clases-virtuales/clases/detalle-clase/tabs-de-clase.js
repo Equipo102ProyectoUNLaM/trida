@@ -76,7 +76,7 @@ class TabsDeClase extends Component {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
     this.setState({ isLoading: false, asistencia });
-  }
+  };
 
   getLinksDeClase = async () => {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
@@ -293,6 +293,7 @@ class TabsDeClase extends Component {
       sinRespuesta
     );
 
+    //Ordeno preguntas por número
     this.setState({
       preguntasDeClase: preguntasDesencriptadas.sort(
         (a, b) => a.data.numero - b.data.numero
@@ -444,6 +445,7 @@ class TabsDeClase extends Component {
                               idSala={idSala}
                               idClase={idClase}
                               password={password}
+                              preguntas={preguntasDeClase}
                             />
                           )}
                         </CardBody>
