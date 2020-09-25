@@ -1410,8 +1410,8 @@ button {
   font-size: 74%;
 
   &.badge-pill {
-    padding-right: 1.25em;
-    padding-left: 1.25em;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
   }
 
   &.badge-top-left {
@@ -5494,7 +5494,6 @@ input:-webkit-autofill {
   input {
     width: 300%;
     height: 2.5rem;
-    margin-left: 1rem;
     margin-bottom: 1rem;
     background: none;
     outline: initial !important;
@@ -5514,7 +5513,7 @@ input:-webkit-autofill {
     color: $secondary-color;
     position: absolute;
     width: 22px;
-    margin-left: 1.5rem;
+    margin-left: 0.5rem;
     margin-top: 7px;
     text-align: center;
     cursor: pointer;
@@ -6389,6 +6388,17 @@ input:-webkit-autofill {
   .icon-text{
     font-size: 1.3rem;
     margin-left: 0.5rem;
+  }
+}
+
+.set-date-action-icon-filter {
+  font-size: 1rem;
+  padding-right: 5px;
+  cursor: pointer;
+  color: #fff;
+
+  &.relative {
+    position: relative;
   }
 }
 
@@ -9496,6 +9506,27 @@ div.rendered-file-browser{
 
 .practicas-list-label {
   width: 25%;
+}
+
+.row-filtro-fechas {
+  align-items: center;
+  margin-left: 0;
+}
+
+.badge-filtro {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  font-size: 85% !important;
+}
+
+.columna-filtro-badge {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-filter {
+  margin-left: 1rem;
 }
 
 .datalist-button{

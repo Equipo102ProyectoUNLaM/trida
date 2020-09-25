@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Row } from 'reactstrap';
+import { Row, Button, Badge } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import { Colxx } from 'components/common/CustomBootstrap';
 import { injectIntl } from 'react-intl';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import Calendario from 'components/common/Calendario';
 import FormPractica from './form-practica';
 import FormSubirPractica from './form-subir-practica';
 import DataListView from 'containers/pages/DataListView';
@@ -12,6 +14,8 @@ import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { getFormattedDate, isEmpty } from 'helpers/Utils';
 import { storage } from 'helpers/Firebase';
+import * as _moment from 'moment';
+const moment = _moment;
 
 function collect(props) {
   return { data: props.data };
@@ -34,6 +38,7 @@ class Practica extends Component {
       idMateria: this.props.subject.id,
       modalUploadFileOpen: false,
       rolDocente: this.props.rol === ROLES.Docente,
+      fechaPublicacion: '',
     };
   }
 
@@ -141,6 +146,7 @@ class Practica extends Component {
       modalCreateOpen: false,
       modalEditOpen: false,
       practicaId: '',
+      filtroFecha: '',
     });
   }
 
@@ -196,6 +202,26 @@ class Practica extends Component {
     });
   };
 
+  handleClickCalendario = (date) => {
+    if (date) {
+      this.setState({ filtroFecha: moment(date).format('DD/MM/YYYY') });
+      return this.onSearchKey({
+        target: { value: moment(date).format('DDMMYYYY') },
+      });
+    }
+    return this.setState({
+      filtroFecha: '',
+      items: [...this.state.arrayOriginal],
+    });
+  };
+
+  handleFiltroDelete = () => {
+    this.setState({
+      filtroFecha: '',
+      items: [...this.state.arrayOriginal],
+    });
+  };
+
   render() {
     const {
       modalCreateOpen,
@@ -206,6 +232,7 @@ class Practica extends Component {
       items,
       modalUploadFileOpen,
       rolDocente,
+      filtroFecha,
     } = this.state;
     const { rol } = this.props;
     return isLoading ? (
@@ -232,15 +259,40 @@ class Practica extends Component {
             />
           </ModalGrande>
           <Row>
-            <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-              <input
-                type="text"
-                name="keyword"
-                id="search"
-                placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
-                onChange={(e) => this.onSearchKey(e)}
-              />
-            </div>
+            <Colxx xxs="8" md="8">
+              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                <input
+                  type="text"
+                  name="keyword"
+                  id="search"
+                  placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
+                  onChange={(e) => this.onSearchKey(e)}
+                />
+              </div>
+            </Colxx>
+            <Colxx xxs="4" md="4" className="columna-filtro-badge">
+              <Badge pill className="mb-1 position-absolute badge badge-filtro">
+                <Calendario
+                  handleClick={this.handleClickCalendario}
+                  text="Filtro por fecha de entrega o publicación"
+                  evalCalendar={false}
+                  filterCalendar={true}
+                  id="fechasFilter"
+                />
+                Filtro por Fechas
+                {filtroFecha && (
+                  <>
+                    {' '}
+                    - {filtroFecha}
+                    <Button
+                      className="delete-filter"
+                      onClick={this.handleFiltroDelete}
+                      close
+                    />
+                  </>
+                )}
+              </Badge>
+            </Colxx>
             {!isEmpty(items) &&
               items.map((practica) => {
                 return (
