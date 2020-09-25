@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { storage } from 'helpers/Firebase';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
@@ -17,33 +17,37 @@ import {
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import Select from 'react-select';
-import { editDocument } from 'helpers/Firebase-db';
+import { editDocument, getDocument } from 'helpers/Firebase-db';
 import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import ESTADO_CORRECCION from 'constants/estadoCorreccion';
 import NOTA_CORRECCION from 'constants/notaCorreccion';
+import ROLES from 'constants/roles';
 const publicUrl = process.env.PUBLIC_URL;
 
-const CorreccionTexto = ({ location }, rol) => {
+const CorreccionTexto = ({ subject, rol }) => {
   const history = useHistory();
-  const {
-    url,
-    subjectId,
-    idStorage,
-    verCorreccion,
-    id,
-    estadoCorreccionVer,
-    notaCorreccionVer,
-    comentarioVer,
-    extension,
-  } = location;
-  const [verCorr, setVerCorreccion] = useState(verCorreccion);
+  const params = useParams();
+  const verCorr = window.location.hash.replace('#', '') === 'ver';
+  const [estadoCorreccionVer, setEstadoCorreccionVer] = useState('');
+  const [notaCorreccionVer, setNotaCorreccionVer] = useState(0);
+  const [comentarioVer, setComentarioVer] = useState('');
+  const id = params.id.split('#')[0];
   const [modalConfirmacion, setModalConfirmacion] = useState(false);
   const [estadoCorreccion, setEstado] = useState('');
   const [notaCorreccion, setNotaCorreccion] = useState({ value: 0 });
   const [comentario, setComentario] = useState('-');
   const [showNotas, setShowNotas] = useState(false);
+  const [idStorage, setIdStorage] = useState('');
   const [blob, setBlob] = useState([]);
   const viewer = useRef(null);
+
+  const getFileURL = async (file) => {
+    const url = await storage
+      .ref('materias/' + subject.id + '/correcciones/')
+      .child(file)
+      .getDownloadURL();
+    return url;
+  };
 
   const toggleModalConfirmacion = () => {
     setModalConfirmacion(!modalConfirmacion);
@@ -60,13 +64,11 @@ const CorreccionTexto = ({ location }, rol) => {
   };
 
   const handleNotaChange = (selectedOption) => {
-    console.log(selectedOption);
     if (selectedOption) {
       setNotaCorreccion(selectedOption);
     } else {
       setNotaCorreccion({ value: 0 });
     }
-    console.log(notaCorreccion);
   };
 
   const handleChange = (event) => {
@@ -84,7 +86,7 @@ const CorreccionTexto = ({ location }, rol) => {
   const confirmarCorreccion = async () => {
     toggleModalConfirmacion();
     const listRef = storage.ref(
-      `materias/${subjectId}/correcciones/${idStorage}-correccion`
+      `materias/${subject.id}/correcciones/${idStorage}-correccion`
     );
     await listRef.put(blob);
     await editDocument('correcciones', id, {
@@ -100,7 +102,23 @@ const CorreccionTexto = ({ location }, rol) => {
     history.push('/app/correcciones');
   };
 
-  useEffect(() => {
+  const getUrl = async () => {
+    const { data } = await getDocument(`correcciones/${id}`);
+    let idFile = data.idArchivo.split('.')[0];
+    if (verCorr) {
+      setEstadoCorreccionVer(data.estadoCorreccion);
+      setNotaCorreccionVer(data.notaCorreccion);
+      setComentarioVer(data.comentarioCorreccion);
+      idFile = idFile + '-correccion';
+      setIdStorage(idFile);
+      return await getFileURL(idFile);
+    }
+    setIdStorage(idFile);
+    return await getFileURL(data.idArchivo);
+  };
+
+  const createWebViewer = async () => {
+    const url = await getUrl();
     WebViewer(
       {
         fullAPI: true,
@@ -114,7 +132,7 @@ const CorreccionTexto = ({ location }, rol) => {
         'menuButton',
         'stickyToolGroupButton',
       ]);
-      if (verCorr) {
+      if (verCorr || rol !== ROLES.Docente) {
         instance.disableElements([
           'header',
           'viewControlsOverlay',
@@ -123,7 +141,7 @@ const CorreccionTexto = ({ location }, rol) => {
           'toolsHeader',
         ]);
       }
-      instance.loadDocument(url, { documentId: 'id2', extension: extension });
+      instance.loadDocument(url, { documentId: 'id2' });
       const { docViewer, Annotations } = instance;
       const annotManager = docViewer.getAnnotationManager();
 
@@ -140,22 +158,7 @@ const CorreccionTexto = ({ location }, rol) => {
         // need to draw the annotation otherwise it won't show up until the page is refreshed
         //annotManager.redrawAnnotation(rectangleAnnot);
       });
-
-      if (!verCorr) {
-        let type = 'application/pdf';
-        if (extension === 'docx') {
-          type =
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        }
-        if (extension === 'xlsx') {
-          type =
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        }
-        if (extension === 'pptx') {
-          type =
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation';
-        }
-
+      if (!verCorr && rol === ROLES.Docente) {
         document
           .getElementById('guardar')
           .addEventListener('click', async () => {
@@ -164,12 +167,16 @@ const CorreccionTexto = ({ location }, rol) => {
             const options = { xfdfString, flatten: true };
             const data = await doc.getFileData(options);
             const arr = new Uint8Array(data);
-            const blob = new Blob([arr], { type });
+            const blob = new Blob([arr], { type: 'application/pdf' });
             setBlob(blob);
             setModalConfirmacion(true);
           });
       }
     });
+  };
+
+  useEffect(() => {
+    createWebViewer();
   }, []);
 
   return (
@@ -191,15 +198,19 @@ const CorreccionTexto = ({ location }, rol) => {
             >
               {estadoCorreccionVer.toUpperCase()}
             </Badge>
-            <span className="font-weight-semibold">Nota </span>
-            <Badge
-              key={2 + 'badge'}
-              color="primary"
-              pill
-              className="badge-correccion"
-            >
-              {notaCorreccionVer}
-            </Badge>
+            {notaCorreccionVer !== 0 && (
+              <>
+                <span className="font-weight-semibold">Nota </span>
+                <Badge
+                  key={2 + 'badge'}
+                  color="primary"
+                  pill
+                  className="badge-correccion"
+                >
+                  {notaCorreccionVer}
+                </Badge>
+              </>
+            )}
           </Row>
           <Row className="status-correccion">
             <span className="font-weight-semibold">Comentario:</span>
@@ -208,7 +219,7 @@ const CorreccionTexto = ({ location }, rol) => {
         </>
       )}
       <div className="webviewer" ref={viewer}></div>
-      {!verCorr && (
+      {!verCorr && rol === ROLES.Docente && (
         <Row className="button-group">
           <Button color="primary" className="button" id="guardar">
             Enviar Corrección

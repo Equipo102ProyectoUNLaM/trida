@@ -16,7 +16,7 @@ const MenuCorrecciones = ({ match }) => (
         exact
       />
       <Route
-        path={`${match.url}/correccion`}
+        path={`${match.url}/correccion/:id`}
         render={(props) => <CorreccionTexto {...props} />}
       />
       <Redirect to="/error" />

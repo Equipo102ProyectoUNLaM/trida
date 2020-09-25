@@ -84,43 +84,18 @@ class Correcciones extends Component {
 
   onCorrection = (id, idArchivo, file) => {
     const idStorage = idArchivo.split('.')[0];
-    const extension = idArchivo.split('.')[1];
     this.setState({
       archivoACorregir: file,
       idStorage,
       idACorregir: id,
     });
-    return this.props.history.push({
-      pathname: '/app/correcciones/correccion',
-      subjectId: this.props.subject.id,
-      url: file,
-      idStorage,
-      extension,
-      id,
-      verCorreccion: false,
-    });
+    return this.props.history.push(`/app/correcciones/correccion/${id}`);
   };
 
-  onVerCorrection = async (idArchivo, estado, nota, comentario) => {
+  onVerCorrection = async (id, idArchivo) => {
     const idStorage = idArchivo.split('.')[0];
-    const extension = idArchivo.split('.')[1];
-    const correccionAlumnoUrl = await this.getFileURL(
-      idStorage + '-correccion'
-    );
-    if (correccionAlumnoUrl) {
-      this.setState({ correccionAlumnoUrl, verCorreccion: true });
-      this.props.history.push({
-        pathname: '/app/correcciones/correccion',
-        subjectId: this.props.subject.id,
-        url: correccionAlumnoUrl,
-        idStorage,
-        verCorreccion: true,
-        estadoCorreccionVer: estado,
-        notaCorreccionVer: nota,
-        comentarioVer: comentario,
-        extension,
-      });
-      this.setState({ verCorreccion: false });
+    if (idStorage) {
+      this.props.history.push(`/app/correcciones/correccion/${id}#ver`);
     }
   };
 
