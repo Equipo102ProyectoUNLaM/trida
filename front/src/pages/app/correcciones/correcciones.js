@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Row } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
+import { Row, Button, ButtonGroup } from 'reactstrap';
+import { storage } from 'helpers/Firebase';
+import '../../../../node_modules/react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import ROLES from 'constants/roles';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import DataListView from 'containers/pages/DataListView';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
-import { storage } from 'helpers/Firebase';
 import { isEmpty } from 'helpers/Utils';
 
 function collect(props) {
@@ -29,6 +31,7 @@ class Correcciones extends Component {
       correccionAlumnoUrl: '',
       verCorreccion: false,
       arrayItemsFiltrado: [],
+      cSelected: [],
     };
   }
 
@@ -85,6 +88,10 @@ class Correcciones extends Component {
     console.log('ID de correccion:', id);
   };
 
+  handleChangeMulti = (selectedOptions) => {
+    this.setState({ selectedOptions });
+  };
+
   normalizarString = (nombre) => {
     let nombreNormal = nombre.replace(/á/g, 'a');
     nombreNormal = nombreNormal.replace(/é/g, 'e');
@@ -125,8 +132,26 @@ class Correcciones extends Component {
     });
   };
 
+  onCheckboxBtnClick = (selected) => {
+    const index = this.state.cSelected.indexOf(selected);
+    if (index < 0) {
+      this.state.cSelected.push(selected);
+    } else {
+      this.state.cSelected.splice(index, 1);
+    }
+    this.setState({ cSelected: [...this.state.cSelected] }, () => {
+      if (this.state.cSelected.length === 1 && this.state.cSelected[0] === 1) {
+        return this.onSearchKey({ target: { value: 'Corregido' } });
+      }
+      if (this.state.cSelected.length === 1 && this.state.cSelected[0] === 2) {
+        return this.onSearchKey({ target: { value: 'No Corregido' } });
+      }
+      return this.onSearchKey({ target: { value: '' } });
+    });
+  };
+
   render() {
-    const { isLoading, items, rolDocente } = this.state;
+    const { isLoading, items, rolDocente, cSelected } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -138,6 +163,24 @@ class Correcciones extends Component {
             buttonText={null}
           />
           <Row>
+            <ButtonGroup className="filtros-button-group">
+              <Button
+                color="primary"
+                className="filtros-button"
+                onClick={() => this.onCheckboxBtnClick(1)}
+                active={cSelected.includes(1)}
+              >
+                Corregido
+              </Button>
+              <Button
+                color="primary"
+                className="filtros-button"
+                onClick={() => this.onCheckboxBtnClick(2)}
+                active={cSelected.includes(2)}
+              >
+                No Corregido
+              </Button>
+            </ButtonGroup>
             <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
               <input
                 type="text"
