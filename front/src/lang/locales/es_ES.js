@@ -82,7 +82,7 @@ module.exports = {
   'menu.my-activities': 'Mis Prácticas Actuales',
   'menu.my-old-activities': 'Mis Prácticas Finalizadas',
   'menu.my-evaluations': 'Mis Evaluaciones Actuales',
-  'menu.my-old-evaluations': 'Mis Evaluaciones Vencidas',
+  'menu.my-old-evaluations': 'Mis Evaluaciones Finalizadas',
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
   'menu.agregar': 'Agregar Evaluación',
@@ -151,7 +151,7 @@ module.exports = {
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR EVALUACIÓN',
-  'evaluation.old': 'VER EVALUACIONES VENCIDAS',
+  'evaluation.old': 'VER EVALUACIONES FINALIZADAS',
   'evaluation.active': 'VER EVALUACIONES ACTUALES',
 
   /* 12. Contenidos */
