@@ -5478,6 +5478,7 @@ input:-webkit-autofill {
   position: relative;
 
   input {
+    height: 2rem;
     width: 300%;
     margin-left: 1rem;
     margin-bottom: 1rem;
@@ -5502,7 +5503,7 @@ input:-webkit-autofill {
     margin-left: 1.5rem;
     text-align: center;
     cursor: pointer;
-    top: 2px;
+    top: 5px;
   }
 }
 
@@ -9854,6 +9855,15 @@ div.rendered-file-browser{
 }
 
 // Correcciones
+
+.filtros-button {
+  padding: 0 1.5rem !important;
+}
+
+.filtros-button-group {
+  margin-left: 1rem;
+  height: 2rem;
+}
 
 .modal-correccion {
   width: 100% !important;
