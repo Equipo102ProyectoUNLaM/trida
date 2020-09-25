@@ -31,6 +31,7 @@ import {
 } from 'helpers/Utils';
 import { addDocument } from 'helpers/Firebase-db';
 import PreguntasAleatorias from '../ejercicios/preguntas_aleatorias';
+import AdjuntarDesarrollo from '../ejercicios/adjuntar_desarrollo';
 
 class RealizarEvaluacion extends Component {
   constructor(props) {
@@ -322,6 +323,17 @@ class RealizarEvaluacion extends Component {
                         {ejercicio.data.tipo ===
                           TIPO_EJERCICIO.preguntas_aleatorias && (
                           <PreguntasAleatorias
+                            ejercicioId={index}
+                            value={ejercicio.data}
+                            submitted={submitted}
+                            resolve={true}
+                            onEjercicioChange={this.onEjercicioChange}
+                          />
+                        )}
+
+                        {ejercicio.data.tipo ===
+                          TIPO_EJERCICIO.adjuntar_desarrollo && (
+                          <AdjuntarDesarrollo
                             ejercicioId={index}
                             value={ejercicio.data}
                             submitted={submitted}
