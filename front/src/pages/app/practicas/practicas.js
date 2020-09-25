@@ -162,7 +162,17 @@ class Practica extends Component {
       ) {
         practica.data.url = await this.getFileURL(practica.data.idArchivo);
       }
+
+      const result = await getCollection('correcciones', [
+        { field: 'idPractica', operator: '==', id: practica.id },
+        { field: 'idUsuario', operator: '==', id: this.props.user },
+      ]);
+      practica = Object.assign(
+        practica,
+        result.length > 0 ? { entregada: true } : { entregada: false }
+      );
     }
+
     this.setState({
       items: arrayDeObjetos,
       selectedItems: [],
@@ -269,6 +279,9 @@ class Practica extends Component {
                   calendario={
                     rol === ROLES.Docente && !oldPracticesActive ? true : false
                   }
+                  entregada={
+                    practica.entregada && rol === ROLES.Alumno ? true : false
+                  }
                 />
               );
             })}{' '}
@@ -321,10 +334,10 @@ class Practica extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { userData, user } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default injectIntl(connect(mapStateToProps)(Practica));

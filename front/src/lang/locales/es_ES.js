@@ -80,7 +80,7 @@ module.exports = {
   'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas Actuales',
-  'menu.my-old-activities': 'Mis Prácticas Vencidas',
+  'menu.my-old-activities': 'Mis Prácticas Finalizadas',
   'menu.my-evaluations': 'Mis Evaluaciones Actuales',
   'menu.my-old-evaluations': 'Mis Evaluaciones Vencidas',
   'menu.excersises': 'Ejercicios',
@@ -145,7 +145,7 @@ module.exports = {
   'activity.edit': 'EDITAR PRÁCTICA',
   'activity.upload': 'SUBIR PRÁCTICA',
   'activity.delete': 'ELIMINAR PRÁCTICA',
-  'activity.old': 'VER PRÁCTICAS VENCIDAS',
+  'activity.old': 'VER PRÁCTICAS FINALIZADAS',
   'activity.active': 'VER PRÁCTICAS ACTUALES',
   'fecha.modificar': 'Modificar fecha de entrega',
 
