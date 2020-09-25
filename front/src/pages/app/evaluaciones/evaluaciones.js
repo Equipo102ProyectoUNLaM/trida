@@ -12,9 +12,13 @@ import {
   logicDeleteDocument,
   getCollectionWithSubCollections,
   getCollection,
+  getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
 import firebase from 'firebase/app';
-import { desencriptarEvaluacion } from 'handlers/DecryptionHandler';
+import {
+  desencriptarEvaluacion,
+  desencriptarTexto,
+} from 'handlers/DecryptionHandler';
 
 function collect(props) {
   return { data: props.data };
@@ -125,6 +129,21 @@ class Evaluaciones extends Component {
     this.toggleDeleteModal();
   };
 
+  onExport = async (idEvaluacion) => {
+    const obj = await getDocumentWithSubCollection(
+      `evaluaciones/${idEvaluacion}`,
+      'ejercicios'
+    );
+    const element = document.createElement('a');
+    const blob = new Blob([JSON.stringify(obj, null, 2)], {
+      type: 'text/plain',
+    });
+    element.href = URL.createObjectURL(blob);
+    const nombre = desencriptarTexto(obj.data.nombre);
+    element.download = nombre + '.txt';
+    element.click();
+  };
+
   onMake = (evaluacion) => {
     this.setState((prevState) => ({
       evaluacion: evaluacion,
@@ -182,6 +201,7 @@ class Evaluaciones extends Component {
               return (
                 <CardTabs
                   key={evaluacion.id}
+                  id={evaluacion.id}
                   item={evaluacion}
                   materiaId={this.state.materiaId}
                   updateEvaluaciones={this.getEvaluaciones}
@@ -190,6 +210,7 @@ class Evaluaciones extends Component {
                   navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
+                  onExport={this.onExport}
                   onMake={this.onMake}
                   onCancel={this.onCancel}
                   onPreview={this.onPreview}

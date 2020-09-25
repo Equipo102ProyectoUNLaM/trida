@@ -129,11 +129,19 @@ export const getDocument = async (docRef) => {
 // trae un documento en formato objeto (id + data (objeto con datos del documento))
 // junto con la coleccion interior
 // parámetro: referencia al documento y nombre de la sub coleccion
-export const getDocumentWithSubCollection = async (docRef, subCollection) => {
+export const getDocumentWithSubCollection = async (
+  docRef,
+  subCollection,
+  orderBy = false
+) => {
   try {
     const docObj = await getDocument(docRef);
     const { id, data } = docObj;
-    const subColObj = await getCollection(docRef + '/' + subCollection);
+    const subColObj = await getCollection(
+      docRef + '/' + subCollection,
+      false,
+      orderBy
+    );
     return { id: id, data: data, subCollection: subColObj };
   } catch (err) {
     console.log('Error getting documents', err);
@@ -424,8 +432,8 @@ export const editDocument = async (collection, docId, obj, message) => {
 
   if (message) {
     NotificationManager.success(
-      `${message} editada exitosamente`,
-      `${message} editada!`,
+      `${message} exitosamente`,
+      `${message}!`,
       3000,
       null,
       null,
@@ -491,7 +499,8 @@ export const getEventos = async (subject) => {
     const { id, data } = clase;
     arrayDeEventos.push({
       id,
-      tipo: `clases-virtuales/mis-clases/detalle-clase/${id}`,
+      tipo: 'clase',
+      url: `clases-virtuales/mis-clases/detalle-clase/${id}`,
       title: 'Clase: ' + data.nombre,
       start: new Date(`${data.fecha} 08:00:00`),
       end: new Date(`${data.fecha} 10:00:00`),
@@ -504,7 +513,8 @@ export const getEventos = async (subject) => {
     );
     arrayDeEventos.push({
       id,
-      tipo: 'evaluaciones',
+      tipo: 'evaluacion',
+      url: 'evaluaciones',
       title: 'Evaluación: ' + nombre,
       start: new Date(data.fecha_publicacion.toDate()),
       end: new Date(data.fecha_finalizacion.toDate()),
@@ -514,7 +524,8 @@ export const getEventos = async (subject) => {
     const { id, data } = practica;
     arrayDeEventos.push({
       id,
-      tipo: 'practicas',
+      tipo: 'practica',
+      url: 'practicas',
       title: 'Práctica: ' + data.nombre,
       start: new Date(`${data.fechaLanzada} 08:00:00`),
       end: new Date(`${data.fechaVencimiento} 18:00:00`),
@@ -546,8 +557,12 @@ export const guardarNotas = async (user, notas) => {
     .set({ notas: notas }, { merge: true });
 };
 
-export const getDatosClaseOnSnapshot = (document, callback) => {
-  return firestore.collection('clases').doc(document).onSnapshot(callback);
+export const getDatosClaseOnSnapshot = (collection, document, callback) => {
+  return firestore.collection(collection).doc(document).onSnapshot(callback);
+};
+
+export const getCollectionOnSnapshot = async (collection, callback) => {
+  return await firestore.collection(collection).onSnapshot(callback);
 };
 
 export const generateId = (path) => {

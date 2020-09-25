@@ -39,6 +39,19 @@ export const desencriptarEjercicios = (ejercicios, sinRespuesta) => {
         }
       }
     }
+    if (ejercicio.data.preguntas) {
+      for (const pr of ejercicio.data.preguntas) {
+        pr.opcion = CryptoJS.AES.decrypt(pr.opcion, secretKey).toString(
+          CryptoJS.enc.Utf8
+        );
+      }
+    }
+    if (ejercicio.data.cantidad) {
+      ejercicio.data.cantidad = CryptoJS.AES.decrypt(
+        ejercicio.data.cantidad.toString(),
+        secretKey
+      ).toString(CryptoJS.enc.Utf8);
+    }
   }
   return result;
 };
@@ -58,6 +71,16 @@ export const desencriptarEvaluacion = (evaluaciones) => {
       evaluacion.data.base.fecha_finalizacion;
     evaluacion.data.base.fecha_publicacion =
       evaluacion.data.base.fecha_publicacion;
+    evaluacion.data.base.sin_capturas =
+      CryptoJS.AES.decrypt(
+        evaluacion.data.base.sin_capturas,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8) === 'true';
+    evaluacion.data.base.sin_salir_de_ventana =
+      CryptoJS.AES.decrypt(
+        evaluacion.data.base.sin_salir_de_ventana,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8) === 'true';
     if (evaluacion.data.subcollections) {
       evaluacion.data.subcollections = desencriptarEjercicios(
         evaluacion.data.subcollections

@@ -28,8 +28,14 @@ const HeaderHome = (props) => {
     document
       .querySelector('.side-menu__toggler')
       .addEventListener('click', function (e) {
-        document.querySelector('.side-menu__block').classList.toggle('active');
         e.preventDefault();
+        if (
+          document
+            .querySelector('.side-menu__block')
+            .classList.contains('active')
+        )
+          return;
+        document.querySelector('.side-menu__block').classList.toggle('active');
       });
 
     //Close Mobile Menu

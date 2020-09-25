@@ -9,11 +9,35 @@ import { injectIntl } from 'react-intl';
 import { editDocument } from 'helpers/Firebase-db';
 
 class DataListView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      focused: window.location.hash.replace('#', '') === this.props.id,
+    };
+  }
+
+  componentDidMount() {
+    const { focused } = this.state;
+    if (focused) {
+      const el = document.querySelector(`[id='${this.props.id}']`);
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+      setTimeout(() => {
+        this.setState({ focused: null });
+      }, 3000);
+    }
+  }
+
   handleClick = async (date) => {
     if (date) {
       const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
       if (date) {
-        await editDocument('practicas', this.props.id, obj, 'Práctica');
+        await editDocument('practicas', this.props.id, obj, 'Práctica editada');
       }
     }
   };
@@ -45,22 +69,50 @@ class DataListView extends React.Component {
       onVerCorrection,
       sonPreguntas,
       estado,
+      modalLanzarPreguntas,
+      preguntaALanzar,
+      onSelectPregunta,
+      seLanzo,
     } = this.props;
     return (
-      <Colxx xxs="12" className="mb-3">
+      <Colxx xxs="12" className="mb-3" id={id}>
         <ContextMenuTrigger id="menu_id" data={id} collect={collect}>
           <Card
             className={classnames('d-flex flex-row', {
               active: isSelect,
+              focused: this.state.focused,
             })}
           >
-            <div className="pl-2 d-flex flex-grow-1 min-width-zero">
+            <div
+              className={
+                preguntaALanzar === id
+                  ? 'pl-2 d-flex flex-grow-1 min-width-zero preguntaSeleccionada'
+                  : 'pl-2 d-flex flex-grow-1 min-width-zero'
+              }
+            >
               {sonPreguntas && (
                 <p className=" list-item-heading mb-1 truncate card-body">
                   {title}
                 </p>
               )}
-              {!sonPreguntas && (
+              {modalLanzarPreguntas && (
+                <p
+                  className="list-item-heading mb-1 truncate card-body modalLanzarPreguntas"
+                  onClick={() => onSelectPregunta(id)}
+                >
+                  {title}
+                </p>
+              )}
+              {modalLanzarPreguntas && seLanzo && (
+                <Badge
+                  color="danger"
+                  pill
+                  className="mb-1 position-absolute badge-top-right-1"
+                >
+                  LANZADA
+                </Badge>
+              )}
+              {!sonPreguntas && !modalLanzarPreguntas && (
                 <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
                   <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                     <p className="list-item-heading mb-1 truncate practicas-list-label">

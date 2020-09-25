@@ -34,15 +34,21 @@ class ModalVistaPreviaPreguntas extends Component {
 
   render() {
     const { preguntas, isLoading } = this.state;
+    const {
+      isOpen,
+      toggle,
+      esRespuestaDeAlumno,
+      onRespuestaDeAlumno,
+    } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
-      <Modal
-        className="modal-ejercicios"
-        isOpen={this.props.isOpen}
-        toggle={this.props.toggle}
-      >
-        <ModalHeader>Vista previa de las preguntas</ModalHeader>
+      <Modal className="modal-ejercicios" isOpen={isOpen} toggle={toggle}>
+        <ModalHeader>
+          {esRespuestaDeAlumno
+            ? 'Pregunta Lanzada por profesor'
+            : 'Vista previa de las preguntas'}
+        </ModalHeader>
         <ModalBody className="modal-ejercicios-body">
           {preguntas.map((pregunta, index) => (
             <Row className="mb-4" key={index + 'ejer'}>
@@ -68,7 +74,12 @@ class ModalVistaPreviaPreguntas extends Component {
           ))}
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.props.toggle}>
+          {esRespuestaDeAlumno && (
+            <Button color="secondary" onClick={onRespuestaDeAlumno}>
+              Contestar Pregunta
+            </Button>
+          )}
+          <Button color="primary" onClick={toggle}>
             Cerrar
           </Button>
         </ModalFooter>
