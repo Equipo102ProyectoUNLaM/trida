@@ -45,7 +45,7 @@ class Practica extends Component {
 
   getPracticas = async (materiaId) => {
     const arrayDeObjetos = await getCollection('practicas', [
-      rolDocente
+      this.state.rolDocente
         ? {
             field: 'fecha_creacion',
             operator: '<=',
