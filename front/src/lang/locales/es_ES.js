@@ -119,6 +119,9 @@ module.exports = {
   'clase.crear-pregunta': 'Crear Preguntas para la Clase',
   'clase.lanzar-pregunta': 'Lanzar Pregunta',
   'clase.realizar-pregunta': 'Realizar Pregunta',
+  'clase.realizar-pregunta-tip':
+    'Recordá que tu nombre será visible para tu docente pero no para tus compañeros',
+  'clase.escribir-pregunta': 'Escribí tu pregunta',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',

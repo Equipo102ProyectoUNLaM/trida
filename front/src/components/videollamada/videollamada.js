@@ -1,12 +1,15 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
-import { Button, Row, ModalFooter } from 'reactstrap';
+import { Button, Row, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
-import { editDocument, getCollectionOnSnapshot } from 'helpers/Firebase-db';
+import {
+  editDocumentSinFechaEdicion,
+  getCollectionOnSnapshot,
+} from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
@@ -37,6 +40,7 @@ const Videollamada = ({
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState();
   const [realizarPregunta, setRealizarPregunta] = useState(false);
+  const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
 
   const setElementHeight = () => {
@@ -165,7 +169,19 @@ const Videollamada = ({
   };
 
   const onRealizarPregunta = () => {
-    console.log('realizar');
+    editDocumentSinFechaEdicion(
+      'preguntasDeAlumno',
+      idClase,
+      {
+        preguntas: [{ pregunta: preguntaDeAlumno, alumno: userName }],
+      },
+      'Pregunta enviada'
+    );
+  };
+
+  const handleCancelarRealizarPregunta = () => {
+    setPreguntaDeAlumno('');
+    toggleRealizarPregunta();
   };
 
   useEffect(() => {
@@ -281,12 +297,25 @@ const Videollamada = ({
           toggleModal={toggleRealizarPregunta}
           text="Realizar pregunta"
         >
-          <span>Pregunta input</span>
+          <span className="tip-text">
+            {' '}
+            <IntlMessages id="clase.realizar-pregunta-tip" />
+          </span>
+          <FormGroup className="form-group has-float-label">
+            <Label>
+              <IntlMessages id="clase.escribir-pregunta" />
+            </Label>
+            <Input
+              onChange={(e) => setPreguntaDeAlumno(e.target.value)}
+              className="form-control mt-3"
+              name="nombre"
+            />
+          </FormGroup>
           <ModalFooter>
             <Button color="primary" onClick={onRealizarPregunta}>
               Realizar Pregunta
             </Button>
-            <Button color="secondary" onClick={toggleRealizarPregunta}>
+            <Button color="secondary" onClick={handleCancelarRealizarPregunta}>
               Cancelar
             </Button>
           </ModalFooter>

@@ -380,6 +380,20 @@ export const editDocument = async (collection, docId, obj, message) => {
   }
 };
 
+export const editDocumentSinFechaEdicion = async (
+  collection,
+  docId,
+  obj,
+  message
+) => {
+  var ref = firestore.collection(collection).doc(docId);
+  ref.set(obj, { merge: true });
+
+  if (message) {
+    enviarNotificacionExitosa(`${message} exitosamente`, `${message}!`);
+  }
+};
+
 // borra un documento
 // parámetros: colección, id de documento y reemplazo para mostrar en la notificación
 export const deleteDocument = async (collection, document, message) => {
