@@ -125,9 +125,6 @@ export const getTimestamp = () => {
 };
 
 export const getTimestampDifference = (date1, date2) => {
-  console.log(date1);
-  console.log(date2);
-
   return moment(date1).diff(moment(date2), 'minutes');
 };
 
