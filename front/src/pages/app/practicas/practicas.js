@@ -37,6 +37,7 @@ class Practica extends Component {
       practicaId: '',
       idMateria: this.props.subject.id,
       modalUploadFileOpen: false,
+      oldPracticesActive: false,
       rolDocente: this.props.rol === ROLES.Docente,
       fechaPublicacion: '',
     };
@@ -55,6 +56,24 @@ class Practica extends Component {
             operator: '<=',
             id: new Date().toISOString().slice(0, 10),
           },
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ]);
+
+    let practicasActuales = arrayDeObjetos.filter((elem) => {
+      return moment(elem.data.fechaVencimiento).isAfter(moment(new Date()));
+    });
+
+    this.dataListRenderer(practicasActuales);
+  };
+
+  getPracticasVencidas = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('practicas', [
+      {
+        field: 'fechaVencimiento',
+        operator: '<',
+        id: new Date().toISOString().slice(0, 10),
+      },
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
     ]);
@@ -108,6 +127,18 @@ class Practica extends Component {
     });
   };
 
+  toggleOldPracticesModal = async () => {
+    await this.setState({
+      oldPracticesActive: !this.state.oldPracticesActive,
+      isLoading: true,
+    });
+    if (this.state.oldPracticesActive) {
+      this.getPracticasVencidas(this.state.idMateria);
+    } else {
+      this.getPracticas(this.state.idMateria);
+    }
+  };
+
   onFileUploaded = () => {
     this.toggleUploadFileModal();
   };
@@ -137,7 +168,17 @@ class Practica extends Component {
       ) {
         practica.data.url = await this.getFileURL(practica.data.idArchivo);
       }
+
+      const result = await getCollection('correcciones', [
+        { field: 'idPractica', operator: '==', id: practica.id },
+        { field: 'idUsuario', operator: '==', id: this.props.user },
+      ]);
+      practica = Object.assign(
+        practica,
+        result.length > 0 ? { entregada: true } : { entregada: false }
+      );
     }
+
     this.setState({
       items: arrayDeObjetos,
       arrayOriginal: arrayDeObjetos,
@@ -231,6 +272,7 @@ class Practica extends Component {
       isLoading,
       items,
       modalUploadFileOpen,
+      oldPracticesActive,
       rolDocente,
       filtroFecha,
     } = this.state;
@@ -241,9 +283,25 @@ class Practica extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.my-activities"
-            toggleModal={rolDocente ? this.toggleCreateModal : null}
-            buttonText={rolDocente ? 'activity.add' : null}
+            heading={
+              oldPracticesActive
+                ? 'menu.my-old-activities'
+                : 'menu.my-activities'
+            }
+            toggleModal={
+              rol === ROLES.Docente && !oldPracticesActive
+                ? this.toggleCreateModal
+                : null
+            }
+            buttonText={
+              rol === ROLES.Docente && !oldPracticesActive
+                ? 'activity.add'
+                : null
+            }
+            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryButtonText={
+              oldPracticesActive ? 'activity.active' : 'activity.old'
+            }
           />
           <ModalGrande
             modalOpen={modalCreateOpen}
@@ -310,14 +368,31 @@ class Practica extends Component {
                     }
                     file={practica.data.url}
                     isSelect={this.state.selectedItems.includes(practica.id)}
-                    onEditItem={rolDocente ? this.toggleEditModal : null}
-                    onDelete={rolDocente ? this.onDelete : null}
+                    onEditItem={
+                      rol === ROLES.Docente && !oldPracticesActive
+                        ? this.toggleEditModal
+                        : null
+                    }
+                    onDelete={
+                      rol === ROLES.Docente && !oldPracticesActive
+                        ? this.onDelete
+                        : null
+                    }
                     onUploadFile={
-                      rol === ROLES.Alumno ? this.toggleUploadFileModal : null
+                      rol === ROLES.Alumno && !oldPracticesActive
+                        ? this.toggleUploadFileModal
+                        : null
                     }
                     navTo="#"
                     collect={collect}
-                    calendario={rolDocente ? true : false}
+                    calendario={
+                      rol === ROLES.Docente && !oldPracticesActive
+                        ? true
+                        : false
+                    }
+                    entregada={
+                      practica.entregada && rol === ROLES.Alumno ? true : false
+                    }
                   />
                 );
               })}{' '}
@@ -375,10 +450,10 @@ class Practica extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { userData, user } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default injectIntl(connect(mapStateToProps)(Practica));

@@ -7,6 +7,8 @@ import { NavLink } from 'react-router-dom';
 import Calendario from 'components/common/Calendario';
 import { injectIntl } from 'react-intl';
 import { editDocument } from 'helpers/Firebase-db';
+import ROLES from 'constants/roles';
+import { connect } from 'react-redux';
 
 class DataListView extends React.Component {
   constructor(props) {
@@ -70,6 +72,7 @@ class DataListView extends React.Component {
       preguntaALanzar,
       onSelectPregunta,
       seLanzo,
+      entregada,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3" id={id}>
@@ -185,6 +188,20 @@ class DataListView extends React.Component {
                 </Row>
               </div>
             </div>
+            {entregada && this.props.rol === ROLES.Alumno && (
+              <div className="flex mr-4">
+                <Badge color="primary" pill className="margin-auto mb-1">
+                  ENTREGADA
+                </Badge>
+              </div>
+            )}
+            {!entregada && this.props.rol === ROLES.Alumno && (
+              <div className="flex mr-4">
+                <Badge color="danger" pill className="margin-auto mb-1">
+                  NO ENTREGADA
+                </Badge>
+              </div>
+            )}
           </Card>
         </ContextMenuTrigger>
       </Colxx>
@@ -192,4 +209,11 @@ class DataListView extends React.Component {
   }
 }
 
-export default injectIntl(DataListView);
+const mapStateToProps = ({ authUser }) => {
+  const { userData } = authUser;
+  const { rol } = userData;
+
+  return { rol };
+};
+
+export default injectIntl(connect(mapStateToProps)(DataListView));
