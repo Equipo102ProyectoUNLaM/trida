@@ -164,15 +164,15 @@ class DataListView extends React.Component {
               </div>
             </div>
             {entregada && this.props.rol === ROLES.Alumno && (
-              <div>
-                <Badge color="primary" pill className="mb-1">
+              <div className="flex mr-4">
+                <Badge color="primary" pill className="margin-auto mb-1">
                   ENTREGADA
                 </Badge>
               </div>
             )}
             {!entregada && this.props.rol === ROLES.Alumno && (
-              <div>
-                <Badge color="danger" pill className="mb-1">
+              <div className="flex mr-4">
+                <Badge color="danger" pill className="margin-auto mb-1">
                   NO ENTREGADA
                 </Badge>
               </div>
