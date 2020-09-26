@@ -81,8 +81,6 @@ class FormEvaluacion extends React.Component {
   async componentDidMount() {
     if (this.props.idEval) {
       const userName = await getUsernameById(this.props.user);
-      let fechaFinalizacion;
-      let fechaPublicacion;
       if (this.props.evaluacionImportada) {
         this.setState({
           evaluacionId: this.props.idEval,
