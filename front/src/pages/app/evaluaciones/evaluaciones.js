@@ -21,7 +21,11 @@ import {
   desencriptarEvaluacion,
   desencriptarTexto,
 } from 'handlers/DecryptionHandler';
-import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
+import {
+  isEmpty,
+  getDateTimeStringFromDate,
+  getTimestampDifference,
+} from 'helpers/Utils';
 import * as _moment from 'moment';
 const moment = _moment;
 
@@ -72,11 +76,12 @@ class Evaluaciones extends Component {
       'ejercicios'
     );
     const evaluaciones = await desencriptarEvaluacion(arrayDeObjetos);
-    console.log(evaluaciones);
     const evaluacionesActuales = evaluaciones.filter((elem) => {
-      console.log(moment(elem.data.base.fecha_finalizacion));
-      return moment(elem.data.base.fecha_finalizacion).isAfter(
-        moment(new Date())
+      return (
+        getTimestampDifference(
+          elem.data.base.fecha_finalizacion.toDate(),
+          moment().toDate()
+        ) > 0
       );
     });
     this.dataListRenderer(evaluacionesActuales);
