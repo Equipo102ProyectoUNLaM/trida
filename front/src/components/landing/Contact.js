@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BlockTitle from './BlockTitle';
 import { functions } from 'helpers/Firebase';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import ContactBgShape from 'assets/landing/images/shapes/contact-bg-shape-1-1.png';
 import ContactImage from 'assets/landing/images/contacto2.png';
 
@@ -25,7 +26,7 @@ const Contact = () => {
     const sendMail = functions.httpsCallable('sendMail');
 
     return await sendMail({ email, ...options }).catch(function (error) {
-      console.log(error);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     });
   };
 
