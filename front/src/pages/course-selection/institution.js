@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from 'react';
 import { Row, Card, CardBody, Jumbotron } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
 import MediumCardListView from '../../containers/pages/MediumCardListView';
@@ -29,7 +30,7 @@ class Institution extends Component {
       const items = await getInstituciones(this.props.user);
       this.dataListRenderer(items);
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
 

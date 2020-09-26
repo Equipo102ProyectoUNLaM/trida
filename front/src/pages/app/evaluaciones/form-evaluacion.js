@@ -8,6 +8,7 @@ import {
   addDocumentWithSubcollection,
   getUsernameById,
 } from 'helpers/Firebase-db';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercicio';
@@ -240,7 +241,7 @@ class FormEvaluacion extends React.Component {
       this.props.onEvaluacionEditada();
       return;
     } catch (err) {
-      console.log(err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
 

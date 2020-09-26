@@ -11,6 +11,30 @@ import ROLES from 'constants/roles';
 import { connect } from 'react-redux';
 
 class DataListView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      focused: window.location.hash.replace('#', '') === this.props.id,
+    };
+  }
+
+  componentDidMount() {
+    const { focused } = this.state;
+    if (focused) {
+      const el = document.querySelector(`[id='${this.props.id}']`);
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+      setTimeout(() => {
+        this.setState({ focused: null });
+      }, 3000);
+    }
+  }
+
   handleClick = async (date) => {
     if (date) {
       const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
@@ -51,11 +75,12 @@ class DataListView extends React.Component {
       entregada,
     } = this.props;
     return (
-      <Colxx xxs="12" className="mb-3">
+      <Colxx xxs="12" className="mb-3" id={id}>
         <ContextMenuTrigger id="menu_id" data={id} collect={collect}>
           <Card
             className={classnames('d-flex flex-row', {
               active: isSelect,
+              focused: this.state.focused,
             })}
           >
             <div
@@ -164,15 +189,15 @@ class DataListView extends React.Component {
               </div>
             </div>
             {entregada && this.props.rol === ROLES.Alumno && (
-              <div>
-                <Badge color="primary" pill className="mb-1">
+              <div className="flex mr-4">
+                <Badge color="primary" pill className="margin-auto mb-1">
                   ENTREGADA
                 </Badge>
               </div>
             )}
             {!entregada && this.props.rol === ROLES.Alumno && (
-              <div>
-                <Badge color="danger" pill className="mb-1">
+              <div className="flex mr-4">
+                <Badge color="danger" pill className="margin-auto mb-1">
                   NO ENTREGADA
                 </Badge>
               </div>
