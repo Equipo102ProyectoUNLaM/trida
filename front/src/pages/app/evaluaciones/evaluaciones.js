@@ -279,7 +279,7 @@ class Evaluaciones extends Component {
                   type="text"
                   name="keyword"
                   id="search"
-                  placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
+                  placeholder="Búsqueda por nombre de evaluación, fecha de publicación, fecha de finalización..."
                   onChange={(e) => this.onSearchKey(e)}
                 />
               </div>
