@@ -279,17 +279,19 @@ class CardTabs extends Component {
                                 Exportar Evaluación
                               </Button>
                             )}
-                            {rol === ROLES.Alumno && !entregada && (
-                              <Button
-                                outline
-                                onClick={this.handleClickMake}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Realizar Evaluación
-                              </Button>
-                            )}
+                            {rol === ROLES.Alumno &&
+                              !entregada &&
+                              !this.props.isOldTest && (
+                                <Button
+                                  outline
+                                  onClick={this.handleClickMake}
+                                  size="sm"
+                                  color="primary"
+                                  className="button"
+                                >
+                                  Realizar Evaluación
+                                </Button>
+                              )}
                             {rol === ROLES.Alumno && entregada && (
                               <div>
                                 <Badge color="primary" pill className="mb-1">
@@ -297,6 +299,15 @@ class CardTabs extends Component {
                                 </Badge>
                               </div>
                             )}
+                            {rol === ROLES.Alumno &&
+                              !entregada &&
+                              this.props.isOldTest && (
+                                <div>
+                                  <Badge color="danger" pill className="mb-1">
+                                    NO ENTREGADA
+                                  </Badge>
+                                </div>
+                              )}
                           </Row>
                         </CardBody>
                       </Colxx>
