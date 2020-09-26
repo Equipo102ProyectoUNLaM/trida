@@ -36,7 +36,7 @@ const Videollamada = ({
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState();
-
+  const [realizarPregunta, setRealizarPregunta] = useState(false);
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
 
   const setElementHeight = () => {
@@ -160,6 +160,14 @@ const Videollamada = ({
     }));
   };
 
+  const toggleRealizarPregunta = () => {
+    setRealizarPregunta(!realizarPregunta);
+  };
+
+  const onRealizarPregunta = () => {
+    console.log('realizar');
+  };
+
   useEffect(() => {
     setElementHeight();
     window.addEventListener('resize', setElementHeight);
@@ -254,6 +262,35 @@ const Videollamada = ({
             <IntlMessages id="pizarron.abrir-pizarron" />
           </Button>
         </Row>
+      )}
+      {rol === ROLES.Alumno && (
+        <Row className="button-group mb-3 mr-3">
+          <Button
+            className="button"
+            color="primary"
+            size="lg"
+            onClick={toggleRealizarPregunta}
+          >
+            <IntlMessages id="clase.realizar-pregunta" />
+          </Button>
+        </Row>
+      )}
+      {realizarPregunta && (
+        <ModalGrande
+          modalOpen={realizarPregunta}
+          toggleModal={toggleRealizarPregunta}
+          text="Realizar pregunta"
+        >
+          <span>Pregunta input</span>
+          <ModalFooter>
+            <Button color="primary" onClick={onRealizarPregunta}>
+              Realizar Pregunta
+            </Button>
+            <Button color="secondary" onClick={toggleRealizarPregunta}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </ModalGrande>
       )}
       {modalPreguntasOpen && (
         <ModalGrande
