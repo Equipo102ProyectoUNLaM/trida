@@ -144,7 +144,8 @@ module.exports = {
   'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 11. Evaluaciones */
-  'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluation.add': 'AGREGAR / IMPORTAR EVALUACIÓN',
+  'evaluation.import': 'IMPORTAR EVALUACIÓN',
 
   /* 12. Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',
