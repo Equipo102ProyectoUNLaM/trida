@@ -24,6 +24,7 @@ import {
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
@@ -76,7 +77,7 @@ class TabsDeClase extends Component {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
     this.setState({ isLoading: false, asistencia });
-  }
+  };
 
   getLinksDeClase = async () => {
     const { data } = await getDocument(`clases/${this.props.idClase}`);
@@ -142,7 +143,7 @@ class TabsDeClase extends Component {
         }
       });
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       this.setState({
         files: array,
@@ -182,7 +183,7 @@ class TabsDeClase extends Component {
         }
       });
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       return array;
     }
@@ -218,9 +219,14 @@ class TabsDeClase extends Component {
           isLoading: false,
         },
         async () =>
-          await editDocument('clases', this.props.idClase, {
-            contenidos: contenidos,
-          })
+          await editDocument(
+            'clases',
+            this.props.idClase,
+            {
+              contenidos: contenidos,
+            },
+            'Clase editada'
+          )
       );
     }
   };
@@ -261,10 +267,10 @@ class TabsDeClase extends Component {
         'clases',
         this.props.idClase,
         { contenidos: arrayFiltrado },
-        'Clase'
+        'Clase editada'
       );
     } catch (err) {
-      console.log('Error', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
     this.toggleDeleteModal();
     this.props.updateContenidos();
@@ -288,6 +294,7 @@ class TabsDeClase extends Component {
       sinRespuesta
     );
 
+    //Ordeno preguntas por número
     this.setState({
       preguntasDeClase: preguntasDesencriptadas.sort(
         (a, b) => a.data.numero - b.data.numero
@@ -439,6 +446,7 @@ class TabsDeClase extends Component {
                               idSala={idSala}
                               idClase={idClase}
                               password={password}
+                              preguntas={preguntasDeClase}
                             />
                           )}
                         </CardBody>

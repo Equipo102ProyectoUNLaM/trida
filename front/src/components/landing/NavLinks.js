@@ -13,7 +13,7 @@ const NavLinks = () => {
           offset={-70}
           duration={500}
         >
-          <a>Home</a>
+          Home
         </ScrollLink>
       </li>
       <li>

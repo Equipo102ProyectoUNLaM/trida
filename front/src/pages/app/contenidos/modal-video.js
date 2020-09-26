@@ -12,7 +12,10 @@ import {
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { storage } from 'helpers/Firebase';
-import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
+import {
+  enviarNotificacionExitosa,
+  enviarNotificacionError,
+} from 'helpers/Utils-ui';
 import { getTimestamp } from 'helpers/Utils';
 
 const ModalVideo = ({
@@ -37,7 +40,7 @@ const ModalVideo = ({
         '¡Video subido!'
       );
     } catch (error) {
-      console.log(error);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
   return (

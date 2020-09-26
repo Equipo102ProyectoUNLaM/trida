@@ -1,5 +1,6 @@
 import { firestore, storage } from 'helpers/Firebase';
 import { getDocument } from 'helpers/Firebase-db';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 export const getUserData = async (userId) => {
   let foto = '';
@@ -8,7 +9,7 @@ export const getUserData = async (userId) => {
     try {
       foto = await storage.ref('usuarios').child(userId).getDownloadURL();
     } catch (error) {
-      console.log(error);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
 
     return {
@@ -16,7 +17,7 @@ export const getUserData = async (userId) => {
       foto,
     };
   } catch (err) {
-    console.log('Error al obtener documento de usuarios', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 
@@ -40,7 +41,7 @@ export const getInstituciones = async (userId) => {
       array.push(obj);
     }
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   } finally {
     return array;
   }
@@ -62,7 +63,7 @@ export const renderSubjects = async (materiasIds) => {
     }
     return array;
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 
@@ -90,7 +91,7 @@ export const getCourses = async (institutionId, userId) => {
     }
     return array;
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 

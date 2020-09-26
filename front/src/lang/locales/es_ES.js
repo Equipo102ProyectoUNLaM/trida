@@ -7,8 +7,8 @@ Tabla de Contenidos
 03. Menu
 04. Página de error
 05. Páginas generales
-06.Virtual Classes
-  06.01.My Classes
+06. Clases Virtuales
+  06.01. Mis Clases
 07. Institucion
 08. Curso
 09. Materia
@@ -17,6 +17,7 @@ Tabla de Contenidos
 12. Contenidos
 13. Mensajería
 14. Inicio
+15. Foros
 */
 
 module.exports = {
@@ -78,7 +79,8 @@ module.exports = {
   'menu.mis-clases': 'Mis Clases',
   'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
-  'menu.my-activities': 'Mis Prácticas',
+  'menu.my-activities': 'Mis Prácticas Actuales',
+  'menu.my-old-activities': 'Mis Prácticas Finalizadas',
   'menu.my-evaluations': 'Mis Evaluaciones',
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
@@ -87,6 +89,7 @@ module.exports = {
   'menu.mis-instituciones': 'Mis Instituciones',
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
+  'menu.mis-foros': 'Mis Temas',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -113,8 +116,8 @@ module.exports = {
   'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
   'clase.agregar-link': 'Link *',
   'clase.descripcion-link': 'Descripción link',
-
   'clase.crear-pregunta': 'Crear Preguntas para la Clase',
+  'clase.lanzar-pregunta': 'Lanzar Pregunta',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',
@@ -141,6 +144,8 @@ module.exports = {
   'activity.edit': 'EDITAR PRÁCTICA',
   'activity.upload': 'SUBIR PRÁCTICA',
   'activity.delete': 'ELIMINAR PRÁCTICA',
+  'activity.old': 'VER PRÁCTICAS FINALIZADAS',
+  'activity.active': 'VER PRÁCTICAS ACTUALES',
   'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 11. Evaluaciones */
@@ -162,4 +167,8 @@ module.exports = {
 
   /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
+
+  /* 15. Foros */
+  'forums.add': 'AGREGAR TEMA',
+  'forums.edit': 'EDITAR TEMA',
 };

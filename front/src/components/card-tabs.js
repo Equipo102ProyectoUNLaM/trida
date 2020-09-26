@@ -32,7 +32,26 @@ class CardTabs extends Component {
       activeFirstTab: '1',
       activeSecondTab: '1',
       modalMakeOpen: false,
+      focused: window.location.hash.replace('#', '') === this.props.item.id,
     };
+  }
+
+  componentDidMount() {
+    const { focused } = this.state;
+    if (focused) {
+      const el = document.querySelector(`[id='${this.props.item.id}']`);
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+
+      setTimeout(() => {
+        this.setState({ focused: null });
+      }, 3000);
+    }
   }
 
   toggleFirstTab(tab) {
@@ -71,7 +90,12 @@ class CardTabs extends Component {
       const obj = {
         fecha_finalizacion: timeStamp.fromDate(new Date(date)),
       };
-      await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
+      await editDocument(
+        'evaluaciones',
+        this.props.item.id,
+        obj,
+        'Evaluación editada'
+      );
       this.props.updateEvaluaciones(this.props.materiaId);
     }
   };
@@ -81,7 +105,12 @@ class CardTabs extends Component {
       const obj = {
         fecha_publicacion: timeStamp.fromDate(new Date(date)),
       };
-      await editDocument('evaluaciones', this.props.item.id, obj, 'Evaluación');
+      await editDocument(
+        'evaluaciones',
+        this.props.item.id,
+        obj,
+        'Evaluación editada'
+      );
       this.props.updateEvaluaciones(this.props.materiaId);
     }
   };
@@ -97,8 +126,8 @@ class CardTabs extends Component {
       <Row lg="12" className="tab-card-evaluaciones">
         <Colxx xxs="12">
           <Row lg="12">
-            <Colxx xxs="12" xs="12" lg="12">
-              <Card className="mb-4">
+            <Colxx xxs="12" xs="12" lg="12" id={item.id}>
+              <Card className={`mb-4 ${this.state.focused ? 'focused' : ''}`}>
                 <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs ml-0 mr-0">
                     <NavItem

@@ -1,4 +1,5 @@
 import { storage } from 'helpers/Firebase';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import Moment from 'moment';
 
 export const BaseUrl = 'gs://trida-7f28f.appspot.com/';
@@ -41,7 +42,7 @@ export const buscarArchivosStorage = async (subjectId, newRef) => {
 
     return arrayFiles;
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 
@@ -57,7 +58,6 @@ export const subirArchivoAStorage = async (path, file) => {
 export const eliminarArchivoStorage = async (path) => {
   const fileRef = storage.ref(path);
   fileRef.delete().catch(function (error) {
-    // Uh-oh, an error occurred!
-    console.log('Error deleting documents', error);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   });
 };
