@@ -182,7 +182,7 @@ class Correcciones extends Component {
             <Colxx xxs="4" md="4" className="columna-filtro-badge">
               <ButtonGroup className="filtros-button-group">
                 <Button
-                  color="primary"
+                  color="secondary"
                   className="filtros-button"
                   onClick={() => this.onCheckboxBtnClick(1)}
                   active={cSelected.includes(1)}
@@ -190,7 +190,7 @@ class Correcciones extends Component {
                   Corregido
                 </Button>
                 <Button
-                  color="primary"
+                  color="secondary"
                   className="filtros-button"
                   onClick={() => this.onCheckboxBtnClick(2)}
                   active={cSelected.includes(2)}
