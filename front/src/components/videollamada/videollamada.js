@@ -20,6 +20,8 @@ import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ContestarPregunta from './contestar-pregunta';
 import { timeStamp } from 'helpers/Firebase';
 import { getDate } from 'helpers/Utils';
+import { TimePicker } from 'antd';
+import moment from 'moment';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -38,6 +40,7 @@ const Videollamada = ({
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
+  const timeFormat = 'mm:ss';
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
@@ -46,7 +49,9 @@ const Videollamada = ({
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState();
-  const [tiempoPregunta, setTiempoPregunta] = useState('00:05');
+  const [tiempoPregunta, setTiempoPregunta] = useState(
+    moment('01:30', timeFormat)
+  );
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
   const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(false);
 
@@ -81,7 +86,7 @@ const Videollamada = ({
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
-      // tiempoDuracion: timeStamp.fromDate(new Date(tiempoPregunta)), // CAMBIAR A FORMATO FECHA DE FIREBASE PARA MANEJAR EN COUNTDOWN
+      tiempoDuracion: timeStamp.fromDate(new Date(tiempoPregunta)),
     });
 
     setPreguntaALanzar(null);
@@ -161,16 +166,12 @@ const Videollamada = ({
     setModalPreviewOpen(!modalPreviewOpen);
   };
 
-  const handleChange = (event) => {
-    const { value } = event.target;
-    //setTiempoPregunta(value);
-
-    setTiempoPregunta(getDate(value, 'HH:mm'));
-    console.log(tiempoPregunta);
+  const handleChangeTime = (time, timeString) => {
+    setTiempoPregunta(time);
   };
 
   const lanzamientoPreguntaValido = () => {
-    return preguntaALanzar && tiempoPregunta && tiempoPregunta !== '00:00';
+    return preguntaALanzar && tiempoPregunta;
   };
 
   const guardarListaAsistencia = async () => {
@@ -303,11 +304,13 @@ const Videollamada = ({
           </Label>
           <Row className="mb-3 mr-3">
             <Colxx xxs="4" md="5">
-              <Input
+              <TimePicker
                 className="timer-pregunta-clase"
-                type="time"
                 defaultValue={tiempoPregunta}
-                onChange={handleChange}
+                format={timeFormat}
+                placeholder={'Minutos : Segundos'}
+                showNow={false}
+                onChange={handleChangeTime}
               />
             </Colxx>
           </Row>
@@ -340,7 +343,6 @@ const Videollamada = ({
           </ModalFooter>
         </ModalGrande>
       )}
-      {/* CUANDO SE HAGA LOGICA DE LA RTA, SE AGREGA LA VALIDACIÓN DE QUE NO ESTÉ RESPONDIDA PARA MOSTRAR EL MODAL */}
       {rol === ROLES.Alumno &&
         preguntaLanzadaGlobal.length > 0 &&
         !alumnoRespondioPregunta && (
