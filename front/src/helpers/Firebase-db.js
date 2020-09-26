@@ -499,7 +499,8 @@ export const getEventos = async (subject) => {
     const { id, data } = clase;
     arrayDeEventos.push({
       id,
-      tipo: `clases-virtuales/mis-clases/detalle-clase/${id}`,
+      tipo: 'clase',
+      url: `clases-virtuales/mis-clases/detalle-clase/${id}`,
       title: 'Clase: ' + data.nombre,
       start: new Date(`${data.fecha} 08:00:00`),
       end: new Date(`${data.fecha} 10:00:00`),
@@ -512,7 +513,8 @@ export const getEventos = async (subject) => {
     );
     arrayDeEventos.push({
       id,
-      tipo: 'evaluaciones',
+      tipo: 'evaluacion',
+      url: 'evaluaciones',
       title: 'Evaluación: ' + nombre,
       start: new Date(data.fecha_publicacion.toDate()),
       end: new Date(data.fecha_finalizacion.toDate()),
@@ -522,7 +524,8 @@ export const getEventos = async (subject) => {
     const { id, data } = practica;
     arrayDeEventos.push({
       id,
-      tipo: 'practicas',
+      tipo: 'practica',
+      url: 'practicas',
       title: 'Práctica: ' + data.nombre,
       start: new Date(`${data.fechaLanzada} 08:00:00`),
       end: new Date(`${data.fechaVencimiento} 18:00:00`),

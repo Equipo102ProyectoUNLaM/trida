@@ -1,8 +1,10 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import es from 'date-fns/locale/es';
 import { DropdownMenu, Button, ModalFooter, ModalHeader } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import 'react-datepicker/dist/react-datepicker.css';
+registerLocale('es', es);
 
 class Calendario extends React.Component {
   constructor(props, context) {
@@ -35,24 +37,31 @@ class Calendario extends React.Component {
     });
 
     this.props.handleClick(this.state.fecha);
+
+    this.setState({
+      fecha: '',
+    });
   };
 
   render() {
     const {
       text,
       evalCalendar,
+      filterCalendar,
       dateFormat,
       timeFormat,
       timeCaption,
       timeIntervals,
     } = this.props;
     const classText = evalCalendar ? '-eval' : '';
+    const filterText = filterCalendar ? '-filter' : '';
     return (
       <div>
         <div
           className={
             'glyph-icon simple-icon-calendar set-date-action-icon' +
             classText +
+            filterText +
             ' relative'
           }
           onClick={this.handleClick}
@@ -79,6 +88,7 @@ class Calendario extends React.Component {
             timeIntervals={timeIntervals ? timeIntervals : null}
             dropdownMode="select"
             defaultValue={null}
+            locale="es"
           />
           <ModalFooter>
             <Button color="primary" className="button" onClick={this.onConfirm}>
