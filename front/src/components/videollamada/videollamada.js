@@ -11,6 +11,7 @@ import {
   editDocument,
   getCollectionOnSnapshot,
   documentExistsOnSnapshot,
+  getDatosClaseOnSnapshot,
 } from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
@@ -47,6 +48,7 @@ const Videollamada = ({
   const [preguntaALanzar, setPreguntaALanzar] = useState();
   const [tiempoPregunta, setTiempoPregunta] = useState('00:05');
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
+  const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(false);
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -79,23 +81,16 @@ const Videollamada = ({
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
-      tiempoDuracion: timeStamp.fromDate(new Date(tiempoPregunta)), // CAMBIAR A FORMATO FECHA DE FIREBASE PARA MANEJAR EN COUNTDOWN
+      // tiempoDuracion: timeStamp.fromDate(new Date(tiempoPregunta)), // CAMBIAR A FORMATO FECHA DE FIREBASE PARA MANEJAR EN COUNTDOWN
     });
-
-    //La lógica anda, tengo que ver donde hacer el llamado (useEffect?)
-
-    const existe = await documentExistsOnSnapshot(
-      `clases/${idClase}/preguntas/${
-        /* preguntaLanzadaGlobal[0].id */ preguntaALanzar
-      }/respuestas`,
-      userId
-    );
-    console.log('existe', existe);
-
-    //
 
     setPreguntaALanzar(null);
     toggleModalPreguntas();
+  };
+
+  const checkRespuestaAlumno = (document) => {
+    setAlumnoRespondioPregunta(document.exists);
+    console.log('alumnoRespondioPregunta', alumnoRespondioPregunta);
   };
 
   useEffect(() => {
@@ -133,6 +128,12 @@ const Videollamada = ({
         preguntaLanzadaEncriptada,
         sinRespuesta
       );
+      getDatosClaseOnSnapshot(
+        `clases/${idClase}/preguntas/${preguntaLanzadaGlobal[0].id}/respuestas`,
+        userId,
+        checkRespuestaAlumno
+      );
+      console.log('preguntaLanzadaGlobal', preguntaLanzadaGlobal);
       toggleModalPreviewPreguntaAlumno();
     }
   };
@@ -340,15 +341,17 @@ const Videollamada = ({
         </ModalGrande>
       )}
       {/* CUANDO SE HAGA LOGICA DE LA RTA, SE AGREGA LA VALIDACIÓN DE QUE NO ESTÉ RESPONDIDA PARA MOSTRAR EL MODAL */}
-      {rol === ROLES.Alumno && preguntaLanzadaGlobal.length > 0 && (
-        <ContestarPregunta
-          toggle={toggleModalPreviewPreguntaAlumno}
-          isOpen={modalPreviewOpen}
-          preguntas={preguntaLanzadaGlobal}
-          onRespuestaDeAlumno={respuestaDeAlumno}
-          idClase={idClase}
-        />
-      )}
+      {rol === ROLES.Alumno &&
+        preguntaLanzadaGlobal.length > 0 &&
+        !alumnoRespondioPregunta && (
+          <ContestarPregunta
+            toggle={toggleModalPreviewPreguntaAlumno}
+            isOpen={modalPreviewOpen}
+            preguntas={preguntaLanzadaGlobal}
+            onRespuestaDeAlumno={respuestaDeAlumno}
+            idClase={idClase}
+          />
+        )}
       <div id={parentNode}></div>
     </Fragment>
   );
