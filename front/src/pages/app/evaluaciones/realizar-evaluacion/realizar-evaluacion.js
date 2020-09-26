@@ -22,6 +22,8 @@ import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import { createUUID } from 'helpers/Utils';
+import { subirArchivoAStorage } from 'helpers/Firebase-storage';
 
 import {
   getDateWithFormat,
@@ -132,9 +134,10 @@ class RealizarEvaluacion extends Component {
         ejercicio.respuesta[e.indiceOpcion] = e.respuesta;
         break;
       case TIPO_EJERCICIO.preguntas_aleatorias:
-        {
-          ejercicio.respuesta = e;
-        }
+        ejercicio.respuesta = e;
+        break;
+      case TIPO_EJERCICIO.adjuntar_desarrollo:
+        ejercicio.respuesta = e.respuesta;
         break;
       default:
         break;
@@ -151,6 +154,8 @@ class RealizarEvaluacion extends Component {
   };
 
   entregarEvaluacion = async () => {
+    this.setState({ isLoading: true });
+    let respuestasConUrl = await this.subirImagenesAStorage();
     let obj = {
       estado: ESTADO_ENTREGA.no_corregido,
       fecha_entrega: getFechaHoraActual(),
@@ -159,8 +164,9 @@ class RealizarEvaluacion extends Component {
       id_entrega: this.state.evaluacionId,
       tipo: TIPO_ENTREGA.evaluacion,
       version: 0,
-      respuestas: this.state.respuestas,
+      respuestas: respuestasConUrl,
     };
+
     await addDocument(
       `correcciones`,
       obj,
@@ -170,6 +176,30 @@ class RealizarEvaluacion extends Component {
       'Tu evaluación no pudo ser entregada'
     );
     this.props.history.push(`/app/evaluaciones`);
+  };
+
+  subirImagenesAStorage = async () => {
+    try {
+      let rtaConUrl = this.state.respuestas;
+      for (const respuesta of rtaConUrl) {
+        const ejercicio = this.state.ejercicios.find(
+          (x) => x.data.numero === respuesta.numero
+        );
+        if (ejercicio.data.tipo === TIPO_EJERCICIO.adjuntar_desarrollo) {
+          const uuid = createUUID();
+          const path = `materias/${this.props.subject.id}/ejerciciosEvaluaciones/${this.state.evaluacionId}`;
+          const url = await subirArchivoAStorage(
+            path,
+            respuesta.respuesta,
+            uuid
+          );
+          respuesta.respuesta = url;
+        }
+      }
+      return rtaConUrl;
+    } catch (err) {
+      console.log('Error', err);
+    }
   };
 
   validateRespuestas = () => {
@@ -182,6 +212,7 @@ class RealizarEvaluacion extends Component {
         case TIPO_EJERCICIO.oral:
           break;
         case TIPO_EJERCICIO.respuesta_libre:
+        case TIPO_EJERCICIO.adjuntar_desarrollo:
           if (!rta.respuesta || rta.respuesta === '') valid = false;
           break;
         case TIPO_EJERCICIO.opcion_multiple:
@@ -190,7 +221,7 @@ class RealizarEvaluacion extends Component {
         case TIPO_EJERCICIO.preguntas_aleatorias:
           if (
             rta.respuesta.find((x) => !x.respuesta) ||
-            rta.respuesta.length !=
+            rta.respuesta.length !==
               this.state.ejercicios.find(
                 (x) => x.data.numero.toString() === rta.numero.toString()
               ).data.cantidad

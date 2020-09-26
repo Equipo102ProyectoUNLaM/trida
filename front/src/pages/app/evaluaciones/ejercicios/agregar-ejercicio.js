@@ -110,6 +110,7 @@ class AgregarEjercicio extends React.Component {
               valid = false;
               break;
             }
+            break;
           default:
             break;
         }

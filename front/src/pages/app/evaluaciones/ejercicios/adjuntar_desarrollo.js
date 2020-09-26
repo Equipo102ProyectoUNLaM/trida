@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import {
   Row,
   Input,
-  Button,
   Label,
   FormGroup,
   InputGroup,
@@ -18,7 +17,10 @@ class AdjuntarDesarrollo extends React.Component {
 
     this.state = {
       consigna: '',
-      respuesta: '',
+      respuesta: {
+        desarrollo: null,
+        file: null,
+      },
       isOpenImagePreview: false,
     };
   }
@@ -38,24 +40,37 @@ class AdjuntarDesarrollo extends React.Component {
     this.props.onEjercicioChange({ [name]: value }, this.props.ejercicioId);
   };
 
+  removeRespuesta = () => {
+    this.setState({
+      respuesta: {
+        desarrollo: null,
+        file: null,
+      },
+    });
+    this.props.onEjercicioChange({ respuesta: null }, this.props.value.numero);
+  };
+
   handleImageChange = (event) => {
     event.preventDefault();
-    const { value, name } = event.target;
+    const { files } = event.target;
     let reader = new FileReader();
-    let file = event.target.files[0];
+    let file = files[0];
     let img = {
-      [name]: value,
       file: file,
-      desarrollo: reader.result,
+      desarrollo: '',
     };
     reader.onloadend = () => {
+      img.desarrollo = reader.result;
       this.setState({
         respuesta: img,
       });
     };
 
     reader.readAsDataURL(file);
-    this.props.onEjercicioChange({ respuesta: img }, this.props.ejercicioId);
+    this.props.onEjercicioChange(
+      { respuesta: img.file },
+      this.props.value.numero
+    );
   };
 
   render() {
@@ -88,28 +103,29 @@ class AdjuntarDesarrollo extends React.Component {
               <Label>{consigna}</Label>
             </div>
             <div>
-              {respuesta && (
+              {respuesta.desarrollo && (
                 <Fragment>
-                  <img
-                    className="image-preview"
-                    alt="img"
-                    src={respuesta.desarrollo}
-                  />
-                  <Colxx xxs="1" className="icon-container">
-                    <div
-                      className="margin-auto"
-                      style={{ textAlign: 'center' }}
-                    >
+                  <Row>
+                    <Colxx className="flex">
+                      <img
+                        className="image-preview"
+                        alt="img"
+                        src={respuesta.desarrollo}
+                      />
                       <div
-                        className="glyph-icon simple-icon-magnifier-add zoom-icon"
+                        className="mr-1 ml-1 glyph-icon simple-icon-magnifier-add zoom-icon"
                         onClick={() =>
                           this.setState({
                             isOpenImagePreview: true,
                           })
                         }
-                      ></div>
-                    </div>
-                  </Colxx>
+                      />
+                      <div
+                        className="glyph-icon simple-icon-close remove-icon ml-1 mr-1"
+                        onClick={() => this.removeRespuesta()}
+                      />
+                    </Colxx>
+                  </Row>
                 </Fragment>
               )}
               {!respuesta.desarrollo && (
@@ -123,6 +139,11 @@ class AdjuntarDesarrollo extends React.Component {
                   />
                 </InputGroup>
               )}
+              {this.props.submitted && !respuesta.file ? (
+                <div className="invalid-feedback d-block">
+                  Adjuntar el desarrollo
+                </div>
+              ) : null}
             </div>
           </div>
         )}
@@ -130,7 +151,7 @@ class AdjuntarDesarrollo extends React.Component {
         {!preview && !resolve && (
           <div className="rta-libre-container">
             <FormGroup className="error-l-75">
-              <Label>Pregunta</Label>
+              <Label>Consigna</Label>
               <Input
                 autoComplete="off"
                 name="consigna"
