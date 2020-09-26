@@ -200,6 +200,9 @@ class Correcciones extends Component {
                   isSelect={this.state.selectedItems.includes(correccion.id)}
                   navTo="#"
                   collect={collect}
+                />
+              );
+            })}
             <Colxx xxs="8" md="8">
               <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
                 <input
