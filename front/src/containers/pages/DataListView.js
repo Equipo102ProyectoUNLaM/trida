@@ -73,6 +73,7 @@ class DataListView extends React.Component {
       onSelectPregunta,
       seLanzo,
       entregada,
+      noEntregada,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3" id={id}>
@@ -195,7 +196,7 @@ class DataListView extends React.Component {
                 </Badge>
               </div>
             )}
-            {!entregada && this.props.rol === ROLES.Alumno && (
+            {noEntregada && this.props.rol === ROLES.Alumno && (
               <div className="flex mr-4">
                 <Badge color="danger" pill className="margin-auto mb-1">
                   NO ENTREGADA

@@ -382,8 +382,9 @@ class Practica extends Component {
                     calendario={
                       rolDocente && !oldPracticesActive ? true : false
                     }
-                    entregada={
-                      practica.entregada && rol === ROLES.Alumno ? true : false
+                    entregada={practica.entregada ? true : false}
+                    noEntregada={
+                      !practica.entregada && oldPracticesActive ? true : false
                     }
                   />
                 );
