@@ -30,6 +30,7 @@ import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import { themeRadiusStorageKey } from 'constants/defaultValues';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -63,6 +64,7 @@ const Videollamada = ({
   const [preguntasRealizadas, setPreguntasRealizadas] = useState([]);
   const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
+  const [reacciones, setReacciones] = useState({});
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -232,8 +234,19 @@ const Videollamada = ({
     const { data } = await getDocument(
       `preguntasDeAlumno/${idClase}/preguntas/${preguntaId}`
     );
-    editDocument(`preguntasDeAlumno/${idClase}/preguntas`, preguntaId, {
-      reacciones: data.reacciones + 1,
+    if (reacciones[preguntaId] === true) {
+      editDocument(`preguntasDeAlumno/${idClase}/preguntas`, preguntaId, {
+        reacciones: data.reacciones - 1,
+      });
+    } else {
+      editDocument(`preguntasDeAlumno/${idClase}/preguntas`, preguntaId, {
+        reacciones: data.reacciones + 1,
+      });
+    }
+
+    setReacciones({
+      ...reacciones,
+      [preguntaId]: !reacciones[preguntaId],
     });
   };
 
@@ -471,7 +484,9 @@ const Videollamada = ({
                         ? () => updateReacciones(pregunta.id)
                         : null
                     }
-                    className="reaccion-pregunta"
+                    className={`reaccion-pregunta ${
+                      reacciones[pregunta.id] ? 'active' : ''
+                    }`}
                   >
                     <span role="img" aria-label="mal">
                       👍
