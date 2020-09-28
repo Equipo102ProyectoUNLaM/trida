@@ -16,17 +16,15 @@ import {
   getTimestamp,
   getTimestampDifference,
   getFechaHoraActual,
-  createRandomString,
 } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
 import {
-  editDocumentSinFechaEdicion,
   getCollectionOnSnapshot,
   editDocument,
-  getDatosClaseOnSnapshot,
   getDocument,
+  addDocument,
 } from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
@@ -46,6 +44,7 @@ const Videollamada = ({
   rol,
   idClase,
   preguntas,
+  idUser,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
@@ -103,12 +102,25 @@ const Videollamada = ({
 
   useEffect(() => {
     getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
-    getDatosClaseOnSnapshot('preguntasDeAlumno', idClase, onPreguntaRealizada);
+    getCollectionOnSnapshot(
+      `preguntasDeAlumno/${idClase}/preguntas`,
+      onPreguntaRealizada
+    );
   }, []);
 
   const onPreguntaRealizada = (doc) => {
-    const { preguntas } = doc.data();
-    setPreguntasRealizadas(preguntas);
+    const arrayPreguntas = [];
+    doc.forEach((document) => {
+      const { alumno, fecha, pregunta, reacciones } = document.data();
+      arrayPreguntas.push({
+        id: document.id,
+        alumno,
+        fecha,
+        pregunta,
+        reacciones,
+      });
+    });
+    setPreguntasRealizadas(arrayPreguntas);
   };
 
   // Obtengo la pregunta que lanzó el profe y la muestro en el modal Preview al alumno
@@ -201,40 +213,27 @@ const Videollamada = ({
   };
 
   const onRealizarPregunta = async () => {
-    const { data } = await getDocument(`preguntasDeAlumno/${idClase}`);
-    editDocumentSinFechaEdicion(
-      'preguntasDeAlumno',
-      idClase,
+    await addDocument(
+      `preguntasDeAlumno/${idClase}/preguntas`,
       {
-        preguntas: [
-          ...data.preguntas,
-          {
-            id: createRandomString(),
-            pregunta: preguntaDeAlumno,
-            alumno: userName,
-            fecha: getFechaHoraActual(),
-            reacciones: 0,
-          },
-        ],
+        pregunta: preguntaDeAlumno,
+        alumno: userName,
+        fecha: getFechaHoraActual(),
+        reacciones: 0,
       },
-      'Pregunta enviada'
+      idUser,
+      'Pregunta enviada!',
+      'Pregunta enviada exitosamente'
     );
+    toggleRealizarPregunta();
   };
 
   const updateReacciones = async (preguntaId) => {
-    const { data } = await getDocument(`preguntasDeAlumno/${idClase}`);
-    const [pregunta] = data.preguntas.filter((elem) => elem.id === preguntaId);
-    editDocumentSinFechaEdicion('preguntasDeAlumno', idClase, {
-      preguntas: [
-        ...data.preguntas,
-        {
-          id: pregunta.id,
-          pregunta: pregunta.pregunta,
-          alumno: pregunta.alumno,
-          fecha: pregunta.fecha,
-          reacciones: pregunta.reacciones + 1,
-        },
-      ],
+    const { data } = await getDocument(
+      `preguntasDeAlumno/${idClase}/preguntas/${preguntaId}`
+    );
+    editDocument(`preguntasDeAlumno/${idClase}/preguntas`, preguntaId, {
+      reacciones: data.reacciones + 1,
     });
   };
 
@@ -471,7 +470,9 @@ const Videollamada = ({
                     <span role="img" aria-label="mal">
                       👍
                     </span>
-                    <span>+ {pregunta.reacciones}</span>
+                    {pregunta.reacciones > 0 && (
+                      <span>+ {pregunta.reacciones}</span>
+                    )}
                   </Row>
                 </div>
               );
