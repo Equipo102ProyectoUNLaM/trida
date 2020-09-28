@@ -471,7 +471,12 @@ const Videollamada = ({
                       👍
                     </span>
                     {pregunta.reacciones > 0 && (
-                      <span>+ {pregunta.reacciones}</span>
+                      <span className="texto-reaccion-pregunta">
+                        + {pregunta.reacciones}
+                      </span>
+                    )}
+                    {pregunta.reacciones === 0 && (
+                      <span className="texto-reaccion-pregunta"> - </span>
                     )}
                   </Row>
                 </div>

@@ -212,21 +212,15 @@ class TabsDeClase extends Component {
           '/contenidos/' +
           nombre
       );
-
       this.setState(
         {
           propsContenidos: contenidos,
           isLoading: false,
         },
         async () =>
-          await editDocument(
-            'clases',
-            this.props.idClase,
-            {
-              contenidos: contenidos,
-            },
-            'Clase editada'
-          )
+          await editDocument('clases', this.props.idClase, {
+            contenidos: contenidos,
+          })
       );
     }
   };
