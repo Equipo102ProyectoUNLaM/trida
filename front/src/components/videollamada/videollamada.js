@@ -1,6 +1,16 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
-import { Button, Row, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
+import {
+  Button,
+  Row,
+  ModalFooter,
+  FormGroup,
+  Label,
+  Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
+} from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
@@ -9,6 +19,9 @@ import INTERFACE_CONFIG from 'constants/videollamada';
 import {
   editDocumentSinFechaEdicion,
   getCollectionOnSnapshot,
+  editDocument,
+  getDatosClaseOnSnapshot,
+  getDocument,
 } from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
@@ -38,8 +51,12 @@ const Videollamada = ({
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
+  const [modalPreguntasRealizadas, setModalPreguntasRealizadas] = useState(
+    false
+  );
   const [preguntaALanzar, setPreguntaALanzar] = useState();
   const [realizarPregunta, setRealizarPregunta] = useState(false);
+  const [preguntasRealizadas, setPreguntasRealizadas] = useState([]);
   const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
 
@@ -81,7 +98,13 @@ const Videollamada = ({
 
   useEffect(() => {
     getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
+    getDatosClaseOnSnapshot('preguntasDeAlumno', idClase, onPreguntaRealizada);
   }, []);
+
+  const onPreguntaRealizada = (doc) => {
+    const { preguntas } = doc.data();
+    setPreguntasRealizadas(preguntas);
+  };
 
   // Obtengo la pregunta que lanzó el profe y la muestro en el modal Preview al alumno
   const getPreguntaLanzada = (documents) => {
@@ -168,15 +191,24 @@ const Videollamada = ({
     setRealizarPregunta(!realizarPregunta);
   };
 
-  const onRealizarPregunta = () => {
+  const toggleModalPreguntasRealizadas = () => {
+    setModalPreguntasRealizadas(!modalPreguntasRealizadas);
+  };
+
+  const onRealizarPregunta = async () => {
+    const { data } = await getDocument(`preguntasDeAlumno/${idClase}`);
     editDocumentSinFechaEdicion(
       'preguntasDeAlumno',
       idClase,
       {
-        preguntas: [{ pregunta: preguntaDeAlumno, alumno: userName }],
+        preguntas: [
+          ...data.preguntas,
+          { pregunta: preguntaDeAlumno, alumno: userName },
+        ],
       },
       'Pregunta enviada'
     );
+    toggleRealizarPregunta();
   };
 
   const handleCancelarRealizarPregunta = () => {
@@ -251,34 +283,47 @@ const Videollamada = ({
   }, [jitsi, userName, password, subject]);
   return (
     <Fragment>
-      {rol === ROLES.Docente && (
-        <Row className="button-group mb-3 mr-3">
+      <Row className="button-group mb-3 mr-3">
+        {preguntasRealizadas && (
           <Button
             className="button"
             color="primary"
             size="lg"
-            onClick={toggleModalPreguntas}
+            onClick={toggleModalPreguntasRealizadas}
           >
-            <IntlMessages id="clase.lanzar-pregunta" />
+            <IntlMessages id="clase.ver-preguntas-realizadas" />
           </Button>
-          <Button
-            className="button"
-            color="primary"
-            size="lg"
-            onClick={toggleShareScreen}
-          >
-            {shareButtonText}
-          </Button>{' '}
-          <Button
-            className="button"
-            color="primary"
-            size="lg"
-            onClick={abrirPizarron}
-          >
-            <IntlMessages id="pizarron.abrir-pizarron" />
-          </Button>
-        </Row>
-      )}
+        )}
+        {rol === ROLES.Docente && (
+          <>
+            <Button
+              className="button"
+              color="primary"
+              size="lg"
+              onClick={toggleModalPreguntas}
+            >
+              <IntlMessages id="clase.lanzar-pregunta" />
+            </Button>
+            <Button
+              className="button"
+              color="primary"
+              size="lg"
+              onClick={toggleShareScreen}
+            >
+              {shareButtonText}
+            </Button>{' '}
+            <Button
+              className="button"
+              color="primary"
+              size="lg"
+              onClick={abrirPizarron}
+            >
+              <IntlMessages id="pizarron.abrir-pizarron" />
+            </Button>
+          </>
+        )}
+      </Row>
+
       {rol === ROLES.Alumno && (
         <Row className="button-group mb-3 mr-3">
           <Button
@@ -295,7 +340,7 @@ const Videollamada = ({
         <ModalGrande
           modalOpen={realizarPregunta}
           toggleModal={toggleRealizarPregunta}
-          text="Realizar pregunta"
+          text="Realizá una pregunta a tu docente"
         >
           <span className="tip-text">
             {' '}
@@ -365,6 +410,32 @@ const Videollamada = ({
           esRespuestaDeAlumno={true}
           onRespuestaDeAlumno={respuestaDeAlumno}
         />
+      )}
+      {modalPreguntasRealizadas && (
+        <Modal
+          isOpen={modalPreguntasRealizadas}
+          toggle={toggleModalPreguntasRealizadas}
+          wrapClassName="modal-right"
+        >
+          <ModalHeader toggle={toggleModalPreguntasRealizadas}>
+            <IntlMessages id="clase.ver-preguntas-realizadas" />
+          </ModalHeader>
+          <ModalBody>
+            {preguntasRealizadas.map((pregunta) => {
+              return (
+                <div key={pregunta.pregunta}>
+                  <Row>{pregunta.pregunta}</Row>
+                  <Row>{rol === ROLES.Docente ? pregunta.alumno : null}</Row>
+                </div>
+              );
+            })}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={toggleModalPreguntasRealizadas}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </Modal>
       )}
       <div id={parentNode}></div>
     </Fragment>

@@ -122,6 +122,7 @@ module.exports = {
   'clase.realizar-pregunta-tip':
     'Recordá que tu nombre será visible para tu docente pero no para tus compañeros',
   'clase.escribir-pregunta': 'Escribí tu pregunta',
+  'clase.ver-preguntas-realizadas': 'Ver preguntas realizadas',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',
