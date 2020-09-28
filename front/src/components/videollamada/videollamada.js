@@ -12,7 +12,12 @@ import {
   ModalBody,
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
+import {
+  getTimestamp,
+  getTimestampDifference,
+  getFechaHoraActual,
+  createRandomString,
+} from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
@@ -203,12 +208,34 @@ const Videollamada = ({
       {
         preguntas: [
           ...data.preguntas,
-          { pregunta: preguntaDeAlumno, alumno: userName },
+          {
+            id: createRandomString(),
+            pregunta: preguntaDeAlumno,
+            alumno: userName,
+            fecha: getFechaHoraActual(),
+            reacciones: 0,
+          },
         ],
       },
       'Pregunta enviada'
     );
-    toggleRealizarPregunta();
+  };
+
+  const updateReacciones = async (preguntaId) => {
+    const { data } = await getDocument(`preguntasDeAlumno/${idClase}`);
+    const [pregunta] = data.preguntas.filter((elem) => elem.id === preguntaId);
+    editDocumentSinFechaEdicion('preguntasDeAlumno', idClase, {
+      preguntas: [
+        ...data.preguntas,
+        {
+          id: pregunta.id,
+          pregunta: pregunta.pregunta,
+          alumno: pregunta.alumno,
+          fecha: pregunta.fecha,
+          reacciones: pregunta.reacciones + 1,
+        },
+      ],
+    });
   };
 
   const handleCancelarRealizarPregunta = () => {
@@ -322,10 +349,7 @@ const Videollamada = ({
             </Button>
           </>
         )}
-      </Row>
-
-      {rol === ROLES.Alumno && (
-        <Row className="button-group mb-3 mr-3">
+        {rol === ROLES.Alumno && (
           <Button
             className="button"
             color="primary"
@@ -334,8 +358,8 @@ const Videollamada = ({
           >
             <IntlMessages id="clase.realizar-pregunta" />
           </Button>
-        </Row>
-      )}
+        )}
+      </Row>
       {realizarPregunta && (
         <ModalGrande
           modalOpen={realizarPregunta}
@@ -423,9 +447,32 @@ const Videollamada = ({
           <ModalBody>
             {preguntasRealizadas.map((pregunta) => {
               return (
-                <div key={pregunta.pregunta}>
-                  <Row>{pregunta.pregunta}</Row>
-                  <Row>{rol === ROLES.Docente ? pregunta.alumno : null}</Row>
+                <div className="notas mb-2 pt-2 pb-2" key={pregunta.id}>
+                  <Row className="tip-text-cursiva ml-1 mt-2">
+                    {pregunta.fecha}
+                    {rol === ROLES.Docente ? ' - ' + pregunta.alumno : null}
+                  </Row>
+                  <Row className="ml-1 mt-2">
+                    <i className="iconsminds-speach-bubble-asking" />{' '}
+                    <span className="font-weight-semibold mr-1">
+                      {' '}
+                      Pregunta:{' '}
+                    </span>{' '}
+                    {pregunta.pregunta}
+                  </Row>
+                  <Row
+                    onClick={
+                      rol === ROLES.Alumno
+                        ? () => updateReacciones(pregunta.id)
+                        : null
+                    }
+                    className="reaccion-pregunta"
+                  >
+                    <span role="img" aria-label="mal">
+                      👍
+                    </span>
+                    <span>+ {pregunta.reacciones}</span>
+                  </Row>
                 </div>
               );
             })}
