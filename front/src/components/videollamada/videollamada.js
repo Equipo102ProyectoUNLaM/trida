@@ -365,10 +365,16 @@ const Videollamada = ({
           toggleModal={toggleRealizarPregunta}
           text="Realizá una pregunta a tu docente"
         >
-          <span className="tip-text">
+          <Row className="tip-text ml-0">
             {' '}
-            <IntlMessages id="clase.realizar-pregunta-tip" />
-          </span>
+            <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+            <IntlMessages id="clase.realizar-pregunta-tip-recorda" />
+          </Row>
+          <Row className="tip-text ml-0">
+            {' '}
+            <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+            <IntlMessages id="clase.realizar-pregunta-tip-reaccion" />
+          </Row>
           <FormGroup className="form-group has-float-label">
             <Label>
               <IntlMessages id="clase.escribir-pregunta" />
