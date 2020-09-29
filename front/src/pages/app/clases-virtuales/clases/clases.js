@@ -13,6 +13,7 @@ import {
   getDocument,
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
+import { isEmpty } from 'helpers/Utils';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
 
@@ -150,20 +151,26 @@ class Clase extends Component {
             />
           </ModalGrande>
           <Row>
-            {items.map((clase) => {
-              return (
-                <ListaConImagen
-                  key={clase.id}
-                  item={clase}
-                  imagen={imagenClase}
-                  isSelect={this.state.selectedItems.includes(clase.id)}
-                  collect={collect}
-                  navTo={`/app/clases-virtuales/mis-clases/detalle-clase/${clase.id}`}
-                  onEdit={rolDocente ? this.onEdit : null}
-                  onDelete={rolDocente ? this.onDelete : null}
-                />
-              );
-            })}{' '}
+            {!isEmpty(items) &&
+              items.map((clase) => {
+                return (
+                  <ListaConImagen
+                    key={clase.id}
+                    item={clase}
+                    imagen={imagenClase}
+                    isSelect={this.state.selectedItems.includes(clase.id)}
+                    collect={collect}
+                    navTo={`/app/clases-virtuales/mis-clases/detalle-clase/${clase.id}`}
+                    onEdit={rolDocente ? this.onEdit : null}
+                    onDelete={rolDocente ? this.onDelete : null}
+                  />
+                );
+              })}
+            {isEmpty(items) && (
+              <Row className="ml-3">
+                <span>No hay clases cargadas</span>
+              </Row>
+            )}
           </Row>
           {modalEditOpen && (
             <ModalGrande

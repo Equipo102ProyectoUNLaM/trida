@@ -399,7 +399,7 @@ class Practica extends Component {
           </Row>
           {isEmpty(items) && (
             <Row className="ml-0">
-              <span>No hay resultados</span>
+              <span>No hay prácticas</span>
             </Row>
           )}
           {modalEditOpen && (

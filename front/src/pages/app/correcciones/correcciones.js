@@ -229,7 +229,7 @@ class Correcciones extends Component {
           </Row>
           {isEmpty(items) && (
             <Row className="ml-0">
-              <span>No hay resultados</span>
+              <span>No hay correcciones</span>
             </Row>
           )}
         </div>
