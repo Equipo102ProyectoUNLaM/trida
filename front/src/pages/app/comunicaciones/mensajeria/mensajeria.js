@@ -362,6 +362,7 @@ class Mensajeria extends Component {
                     onChange={this.handleChange}
                     className="resend-message"
                     type="textarea"
+                    autocomplete="off"
                   />
                   <label>Destinatarios</label>
                   <Select

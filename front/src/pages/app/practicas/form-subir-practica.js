@@ -181,7 +181,12 @@ class FormSubirPractica extends React.Component {
           <Form className="av-tooltip tooltip-label-right">
             <FormGroup className="mb-3 error-l-75">
               <Label>Mensaje</Label>
-              <Field className="form-control" name="mensaje" type="textarea" />
+              <Field
+                className="form-control"
+                name="mensaje"
+                type="textarea"
+                autocomplete="off"
+              />
               {errors.mensaje && touched.mensaje && (
                 <div className="invalid-feedback d-block">{errors.mensaje}</div>
               )}
