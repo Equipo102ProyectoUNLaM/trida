@@ -17,6 +17,7 @@ import { isEmpty } from 'helpers/Utils';
 import { addDocument, addDocumentWithId } from 'helpers/Firebase-db';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import CountdownPreguntas from 'components/common/CountdownPreguntas';
 
 class ContestarPregunta extends Component {
   constructor(props) {
@@ -35,7 +36,10 @@ class ContestarPregunta extends Component {
     if (!isEmpty(this.props.preguntas)) {
       this.setState({ preguntas: this.props.preguntas });
     }
-    this.setState({ isLoading: false });
+    this.setState({
+      tiempoPregunta: this.props.tiempoPreguntaOnSnapshot,
+      isLoading: false,
+    });
   }
 
   onEjercicioChange = (e, numero) => {
@@ -79,13 +83,30 @@ class ContestarPregunta extends Component {
   };
 
   render() {
-    const { preguntas, isLoading, submitted, respuestas } = this.state;
-    const { isOpen, toggle, onRespuestaDeAlumno } = this.props;
+    const {
+      preguntas,
+      isLoading,
+      submitted,
+      respuestas,
+      tiempoPregunta,
+    } = this.state;
+    const {
+      isOpen,
+      toggle,
+      onRespuestaDeAlumno,
+      tiempoPreguntaOnSnapshot,
+    } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
       <Modal className="modal-ejercicios" isOpen={isOpen} toggle={toggle}>
-        <ModalHeader>Pregunta Lanzada por profesor</ModalHeader>
+        <ModalHeader>
+          Pregunta Lanzada por profesor
+          <CountdownPreguntas
+            end={tiempoPregunta}
+            onFinish={onRespuestaDeAlumno}
+          />
+        </ModalHeader>
         <ModalBody className="modal-ejercicios-body">
           {preguntas.map((pregunta, index) => (
             <Row className="mb-4" key={index + 'ejer'}>

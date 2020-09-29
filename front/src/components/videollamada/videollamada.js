@@ -50,9 +50,10 @@ const Videollamada = ({
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState();
   const [tiempoPregunta, setTiempoPregunta] = useState(
-    moment('01:30', timeFormat)
+    moment('01:30', timeFormat) // tiempo que setea el docente en el modal de preguntas
   );
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
+  const [tiempoPreguntaOnSnapshot, setTiempoPreguntaOnSnapshot] = useState(); // Esta es la que escucha de firebase cuando se setea un tiempo a la pregunta
   const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(false);
 
   const setElementHeight = () => {
@@ -83,11 +84,17 @@ const Videollamada = ({
 
   // Metodo para lanzar pregunta cuando estás con rol de profesor
   const onLanzarPregunta = async () => {
+    const aGuardar = new Date();
+    aGuardar.setMinutes(aGuardar.getMinutes() + tiempoPregunta.minutes());
+    aGuardar.setSeconds(aGuardar.getSeconds() + tiempoPregunta.seconds());
+
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
-      tiempoDuracion: timeStamp.fromDate(new Date(tiempoPregunta)),
+      tiempoDuracion: timeStamp.fromDate(aGuardar),
     });
+
+    console.log('segundos', timeStamp.fromDate(aGuardar).seconds);
 
     setPreguntaALanzar(null);
     toggleModalPreguntas();
@@ -95,7 +102,6 @@ const Videollamada = ({
 
   const checkRespuestaAlumno = (document) => {
     setAlumnoRespondioPregunta(document.exists);
-    console.log('alumnoRespondioPregunta', alumnoRespondioPregunta);
   };
 
   useEffect(() => {
@@ -123,6 +129,10 @@ const Videollamada = ({
     //Me quedo con la pregunta lanzada, si la hay (lanzada == true)
     if (preguntaLanzada) {
       preguntaLanzadaEncriptada.push(preguntaLanzada);
+      setTiempoPreguntaOnSnapshot(preguntaLanzada.data.tiempoDuracion);
+      if (tiempoPreguntaOnSnapshot) {
+        console.log('tiempoPreguntaOnSnapshot', tiempoPreguntaOnSnapshot);
+      }
     }
 
     //Desencripto la pregunta lanzada (si la hay)
@@ -133,6 +143,7 @@ const Videollamada = ({
         preguntaLanzadaEncriptada,
         sinRespuesta
       );
+      // Verifico si el alumno respondio la pregunta lanzada por el profe
       getDatosClaseOnSnapshot(
         `clases/${idClase}/preguntas/${preguntaLanzadaGlobal[0].id}/respuestas`,
         userId,
@@ -298,7 +309,6 @@ const Videollamada = ({
           toggleModal={toggleModalPreguntas}
           text="Preguntas de la Clase"
         >
-          {/* ver si cambiar a seleccionar a que hora finalizar la pregunta */}
           <Label className="timer-pregunta-clase">
             Seleccione durante cuanto tiempo lanzar la pregunta
           </Label>
@@ -352,6 +362,7 @@ const Videollamada = ({
             preguntas={preguntaLanzadaGlobal}
             onRespuestaDeAlumno={respuestaDeAlumno}
             idClase={idClase}
+            tiempoPreguntaOnSnapshot={tiempoPreguntaOnSnapshot}
           />
         )}
       <div id={parentNode}></div>
