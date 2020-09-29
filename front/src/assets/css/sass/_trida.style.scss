@@ -9768,6 +9768,11 @@ div.rendered-file-browser{
   &.active {
     border: 1px solid $theme-color-1 !important;
   }
+
+  &.disabled {
+    filter: grayscale(0.9);
+    cursor: default;
+  }
 }
 
 .texto-reaccion-pregunta {

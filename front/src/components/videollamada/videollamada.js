@@ -31,6 +31,7 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import { themeRadiusStorageKey } from 'constants/defaultValues';
+import classnames from 'classnames';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -113,13 +114,14 @@ const Videollamada = ({
   const onPreguntaRealizada = (doc) => {
     const arrayPreguntas = [];
     doc.forEach((document) => {
-      const { alumno, fecha, pregunta, reacciones } = document.data();
+      const { alumno, fecha, pregunta, reacciones, creador } = document.data();
       arrayPreguntas.push({
         id: document.id,
         alumno,
         fecha,
         pregunta,
         reacciones,
+        creador,
       });
     });
     setPreguntasRealizadas(arrayPreguntas);
@@ -230,24 +232,27 @@ const Videollamada = ({
     toggleRealizarPregunta();
   };
 
-  const updateReacciones = async (preguntaId) => {
-    const { data } = await getDocument(
-      `preguntasDeAlumno/${idClase}/preguntas/${preguntaId}`
-    );
-    if (reacciones[preguntaId] === true) {
-      editDocument(`preguntasDeAlumno/${idClase}/preguntas`, preguntaId, {
-        reacciones: data.reacciones - 1,
+  const updateReacciones = async (pregunta) => {
+    const { id, creador } = pregunta;
+
+    if (creador !== idUser && rol === ROLES.Alumno) {
+      const { data } = await getDocument(
+        `preguntasDeAlumno/${idClase}/preguntas/${id}`
+      );
+
+      const newReacciones = reacciones[id]
+        ? data.reacciones - 1
+        : data.reacciones + 1;
+
+      editDocument(`preguntasDeAlumno/${idClase}/preguntas`, id, {
+        reacciones: newReacciones,
       });
-    } else {
-      editDocument(`preguntasDeAlumno/${idClase}/preguntas`, preguntaId, {
-        reacciones: data.reacciones + 1,
+
+      setReacciones({
+        ...reacciones,
+        [id]: !reacciones[id],
       });
     }
-
-    setReacciones({
-      ...reacciones,
-      [preguntaId]: !reacciones[preguntaId],
-    });
   };
 
   const handleCancelarRealizarPregunta = () => {
@@ -479,14 +484,12 @@ const Videollamada = ({
                     {pregunta.pregunta}
                   </Row>
                   <Row
-                    onClick={
-                      rol === ROLES.Alumno
-                        ? () => updateReacciones(pregunta.id)
-                        : null
-                    }
-                    className={`reaccion-pregunta ${
-                      reacciones[pregunta.id] ? 'active' : ''
-                    }`}
+                    onClick={() => updateReacciones(pregunta)}
+                    className={classnames({
+                      'reaccion-pregunta': true,
+                      active: reacciones[pregunta.id],
+                      disabled: pregunta.creador === idUser,
+                    })}
                   >
                     <span role="img" aria-label="mal">
                       👍
