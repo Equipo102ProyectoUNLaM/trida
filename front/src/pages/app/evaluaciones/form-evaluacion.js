@@ -78,29 +78,33 @@ class FormEvaluacion extends React.Component {
   };
 
   async componentDidMount() {
-    if (this.props.idEval) {
-      const userName = await getUsernameById(this.props.user);
-      this.setState({
-        evaluacionId: this.props.idEval,
-        nombre: this.props.evaluacion.nombre,
-        fecha_creacion: this.props.evaluacion.fecha_creacion,
-        fecha_finalizacion: getDate(
-          this.props.evaluacion.fecha_finalizacion.toDate(),
-          'YYYY-MM-DD, HH:mm'
-        ),
-        fecha_publicacion: getDate(
-          this.props.evaluacion.fecha_publicacion.toDate(),
-          'YYYY-MM-DD, HH:mm'
-        ),
-        descripcion: this.props.evaluacion.descripcion,
-        ejercicios: this.props.evaluacion.ejercicios,
-        sin_capturas: this.props.evaluacion.sin_capturas,
-        sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
-        creador: userName,
-        isLoading: false,
-      });
-    } else {
-      this.setState({ isLoading: false });
+    try {
+      if (this.props.idEval) {
+        const userName = await getUsernameById(this.props.user);
+        this.setState({
+          evaluacionId: this.props.idEval,
+          nombre: this.props.evaluacion.nombre,
+          fecha_creacion: this.props.evaluacion.fecha_creacion,
+          fecha_finalizacion: getDate(
+            this.props.evaluacion.fecha_finalizacion.toDate(),
+            'YYYY-MM-DD, HH:mm'
+          ),
+          fecha_publicacion: getDate(
+            this.props.evaluacion.fecha_publicacion.toDate(),
+            'YYYY-MM-DD, HH:mm'
+          ),
+          descripcion: this.props.evaluacion.descripcion,
+          ejercicios: this.props.evaluacion.ejercicios,
+          sin_capturas: this.props.evaluacion.sin_capturas,
+          sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
+          creador: userName,
+          isLoading: false,
+        });
+      } else {
+        this.setState({ isLoading: false });
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 

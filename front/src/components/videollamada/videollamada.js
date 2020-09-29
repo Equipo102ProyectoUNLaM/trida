@@ -85,13 +85,15 @@ const Videollamada = ({
   // Metodo para lanzar pregunta cuando estás con rol de profesor
   const onLanzarPregunta = async () => {
     const aGuardar = new Date();
-    aGuardar.setMinutes(aGuardar.getMinutes() + tiempoPregunta.minutes());
-    aGuardar.setSeconds(aGuardar.getSeconds() + tiempoPregunta.seconds());
-
+    console.log('minutos log', tiempoPregunta.format('mm'));
+    console.log('segundos log', tiempoPregunta.format('ss'));
+    // aGuardar.setMinutes(aGuardar.getMinutes() + tiempoPregunta.minutes());
+    // aGuardar.setSeconds(aGuardar.getSeconds() + tiempoPregunta.seconds());
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
-      tiempoDuracion: timeStamp.fromDate(aGuardar),
+      tiempoDuracion:
+        tiempoPregunta.format('mm') + ':' + tiempoPregunta.format('ss'),
     });
 
     console.log('segundos', timeStamp.fromDate(aGuardar).seconds);

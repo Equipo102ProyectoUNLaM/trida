@@ -18,6 +18,7 @@ import { addDocument, addDocumentWithId } from 'helpers/Firebase-db';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import CountdownPreguntas from 'components/common/CountdownPreguntas';
+import moment from 'moment';
 
 class ContestarPregunta extends Component {
   constructor(props) {
@@ -36,6 +37,8 @@ class ContestarPregunta extends Component {
     if (!isEmpty(this.props.preguntas)) {
       this.setState({ preguntas: this.props.preguntas });
     }
+    // console.log(this.props.tiempoPreguntaOnSnapshot);
+    // console.log(moment(this.props.tiempoPreguntaOnSnapshot))
     this.setState({
       tiempoPregunta: this.props.tiempoPreguntaOnSnapshot,
       isLoading: false,
@@ -103,7 +106,7 @@ class ContestarPregunta extends Component {
         <ModalHeader>
           Pregunta Lanzada por profesor
           <CountdownPreguntas
-            end={tiempoPregunta}
+            remainingTime={tiempoPregunta}
             onFinish={onRespuestaDeAlumno}
           />
         </ModalHeader>
