@@ -106,7 +106,11 @@ class Inicio extends Component {
                       key={evento.id + 'dataList'}
                       id={evento.id}
                       title={evento.title}
-                      navTo={`/app/${evento.tipo}`}
+                      navTo={
+                        evento.tipo === 'clase'
+                          ? `/app/${evento.url}`
+                          : `/app/${evento.url}#${evento.id}`
+                      }
                     />
                   );
                 })}{' '}

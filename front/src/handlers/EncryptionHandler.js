@@ -35,6 +35,17 @@ export const encriptarEjercicios = (ejercicios) => {
         ).toString();
       }
     }
+    if (ejercicio.preguntas) {
+      for (const pr of ejercicio.preguntas) {
+        pr.opcion = CryptoJS.AES.encrypt(pr.opcion, secretKey).toString();
+      }
+    }
+    if (ejercicio.cantidad) {
+      ejercicio.cantidad = CryptoJS.AES.encrypt(
+        ejercicio.cantidad.toString(),
+        secretKey
+      ).toString();
+    }
   }
   return result;
 };

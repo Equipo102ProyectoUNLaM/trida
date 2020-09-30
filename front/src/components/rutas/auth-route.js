@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { getEnEvaluacionOnSnapshot, getDocument } from 'helpers/Firebase-db';
+import { getDocument } from 'helpers/Firebase-db';
 import EnEvaluacion from 'pages/en-evaluacion';
 
 export const AuthRoute = ({ component: Component, authUser, ...rest }) => {

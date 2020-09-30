@@ -32,6 +32,7 @@ import {
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
 import { addDocument, editDocument } from 'helpers/Firebase-db';
+import PreguntasAleatorias from '../ejercicios/preguntas_aleatorias';
 
 class RealizarEvaluacion extends Component {
   constructor(props) {
@@ -143,15 +144,25 @@ class RealizarEvaluacion extends Component {
         tipo: ejercicio.data.tipo,
         nombre: ejercicio.data.nombre,
       };
-      if (ejercicio.data.opciones && ejercicio.data.opciones.lenght !== 0) {
-        let respuestas_choice = [];
-        ejercicio.data.opciones.forEach((opcion, index) => {
-          respuestas_choice.push(false);
-        });
+      switch (obj.tipo) {
+        case TIPO_EJERCICIO.opcion_multiple:
+        case TIPO_EJERCICIO.opcion_multiple_imagen: {
+          if (ejercicio.data.opciones && ejercicio.data.opciones.lenght !== 0) {
+            let respuestas_choice = [];
+            ejercicio.data.opciones.forEach((opcion, index) => {
+              respuestas_choice.push(false);
+            });
 
-        obj = Object.assign(obj, { respuesta: respuestas_choice });
-      } else {
-        obj = Object.assign(obj, { respuesta: '' });
+            obj = Object.assign(obj, { respuesta: respuestas_choice });
+          }
+          break;
+        }
+        case TIPO_EJERCICIO.preguntas_aleatorias: {
+          obj = Object.assign(obj, { respuesta: [] });
+          break;
+        }
+        default:
+          obj = Object.assign(obj, { respuesta: '' });
       }
       respuestas.push(obj);
     }
@@ -190,6 +201,11 @@ class RealizarEvaluacion extends Component {
       case TIPO_EJERCICIO.opcion_multiple:
       case TIPO_EJERCICIO.opcion_multiple_imagen:
         ejercicio.respuesta[e.indiceOpcion] = e.respuesta;
+        break;
+      case TIPO_EJERCICIO.preguntas_aleatorias:
+        {
+          ejercicio.respuesta = e;
+        }
         break;
       default:
         break;
@@ -258,6 +274,16 @@ class RealizarEvaluacion extends Component {
           break;
         case TIPO_EJERCICIO.opcion_multiple:
           if (!rta.respuesta.find((x) => x === true)) valid = false;
+          break;
+        case TIPO_EJERCICIO.preguntas_aleatorias:
+          if (
+            rta.respuesta.find((x) => !x.respuesta) ||
+            rta.respuesta.length !=
+              this.state.ejercicios.find(
+                (x) => x.data.numero.toString() === rta.numero.toString()
+              ).data.cantidad
+          )
+            valid = false;
           break;
         default:
           break;
@@ -384,6 +410,17 @@ class RealizarEvaluacion extends Component {
 
                         {ejercicio.data.tipo === TIPO_EJERCICIO.oral && (
                           <Oral
+                            ejercicioId={index}
+                            value={ejercicio.data}
+                            submitted={submitted}
+                            resolve={true}
+                            onEjercicioChange={this.onEjercicioChange}
+                          />
+                        )}
+
+                        {ejercicio.data.tipo ===
+                          TIPO_EJERCICIO.preguntas_aleatorias && (
+                          <PreguntasAleatorias
                             ejercicioId={index}
                             value={ejercicio.data}
                             submitted={submitted}
