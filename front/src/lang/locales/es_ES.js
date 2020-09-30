@@ -118,6 +118,14 @@ module.exports = {
   'clase.descripcion-link': 'Descripción link',
   'clase.crear-pregunta': 'Crear Preguntas para la Clase',
   'clase.lanzar-pregunta': 'Lanzar Pregunta',
+  'clase.realizar-pregunta': 'Realizar Pregunta',
+  'clase.realizar-pregunta-tip': 'Acá podés realizarle preguntas a tu docente.',
+  'clase.realizar-pregunta-tip-recorda':
+    'Recordá que tu nombre será visible para tu docente, pero no para tus compañeros.',
+  'clase.realizar-pregunta-tip-reaccion':
+    'También podés reaccionar a preguntas ya hechas por tus compañeros si tenés la misma consulta.',
+  'clase.escribir-pregunta': 'Escribí tu pregunta',
+  'clase.ver-preguntas-realizadas': 'Ver Preguntas Realizadas',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',
