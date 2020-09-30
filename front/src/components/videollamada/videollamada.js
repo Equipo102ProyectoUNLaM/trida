@@ -163,7 +163,7 @@ const Videollamada = ({
 
   //Metodo que se ejecuta cuando el alumno responde una pregunta
   const respuestaDeAlumno = () => {
-    // NOTA: POR AHORA, PONGO EN FALSE EL LANZADA CUANDO EL ALUMNO CLICKEA EN "CERRAR", DESPUÉS AGREGO LA LÓGICA DE QUE SE HAGA CON TIMER
+    // Cuando termina el timer en el modal ContestarPregunta, seteo lanzada=false
     editDocument(`clases/${idClase}/preguntas`, preguntaLanzadaGlobal[0].id, {
       lanzada: false,
     });

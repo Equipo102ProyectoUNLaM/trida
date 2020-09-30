@@ -46,9 +46,7 @@ export default function CountdownPreguntas(props) {
           colors={[['#e2863b']]}
           duration={hourSeconds}
           initialRemainingTime={remainingTime % hourSeconds}
-          onComplete={(totalElapsedTime) => [
-            remainingTime - totalElapsedTime > minuteSeconds,
-          ]}
+          onComplete={props.onFinish}
         >
           {({ elapsedTime }) =>
             renderTime(
