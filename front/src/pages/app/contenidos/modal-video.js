@@ -63,6 +63,7 @@ const ModalVideo = ({
             className="form-control"
             name="nombre"
             onChange={(e) => setNombre(e.target.value)}
+            autocomplete="off"
           />
         </FormGroup>
         <VideoRecorder

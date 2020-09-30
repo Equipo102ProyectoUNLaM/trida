@@ -332,6 +332,7 @@ class Evaluaciones extends Component {
                   id="search"
                   placeholder="Búsqueda por nombre de evaluación, fecha de publicación, fecha de finalización..."
                   onChange={(e) => this.onSearchKey(e)}
+                  autoComplete="off"
                 />
               </div>
             </Colxx>
@@ -382,7 +383,7 @@ class Evaluaciones extends Component {
           </Row>
           {isEmpty(items) && (
             <Row className="ml-0">
-              <span>No hay resultados</span>
+              <span>No hay evaluaciones</span>
             </Row>
           )}
           {modalDeleteOpen && (

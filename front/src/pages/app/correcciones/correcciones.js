@@ -176,6 +176,7 @@ class Correcciones extends Component {
                       : 'Búsqueda por estado, nombre de actividad, tipo de actividad...'
                   }
                   onChange={(e) => this.onSearchKey(e)}
+                  autoComplete="off"
                 />
               </div>
             </Colxx>
@@ -229,7 +230,7 @@ class Correcciones extends Component {
           </Row>
           {isEmpty(items) && (
             <Row className="ml-0">
-              <span>No hay resultados</span>
+              <span>No hay correcciones</span>
             </Row>
           )}
         </div>

@@ -114,6 +114,8 @@ class Mensajeria extends Component {
       [{ order: 'fecha_creacion', orderCond: 'asc' }]
     );
     await this.dataMessageSentRenderer(mensajesEnviados);
+
+    await this.orderMessages();
   };
 
   dataMessageSentRenderer = async (arrayDeObjetos) => {
@@ -149,6 +151,20 @@ class Mensajeria extends Component {
     }
     this.setState({
       itemsReceive: data,
+    });
+  };
+
+  orderMessages = async () => {
+    const recibidos = this.state.itemsReceive.sort(
+      (a, b) => a.fecha_creacion - b.fecha_creacion
+    );
+    const enviado = this.state.itemsSent.sort(
+      (a, b) => a.fecha_creacion - b.fecha_creacion
+    );
+
+    this.setState({
+      itemsReceive: recibidos,
+      itemsSent: enviado,
     });
   };
 
@@ -343,6 +359,7 @@ class Mensajeria extends Component {
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}
               isOpen={modalMessageOpen}
+              modalFooterClassname="modal-footer-mensajeria"
               onConfirm={
                 esEnviado ? this.toggleReenviarModal : this.toggleResponderModal
               }
@@ -362,6 +379,7 @@ class Mensajeria extends Component {
                     onChange={this.handleChange}
                     className="resend-message"
                     type="textarea"
+                    autocomplete="off"
                   />
                   <label>Destinatarios</label>
                   <Select

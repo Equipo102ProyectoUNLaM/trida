@@ -114,7 +114,7 @@ module.exports = {
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
   'pizarron.abrir-pizarron': 'Abrir pizarrón',
-  'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
+  'pizarron.abrir-nueva-ventana': 'ABRIR PIZARRÓN EN UNA NUEVA VENTANA',
   'clase.agregar-link': 'Link *',
   'clase.descripcion-link': 'Descripción link',
   'clase.crear-pregunta': 'Crear Preguntas para la Clase',

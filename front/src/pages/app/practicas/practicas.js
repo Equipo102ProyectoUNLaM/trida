@@ -321,6 +321,7 @@ class Practica extends Component {
                   id="search"
                   placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
                   onChange={(e) => this.onSearchKey(e)}
+                  autoComplete="off"
                 />
               </div>
             </Colxx>
@@ -392,7 +393,7 @@ class Practica extends Component {
           </Row>
           {isEmpty(items) && (
             <Row className="ml-0">
-              <span>No hay resultados</span>
+              <span>No hay prácticas</span>
             </Row>
           )}
           {modalEditOpen && (
