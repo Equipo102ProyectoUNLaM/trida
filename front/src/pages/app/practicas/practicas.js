@@ -48,8 +48,8 @@ class Practica extends Component {
       this.state.rolDocente
         ? {
             field: 'fecha_creacion',
-            operator: '<=',
-            id: new Date().toISOString().slice(0, 10),
+            operator: '>',
+            id: '',
           }
         : {
             field: 'fechaLanzada',
