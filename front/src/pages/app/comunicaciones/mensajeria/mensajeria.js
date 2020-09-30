@@ -343,6 +343,7 @@ class Mensajeria extends Component {
               buttonSecondary="Cerrar"
               toggle={this.toggleDetailModal}
               isOpen={modalMessageOpen}
+              modalFooterClassname="modal-footer-mensajeria"
               onConfirm={
                 esEnviado ? this.toggleReenviarModal : this.toggleResponderModal
               }

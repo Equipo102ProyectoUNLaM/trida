@@ -9328,11 +9328,20 @@ tr.folder{
 }
 
 .users-names {
-  padding-top: 2rem;
+  align-items: center;
+  padding-top: 1rem;
 }
 
 .fecha-mensaje {
   padding-left: 0.25rem;
+}
+
+.texto-mensaje, .icono-mensaje {
+  font-size: 1rem !important;
+}
+
+.modal-mensaje-border-radius {
+  border-radius: 1.1rem !important;
 }
 
 .break-word {
@@ -9405,6 +9414,24 @@ tr.folder{
 
 .mensaje-es-responder {
   margin: auto;
+}
+
+.modal-footer-mensajeria:after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 70px 70px 0 0;
+  border-color: #ffffff transparent transparent transparent;
+  position: absolute;
+  bottom: -34px;
+  left: 0;
+}
+
+.modal-detalle-mensaje {
+  .modal-content {
+    border-radius: 1.9rem !important;
+  }
 }
 
 //49 Correcciones
