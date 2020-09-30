@@ -68,6 +68,9 @@ class AgregarEvaluacion extends Component {
         fecha_finalizacion:
           evaluacionesDesencriptadas[0].data.fecha_finalizacion,
         descripcion: evaluacionesDesencriptadas[0].data.descripcion,
+        sin_salir_de_ventana:
+          evaluacionesDesencriptadas[0].data.sin_salir_de_ventana,
+        sin_capturas: evaluacionesDesencriptadas[0].data.sin_capturas,
         ejercicios: evaluacionesDesencriptadas[0].subCollection.sort(
           (a, b) => a.data.numero - b.data.numero
         ),

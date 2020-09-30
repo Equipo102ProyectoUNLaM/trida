@@ -103,6 +103,15 @@ export const desencriptarEvaluacionImportada = (evaluaciones) => {
     ).toString(CryptoJS.enc.Utf8);
     evaluacion.data.fecha_finalizacion = evaluacion.data.fecha_finalizacion;
     evaluacion.data.fecha_publicacion = evaluacion.data.fecha_publicacion;
+    evaluacion.data.sin_capturas =
+      CryptoJS.AES.decrypt(evaluacion.data.sin_capturas, secretKey).toString(
+        CryptoJS.enc.Utf8
+      ) === 'true';
+    evaluacion.data.sin_salir_de_ventana =
+      CryptoJS.AES.decrypt(
+        evaluacion.data.sin_salir_de_ventana,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8) === 'true';
     if (evaluacion.subCollection) {
       evaluacion.subCollection = desencriptarEjercicios(
         evaluacion.subCollection

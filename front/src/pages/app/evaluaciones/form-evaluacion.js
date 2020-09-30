@@ -90,6 +90,8 @@ class FormEvaluacion extends React.Component {
           ejercicios: this.props.evaluacion.ejercicios,
           creador: userName,
           isLoading: false,
+          sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
+          sin_capturas: this.props.evaluacion.sin_capturas,
         });
       } else {
         this.setState({
