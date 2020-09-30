@@ -16,6 +16,7 @@ import {
   getTimestamp,
   getTimestampDifference,
   getFechaHoraActual,
+  isEmpty,
 } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
@@ -26,11 +27,11 @@ import {
   getDocument,
   addDocument,
 } from 'helpers/Firebase-db';
+import { timeStamp } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
-import { themeRadiusStorageKey } from 'constants/defaultValues';
 import classnames from 'classnames';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
@@ -66,6 +67,7 @@ const Videollamada = ({
   const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
   const [reacciones, setReacciones] = useState({});
+  const [hayPreguntas, setHayPreguntas] = useState(false);
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -114,7 +116,14 @@ const Videollamada = ({
   const onPreguntaRealizada = (doc) => {
     const arrayPreguntas = [];
     doc.forEach((document) => {
-      const { alumno, fecha, pregunta, reacciones, creador } = document.data();
+      const {
+        alumno,
+        fecha,
+        pregunta,
+        reacciones,
+        creador,
+        timeStamp,
+      } = document.data();
       arrayPreguntas.push({
         id: document.id,
         alumno,
@@ -122,9 +131,16 @@ const Videollamada = ({
         pregunta,
         reacciones,
         creador,
+        timeStamp,
       });
     });
-    setPreguntasRealizadas(arrayPreguntas);
+    if (!isEmpty(arrayPreguntas)) {
+      const arrayOrdenado = arrayPreguntas.sort(
+        (elemA, elemB) => elemA.timeStamp.valueOf() - elemB.timeStamp.valueOf()
+      );
+      setPreguntasRealizadas(arrayOrdenado);
+      setHayPreguntas(true);
+    }
   };
 
   // Obtengo la pregunta que lanzó el profe y la muestro en el modal Preview al alumno
@@ -213,6 +229,7 @@ const Videollamada = ({
   };
 
   const toggleModalPreguntasRealizadas = () => {
+    setHayPreguntas(false);
     setModalPreguntasRealizadas(!modalPreguntasRealizadas);
   };
 
@@ -224,6 +241,7 @@ const Videollamada = ({
         alumno: userName,
         fecha: getFechaHoraActual(),
         reacciones: 0,
+        timeStamp: timeStamp.fromDate(new Date()),
       },
       idUser,
       'Pregunta enviada!',
@@ -328,16 +346,16 @@ const Videollamada = ({
   return (
     <Fragment>
       <Row className="button-group mb-3 mr-3">
-        {preguntasRealizadas && (
-          <Button
-            className="button"
-            color="primary"
-            size="lg"
-            onClick={toggleModalPreguntasRealizadas}
-          >
-            <IntlMessages id="clase.ver-preguntas-realizadas" />
-          </Button>
-        )}
+        <Button
+          className="button relative"
+          color="primary"
+          size="lg"
+          onClick={toggleModalPreguntasRealizadas}
+        >
+          {hayPreguntas && <span className="notificacion-pregunta">.</span>}
+
+          <IntlMessages id="clase.ver-preguntas-realizadas" />
+        </Button>
         {rol === ROLES.Docente && (
           <>
             <Button
@@ -463,6 +481,7 @@ const Videollamada = ({
           isOpen={modalPreguntasRealizadas}
           toggle={toggleModalPreguntasRealizadas}
           wrapClassName="modal-right"
+          className="modal-ver-preguntas"
         >
           <ModalHeader toggle={toggleModalPreguntasRealizadas}>
             <IntlMessages id="clase.ver-preguntas-realizadas" />
@@ -475,7 +494,7 @@ const Videollamada = ({
                     {pregunta.fecha}
                     {rol === ROLES.Docente ? ' - ' + pregunta.alumno : null}
                   </Row>
-                  <Row className="ml-1 mt-2">
+                  <Row className="ml-1 mt-2 mr-2">
                     <i className="iconsminds-speach-bubble-asking" />{' '}
                     <span className="font-weight-semibold mr-1">
                       {' '}
