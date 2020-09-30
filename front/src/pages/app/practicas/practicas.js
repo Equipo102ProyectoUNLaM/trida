@@ -325,6 +325,7 @@ class Practica extends Component {
                   id="search"
                   placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
                   onChange={(e) => this.onSearchKey(e)}
+                  autoComplete="off"
                 />
               </div>
             </Colxx>

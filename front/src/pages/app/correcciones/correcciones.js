@@ -176,6 +176,7 @@ class Correcciones extends Component {
                       : 'Búsqueda por estado, nombre de actividad, tipo de actividad...'
                   }
                   onChange={(e) => this.onSearchKey(e)}
+                  autoComplete="off"
                 />
               </div>
             </Colxx>
