@@ -31,10 +31,9 @@ export default function CountdownPreguntas(props) {
   // const endTime = props.end.seconds; // use UNIX timestamp in seconds. Representa el horario de la preg lanzada + mins + segs seleccionados por el docente
 
   //const remainingTime = endTime - startTime;
-  console.log(this.props.remainingTime.substring(0, 2));
-  console.log(Number(this.props.remainingTime.substring(0, 2)) * 60);
-  console.log(Number(this.props.remainingTime.substring(3, 5)));
-  const remainingTime = 2;
+  const mins = Number(props.remainingTime.substring(0, 2)) * 60;
+  const segs = Number(props.remainingTime.substring(3, 5));
+  const remainingTime = mins + segs;
   console.log('remainingTime', remainingTime);
   const days = Math.ceil(remainingTime / daySeconds);
   const daysDuration = days * daySeconds;

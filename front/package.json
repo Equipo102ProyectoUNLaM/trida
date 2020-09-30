@@ -34,7 +34,7 @@
     "react-chartjs-2": "^2.7.4",
     "react-circular-progressbar": "^2.0.2",
     "react-contextmenu": "^2.9.4",
-    "react-countdown-circle-timer": "^2.3.7",
+    "react-countdown-circle-timer": "2.1.0",
     "react-countup": "^4.3.3",
     "react-datepicker": "^1.8.0",
     "react-dom": "^16.13.1",
