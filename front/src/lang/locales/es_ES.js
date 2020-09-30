@@ -167,6 +167,14 @@ module.exports = {
   /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
 
+  /* 15. Correcciones */
+  'correcciones.corregir': 'Corregir',
+  'correcciones.ver': 'Ver Corrección',
+  'correcciones.volver': 'VOLVER',
+  'correcciones.estado': 'Estado de Corrección *',
+  'correcciones.calificacion': 'Calificación de Corrección',
+  'correcciones.comentario': 'Agregar Comentario',
+
   /* 15. Foros */
   'forums.add': 'AGREGAR TEMA',
   'forums.edit': 'EDITAR TEMA',

@@ -6503,6 +6503,11 @@ input:-webkit-autofill {
   margin-left: 1rem !important;
 }
 
+.without-tooltip {
+  width: 93% !important;
+  margin-left: 1rem !important;
+}
+
 .has-float-label label::after,
 .has-float-label > span::after {
   background: $foreground-color !important;
@@ -9540,7 +9545,7 @@ div.rendered-file-browser{
 }
 
 .practicas-list-label {
-  width: 30%;
+  width: 50%;
 }
 
 .row-filtro-fechas {
@@ -9565,7 +9570,7 @@ div.rendered-file-browser{
 }
 
 .datalist-button{
-  margin-right: 5%;
+  margin-right: 2%;
 }
 
 .practicas-adjuntar-button {
@@ -9578,6 +9583,40 @@ div.rendered-file-browser{
 
 .practica-file-element {
   display: inline-block;
+}
+
+.badge-data-list {
+  width: 25%;
+  height: 50%;
+  margin-right: 2%;
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
+  background-color: $theme-color-1 !important;
+  color: #fff;
+  padding: 0.55em 0.75em 0.6em 0.75em;
+  font-size: 74%;
+}
+
+
+.badge-correccion {
+  width: 15%;
+  height: 50%;
+  margin-right: 2%;
+  margin-left: 1%;
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
+  background-color: $theme-color-1 !important;
+  color: #fff;
+  padding: 0.55em 0.75em 0.6em 0.75em;
+  font-size: 74%;
+}
+
+.correcciones-data-list-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  align-items: center;
 }
 
 .custom-file-label::after {
@@ -9912,7 +9951,45 @@ div.rendered-file-browser{
   }
 }
 
-// Foro
+// Correcciones
+
+.modal-correccion {
+  width: 100% !important;
+}
+
+.MuiTypography-h5, .MuiFormLabel-root, .MuiInputLabel-root, 
+.MuiInputLabel-formControl, .MuiInputLabel-animated, .MuiTypography-root,
+.MuiFormControlLabel-label, .MuiTypography-body1, .MuiButtonBase-root, .MuiListItem-root,
+.MuiMenuItem-root, .MuiMenuItem-gutters, .MuiListItem-gutters, .MuiListItem-button, 
+.MuiFormHelperText-root, .MuiSelect-root, .MuiSelect-select, .MuiSelect-selectMenu
+.MuiInputBase-input, .MuiInput-input {
+  font-family: "Nunito" !important;
+}
+
+.MuiCardContent-root {
+  font-size: 1rem !important;
+}
+
+.MuiPaper-root, .MuiCard-root, .MuiPaper-elevation1, .MuiPaper-rounded {
+  margin-bottom: 1rem !important;
+  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.MuiIconButton-colorPrimary {
+  color: $theme-color-1 !important;
+}
+
+.webviewer {
+  height: 800px !important;
+  margin-bottom: 1rem !important;
+}
+
+.status-correccion {
+  margin-left: 0;
+  margin-bottom: 1rem;
+}
+  
+ // Foro
 .row-space-between {
   display: flex;
   justify-content: space-between;
