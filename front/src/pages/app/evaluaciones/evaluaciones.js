@@ -331,7 +331,7 @@ class Evaluaciones extends Component {
           </Row>
           {isEmpty(items) && (
             <Row className="ml-0">
-              <span>No hay resultados</span>
+              <span>No hay evaluaciones</span>
             </Row>
           )}
           {modalDeleteOpen && (

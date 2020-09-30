@@ -114,6 +114,8 @@ class Mensajeria extends Component {
       [{ order: 'fecha_creacion', orderCond: 'asc' }]
     );
     await this.dataMessageSentRenderer(mensajesEnviados);
+
+    await this.orderMessages();
   };
 
   dataMessageSentRenderer = async (arrayDeObjetos) => {
@@ -149,6 +151,20 @@ class Mensajeria extends Component {
     }
     this.setState({
       itemsReceive: data,
+    });
+  };
+
+  orderMessages = async () => {
+    const recibidos = this.state.itemsReceive.sort(
+      (a, b) => a.fecha_creacion - b.fecha_creacion
+    );
+    const enviado = this.state.itemsSent.sort(
+      (a, b) => a.fecha_creacion - b.fecha_creacion
+    );
+
+    this.setState({
+      itemsReceive: recibidos,
+      itemsSent: enviado,
     });
   };
 
