@@ -73,16 +73,15 @@ class ContestarPregunta extends Component {
       idAlumno: this.props.user,
       respuestas: this.state.respuestas,
     };
-    if (this.respuestaValida()) {
-      //Guardo en la subcoleccion respuestas. El idDoc es el idUser del alumno
-      await addDocumentWithId(
-        `clases/${this.state.idClase}/preguntas/${this.state.preguntas[0].id}/respuestas`,
-        this.props.user,
-        obj,
-        'Pregunta'
-      );
-      this.props.toggle();
-    }
+
+    //Guardo en la subcoleccion respuestas. El idDoc es el idUser del alumno
+    await addDocumentWithId(
+      `clases/${this.state.idClase}/preguntas/${this.state.preguntas[0].id}/respuestas`,
+      this.props.user,
+      obj,
+      'Pregunta'
+    );
+    this.props.toggle();
   };
 
   render() {
@@ -144,8 +143,8 @@ class ContestarPregunta extends Component {
           >
             Contestar Pregunta
           </Button>
-          <Button color="primary" onClick={toggle}>
-            Cerrar
+          <Button color="primary" onClick={this.responderPregunta}>
+            No sé la respuesta
           </Button>
         </ModalFooter>
       </Modal>
