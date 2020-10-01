@@ -45,11 +45,11 @@ class Practica extends Component {
 
   getPracticas = async (materiaId) => {
     const arrayDeObjetos = await getCollection('practicas', [
-      this.props.rol === ROLES.Docente
+      this.state.rolDocente
         ? {
             field: 'fecha_creacion',
-            operator: '<=',
-            id: new Date().toISOString().slice(0, 10),
+            operator: '>',
+            id: '',
           }
         : {
             field: 'fechaLanzada',
@@ -289,14 +289,10 @@ class Practica extends Component {
                 : 'menu.my-activities'
             }
             toggleModal={
-              rol === ROLES.Docente && !oldPracticesActive
-                ? this.toggleCreateModal
-                : null
+              rolDocente && !oldPracticesActive ? this.toggleCreateModal : null
             }
             buttonText={
-              rol === ROLES.Docente && !oldPracticesActive
-                ? 'activity.add'
-                : null
+              rolDocente && !oldPracticesActive ? 'activity.add' : null
             }
             secondaryToggleModal={this.toggleOldPracticesModal}
             secondaryButtonText={
@@ -370,14 +366,12 @@ class Practica extends Component {
                     file={practica.data.url}
                     isSelect={this.state.selectedItems.includes(practica.id)}
                     onEditItem={
-                      rol === ROLES.Docente && !oldPracticesActive
+                      rolDocente && !oldPracticesActive
                         ? this.toggleEditModal
                         : null
                     }
                     onDelete={
-                      rol === ROLES.Docente && !oldPracticesActive
-                        ? this.onDelete
-                        : null
+                      rolDocente && !oldPracticesActive ? this.onDelete : null
                     }
                     onUploadFile={
                       rol === ROLES.Alumno && !oldPracticesActive
@@ -387,12 +381,11 @@ class Practica extends Component {
                     navTo="#"
                     collect={collect}
                     calendario={
-                      rol === ROLES.Docente && !oldPracticesActive
-                        ? true
-                        : false
+                      rolDocente && !oldPracticesActive ? true : false
                     }
-                    entregada={
-                      practica.entregada && rol === ROLES.Alumno ? true : false
+                    entregada={practica.entregada ? true : false}
+                    noEntregada={
+                      !practica.entregada && oldPracticesActive ? true : false
                     }
                   />
                 );

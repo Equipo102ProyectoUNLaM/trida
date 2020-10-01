@@ -21,7 +21,11 @@ import {
   desencriptarEvaluacion,
   desencriptarTexto,
 } from 'handlers/DecryptionHandler';
-import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
+import {
+  isEmpty,
+  getDateTimeStringFromDate,
+  getTimestampDifference,
+} from 'helpers/Utils';
 import * as _moment from 'moment';
 const moment = _moment;
 
@@ -44,6 +48,7 @@ class Evaluaciones extends Component {
       materiaId: this.props.subject.id,
       eval: null,
       evalId: '',
+      oldTestActive: false,
       rolDocente: this.props.rol === ROLES.Docente,
       filtroFecha: '',
     };
@@ -53,7 +58,7 @@ class Evaluaciones extends Component {
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
       [
-        this.props.rol === ROLES.Docente
+        this.state.rolDocente
           ? {
               field: 'fecha_creacion',
               operator: '>',
@@ -64,6 +69,33 @@ class Evaluaciones extends Component {
               operator: '<=',
               id: firebase.firestore.Timestamp.now(),
             },
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'activo', operator: '==', id: true },
+      ],
+      false,
+      'ejercicios'
+    );
+    const evaluaciones = await desencriptarEvaluacion(arrayDeObjetos);
+    const evaluacionesActuales = evaluaciones.filter((elem) => {
+      return (
+        getTimestampDifference(
+          elem.data.base.fecha_finalizacion.toDate(),
+          moment().toDate()
+        ) >= 0
+      );
+    });
+    this.dataListRenderer(evaluacionesActuales);
+  };
+
+  getEvaluacionesVencidas = async (materiaId) => {
+    const arrayDeObjetos = await getCollectionWithSubCollections(
+      'evaluaciones',
+      [
+        {
+          field: 'fecha_finalizacion',
+          operator: '<',
+          id: firebase.firestore.Timestamp.now(),
+        },
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
@@ -184,6 +216,18 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
+  toggleOldPracticesModal = async () => {
+    await this.setState({
+      oldTestActive: !this.state.oldTestActive,
+      isLoading: true,
+    });
+    if (this.state.oldTestActive) {
+      this.getEvaluacionesVencidas(this.state.materiaId);
+    } else {
+      this.getEvaluaciones(this.state.materiaId);
+    }
+  };
+
   normalizarFecha = (fecha) => {
     let fechaNormal = getDateTimeStringFromDate(fecha).split(' ')[0];
     fechaNormal = fechaNormal.replace(/\//g, '');
@@ -259,6 +303,7 @@ class Evaluaciones extends Component {
       modalPreviewOpen,
       evalId,
       evaluacion,
+      oldTestActive,
       rolDocente,
       filtroFecha,
     } = this.state;
@@ -268,9 +313,15 @@ class Evaluaciones extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.evaluations"
-            toggleModal={rolDocente ? this.onAdd : null}
-            buttonText={rolDocente ? 'evaluation.add' : null}
+            heading={
+              oldTestActive ? 'menu.my-old-evaluations' : 'menu.my-evaluations'
+            }
+            toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
+            buttonText={rolDocente && !oldTestActive ? 'evaluation.add' : null}
+            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryButtonText={
+              oldTestActive ? 'evaluation.active' : 'evaluation.old'
+            }
           />
           <Row>
             <Colxx xxs="8" md="8">
@@ -315,6 +366,7 @@ class Evaluaciones extends Component {
                   id={evaluacion.id}
                   item={evaluacion}
                   materiaId={this.state.materiaId}
+                  isOldTest={this.state.oldTestActive}
                   updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
