@@ -251,9 +251,9 @@ class TopNav extends Component {
                   {this.props.course.name}
                 </a>
               </BreadcrumbItem>
-              <BreadcrumbItem active>
+              <BreadcrumbItem active className="breadcrumb-flex">
                 <UncontrolledDropdown>
-                  <DropdownToggle color="empty">
+                  <DropdownToggle color="empty" className="dropdown-padding-0">
                     <span>{this.props.subject.name}</span>
                     <i className="simple-icon-arrow-down ml-1" />
                   </DropdownToggle>
@@ -261,7 +261,7 @@ class TopNav extends Component {
                     <DropdownItem
                       onClick={() => this.props.history.push('/app/alumnos')}
                     >
-                      Ver Alumnos
+                      Ver Usuarios
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>

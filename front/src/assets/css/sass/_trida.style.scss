@@ -3285,7 +3285,7 @@ nav .nomargin {
   }
 
   .card-body {
-    padding: 2rem 0.5rem;
+    padding: 1.5rem 0.5rem;
   }
 
   .card-text {
@@ -3295,6 +3295,7 @@ nav .nomargin {
   }
 
   .lead {
+    font-size: 0.9rem;
     color: $theme-color-1;
     margin-bottom: 0;
   }
@@ -3312,12 +3313,12 @@ nav .nomargin {
 
   @include respond-below(xl) {
     .card-text {
-      height: 48px;
+      height: 20px;
       line-height: 18px;
     }
 
     .lead {
-      font-size: 1.6rem;
+      font-size: 0.7rem;
     }
 
     i {
@@ -10097,4 +10098,16 @@ div.rendered-file-browser{
 
 .half-height {
   height: 60% !important;
+}
+
+.dropdown-padding-0 {
+
+  .btn-empty {
+    padding: 0 !important;
+  }
+}
+
+.breadcrumb-flex {
+  display: flex;
+  align-items: center;
 }

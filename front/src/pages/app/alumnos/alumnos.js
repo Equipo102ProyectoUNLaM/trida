@@ -12,12 +12,11 @@ class PaginaAlumnos extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      isLoading: true,
       usuariosArray: [],
     };
   }
   componentDidMount() {
-    this.setState({ loading: true });
     this.getAlumnos();
   }
 
@@ -28,12 +27,16 @@ class PaginaAlumnos extends Component {
 
     const usuariosArrayPromise = data.usuario_id.map(async (elem) => {
       const { data } = await getDocument(`usuarios/${elem}`);
-      return { id: elem, nombre: data.nombre + ' ' + data.apellido };
+      return {
+        id: elem,
+        nombre: data.nombre + ' ' + data.apellido,
+        rol: data.rol,
+      };
     });
     const usuariosArray = await Promise.all(usuariosArrayPromise);
     this.setState({
       usuariosArray,
-      loading: false,
+      isLoading: false,
     });
   };
 
@@ -46,11 +49,10 @@ class PaginaAlumnos extends Component {
           toggleModal={() => this.props.history.push('/app/home')}
           buttonText="menu.volver"
         />
-        {(isLoading || isEmpty(usuariosArray)) && <div className="loading" />}
-        {!isLoading && isEmpty(usuariosArray) && (
+        {isLoading && <div className="loading" />}
+        {!isLoading && isEmpty(usuariosArray) ? (
           <p className="mb-4">No hay usuarios asociados a la materia</p>
-        )}
-        {!isLoading && (
+        ) : (
           <Row className="icon-cards-row mb-2">
             {usuariosArray.map((item) => {
               return (
@@ -62,8 +64,13 @@ class PaginaAlumnos extends Component {
                   key={`icon_card_${item.id}`}
                 >
                   <IconCard
-                    icon={'iconsminds-student-male-female'}
+                    icon={
+                      item.rol === 1
+                        ? 'iconsminds-male-female'
+                        : 'iconsminds-student-male-female'
+                    }
                     title={item.nombre}
+                    value={item.rol === 1 ? 'Docente' : 'Alumno'}
                     className="mb-4"
                   />
                 </Colxx>
