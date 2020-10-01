@@ -81,7 +81,7 @@ class Evaluaciones extends Component {
         getTimestampDifference(
           elem.data.base.fecha_finalizacion.toDate(),
           moment().toDate()
-        ) > 0
+        ) >= 0
       );
     });
     this.dataListRenderer(evaluacionesActuales);
