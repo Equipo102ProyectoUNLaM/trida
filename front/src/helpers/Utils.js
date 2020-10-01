@@ -117,6 +117,7 @@ export const getFormattedTime = (date, format, formatTo) => {
 /*  Esta función recibe un string con una fecha, y opcionalmente el formato en el que esta, y devuelve
  un moment de la fecha */
 export const getDate = (date, format) => {
+  console.log(moment(date, format ? format : 'DD/MM/YYYY').locale('es'));
   return moment(date, format ? format : 'DD/MM/YYYY').locale('es');
 };
 
