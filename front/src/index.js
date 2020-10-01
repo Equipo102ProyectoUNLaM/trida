@@ -5,7 +5,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-table/react-table.css';
 import 'font-awesome/css/font-awesome.min.css';
-import 'antd/dist/antd.css';
 
 import {
   isMultiColorActive,

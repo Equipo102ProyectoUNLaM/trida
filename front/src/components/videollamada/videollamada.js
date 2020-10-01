@@ -18,10 +18,9 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ContestarPregunta from './contestar-pregunta';
-import { timeStamp } from 'helpers/Firebase';
-import { getDate } from 'helpers/Utils';
-import { TimePicker } from 'antd';
-import moment from 'moment';
+import TimePicker from 'react-time-picker';
+import TooltipItem from 'components/common/TooltipItem';
+import { toolTipMinutosPreguntas } from 'constants/texts';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -40,7 +39,7 @@ const Videollamada = ({
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
-  const timeFormat = 'mm:ss';
+  const timeFormat = 'm:ss';
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
@@ -49,9 +48,7 @@ const Videollamada = ({
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState();
-  const [tiempoPregunta, setTiempoPregunta] = useState(
-    moment('01:30', timeFormat) // tiempo que setea el docente en el modal de preguntas
-  );
+  const [tiempoPregunta, setTiempoPregunta] = useState(); // tiempo que setea el docente en el modal de preguntas
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
   const [tiempoPreguntaOnSnapshot, setTiempoPreguntaOnSnapshot] = useState(); // Esta es la que escucha de firebase cuando se setea un tiempo a la pregunta
   const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(false);
@@ -84,20 +81,13 @@ const Videollamada = ({
 
   // Metodo para lanzar pregunta cuando estás con rol de profesor
   const onLanzarPregunta = async () => {
-    const aGuardar = new Date();
-    console.log('minutos log', tiempoPregunta.format('mm'));
-    console.log('segundos log', tiempoPregunta.format('ss'));
     // aGuardar.setMinutes(aGuardar.getMinutes() + tiempoPregunta.minutes());
     // aGuardar.setSeconds(aGuardar.getSeconds() + tiempoPregunta.seconds());
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
-      tiempoDuracion:
-        tiempoPregunta.format('mm') + ':' + tiempoPregunta.format('ss'),
+      tiempoDuracion: tiempoPregunta,
     });
-
-    console.log('segundos', timeStamp.fromDate(aGuardar).seconds);
-
     setPreguntaALanzar(null);
     toggleModalPreguntas();
   };
@@ -317,13 +307,20 @@ const Videollamada = ({
           <Row className="mb-3 mr-3">
             <Colxx xxs="4" md="5">
               <TimePicker
+                onChange={setTiempoPregunta}
+                value={tiempoPregunta}
+                disableClock={true}
+                className="timer-pregunta-clase"
+              />
+              <TooltipItem body={toolTipMinutosPreguntas} id="preguntas" />
+              {/*               <TimePicker
                 className="timer-pregunta-clase"
                 defaultValue={tiempoPregunta}
                 format={timeFormat}
                 placeholder={'Minutos : Segundos'}
                 showNow={false}
                 onChange={handleChangeTime}
-              />
+              /> */}
             </Colxx>
           </Row>
           {preguntas.map((pregunta) => {
