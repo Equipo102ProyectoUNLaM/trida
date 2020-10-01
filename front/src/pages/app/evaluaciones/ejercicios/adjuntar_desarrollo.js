@@ -59,6 +59,7 @@ class AdjuntarDesarrollo extends React.Component {
       file: file,
       desarrollo: '',
     };
+    console.log(file);
     reader.onloadend = () => {
       img.desarrollo = reader.result;
       this.setState({
@@ -89,6 +90,7 @@ class AdjuntarDesarrollo extends React.Component {
               <InputGroup className="mb-3">
                 <CustomInput
                   type="file"
+                  disabled
                   label="Adjuntá el desarrollo del ejercicio"
                   id="exampleCustomFileBrowser1"
                 />
@@ -140,6 +142,11 @@ class AdjuntarDesarrollo extends React.Component {
                 </InputGroup>
               )}
               {this.props.submitted && !respuesta.file ? (
+                <div className="invalid-feedback d-block">
+                  Adjuntar el desarrollo
+                </div>
+              ) : null}
+              {this.props.submitted && respuesta.file ? (
                 <div className="invalid-feedback d-block">
                   Adjuntar el desarrollo
                 </div>
