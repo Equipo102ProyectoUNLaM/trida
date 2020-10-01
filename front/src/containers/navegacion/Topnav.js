@@ -251,7 +251,21 @@ class TopNav extends Component {
                   {this.props.course.name}
                 </a>
               </BreadcrumbItem>
-              <BreadcrumbItem active>{this.props.subject.name}</BreadcrumbItem>
+              <BreadcrumbItem active>
+                <UncontrolledDropdown>
+                  <DropdownToggle color="empty">
+                    <span>{this.props.subject.name}</span>
+                    <i className="simple-icon-arrow-down ml-1" />
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem
+                      onClick={() => this.props.history.push('/app/alumnos')}
+                    >
+                      Ver Alumnos
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </BreadcrumbItem>
             </Breadcrumb>
           </div>
         </div>
