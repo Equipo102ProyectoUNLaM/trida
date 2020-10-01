@@ -252,10 +252,10 @@ class TopNav extends Component {
                 </a>
               </BreadcrumbItem>
               <BreadcrumbItem active className="breadcrumb-flex">
-                <UncontrolledDropdown>
-                  <DropdownToggle color="empty" className="dropdown-padding-0">
+                <UncontrolledDropdown className="dropdown-padding-0">
+                  <DropdownToggle className="dropdown-empty">
                     <span>{this.props.subject.name}</span>
-                    <i className="simple-icon-arrow-down ml-1" />
+                    <i className="simple-icon-arrow-down dropdown-arrow" />
                   </DropdownToggle>
                   <DropdownMenu right>
                     <DropdownItem

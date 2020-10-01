@@ -10102,8 +10102,27 @@ div.rendered-file-browser{
 
 .dropdown-padding-0 {
 
-  .btn-empty {
+  button {
     padding: 0 !important;
+  }
+}
+
+.dropdown-arrow {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.dropdown-empty {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  color: $primary-color;
+  transition: color $animation-time-short;
+
+  &:hover,
+  &:active {
+    text-decoration: initial;
+    color: $theme-color-1;
   }
 }
 
