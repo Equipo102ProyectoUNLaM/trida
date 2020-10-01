@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
-import { formPracticaSchema } from './validations';
 import { storage } from 'helpers/Firebase';
 import FileUploader from 'react-firebase-file-uploader';
 
@@ -75,14 +74,15 @@ class FormSubirPractica extends React.Component {
     console.error(error);
   };
 
-  handleUploadSuccess = (filename) => {
+  handleUploadSuccess = async (filename) => {
     this.setState({
       file: filename,
       fileUploadProgress: 100,
       isFileUploading: false,
       isFileUploaded: true,
     });
-    storage
+
+    await storage
       .ref('materias/' + this.props.subject.id + '/correcciones/')
       .child(filename)
       .getDownloadURL()
@@ -114,6 +114,7 @@ class FormSubirPractica extends React.Component {
       idMateria: this.props.subject.id,
       idArchivo: this.state.file,
       tipo: 'practica',
+      estado: 'No Corregido',
     };
     await addDocument(
       'correcciones',
@@ -196,6 +197,7 @@ class FormSubirPractica extends React.Component {
               <label className="practicas-adjuntar-button">
                 Adjuntar Archivo
                 <FileUploader
+                  accept={['image/*', 'application/pdf']}
                   hidden
                   name="archivo"
                   randomizeFilename

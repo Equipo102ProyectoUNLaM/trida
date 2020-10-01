@@ -24,6 +24,9 @@ class Correcciones extends Component {
       selectedItems: [],
       files: [],
       isLoading: true,
+      subjectId: this.props.subject.id,
+      correccionImagen: false,
+      correccionTexto: false,
       materiaId: this.props.subject.id,
       idACorregir: '',
       archivoACorregir: '',
@@ -54,7 +57,6 @@ class Correcciones extends Component {
         correccion.data.idArchivo !== ''
       ) {
         correccion.data.url = await this.getFileURL(correccion.data.idArchivo);
-        console.log(correccion.data);
       }
     }
 
@@ -85,8 +87,21 @@ class Correcciones extends Component {
     return docAlumno.data.nombre + ' ' + docAlumno.data.apellido;
   };
 
-  onCorrection = (id) => {
-    console.log('ID de correccion:', id);
+  onCorrection = (id, idArchivo, file) => {
+    const idStorage = idArchivo.split('.')[0];
+    this.setState({
+      archivoACorregir: file,
+      idStorage,
+      idACorregir: id,
+    });
+    return this.props.history.push(`/app/correcciones/correccion/${id}`);
+  };
+
+  onVerCorrection = async (id, idArchivo) => {
+    const idStorage = idArchivo.split('.')[0];
+    if (idStorage) {
+      this.props.history.push(`/app/correcciones/correccion/${id}#ver`);
+    }
   };
 
   handleChangeMulti = (selectedOptions) => {
@@ -234,6 +249,28 @@ class Correcciones extends Component {
             </Row>
           )}
         </div>
+        {/* {correccionImagen && (
+          <Modal
+            isOpen={correccionImagen}
+            size="xl"
+            toggle={this.toggleCorreccionImagen}
+            className="modal-correccion"
+          >
+            <ModalHeader toggle={this.toggleCorreccionImagen}>
+              <span>{rolDocente ? 'Corregir' : 'Ver corrección'}</span>
+            </ModalHeader>
+            <ModalBody className="modal-correccion">
+              <CorreccionImagen
+                idACorregir={idACorregir}
+                archivoACorregir={archivoACorregir}
+                idStorage={idStorage}
+                correccionAlumnoUrl={correccionAlumnoUrl}
+                toggle={this.toggleCorreccionImagen}
+                verCorreccionDocente={verCorreccionDocente}
+              />
+            </ModalBody>
+          </Modal>
+        )} */}
       </Fragment>
     );
   }
@@ -247,4 +284,4 @@ const mapStateToProps = ({ seleccionCurso, authUser }) => {
   return { subject, rol };
 };
 
-export default connect(mapStateToProps)(Correcciones);
+export default withRouter(connect(mapStateToProps)(Correcciones));

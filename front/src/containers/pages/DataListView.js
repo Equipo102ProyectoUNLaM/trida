@@ -55,6 +55,7 @@ class DataListView extends React.Component {
   render() {
     const {
       id,
+      idArchivo,
       title,
       text1,
       text2,
@@ -67,7 +68,9 @@ class DataListView extends React.Component {
       onDelete,
       onUploadFile,
       onCorrection,
+      onVerCorrection,
       sonPreguntas,
+      estado,
       modalLanzarPreguntas,
       preguntaALanzar,
       onSelectPregunta,
@@ -120,7 +123,7 @@ class DataListView extends React.Component {
                       {title}
                     </p>
                     {text1 && (
-                      <p className="mb-1 text-small w-sm-100 practicas-list-label">
+                      <p className="mb-1 mr-2 text-small w-sm-100 practicas-list-label">
                         {text1}
                       </p>
                     )}
@@ -133,7 +136,17 @@ class DataListView extends React.Component {
                 </NavLink>
               )}
               <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label">
-                <Row>
+                <Row className="correcciones-data-list-row">
+                  {estado && (
+                    <Badge
+                      key={id + 'badge'}
+                      color="primary"
+                      pill
+                      className="badge-data-list"
+                    >
+                      {estado.toUpperCase()}
+                    </Badge>
+                  )}
                   {file !== undefined && (
                     <Button
                       outline
@@ -156,15 +169,28 @@ class DataListView extends React.Component {
                       Subir Práctica
                     </Button>
                   )}
-                  {onCorrection && (
+                  {onCorrection && estado === 'No Corregido' && (
                     <Button
+                      style={{ width: '7rem' }}
                       outline
-                      onClick={() => onCorrection(id)}
+                      onClick={() => onCorrection(id, idArchivo, file)}
                       size="sm"
                       color="primary"
                       className="button datalist-button"
                     >
                       Corregir
+                    </Button>
+                  )}
+                  {onVerCorrection && estado === 'Corregido' && (
+                    <Button
+                      outline
+                      onClick={() => onVerCorrection(id, idArchivo)}
+                      size="sm"
+                      color="primary"
+                      className="button datalist-button"
+                      disabled={estado === 'Corregido' ? false : true}
+                    >
+                      Ver Corrección
                     </Button>
                   )}
                   {onEditItem && (
