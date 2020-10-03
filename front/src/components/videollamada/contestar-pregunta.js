@@ -14,11 +14,10 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import { isEmpty } from 'helpers/Utils';
-import { addDocument, addDocumentWithId } from 'helpers/Firebase-db';
+import { addDocumentWithId } from 'helpers/Firebase-db';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import CountdownPreguntas from 'components/common/CountdownPreguntas';
-import moment from 'moment';
 
 class ContestarPregunta extends Component {
   constructor(props) {
@@ -37,8 +36,6 @@ class ContestarPregunta extends Component {
     if (!isEmpty(this.props.preguntas)) {
       this.setState({ preguntas: this.props.preguntas });
     }
-    // console.log(this.props.tiempoPreguntaOnSnapshot);
-    // console.log(moment(this.props.tiempoPreguntaOnSnapshot))
     this.setState({
       tiempoPregunta: this.props.tiempoPreguntaOnSnapshot,
       isLoading: false,
@@ -85,19 +82,8 @@ class ContestarPregunta extends Component {
   };
 
   render() {
-    const {
-      preguntas,
-      isLoading,
-      submitted,
-      respuestas,
-      tiempoPregunta,
-    } = this.state;
-    const {
-      isOpen,
-      toggle,
-      onRespuestaDeAlumno,
-      tiempoPreguntaOnSnapshot,
-    } = this.props;
+    const { preguntas, isLoading, submitted, tiempoPregunta } = this.state;
+    const { isOpen, toggle, onRespuestaDeAlumno } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (

@@ -10,12 +10,10 @@ import INTERFACE_CONFIG from 'constants/videollamada';
 import {
   editDocument,
   getCollectionOnSnapshot,
-  documentExistsOnSnapshot,
   getDatosClaseOnSnapshot,
 } from 'helpers/Firebase-db';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
-import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ContestarPregunta from './contestar-pregunta';
 import TimePicker from 'react-time-picker';
@@ -81,8 +79,6 @@ const Videollamada = ({
 
   // Metodo para lanzar pregunta cuando estás con rol de profesor
   const onLanzarPregunta = async () => {
-    // aGuardar.setMinutes(aGuardar.getMinutes() + tiempoPregunta.minutes());
-    // aGuardar.setSeconds(aGuardar.getSeconds() + tiempoPregunta.seconds());
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
@@ -122,9 +118,6 @@ const Videollamada = ({
     if (preguntaLanzada) {
       preguntaLanzadaEncriptada.push(preguntaLanzada);
       setTiempoPreguntaOnSnapshot(preguntaLanzada.data.tiempoDuracion);
-      if (tiempoPreguntaOnSnapshot) {
-        console.log('tiempoPreguntaOnSnapshot', tiempoPreguntaOnSnapshot);
-      }
     }
 
     //Desencripto la pregunta lanzada (si la hay)
@@ -141,7 +134,6 @@ const Videollamada = ({
         userId,
         checkRespuestaAlumno
       );
-      console.log('preguntaLanzadaGlobal', preguntaLanzadaGlobal);
       toggleModalPreviewPreguntaAlumno();
     }
   };
@@ -167,10 +159,6 @@ const Videollamada = ({
   //Este metodo se ejecuta cuando se clickea en Cerrar en la modal de Preview de la pregunta
   const toggleModalPreviewPreguntaAlumno = () => {
     setModalPreviewOpen(!modalPreviewOpen);
-  };
-
-  const handleChangeTime = (time, timeString) => {
-    setTiempoPregunta(time);
   };
 
   const lanzamientoPreguntaValido = () => {
@@ -237,6 +225,8 @@ const Videollamada = ({
       });
       jitsi.addEventListener('readyToClose', () => {
         if (rol === ROLES.Docente) guardarListaAsistencia();
+        if (rol === ROLES.Docente && preguntaLanzadaGlobal[0].id)
+          respuestaDeAlumno();
         setCallOff();
       });
       if (rol === ROLES.Docente) {
@@ -313,14 +303,6 @@ const Videollamada = ({
                 className="timer-pregunta-clase"
               />
               <TooltipItem body={toolTipMinutosPreguntas} id="preguntas" />
-              {/*               <TimePicker
-                className="timer-pregunta-clase"
-                defaultValue={tiempoPregunta}
-                format={timeFormat}
-                placeholder={'Minutos : Segundos'}
-                showNow={false}
-                onChange={handleChangeTime}
-              /> */}
             </Colxx>
           </Row>
           {preguntas.map((pregunta) => {
