@@ -49,12 +49,23 @@ class App extends Component {
   constructor(props) {
     super(props);
     const direction = getDirection();
+
     if (direction.isRtl) {
       document.body.classList.add('rtl');
       document.body.classList.remove('ltr');
     } else {
       document.body.classList.add('ltr');
       document.body.classList.remove('rtl');
+    }
+  }
+
+  componentDidMount() {
+    const { pathname } = window.location;
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (isProduction && pathname !== '/' && pathname !== '/en-construccion') {
+      this.props.history.push('/en-construccion');
+      return this.props.history.go(0);
     }
   }
 
