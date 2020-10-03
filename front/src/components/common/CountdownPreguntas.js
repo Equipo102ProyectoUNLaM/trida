@@ -31,8 +31,7 @@ export default function CountdownPreguntas(props) {
   const segs = props.remainingTime
     ? Number(props.remainingTime.substring(3, 5))
     : 0;
-  const remainingTime = mins + segs;
-  const days = Math.ceil(remainingTime / daySeconds);
+  const remainingTime = mins + segs; // queda en segundos
   return (
     <div className="countdown">
       <Card className="mb-4 card-countdown-preguntas">

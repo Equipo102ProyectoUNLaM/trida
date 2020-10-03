@@ -45,12 +45,9 @@ class ContestarPregunta extends Component {
   onEjercicioChange = (e, numero) => {
     //Si selecciona una opción, lo coloco en el array
     if (e.respuesta) {
-      this.setState(
-        {
-          respuestas: this.state.respuestas.concat(e.indiceOpcion),
-        },
-        this.log
-      );
+      this.setState({
+        respuestas: this.state.respuestas.concat(e.indiceOpcion),
+      });
     } else {
       // si la deselecciona, lo saco del array
       this.setState({

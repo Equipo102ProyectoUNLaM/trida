@@ -45,11 +45,11 @@ const Videollamada = ({
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
-  const [preguntaALanzar, setPreguntaALanzar] = useState();
+  const [preguntaALanzar, setPreguntaALanzar] = useState(); // id de la pregunta a lanzar
   const [tiempoPregunta, setTiempoPregunta] = useState(); // tiempo que setea el docente en el modal de preguntas
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
   const [tiempoPreguntaOnSnapshot, setTiempoPreguntaOnSnapshot] = useState(); // Esta es la que escucha de firebase cuando se setea un tiempo a la pregunta
-  const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(false);
+  const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(true);
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -86,6 +86,20 @@ const Videollamada = ({
     });
     setPreguntaALanzar(null);
     toggleModalPreguntas();
+
+    // Comienzo timer interno para cancelar la pregunta
+    const mins = tiempoPregunta
+      ? Number(tiempoPregunta.substring(0, 2)) * 60
+      : 0;
+    const segs = tiempoPregunta ? Number(tiempoPregunta.substring(3, 5)) : 0;
+    const remainingTime = mins + segs; // queda en segundos
+    console.log('remainingTime', remainingTime);
+    if (remainingTime > 0) {
+      setTimeout(() => {
+        onCancelarPregunta(preguntaALanzar);
+      }, remainingTime * 1000);
+    }
+    //setTimeout({ onCancelarPregunta }, remainingTime * 1000);
   };
 
   const checkRespuestaAlumno = (document) => {
@@ -146,14 +160,24 @@ const Videollamada = ({
   //Metodo que se ejecuta cuando el alumno responde una pregunta
   const respuestaDeAlumno = () => {
     // Cuando termina el timer en el modal ContestarPregunta, seteo lanzada=false
-    editDocument(`clases/${idClase}/preguntas`, preguntaLanzadaGlobal[0].id, {
-      lanzada: false,
-    });
+    onCancelarPregunta();
 
     // Limpio la pregunta lanzada
     preguntaLanzadaGlobal = [];
     //Cierro modal
     toggleModalPreviewPreguntaAlumno();
+  };
+
+  const onCancelarPregunta = async (preguntaALanzar = null) => {
+    const idPregunta = preguntaALanzar
+      ? preguntaALanzar
+      : preguntaLanzadaGlobal[0].id;
+
+    await editDocument(`clases/${idClase}/preguntas`, idPregunta, {
+      lanzada: false,
+    });
+
+    preguntaLanzadaGlobal = [];
   };
 
   //Este metodo se ejecuta cuando se clickea en Cerrar en la modal de Preview de la pregunta
