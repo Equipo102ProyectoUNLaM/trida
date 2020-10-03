@@ -58,8 +58,6 @@ class AgregarEvaluacion extends Component {
       const evaluacionesDesencriptadas = desencriptarEvaluacionImportada(
         evaluaciones
       );
-      console.log('evaluacion', evaluacionesDesencriptadas[0]);
-      console.log('evaluacion.id', evaluacionesDesencriptadas[0].id);
       this.toggleImportModal();
       this.setState({
         evaluacionId: evaluacionesDesencriptadas[0].id,
