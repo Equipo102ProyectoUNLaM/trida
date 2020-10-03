@@ -163,6 +163,7 @@ class FormMensaje extends Component {
                     {rol === ROLES.Docente && (
                       <Colxx xxs="12" md="6" className="receivers-general">
                         <Field
+                          autocomplete="off"
                           name="esGeneral"
                           className="general-check"
                           type="checkbox"
@@ -177,6 +178,7 @@ class FormMensaje extends Component {
                 {esResponder && (
                   <Row className="mensaje-es-responder">
                     <Field
+                      autocomplete="off"
                       value={usuarioAResponder}
                       name="usuarioAResponder"
                       disabled
@@ -186,6 +188,7 @@ class FormMensaje extends Component {
                       Mensaje a responder
                     </Label>
                     <Field
+                      autocomplete="off"
                       value={mensajeAResponder}
                       name="mensajeAResponder"
                       disabled
@@ -208,6 +211,7 @@ class FormMensaje extends Component {
             <FormGroup className="mb-3">
               <Label>Mensaje</Label>
               <Field
+                autocomplete="off"
                 name="textoMensaje"
                 component="textarea"
                 className="form-control"

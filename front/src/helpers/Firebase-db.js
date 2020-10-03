@@ -169,7 +169,7 @@ export const addDocument = async (
 ) => {
   object = {
     ...object,
-    fechaCreacion: getFechaHoraActual(),
+    fecha_creacion: getFechaHoraActual(),
     activo: true,
     creador: userId,
   };
@@ -201,7 +201,7 @@ export const addDocumentWithSubcollection = async (
   let objectSubcollectionData = object.subcollection.data;
   let objectBaseData = {
     ...object,
-    fechaCreacion: getFechaHoraActual(),
+    fecha_creacion: getFechaHoraActual(),
     activo: true,
     creador: userId,
   };
@@ -245,7 +245,7 @@ export const addToSubCollection = async (
 ) => {
   object = {
     ...object,
-    fechaCreacion: getFechaHoraActual(),
+    fecha_creacion: getFechaHoraActual(),
     activo: true,
     creador: userId,
   };
@@ -282,7 +282,7 @@ export const addArrayToSubCollection = async (
   let objectSubcollectionData = object.subcollection.data;
   let objectBaseData = {
     ...object,
-    fechaCreacion: getFechaHoraActual(),
+    fecha_creacion: getFechaHoraActual(),
     activo: true,
     creador: userId,
   };
@@ -316,7 +316,7 @@ export const addToMateriasCollection = async (
 ) => {
   object = {
     ...object,
-    fechaCreacion: getFechaHoraActual(),
+    fecha_creacion: getFechaHoraActual(),
     activo: true,
     creador: userId,
   };
@@ -369,7 +369,7 @@ export const addDocumentWithId = async (collection, id, object, message) => {
 export const editDocument = async (collection, docId, obj, message) => {
   obj = {
     ...obj,
-    fechaEdicion: getFechaHoraActual(),
+    fecha_edicion: getFechaHoraActual(),
   };
 
   var ref = firestore.collection(collection).doc(docId);

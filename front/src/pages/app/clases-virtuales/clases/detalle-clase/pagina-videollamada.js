@@ -67,6 +67,7 @@ const PaginaVideollamada = (props) => {
         rol={props.rol}
         idClase={props.idClase}
         preguntas={props.preguntas}
+        idUser={props.user}
       />
     </>
   ) : (
@@ -83,6 +84,7 @@ const PaginaVideollamada = (props) => {
                 placeholder="Nombre"
                 value={`${props.nombre} ${props.apellido}`}
                 disabled
+                autocomplete="off"
               />
             </FormGroup>
             <FormGroup>
@@ -129,9 +131,10 @@ const PaginaVideollamada = (props) => {
 };
 
 const mapStateToProps = ({ authUser }) => {
-  const { userData } = authUser;
+  const { user, userData } = authUser;
   const { nombre, apellido, rol } = userData;
   return {
+    user,
     nombre,
     apellido,
     rol,

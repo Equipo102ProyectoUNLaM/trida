@@ -291,7 +291,11 @@ class FormEvaluacion extends React.Component {
           <Form className="av-tooltip tooltip-label-right" autoComplete="off">
             <FormGroup className="mb-3 error-l-150">
               <Label>Nombre de la evaluacion</Label>
-              <Field className="form-control" name="nombre" />
+              <Field
+                className="form-control"
+                name="nombre"
+                autocomplete="off"
+              />
               {errors.nombre && touched.nombre ? (
                 <div className="invalid-feedback d-block">{errors.nombre}</div>
               ) : null}
@@ -357,6 +361,7 @@ class FormEvaluacion extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
+                autocomplete="off"
                 className="form-control"
                 name="descripcion"
                 component="textarea"
