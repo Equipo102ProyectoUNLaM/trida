@@ -30,7 +30,7 @@ import {
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
 import { addDocument } from 'helpers/Firebase-db';
-import PreguntasAleatorias from '../ejercicios/preguntas_aleatorias';
+import PreguntasAleatorias from '../ejercicios/preguntas-aleatorias';
 
 class RealizarEvaluacion extends Component {
   constructor(props) {
@@ -131,15 +131,13 @@ class RealizarEvaluacion extends Component {
         ejercicio.respuesta[e.indiceOpcion] = e.respuesta;
         break;
       case TIPO_EJERCICIO.preguntas_aleatorias:
-        {
-          ejercicio.respuesta = e;
-        }
+        ejercicio.respuesta = e;
         break;
       default:
         break;
     }
     this.setState({
-      respuestas: respuestas, //Aca quedan las respuestas actualizadas
+      respuestas, //Aca quedan las respuestas actualizadas
     });
   };
 
@@ -189,7 +187,7 @@ class RealizarEvaluacion extends Component {
         case TIPO_EJERCICIO.preguntas_aleatorias:
           if (
             rta.respuesta.find((x) => !x.respuesta) ||
-            rta.respuesta.length !=
+            rta.respuesta.length !==
               this.state.ejercicios.find(
                 (x) => x.data.numero.toString() === rta.numero.toString()
               ).data.cantidad

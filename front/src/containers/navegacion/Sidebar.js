@@ -347,7 +347,6 @@ class Sidebar extends Component {
       selectedParentMenu,
       viewingParentMenu,
       collapsedMenus,
-      menuOptions,
     } = this.state;
 
     return (

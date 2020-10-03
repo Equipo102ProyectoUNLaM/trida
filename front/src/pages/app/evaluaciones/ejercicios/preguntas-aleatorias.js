@@ -20,7 +20,7 @@ class PreguntasAleatorias extends React.Component {
   componentDidMount() {
     if (this.props.value.preguntas) {
       let aleatorias = [];
-      while (aleatorias.length != this.props.value.cantidad) {
+      while (aleatorias.length !== this.props.value.cantidad) {
         const number = Math.floor(
           Math.random() * this.props.value.preguntas.length
         );
@@ -119,7 +119,7 @@ class PreguntasAleatorias extends React.Component {
               </FormGroup>
             ))}{' '}
             {this.props.submitted &&
-            (respuestas.length != cantidad ||
+            (respuestas.length !== cantidad ||
               respuestas.find((x) => !x.respuesta)) ? (
               <div className="invalid-feedback d-block">
                 Las respuestas son requeridas

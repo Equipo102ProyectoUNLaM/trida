@@ -8,7 +8,7 @@ import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import OpcionMultipleImagen from './opcion-multiple-imagen';
-import PreguntasAleatorias from './preguntas_aleatorias';
+import PreguntasAleatorias from './preguntas-aleatorias';
 
 class AgregarEjercicio extends React.Component {
   constructor(props) {
@@ -98,17 +98,16 @@ class AgregarEjercicio extends React.Component {
           case TIPO_EJERCICIO.preguntas_aleatorias:
             if (!ejer.preguntas || ejer.preguntas.length === 0) {
               valid = false;
-              break;
             }
             if (!ejer.cantidad) {
               valid = false;
-              break;
             }
             if (ejer.preguntas.length < ejer.cantidad) {
               valid = false;
-              break;
             }
+            break;
           default:
+            if (!ejer.consigna) valid = false;
             break;
         }
       }

@@ -6,7 +6,6 @@ import BlockTitle from './BlockTitle';
 
 import CtaShape1 from 'assets/landing/images/shapes/cta-1-shape-1.png';
 import CtaShape2 from 'assets/landing/images/shapes/cta-1-shape-2.png';
-import CtaMoc1 from 'assets/landing/images/shapes/banner-shape-1-1.png';
 
 const CTAOne = (props) => {
   const history = useHistory();

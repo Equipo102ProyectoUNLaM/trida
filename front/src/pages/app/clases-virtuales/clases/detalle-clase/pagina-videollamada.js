@@ -9,7 +9,6 @@ import {
   Label,
   CustomInput,
   FormGroup,
-  FormText,
 } from 'reactstrap';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
@@ -40,7 +39,7 @@ const PaginaVideollamada = (props) => {
 
   useEffect(() => {
     getDatosClaseOnSnapshot('clases', props.idClase, onClaseIniciada);
-  }, []);
+  }, [props.idClase]);
 
   const onClaseIniciada = (doc) => {
     const { iniciada } = doc.data();

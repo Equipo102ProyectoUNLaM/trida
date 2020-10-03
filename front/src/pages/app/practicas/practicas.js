@@ -161,7 +161,7 @@ class Practica extends Component {
   };
 
   async dataListRenderer(arrayDeObjetos) {
-    for (const practica of arrayDeObjetos) {
+    for (let practica of arrayDeObjetos) {
       if (
         practica.data.idArchivo !== undefined &&
         practica.data.idArchivo !== ''
@@ -173,10 +173,8 @@ class Practica extends Component {
         { field: 'idPractica', operator: '==', id: practica.id },
         { field: 'idUsuario', operator: '==', id: this.props.user },
       ]);
-      practica = Object.assign(
-        practica,
-        result.length > 0 ? { entregada: true } : { entregada: false }
-      );
+
+      practica.entregada = result.length > 0;
     }
 
     this.setState({

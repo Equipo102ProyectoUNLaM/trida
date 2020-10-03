@@ -26,7 +26,7 @@ import {
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
 import OpcionMultipleImagen from '../ejercicios/opcion-multiple-imagen';
-import PreguntasAleatorias from '../ejercicios/preguntas_aleatorias';
+import PreguntasAleatorias from '../ejercicios/preguntas-aleatorias';
 
 class ModalVistaPreviaEvaluacion extends Component {
   constructor(props) {
