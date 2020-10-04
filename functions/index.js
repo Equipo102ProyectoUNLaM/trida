@@ -44,7 +44,7 @@ exports.register = functions.auth.user().onCreate((data)=> {
     const user = {
       id: data.uid,
       mail: data.email,
-      fechaCreacion: data.metadata.creationTime,
+      fecha_creacion: data.metadata.creationTime,
       nombre: '',
       apellido: '',
       telefono: '',
@@ -178,7 +178,7 @@ exports.asignarMaterias = functions.https.onCall(async (data)=> {
     await admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set( { instituciones: instObj }, { merge: true });
-    
+
   } catch (error) {
     console.log('error', error);
   }
@@ -202,7 +202,7 @@ exports.mergeInstituciones = async (instUser, instAsignar) => {
   if (!institucionYaAsignada) {
     return [...instUser,  ...instAsignar]
   }
-  
+
   // El usuario ya posee la institución a la cual lo invitaron
   const { cursos } = institucionYaAsignada;
 
@@ -227,7 +227,7 @@ exports.mergeInstituciones = async (instUser, instAsignar) => {
     })
 
   })
-  
+
   return instUser;
 }
 
@@ -245,7 +245,7 @@ exports.agregarMaterias = functions.https.onCall(async (data)=> {
   } catch (error) {
     console.log('error', error);
   }
-  
+
 });
 
 exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
@@ -270,7 +270,7 @@ exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
   } catch (error) {
     console.log('error', error);
   }
-  
+
 };
 
 

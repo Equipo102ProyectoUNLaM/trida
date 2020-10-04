@@ -54,6 +54,8 @@ Table of Contents
 49.Correcciones
 50.Evaluaciones
 51.Countdown
+52.Foro
+53.Correcciones
 
 */
 
@@ -6505,6 +6507,11 @@ input:-webkit-autofill {
   margin-left: 1rem !important;
 }
 
+.without-tooltip {
+  width: 93% !important;
+  margin-left: 1rem !important;
+}
+
 .has-float-label label::after,
 .has-float-label > span::after {
   background: $foreground-color !important;
@@ -9330,11 +9337,20 @@ tr.folder{
 }
 
 .users-names {
-  padding-top: 2rem;
+  align-items: center;
+  padding-top: 1rem;
 }
 
 .fecha-mensaje {
   padding-left: 0.25rem;
+}
+
+.texto-mensaje, .icono-mensaje {
+  font-size: 1rem !important;
+}
+
+.modal-mensaje-border-radius {
+  border-radius: 1.1rem !important;
 }
 
 .break-word {
@@ -9407,6 +9423,24 @@ tr.folder{
 
 .mensaje-es-responder {
   margin: auto;
+}
+
+.modal-footer-mensajeria:after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 70px 70px 0 0;
+  border-color: #ffffff transparent transparent transparent;
+  position: absolute;
+  bottom: -34px;
+  left: 0;
+}
+
+.modal-detalle-mensaje {
+  .modal-content {
+    border-radius: 1.9rem !important;
+  }
 }
 
 //49 Correcciones
@@ -9515,7 +9549,7 @@ div.rendered-file-browser{
 }
 
 .practicas-list-label {
-  width: 30%;
+  width: 50%;
 }
 
 .row-filtro-fechas {
@@ -9540,7 +9574,7 @@ div.rendered-file-browser{
 }
 
 .datalist-button{
-  margin-right: 5%;
+  margin-right: 2%;
 }
 
 .practicas-adjuntar-button {
@@ -9553,6 +9587,40 @@ div.rendered-file-browser{
 
 .practica-file-element {
   display: inline-block;
+}
+
+.badge-data-list {
+  width: 25%;
+  height: 50%;
+  margin-right: 2%;
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
+  background-color: $theme-color-1 !important;
+  color: #fff;
+  padding: 0.55em 0.75em 0.6em 0.75em;
+  font-size: 74%;
+}
+
+
+.badge-correccion {
+  width: 15%;
+  height: 50%;
+  margin-right: 2%;
+  margin-left: 1%;
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
+  background-color: $theme-color-1 !important;
+  color: #fff;
+  padding: 0.55em 0.75em 0.6em 0.75em;
+  font-size: 74%;
+}
+
+.correcciones-data-list-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  align-items: center;
 }
 
 .custom-file-label::after {
@@ -9678,7 +9746,7 @@ div.rendered-file-browser{
   display: flex;
   justify-content: flex-end;
   visibility: visible;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, -0.3);
   z-index: 4;
   font-weight: bold;
   font-size: 85%;
@@ -9757,6 +9825,61 @@ div.rendered-file-browser{
   box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
 }
 
+.reaccion-pregunta {
+  cursor: pointer;
+  border: 1px solid white !important;
+  border-radius: 1rem;
+  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+  width: 19%;
+  margin: 0.5rem 0 0.5rem 1rem;
+  padding: 0.3rem 0.5rem;
+  transition: ease-in-out 240ms all;
+
+  &.active {
+    border: 1px solid $theme-color-1 !important;
+  }
+
+  &.disabled {
+    filter: grayscale(0.9);
+    cursor: default;
+  }
+}
+
+.texto-reaccion-pregunta {
+  font-weight: bold;
+  color: $theme-color-1;
+  margin-left: 0.5rem;
+}
+
+.notificacion-pregunta {
+  background-color: red;
+  border-color: white;
+  border: solid 1px;
+  color: white;
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -0.5rem;
+  right: 1.6rem;
+  left: auto;
+  font-size: 110%;
+  padding-bottom: 0.3rem;
+  padding-left: 0.05rem;
+}
+
+.modal-ver-preguntas {
+  .modal-content {
+    height: auto !important;
+  }
+}
+
+.relative {
+  position: relative;
+}
 // Grabaciones
 
 [data-qa=turn-on-camera] {
@@ -9914,7 +10037,8 @@ div.rendered-file-browser{
   margin: auto;
   padding-right: 10px;
 }
-// Foro
+// 52 Foro
+
 .row-space-between {
   display: flex;
   justify-content: space-between;
@@ -9923,17 +10047,7 @@ div.rendered-file-browser{
     margin-right: 1rem;
 }
 
-// Correcciones
-
-.filtros-button {
-  padding: 0 1.5rem !important;
-}
-
-.filtros-button-group {
-  margin-left: 1rem;
-  height: 2.5rem;
-}
-
+// 53 Correcciones
 .modal-correccion {
   width: 100% !important;
 }
@@ -9965,6 +10079,7 @@ div.rendered-file-browser{
   margin-bottom: 1rem !important;
 }
 
-.half-height {
-  height: 60% !important;
+.status-correccion {
+  margin-left: 0;
+  margin-bottom: 1rem;
 }

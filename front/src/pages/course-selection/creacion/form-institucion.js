@@ -100,7 +100,11 @@ class FormInstitucion extends Component {
                       <Label>
                         <IntlMessages id="institucion.nombre" />
                       </Label>
-                      <Field className="form-control" name="nombre" />
+                      <Field
+                        className="form-control"
+                        name="nombre"
+                        autocomplete="off"
+                      />
                       {errors.nombre && touched.nombre && (
                         <div className="invalid-feedback d-block">
                           {errors.nombre}
@@ -129,6 +133,7 @@ class FormInstitucion extends Component {
                         className="form-control"
                         name="telefono"
                         onChange={this.handleChange}
+                        autocomplete="off"
                       />
                       {errors.telefono && touched.telefono && (
                         <div className="invalid-feedback d-block">
