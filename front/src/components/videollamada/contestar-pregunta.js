@@ -29,6 +29,8 @@ class ContestarPregunta extends Component {
       isLoading: true,
       submitted: false,
       idClase: this.props.idClase,
+      backdrop: 'static', // no permite cerrar el modal
+      noResponde: true,
     };
   }
 
@@ -67,7 +69,18 @@ class ContestarPregunta extends Component {
       idAlumno: this.props.user,
       respuestas: this.state.respuestas,
     };
+    await this.guardarRespuesta(obj);
+  };
 
+  noSabeRespuesta = async () => {
+    const obj = {
+      idAlumno: this.props.user,
+      respuestas: [],
+    };
+    await this.guardarRespuesta(obj);
+  };
+
+  async guardarRespuesta(obj) {
     //Guardo en la subcoleccion respuestas. El idDoc es el idUser del alumno
     await addDocumentWithId(
       `clases/${this.state.idClase}/preguntas/${this.state.preguntas[0].id}/respuestas`,
@@ -76,15 +89,26 @@ class ContestarPregunta extends Component {
       'Pregunta'
     );
     this.props.toggle();
-  };
+  }
 
   render() {
-    const { preguntas, isLoading, submitted, tiempoPregunta } = this.state;
+    const {
+      preguntas,
+      isLoading,
+      submitted,
+      tiempoPregunta,
+      backdrop,
+    } = this.state;
     const { isOpen, toggle, onRespuestaDeAlumno } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
-      <Modal className="modal-ejercicios" isOpen={isOpen} toggle={toggle}>
+      <Modal
+        className="modal-ejercicios"
+        isOpen={isOpen}
+        toggle={toggle}
+        backdrop={backdrop}
+      >
         <ModalHeader>
           Pregunta Lanzada por profesor
           <CountdownPreguntas
@@ -126,7 +150,7 @@ class ContestarPregunta extends Component {
           >
             Contestar Pregunta
           </Button>
-          <Button color="primary" onClick={this.responderPregunta}>
+          <Button color="primary" onClick={this.noSabeRespuesta}>
             No sé la respuesta
           </Button>
         </ModalFooter>

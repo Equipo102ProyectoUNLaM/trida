@@ -93,13 +93,11 @@ const Videollamada = ({
       : 0;
     const segs = tiempoPregunta ? Number(tiempoPregunta.substring(3, 5)) : 0;
     const remainingTime = mins + segs; // queda en segundos
-    console.log('remainingTime', remainingTime);
     if (remainingTime > 0) {
       setTimeout(() => {
         onCancelarPregunta(preguntaALanzar);
       }, remainingTime * 1000);
     }
-    //setTimeout({ onCancelarPregunta }, remainingTime * 1000);
   };
 
   const checkRespuestaAlumno = (document) => {
@@ -186,7 +184,9 @@ const Videollamada = ({
   };
 
   const lanzamientoPreguntaValido = () => {
-    return preguntaALanzar && tiempoPregunta;
+    return (
+      preguntaALanzar && tiempoPregunta && preguntaLanzadaGlobal.length == 0
+    );
   };
 
   const guardarListaAsistencia = async () => {
