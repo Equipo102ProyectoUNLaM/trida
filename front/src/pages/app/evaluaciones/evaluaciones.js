@@ -91,7 +91,7 @@ class Evaluaciones extends Component {
   async dataListRenderer(arrayDeObjetos) {
     for (let element of arrayDeObjetos) {
       const result = await getCollection('correcciones', [
-        { field: 'id_entrega', operator: '==', id: element.id },
+        { field: 'idEntrega', operator: '==', id: element.id },
       ]);
       element = Object.assign(
         element,

@@ -48,6 +48,7 @@ class RealizarEvaluacion extends Component {
       respuestas: [],
       submitted: false,
       modalFinishOpen: false,
+      modalAbandonarOpen: false,
       isLoading: true,
     };
   }
@@ -153,15 +154,17 @@ class RealizarEvaluacion extends Component {
     }
   };
 
-  entregarEvaluacion = async () => {
+  entregarEvaluacion = async (abandonarEvaluacion) => {
     this.setState({ isLoading: true });
-    let respuestasConUrl = await this.subirImagenesAStorage();
+    let respuestasConUrl;
+    if (abandonarEvaluacion === true) respuestasConUrl = [];
+    else respuestasConUrl = await this.subirImagenesAStorage();
     let obj = {
       estado: ESTADO_ENTREGA.no_corregido,
-      fecha_entrega: getFechaHoraActual(),
-      id_alumno: this.props.user,
-      id_materia: this.props.subject.id,
-      id_entrega: this.state.evaluacionId,
+      fechaEntrega: getFechaHoraActual(),
+      idAlumno: this.props.user,
+      idMateria: this.props.subject.id,
+      idEntrega: this.state.evaluacionId,
       tipo: TIPO_ENTREGA.evaluacion,
       version: 0,
       respuestas: respuestasConUrl,
@@ -241,6 +244,12 @@ class RealizarEvaluacion extends Component {
     });
   };
 
+  toggleAbandonarModal = () => {
+    this.setState({
+      modalAbandonarOpen: !this.state.modalAbandonarOpen,
+    });
+  };
+
   render() {
     const {
       nombreEval,
@@ -249,6 +258,7 @@ class RealizarEvaluacion extends Component {
       descripcion,
       fecha_finalizacion,
       modalFinishOpen,
+      modalAbandonarOpen,
       submitted,
     } = this.state;
     const { nombre, apellido } = this.props;
@@ -383,7 +393,9 @@ class RealizarEvaluacion extends Component {
                 FINALIZAR EVALUACION
               </Button>
 
-              <Button color="secondary">ABANDONAR</Button>
+              <Button color="secondary" onClick={this.toggleAbandonarModal}>
+                ABANDONAR
+              </Button>
             </ModalFooter>
           </CardBody>
         </Card>
@@ -396,6 +408,17 @@ class RealizarEvaluacion extends Component {
             toggle={this.toggleModal}
             isOpen={modalFinishOpen}
             onConfirm={this.entregarEvaluacion}
+          />
+        )}
+        {modalAbandonarOpen && (
+          <ModalConfirmacion
+            texto="Será entregada vacía y no podrás editarla"
+            titulo="¿Estás seguro de abandonar tu evaluación?"
+            buttonPrimary="Entregar"
+            buttonSecondary="Cancelar"
+            toggle={this.toggleAbandonarModal}
+            isOpen={modalAbandonarOpen}
+            onConfirm={() => this.entregarEvaluacion(true)}
           />
         )}
       </Fragment>
