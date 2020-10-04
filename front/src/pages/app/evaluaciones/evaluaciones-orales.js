@@ -13,6 +13,7 @@ import {
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { isEmpty, getTimestampDifference } from 'helpers/Utils';
+import FormEvaluacionOral from './form-evaluacion-oral';
 import firebase from 'firebase/app';
 import * as _moment from 'moment';
 const moment = _moment;
@@ -78,7 +79,7 @@ class EvaluacionesOrales extends Component {
         { field: 'activo', operator: '==', id: true },
       ],
       false,
-      'ejercicios'
+      'integrantes'
     );
     this.dataListRenderer(arrayDeObjetos);
   };
@@ -172,13 +173,12 @@ class EvaluacionesOrales extends Component {
       isLoading,
       modalDeleteOpen,
       modalEditOpen,
-      idOralEditado: idOralEditado,
-      nombreOralEditado: nombreOralEditado,
-      fechaOralEditado: fechaOralEditado,
+      idOralEditado,
+      nombreOralEditado,
+      fechaOralEditado,
       oldTestActive,
+      rolDocente,
     } = this.state;
-    const { rol } = this.props;
-    const rolDocente = rol === ROLES.Docente;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -190,7 +190,7 @@ class EvaluacionesOrales extends Component {
                 ? 'menu.my-old-oral-evaluations'
                 : 'menu.my-oral-evaluations'
             }
-            toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
+            toggleModal={rolDocente && !oldTestActive ? this.toggleModal : null}
             buttonText={
               rolDocente && !oldTestActive ? 'evaluation.add-oral' : null
             }
@@ -203,7 +203,15 @@ class EvaluacionesOrales extends Component {
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}
             modalHeader="evaluation.add-oral"
-          ></ModalGrande>
+          >
+            <FormEvaluacionOral
+              toggleModal={this.toggleModal}
+              onOralGuardado={this.onOralGuardado}
+              textConfirm="Agregar"
+              operationType="add"
+              idMateria={this.state.materiaId}
+            />
+          </ModalGrande>
           <Row>
             {!isEmpty(items) &&
               items.map((evaluacion) => {
