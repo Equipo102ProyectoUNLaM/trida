@@ -8,10 +8,11 @@ import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import {
   logicDeleteDocument,
-  getDocumentWithSubCollection,
-  getCollectionWithSubCollections,
+  getDocument,
+  getCollection,
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
+import { getUsersOfSubject } from 'helpers/Firebase-user';
 import { isEmpty, getTimestampDifference } from 'helpers/Utils';
 import FormEvaluacionOral from './form-evaluacion-oral';
 import firebase from 'firebase/app';
@@ -30,6 +31,7 @@ class EvaluacionesOrales extends Component {
       items: [],
       modalOpen: false,
       selectedItems: [],
+      datosUsuarios: [],
       isLoading: true,
       idMateria: this.props.subject.id,
       modalDeleteOpen: false,
@@ -45,29 +47,28 @@ class EvaluacionesOrales extends Component {
   }
 
   getEvaluacionesOrales = async (materiaId) => {
-    const arrayDeObjetos = await getCollectionWithSubCollections(
+    const arrayDeObjetos = await getCollection(
       'evaluacionesOrales',
       [
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
-      false,
-      'integrantes'
+      false
     );
 
     const evaluacionesActuales = arrayDeObjetos.filter((elem) => {
       return (
         getTimestampDifference(
-          elem.data.base.fecha_evaluacion.toDate(),
+          elem.data.fecha_evaluacion.toDate(),
           moment().toDate()
-        ) >= 0
+        ) < 0
       );
     });
     this.dataListRenderer(evaluacionesActuales);
   };
 
   getEvaluacionesOralesVencidas = async (materiaId) => {
-    const arrayDeObjetos = await getCollectionWithSubCollections(
+    const arrayDeObjetos = await getCollection(
       'evaluacionesOrales',
       [
         {
@@ -78,13 +79,20 @@ class EvaluacionesOrales extends Component {
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
-      false,
-      'integrantes'
+      false
     );
     this.dataListRenderer(arrayDeObjetos);
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const datos = await getUsersOfSubject(
+      this.state.idMateria,
+      this.props.user
+    );
+    this.setState({
+      datosUsuarios: datos,
+    });
+
     this.getEvaluacionesOrales(this.state.idMateria);
   }
 
@@ -126,9 +134,9 @@ class EvaluacionesOrales extends Component {
       isLoading: true,
     });
     if (this.state.oldTestActive) {
-      this.getEvaluacionesOralesVencidas(this.state.materiaId);
+      this.getEvaluacionesOralesVencidas(this.state.idMateria);
     } else {
-      this.getEvaluacionesOrales(this.state.materiaId);
+      this.getEvaluacionesOrales(this.state.idMateria);
     }
   };
 
@@ -140,11 +148,8 @@ class EvaluacionesOrales extends Component {
   };
 
   onEdit = async (idOral) => {
-    const oral = await getDocumentWithSubCollection(
-      `evaluacionesOrales/${idOral}`,
-      'integrantes'
-    );
-    const { data, subCollection } = oral;
+    const oral = await getDocument(`evaluacionesOrales/${idOral}`);
+    const { data } = oral;
     const { nombre } = data;
     this.setState({
       idOralEditado: idOral,
@@ -176,6 +181,7 @@ class EvaluacionesOrales extends Component {
       idOralEditado,
       nombreOralEditado,
       fechaOralEditado,
+      datosUsuarios,
       oldTestActive,
       rolDocente,
     } = this.state;
@@ -210,6 +216,7 @@ class EvaluacionesOrales extends Component {
               textConfirm="Agregar"
               operationType="add"
               idMateria={this.state.materiaId}
+              datosUsuarios={datosUsuarios}
             />
           </ModalGrande>
           <Row>
@@ -220,16 +227,14 @@ class EvaluacionesOrales extends Component {
                     key={evaluacion.id}
                     id={evaluacion.id}
                     item={evaluacion}
-                    materiaId={this.state.materiaId}
+                    materiaId={this.state.idMateria}
                     isOldTest={this.state.oldTestActive}
-                    updateEvaluaciones={this.getEvaluaciones}
+                    updateEvaluaciones={this.getEvaluacionesOrales}
                     isSelect={this.state.selectedItems.includes(evaluacion.id)}
                     collect={collect}
                     // navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                     onEdit={this.onEdit}
                     onDelete={this.onDelete}
-                    onMake={this.onMake}
-                    onCancel={this.onCancel}
                   />
                 );
               })}

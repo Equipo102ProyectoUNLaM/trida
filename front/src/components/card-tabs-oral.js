@@ -69,12 +69,27 @@ class CardTabsOral extends Component {
     }
   }
 
+  handleClickChangeFinalDate = async (date) => {
+    if (date) {
+      const obj = {
+        fecha_evaluacion: timeStamp.fromDate(new Date(date)),
+      };
+      await editDocument(
+        'evaluacionesOrales',
+        this.props.item.id,
+        obj,
+        'Evaluación editada'
+      );
+      this.props.updateEvaluaciones(this.props.materiaId);
+    }
+  };
+
   render() {
     const { item, rol } = this.props;
     const { data, entregada } = item;
     return (
       <Row lg="12" className="tab-card-evaluaciones">
-        <Colxx xxs="12">
+        <Colxx xxs="3">
           <Row lg="12">
             <Colxx xxs="12" xs="12" lg="12" id={item.id}>
               <Card className={`mb-4 ${this.state.focused ? 'focused' : ''}`}>
@@ -120,17 +135,40 @@ class CardTabsOral extends Component {
                     )}
                   </Nav>
                 </CardHeader>
-
                 <TabContent activeTab={this.state.activeSecondTab}>
                   <TabPane tabId="1">
                     <Row>
                       <Colxx sm="3">
                         <CardBody>
                           <Row>
-                            <Colxx xxs="12" xs="8" lg="8">
-                              <CardTitle className="mb-4">
-                                {data.base.nombre}
-                              </CardTitle>
+                            <CardTitle className="mb-4">
+                              {data.nombre}
+                            </CardTitle>
+                            <Colxx xxs="12" xs="4" lg="4">
+                              <div className="dropdown-calendar flex">
+                                <p>Fecha y Hora de Evaluación&nbsp;</p>
+                                {rol === ROLES.Docente &&
+                                  !this.props.isOldTest && (
+                                    <Calendario
+                                      handleClick={
+                                        this.handleClickChangeFinalDate
+                                      }
+                                      text="Modificar fecha de evaluación"
+                                      evalCalendar={true}
+                                      dateFormat={'DD/MM/YYYY - HH:mm'}
+                                      timeCaption="Hora"
+                                      timeIntervals={60}
+                                      timeFormat={'HH:mm'}
+                                    />
+                                  )}
+                                {
+                                  <p className="mb-4">
+                                    {getDateTimeStringFromDate(
+                                      data.fecha_evaluacion
+                                    )}
+                                  </p>
+                                }
+                              </div>
                             </Colxx>
                           </Row>
                         </CardBody>
@@ -140,22 +178,7 @@ class CardTabsOral extends Component {
                   <TabPane tabId="2">
                     <Row>
                       <Colxx sm="3">
-                        <CardBody>
-                          {data.subcollections.length > 0 && (
-                            <ol>
-                              {data.subcollections.map((scol) => (
-                                <div
-                                  className="ejerciciosRow"
-                                  key={scol.id + 'ej'}
-                                >
-                                  <li className="ejerciciosItem">
-                                    {scol.data.nombre}
-                                  </li>
-                                </div>
-                              ))}
-                            </ol>
-                          )}
-                        </CardBody>
+                        <CardBody></CardBody>
                       </Colxx>
                     </Row>
                   </TabPane>
