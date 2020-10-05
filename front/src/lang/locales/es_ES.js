@@ -159,6 +159,8 @@ module.exports = {
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluacion.adjuntar-desarrollo-extensiones':
+    'Las extensiones admitidas son .pdf, .png, .jpg, .jpeg',
   'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',
   'evaluacion.sinCapturas': '¡Ups!',
   'evaluation.old': 'VER EVALUACIONES FINALIZADAS',
