@@ -199,26 +199,16 @@ class CardTabsOral extends Component {
                           </Row>
                           <Row className="button-group">
                             {rol === ROLES.Docente && !this.props.isOldTest && (
-                              <Button
-                                outline
+                              <div
+                                className="glyph-icon simple-icon-pencil edit-action-icon"
                                 onClick={this.handleClickEdit}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Editar Evaluación
-                              </Button>
+                              />
                             )}
                             {rol === ROLES.Docente && !this.props.isOldTest && (
-                              <Button
-                                outline
+                              <div
+                                className="glyph-icon simple-icon-trash delete-action-icon"
                                 onClick={this.handleClickDelete}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Borrar Evaluación
-                              </Button>
+                              />
                             )}
                           </Row>
                         </CardBody>
@@ -231,7 +221,11 @@ class CardTabsOral extends Component {
                         <CardBody>
                           {!isEmpty(integrantes) &&
                             this.state.integrantes.map((integrante) => {
-                              return <p key={integrante.id}>{integrante}</p>;
+                              return (
+                                <p key={integrante.id}>
+                                  <strong>{integrante}</strong>
+                                </p>
+                              );
                             })}
                           {isEmpty(integrantes) && (
                             <Row>
