@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Card, CardTitle, Label, Button, FormGroup } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { registerUser, changeLocale } from 'redux/actions';
+import { registerUser } from 'redux/actions';
 import { Formik, Form, Field } from 'formik';
 import {
   enviarNotificacionError,

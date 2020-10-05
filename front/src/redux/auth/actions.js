@@ -151,7 +151,6 @@ export const registerUser = (user) => async (dispatch) => {
       dispatch(registerUserError(registerUser.message));
     }
   } catch (error) {
-    console.log(error.message);
     if (
       error.message === 'Este correo ya está siendo usado por otro usuario.'
     ) {
