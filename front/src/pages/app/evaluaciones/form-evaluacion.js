@@ -8,13 +8,13 @@ import {
   addDocumentWithSubcollection,
   getUsernameById,
 } from 'helpers/Firebase-db';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercicio';
 import { Formik, Form, Field } from 'formik';
 import { evaluationSchema } from 'pages/app/evaluaciones/validations';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
-import { getDate } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
@@ -234,7 +234,7 @@ class FormEvaluacion extends React.Component {
       this.props.onEvaluacionEditada();
       return;
     } catch (err) {
-      console.log(err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
 
@@ -272,7 +272,11 @@ class FormEvaluacion extends React.Component {
           <Form className="av-tooltip tooltip-label-right" autoComplete="off">
             <FormGroup className="mb-3 error-l-150">
               <Label>Nombre de la evaluacion</Label>
-              <Field className="form-control" name="nombre" />
+              <Field
+                className="form-control"
+                name="nombre"
+                autocomplete="off"
+              />
               {errors.nombre && touched.nombre ? (
                 <div className="invalid-feedback d-block">{errors.nombre}</div>
               ) : null}
@@ -338,6 +342,7 @@ class FormEvaluacion extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
+                autocomplete="off"
                 className="form-control"
                 name="descripcion"
                 component="textarea"

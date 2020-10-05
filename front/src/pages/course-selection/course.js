@@ -4,6 +4,7 @@ import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
 import { getCourses } from 'helpers/Firebase-user';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { connect } from 'react-redux';
 import { updateSubject, updateCourse } from 'redux/actions';
 
@@ -43,7 +44,7 @@ class Course extends Component {
     try {
       array = await getCourses(institutionId, userId);
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       return array;
     }

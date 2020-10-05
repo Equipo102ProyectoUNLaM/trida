@@ -58,7 +58,7 @@ class AdjuntarDesarrollo extends React.Component {
 
   handleImageChange = (event) => {
     event.preventDefault();
-    const { files, value } = event.target;
+    const { files } = event.target;
     if (!files || !files.length) return;
     let reader = new FileReader();
     let file = files[0];

@@ -24,6 +24,8 @@ import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { createUUID } from 'helpers/Utils';
 import { subirArchivoAStorage } from 'helpers/Firebase-storage';
+import Countdown from 'components/common/Countdown';
+import ModalChico from 'containers/pages/ModalChico';
 
 import {
   getDateWithFormat,
@@ -31,7 +33,7 @@ import {
   getFechaHoraActual,
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
-import { addDocument } from 'helpers/Firebase-db';
+import { addDocument, editDocument } from 'helpers/Firebase-db';
 import PreguntasAleatorias from '../ejercicios/preguntas_aleatorias';
 import AdjuntarDesarrollo from '../ejercicios/adjuntar_desarrollo';
 
@@ -49,18 +51,75 @@ class RealizarEvaluacion extends Component {
       submitted: false,
       modalFinishOpen: false,
       modalAbandonarOpen: false,
+      modalCapturaOpen: false,
+      sinTiempo: false,
       isLoading: true,
     };
   }
 
   async componentDidMount() {
     await this.getEvaluacion();
+    //Cerrar ventana
+    if (this.state.sin_salir_de_ventana) this.configurarSinVentana();
+
+    //Captura de pantalla
+    if (this.state.sin_capturas) this.configurarSinCaptura();
+  }
+
+  configurarSinVentana = () => {
+    window.addEventListener('beforeunload', async (ev) => {
+      ev.preventDefault();
+      await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
+      return (ev.returnValue = 'Seguro desea abandonar?');
+    });
+    window.addEventListener('unload', async (ev) => {
+      ev.preventDefault();
+      await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
+      return;
+    });
+  };
+
+  configurarSinCaptura = () => {
+    window.addEventListener('keyup', (ev) => {
+      ev.preventDefault();
+      if (ev.keyCode === 44) {
+        this.copyToClipboard();
+      }
+      window.focus = function () {
+        document.body.getElementsByClassName('body').show();
+      };
+
+      window.blur = function () {
+        document.body.getElementsByClassName('body').hide();
+      };
+    });
+  };
+
+  copyToClipboard = () => {
+    // Create a "hidden" input
+    var aux = document.createElement('input');
+    // Assign it the value of the specified element
+    aux.setAttribute('value', '¡No podés sacar capturas de pantalla!');
+    // Append it to the body
+    document.body.appendChild(aux);
+    // Highlight its content
+    aux.select();
+    // Copy the highlighted text
+    document.execCommand('copy');
+    // Remove it from the body
+    document.body.removeChild(aux);
+    this.toggleCapturaModel();
+  };
+
+  async componentWillUnmount() {
+    await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
   }
 
   getEvaluacion = async () => {
     if (!this.props.location.evalId) {
       this.setState({ isLoading: false });
       this.props.history.push(`/app/evaluaciones`);
+      return;
     }
     const evaluacion = await getDocumentWithSubCollection(
       `evaluaciones/${this.props.location.evalId}`,
@@ -68,7 +127,13 @@ class RealizarEvaluacion extends Component {
     );
 
     const { id, data, subCollection } = evaluacion;
-    const { nombre, fecha_finalizacion, fecha_publicacion, descripcion } = data;
+    const {
+      nombre,
+      fecha_finalizacion,
+      descripcion,
+      sin_capturas,
+      sin_salir_de_ventana,
+    } = data;
 
     const ejerciciosDesencriptados = desencriptarEjercicios(
       subCollection,
@@ -108,11 +173,18 @@ class RealizarEvaluacion extends Component {
     this.setState({
       respuestas: respuestas,
       evaluacionId: id,
+      sin_capturas:
+        CryptoJS.AES.decrypt(sin_capturas, secretKey).toString(
+          CryptoJS.enc.Utf8
+        ) === 'true',
+      sin_salir_de_ventana:
+        CryptoJS.AES.decrypt(sin_salir_de_ventana, secretKey).toString(
+          CryptoJS.enc.Utf8
+        ) === 'true',
       nombreEval: CryptoJS.AES.decrypt(nombre, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
-      fecha_finalizacion: getDateTimeStringFromDate(fecha_finalizacion),
-      fecha_publicacion: getDateTimeStringFromDate(fecha_publicacion),
+      fecha_finalizacion: fecha_finalizacion,
       descripcion: CryptoJS.AES.decrypt(descripcion, secretKey).toString(
         CryptoJS.enc.Utf8
       ),
@@ -148,13 +220,20 @@ class RealizarEvaluacion extends Component {
     });
   };
 
+  tiempoTerminado = () => {
+    if (!this.state.sinTiempo) {
+      this.entregarEvaluacion(false);
+      this.setState({ sinTiempo: true });
+    }
+  };
+
   finalizarEvaluacion = () => {
     if (this.validateRespuestas() === true) {
       this.toggleModal();
     }
   };
 
-  entregarEvaluacion = async (abandonarEvaluacion) => {
+  entregarEvaluacion = async (navigate, abandonarEvaluacion) => {
     this.setState({ isLoading: true });
     let respuestasConUrl;
     if (abandonarEvaluacion === true) respuestasConUrl = [];
@@ -178,6 +257,16 @@ class RealizarEvaluacion extends Component {
       'Tu evaluación fue entregada correctamente',
       'Tu evaluación no pudo ser entregada'
     );
+    await this.reiniciarEstadoEvaluacion();
+    if (navigate) this.volverAEvaluaciones();
+  };
+
+  reiniciarEstadoEvaluacion = async () => {
+    await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
+  };
+
+  volverAEvaluaciones = (e) => {
+    if (e) e.preventDefault();
     this.props.history.push(`/app/evaluaciones`);
   };
 
@@ -250,6 +339,12 @@ class RealizarEvaluacion extends Component {
     });
   };
 
+  toggleCapturaModel = () => {
+    this.setState({
+      modalCapturaOpen: !this.state.modalCapturaOpen,
+    });
+  };
+
   render() {
     const {
       nombreEval,
@@ -259,9 +354,12 @@ class RealizarEvaluacion extends Component {
       fecha_finalizacion,
       modalFinishOpen,
       modalAbandonarOpen,
+      modalCapturaOpen,
       submitted,
+      sinTiempo,
     } = this.state;
     const { nombre, apellido } = this.props;
+
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -300,7 +398,8 @@ class RealizarEvaluacion extends Component {
                       </div>
                       <div>
                         <h5 className="text-red">
-                          Fecha y hora de finalizacion: {fecha_finalizacion} hs
+                          Fecha y hora de finalizacion:{' '}
+                          {getDateTimeStringFromDate(fecha_finalizacion)} hs
                         </h5>
                       </div>
                     </CardBody>
@@ -410,6 +509,35 @@ class RealizarEvaluacion extends Component {
             onConfirm={this.entregarEvaluacion}
           />
         )}
+        <Countdown end={fecha_finalizacion} onFinish={this.tiempoTerminado} />
+        {sinTiempo && (
+          <ModalChico
+            modalOpen={sinTiempo}
+            modalHeader={'evaluacion.sinTiempo'}
+          >
+            <Colxx xxs="12" md="12">
+              <h4>Ya no tenés más tiempo para seguir con la evaluación :( </h4>
+              <h4>
+                Pero no te preocupes, tu evaluación fue entregada con lo que
+                llegaste a completar hasta ahora
+              </h4>
+            </Colxx>
+            <ModalFooter>
+              <Button color="primary" onClick={this.volverAEvaluaciones}>
+                Aceptar
+              </Button>
+            </ModalFooter>
+          </ModalChico>
+        )}
+        {modalCapturaOpen && (
+          <ModalChico
+            modalOpen={modalCapturaOpen}
+            toggleModal={this.toggleCapturaModel}
+            modalHeader={'evaluacion.sinCapturas'}
+          >
+            <h3>¡No podés sacar capturas de pantalla!</h3>
+          </ModalChico>
+        )}
         {modalAbandonarOpen && (
           <ModalConfirmacion
             texto="Será entregada vacía y no podrás editarla"
@@ -418,7 +546,7 @@ class RealizarEvaluacion extends Component {
             buttonSecondary="Cancelar"
             toggle={this.toggleAbandonarModal}
             isOpen={modalAbandonarOpen}
-            onConfirm={() => this.entregarEvaluacion(true)}
+            onConfirm={() => this.entregarEvaluacion(true, true)}
           />
         )}
       </Fragment>
