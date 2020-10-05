@@ -8,19 +8,19 @@ import {
   Nav,
   NavItem,
   TabContent,
-  Badge,
   TabPane,
   Button,
+  Label,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
-import { editDocument } from 'helpers/Firebase-db';
+import { editDocument, getUsernameById } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
 import Calendario from './common/Calendario';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { getDateTimeStringFromDate } from 'helpers/Utils';
+import { getDateTimeStringFromDate, isEmpty } from 'helpers/Utils';
 import { timeStamp } from 'helpers/Firebase';
 
 class CardTabsOral extends Component {
@@ -32,11 +32,12 @@ class CardTabsOral extends Component {
       activeFirstTab: '1',
       activeSecondTab: '1',
       modalMakeOpen: false,
+      integrantes: [],
       focused: window.location.hash.replace('#', '') === this.props.item.id,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { focused } = this.state;
     if (focused) {
       const el = document.querySelector(`[id='${this.props.item.id}']`);
@@ -52,6 +53,10 @@ class CardTabsOral extends Component {
         this.setState({ focused: null });
       }, 3000);
     }
+
+    this.setState({
+      integrantes: await this.getNameOfReceivers(this.props.item),
+    });
   }
 
   toggleFirstTab(tab) {
@@ -84,9 +89,29 @@ class CardTabsOral extends Component {
     }
   };
 
+  handleClickEdit = () => {
+    this.props.onEdit(this.props.item.id);
+  };
+
+  handleClickDelete = () => {
+    this.props.onDelete(this.props.item.id);
+  };
+
+  getNameOfReceivers = async (evaluacion) => {
+    let nombreIntegrantes = [];
+    if (evaluacion.data.integrantes.length > 0) {
+      evaluacion.data.integrantes.forEach(async (integrante) => {
+        const name = await getUsernameById(integrante);
+        nombreIntegrantes.push(name);
+      });
+    }
+    return nombreIntegrantes;
+  };
+
   render() {
     const { item, rol } = this.props;
-    const { data, entregada } = item;
+    const { data } = item;
+    const { integrantes } = this.state;
     return (
       <Row lg="12" className="tab-card-evaluaciones">
         <Colxx xxs="3">
@@ -138,15 +163,15 @@ class CardTabsOral extends Component {
                 <TabContent activeTab={this.state.activeSecondTab}>
                   <TabPane tabId="1">
                     <Row>
-                      <Colxx sm="3">
+                      <Colxx sm="12">
                         <CardBody>
                           <Row>
-                            <CardTitle className="mb-4">
+                            <CardTitle className="mb-3 ml-1">
                               {data.nombre}
                             </CardTitle>
-                            <Colxx xxs="12" xs="4" lg="4">
-                              <div className="dropdown-calendar flex">
-                                <p>Fecha y Hora de Evaluación&nbsp;</p>
+                            <Colxx xxs="12" xs="12" lg="12">
+                              <p>Fecha y Hora de Evaluación</p>
+                              <div className="dropdown-calendar flex ml-0">
                                 {rol === ROLES.Docente &&
                                   !this.props.isOldTest && (
                                     <Calendario
@@ -159,6 +184,7 @@ class CardTabsOral extends Component {
                                       timeCaption="Hora"
                                       timeIntervals={60}
                                       timeFormat={'HH:mm'}
+                                      className="ml-0"
                                     />
                                   )}
                                 {
@@ -171,14 +197,48 @@ class CardTabsOral extends Component {
                               </div>
                             </Colxx>
                           </Row>
+                          <Row className="button-group">
+                            {rol === ROLES.Docente && !this.props.isOldTest && (
+                              <Button
+                                outline
+                                onClick={this.handleClickEdit}
+                                size="sm"
+                                color="primary"
+                                className="button"
+                              >
+                                Editar Evaluación
+                              </Button>
+                            )}
+                            {rol === ROLES.Docente && !this.props.isOldTest && (
+                              <Button
+                                outline
+                                onClick={this.handleClickDelete}
+                                size="sm"
+                                color="primary"
+                                className="button"
+                              >
+                                Borrar Evaluación
+                              </Button>
+                            )}
+                          </Row>
                         </CardBody>
                       </Colxx>
                     </Row>
                   </TabPane>
                   <TabPane tabId="2">
                     <Row>
-                      <Colxx sm="3">
-                        <CardBody></CardBody>
+                      <Colxx sm="12">
+                        <CardBody>
+                          {!isEmpty(integrantes) &&
+                            this.state.integrantes.map((integrante) => {
+                              return <p key={integrante.id}>{integrante}</p>;
+                            })}
+                          {isEmpty(integrantes) && (
+                            <Row>
+                              <span>La evaluación no tiene integrantes</span>
+                            </Row>
+                          )}
+                        </CardBody>
                       </Colxx>
                     </Row>
                   </TabPane>
