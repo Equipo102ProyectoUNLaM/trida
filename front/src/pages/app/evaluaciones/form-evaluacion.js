@@ -15,7 +15,6 @@ import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercici
 import { Formik, Form, Field } from 'formik';
 import { evaluationSchema } from 'pages/app/evaluaciones/validations';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
-import { getDate } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
@@ -85,14 +84,8 @@ class FormEvaluacion extends React.Component {
         evaluacionId: this.props.idEval,
         nombre: this.props.evaluacion.nombre,
         fecha_creacion: this.props.evaluacion.fecha_creacion,
-        fecha_finalizacion: getDate(
-          this.props.evaluacion.fecha_finalizacion.toDate(),
-          'YYYY-MM-DD, HH:mm'
-        ),
-        fecha_publicacion: getDate(
-          this.props.evaluacion.fecha_publicacion.toDate(),
-          'YYYY-MM-DD, HH:mm'
-        ),
+        fecha_finalizacion: this.props.evaluacion.fecha_finalizacion.toDate(),
+        fecha_publicacion: this.props.evaluacion.fecha_publicacion.toDate(),
         descripcion: this.props.evaluacion.descripcion,
         ejercicios: this.props.evaluacion.ejercicios,
         sin_capturas: this.props.evaluacion.sin_capturas,

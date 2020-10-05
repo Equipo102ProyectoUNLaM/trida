@@ -9,6 +9,7 @@ import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import OpcionMultipleImagen from './opcion-multiple-imagen';
 import PreguntasAleatorias from './preguntas-aleatorias';
+import AdjuntarDesarrollo from './adjuntar-desarrollo';
 
 class AgregarEjercicio extends React.Component {
   constructor(props) {
@@ -80,6 +81,7 @@ class AgregarEjercicio extends React.Component {
       else {
         switch (ejer.tipo) {
           case TIPO_EJERCICIO.respuesta_libre:
+          case TIPO_EJERCICIO.adjuntar_desarrollo:
             if (!ejer.consigna) valid = false;
             break;
           case TIPO_EJERCICIO.oral:
@@ -268,6 +270,17 @@ class AgregarEjercicio extends React.Component {
                             {ejercicio.tipo ===
                               TIPO_EJERCICIO.preguntas_aleatorias && (
                               <PreguntasAleatorias
+                                ejercicioId={index}
+                                value={ejercicio}
+                                submitted={submitted}
+                                preview={false}
+                                onEjercicioChange={this.onEjercicioChange}
+                              />
+                            )}
+
+                            {ejercicio.tipo ===
+                              TIPO_EJERCICIO.adjuntar_desarrollo && (
+                              <AdjuntarDesarrollo
                                 ejercicioId={index}
                                 value={ejercicio}
                                 submitted={submitted}

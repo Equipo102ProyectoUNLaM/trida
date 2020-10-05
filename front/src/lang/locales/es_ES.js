@@ -91,6 +91,8 @@ module.exports = {
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
   'menu.mis-foros': 'Mis Temas',
+  'menu.alumnos-materia': 'Usuarios de la Materia',
+  'menu.volver': 'VOLVER',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -159,6 +161,10 @@ module.exports = {
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluacion.adjuntar-desarrollo-extensiones':
+    'Las extensiones admitidas son .pdf, .png, .jpg, .jpeg',
+  'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',
+  'evaluacion.sinCapturas': '¡Ups!',
   'evaluation.old': 'VER EVALUACIONES FINALIZADAS',
   'evaluation.active': 'VER EVALUACIONES ACTUALES',
 
