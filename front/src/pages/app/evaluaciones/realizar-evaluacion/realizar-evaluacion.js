@@ -34,8 +34,8 @@ import {
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
 import { addDocument, editDocument } from 'helpers/Firebase-db';
-import PreguntasAleatorias from '../ejercicios/preguntas_aleatorias';
-import AdjuntarDesarrollo from '../ejercicios/adjuntar_desarrollo';
+import PreguntasAleatorias from '../ejercicios/preguntas-aleatorias';
+import AdjuntarDesarrollo from '../ejercicios/adjuntar-desarrollo';
 
 class RealizarEvaluacion extends Component {
   constructor(props) {
@@ -209,14 +209,11 @@ class RealizarEvaluacion extends Component {
       case TIPO_EJERCICIO.preguntas_aleatorias:
         ejercicio.respuesta = e;
         break;
-      case TIPO_EJERCICIO.adjuntar_desarrollo:
-        ejercicio.respuesta = e.respuesta;
-        break;
       default:
         break;
     }
     this.setState({
-      respuestas: respuestas, //Aca quedan las respuestas actualizadas
+      respuestas, //Aca quedan las respuestas actualizadas
     });
   };
 

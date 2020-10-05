@@ -54,7 +54,7 @@ class DetalleForo extends Component {
       [{ order: 'fecha_creacion', orderCond: 'asc' }]
     );
 
-    const { id, data, subCollection } = temaForo;
+    const { data, subCollection } = temaForo;
     const {
       nombre,
       fecha_creacion,

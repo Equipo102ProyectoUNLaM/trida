@@ -105,14 +105,6 @@ const Videollamada = ({
     toggleModalPreguntas();
   };
 
-  useEffect(() => {
-    getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
-    getCollectionOnSnapshot(
-      `preguntasDeAlumno/${idClase}/preguntas`,
-      onPreguntaRealizada
-    );
-  }, []);
-
   const onPreguntaRealizada = (doc) => {
     const arrayPreguntas = [];
     doc.forEach((document) => {
@@ -177,6 +169,14 @@ const Videollamada = ({
       toggleModalPreviewPreguntaAlumno();
     }
   };
+
+  useEffect(() => {
+    getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
+    getCollectionOnSnapshot(
+      `preguntasDeAlumno/${idClase}/preguntas`,
+      onPreguntaRealizada
+    );
+  }, [idClase]);
 
   const closeModalPreguntas = () => {
     setPreguntaALanzar(null);
