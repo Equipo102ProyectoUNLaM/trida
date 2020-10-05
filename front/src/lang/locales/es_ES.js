@@ -165,6 +165,8 @@ module.exports = {
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',
+  'evaluacion.sinCapturas': '¡Ups!',
   'evaluation.old': 'VER EVALUACIONES FINALIZADAS',
   'evaluation.active': 'VER EVALUACIONES ACTUALES',
   'evaluation.add-oral': 'AGREGAR EVALUACIÓN ORAL',

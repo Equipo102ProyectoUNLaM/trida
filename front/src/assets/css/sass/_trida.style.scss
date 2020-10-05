@@ -53,6 +53,9 @@ Table of Contents
 48.Mensajeria
 49.Correcciones
 50.Evaluaciones
+51.Countdown
+52.Foro
+53.Correcciones
 
 */
 
@@ -126,6 +129,7 @@ html {
   --primary-color: #{$primary-color};
   --foreground-color: #{$foreground-color};
   --separator-color: #{$separator-color};
+  --inverse-theme-color: '#{$inverse-theme-color}';
 }
 
 #root {
@@ -10006,8 +10010,44 @@ div.rendered-file-browser{
   }
 }
 
-// Correcciones
+// 51 Countdown
+.countdown{
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1030;
+  display: flex;
+  justify-content: space-around;
+  font-family: sans-serif;
+  text-align: center;
+}
 
+.card-countdown{
+  flex-direction: row;
+  margin-top: 5rem;
+  padding: 1rem;
+}
+
+.card-countdown-body{
+  padding: 1rem !important;
+}
+
+.text-countdown{
+  text-align: center;
+  margin: auto;
+  padding-right: 10px;
+}
+// 52 Foro
+
+.row-space-between {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 2rem;
+    padding-right: 1rem;
+    margin-right: 1rem;
+}
+
+// 53 Correcciones
 .modal-correccion {
   width: 100% !important;
 }
@@ -10042,59 +10082,4 @@ div.rendered-file-browser{
 .status-correccion {
   margin-left: 0;
   margin-bottom: 1rem;
-}
-  
- // Foro
-.row-space-between {
-  display: flex;
-  justify-content: space-between;
-  padding-left: 2rem;
-    padding-right: 1rem;
-    margin-right: 1rem;
-}
-
-// Correcciones
-
-.filtros-button {
-  padding: 0 1.5rem !important;
-}
-
-.filtros-button-group {
-  margin-left: 1rem;
-  height: 2.5rem;
-}
-
-.modal-correccion {
-  width: 100% !important;
-}
-
-.MuiTypography-h5, .MuiFormLabel-root, .MuiInputLabel-root, 
-.MuiInputLabel-formControl, .MuiInputLabel-animated, .MuiTypography-root,
-.MuiFormControlLabel-label, .MuiTypography-body1, .MuiButtonBase-root, .MuiListItem-root,
-.MuiMenuItem-root, .MuiMenuItem-gutters, .MuiListItem-gutters, .MuiListItem-button, 
-.MuiFormHelperText-root, .MuiSelect-root, .MuiSelect-select, .MuiSelect-selectMenu
-.MuiInputBase-input, .MuiInput-input {
-  font-family: "Nunito" !important;
-}
-
-.MuiCardContent-root {
-  font-size: 1rem !important;
-}
-
-.MuiPaper-root, .MuiCard-root, .MuiPaper-elevation1, .MuiPaper-rounded {
-  margin-bottom: 1rem !important;
-  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
-}
-
-.MuiIconButton-colorPrimary {
-  color: $theme-color-1 !important;
-}
-
-.webviewer {
-  height: 800px !important;
-  margin-bottom: 1rem !important;
-}
-
-.half-height {
-  height: 60% !important;
 }
