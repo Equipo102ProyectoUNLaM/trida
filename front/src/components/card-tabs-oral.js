@@ -90,7 +90,7 @@ class CardTabsOral extends Component {
   };
 
   handleClickEdit = () => {
-    this.props.onEdit(this.props.item.id);
+    this.props.onEdit(this.props.item);
   };
 
   handleClickDelete = () => {
@@ -222,9 +222,9 @@ class CardTabsOral extends Component {
                           {!isEmpty(integrantes) &&
                             this.state.integrantes.map((integrante) => {
                               return (
-                                <p key={integrante.id}>
+                                <li key={integrante}>
                                   <strong>{integrante}</strong>
-                                </p>
+                                </li>
                               );
                             })}
                           {isEmpty(integrantes) && (

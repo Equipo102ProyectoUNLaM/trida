@@ -174,6 +174,7 @@ module.exports = {
   'evaluation.add-oral': 'AGREGAR EVALUACIÓN ORAL',
   'evaluation.old-oral': 'VER EVALUACIONES ORALES FINALIZADAS',
   'evaluation.active-oral': 'VER EVALUACIONES ORALES ACTUALES',
+  'evaluation-oral.edit': 'EDITAR EVALUACIÓN ORAL',
 
   /* 12. Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',

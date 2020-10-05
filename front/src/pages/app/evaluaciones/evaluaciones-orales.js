@@ -38,9 +38,9 @@ class EvaluacionesOrales extends Component {
       modalEditOpen: false,
       idOral: '',
       idOralEditado: '',
-      nombreOralEditado: '',
-      fechaOralEditado: '',
-      integrantesOral: [],
+      nombreOralEditada: '',
+      fechaOralEditada: '',
+      integrantesEditados: [],
       oldTestActive: false,
       rolDocente: this.props.rol === ROLES.Docente,
     };
@@ -147,13 +147,15 @@ class EvaluacionesOrales extends Component {
     this.toggleDeleteModal();
   };
 
-  onEdit = async (idOral) => {
-    const oral = await getDocument(`evaluacionesOrales/${idOral}`);
+  onEdit = async (oral) => {
+    // const oral = await getDocument(`evaluacionesOrales/${idOral}`);
     const { data } = oral;
-    const { nombre } = data;
+    const { nombre, fecha_evaluacion, integrantes } = data;
     this.setState({
-      idOralEditado: idOral,
-      nombreOralEditado: nombre,
+      idOralEditado: oral.id,
+      nombreOralEditada: nombre,
+      fechaOralEditada: fecha_evaluacion,
+      integrantesEditados: integrantes,
     });
     this.toggleEditModal();
   };
@@ -179,8 +181,9 @@ class EvaluacionesOrales extends Component {
       modalDeleteOpen,
       modalEditOpen,
       idOralEditado,
-      nombreOralEditado,
-      fechaOralEditado,
+      nombreOralEditada,
+      fechaOralEditada,
+      integrantesEditados,
       datosUsuarios,
       oldTestActive,
       rolDocente,
@@ -248,15 +251,19 @@ class EvaluacionesOrales extends Component {
             <ModalGrande
               modalOpen={modalEditOpen}
               toggleModal={this.toggleEditModal}
-              modalHeader="evaluation.edit"
+              modalHeader="evaluation-oral.edit"
             >
               <FormEvaluacionOral
                 toggleModal={this.toggleEditModal}
                 onOralGuardado={this.onOralGuardado}
                 textConfirm="Editar"
-                operationType="add"
+                operationType="edit"
                 idMateria={this.state.materiaId}
                 datosUsuarios={datosUsuarios}
+                nombreOralEditada={nombreOralEditada}
+                fechaOralEditada={fechaOralEditada}
+                idOralEditado={idOralEditado}
+                integrantesEditados={integrantesEditados}
               />
             </ModalGrande>
           )}

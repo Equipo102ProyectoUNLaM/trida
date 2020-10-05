@@ -7,14 +7,20 @@ import { FormikDatePicker } from 'containers/form-validations/FormikFields';
 import { evaluationOralSchema } from 'pages/app/evaluaciones/validations';
 import { timeStamp } from 'helpers/Firebase';
 import Select from 'react-select';
+import { createUserList } from 'helpers/Firebase-user';
 
 class FormEvaluacionOral extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      nombre: '',
-      fecha_evaluacion: '',
+      nombre: this.props.nombreOralEditada ? this.props.nombreOralEditada : '',
+      fecha_evaluacion: this.props.fechaOralEditada
+        ? this.props.fechaOralEditada.toDate()
+        : '',
+      fecha_evaluacion: this.props.idOralEditada
+        ? this.props.idOralEditada
+        : '',
       idMateria: '',
       isLoading: false,
       usuariosDelSelect: this.props.datosUsuarios,
@@ -22,7 +28,17 @@ class FormEvaluacionOral extends React.Component {
     };
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    if (this.props.integrantesEditados) {
+      this.setState({
+        selectedOptions: await createUserList(
+          this.props.integrantesEditados,
+          this.props.user
+        ),
+      });
+    }
+    console.log(this.state.selectedOptions);
+  }
 
   componentWillUnmount() {
     this.setState({
@@ -118,13 +134,6 @@ class FormEvaluacionOral extends React.Component {
 
             <FormGroup className="mb-3 error-l-125">
               <Label>Fecha Evaluación</Label>
-              {/* <Field
-                autoComplete="off"
-                className="form-control"
-                name="fecha_evaluacion"
-                type="date"
-                placeholder="DD/MM/AAAA"
-              /> */}
               <FormikDatePicker
                 name="fecha_evaluacion"
                 value={values.fecha_evaluacion}
