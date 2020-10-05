@@ -21,6 +21,7 @@ import { getCollection, editDocument } from 'helpers/Firebase-db';
 import { getUserData } from 'helpers/Firebase-user';
 import { addMail, inviteMail } from 'constants/emailTexts';
 import { authErrorMessage } from 'constants/errorMessages';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -150,23 +151,29 @@ export const registerUser = (user) => async (dispatch) => {
       dispatch(registerUserError(registerUser.message));
     }
   } catch (error) {
+    console.log(error.message);
     if (
       error.message === 'Este correo ya está siendo usado por otro usuario.'
     ) {
-      const [userObj] = await getCollection('usuarios', [
-        { field: 'mail', operator: '==', id: email },
-      ]);
-      const { id } = userObj;
-      const agregarMaterias = functions.httpsCallable('agregarMaterias');
-      await agregarMaterias({
-        instId,
-        courseId,
-        subjectId,
-        uid: id,
-      });
-      await sendInvitationEmail(email, addMail);
-      return dispatch(registerUserSuccess(registerUser));
-    } else return dispatch(registerUserError(error.message));
+      if (isInvited) {
+        const [userObj] = await getCollection('usuarios', [
+          { field: 'mail', operator: '==', id: email },
+        ]);
+        const { id } = userObj;
+        const agregarMaterias = functions.httpsCallable('agregarMaterias');
+        await agregarMaterias({
+          instId,
+          courseId,
+          subjectId,
+          uid: id,
+        });
+        await sendInvitationEmail(email, addMail);
+        return dispatch(registerUserSuccess(registerUser));
+      } else {
+        dispatch(registerUserError(registerUser.message));
+        return enviarNotificacionError(error.message, 'Error');
+      }
+    } else return dispatch(registerUserError(registerUser.message));
   }
 };
 

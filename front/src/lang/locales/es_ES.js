@@ -30,6 +30,7 @@ module.exports = {
   'user.confirmar-password': 'Confirmá tu contraseña',
   'user.email': 'Email',
   'user.password': 'Contraseña',
+  'user.rol': 'Rol',
   'user.forgot-password-question': '¿Contraseña olvidada?',
   'user.cambie-password': 'Cambiá tu contraseña',
   'user.fullname': 'Nombre completo',

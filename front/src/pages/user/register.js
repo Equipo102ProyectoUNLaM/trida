@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import { Row, Card, CardTitle, Label, Button, FormGroup } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { registerUser } from 'redux/actions';
+import { registerUser, changeLocale } from 'redux/actions';
 import { Formik, Form, Field } from 'formik';
 import {
   enviarNotificacionError,
   enviarNotificacionExitosa,
 } from 'helpers/Utils-ui';
-
+import { FormikReactSelect } from 'containers/form-validations/FormikFields';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
+import ROLES_REGISTRO from 'constants/rolesRegistro';
 
 class Register extends Component {
   constructor(props) {
@@ -26,12 +27,13 @@ class Register extends Component {
       email: values.email,
       password: values.password,
       isInvited: this.state.isInvited,
+      rol: values.rol ? values.rol.value : '',
     };
     if (!this.props.loading) {
-      if (values.email !== '' && values.password !== '') {
+      if (values.email !== '' && values.password !== '' && values.rol) {
         this.props.registerUser(userObj, this.props.history);
       } else {
-        enviarNotificacionError('Completá email y contraseña', 'Error');
+        enviarNotificacionError('Completá email, contraseña y rol', 'Error');
       }
     }
   };
@@ -79,7 +81,6 @@ class Register extends Component {
           <Card className="auth-card">
             <div className="position-relative image-side ">
               <span className="logo-single" />
-              {/* <p className="text-white h2">třída</p> */}
               <p className="white mb-0">
                 Usá este formulario para registrarte. <br />
                 Una vez registrado, podés crear tus instituciones. <br />
@@ -91,9 +92,6 @@ class Register extends Component {
               </p>
             </div>
             <div className="form-side">
-              {/* <NavLink to={`/`} className="white">
-                <span className="logo-single" />
-              </NavLink> */}
               <CardTitle className="mb-4">
                 <IntlMessages id="user.register" />
               </CardTitle>
@@ -101,7 +99,13 @@ class Register extends Component {
                 initialValues={initialValues}
                 onSubmit={this.onUserRegister}
               >
-                {({ errors, touched }) => (
+                {({
+                  setFieldValue,
+                  setFieldTouched,
+                  values,
+                  errors,
+                  touched,
+                }) => (
                   <Form className="av-tooltip tooltip-label-right">
                     <FormGroup className="form-group has-float-label mb-3 error-l-150">
                       <Label>
@@ -131,6 +135,24 @@ class Register extends Component {
                       {errors.password && touched.password && (
                         <div className="invalid-feedback d-block">
                           {errors.password}
+                        </div>
+                      )}
+                    </FormGroup>
+                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
+                      <Label>
+                        <IntlMessages id="user.rol" />
+                      </Label>
+                      <FormikReactSelect
+                        options={ROLES_REGISTRO}
+                        onChange={setFieldValue}
+                        onBlur={setFieldTouched}
+                        value={values.rol}
+                        name="rol"
+                        placeholder="Seleccioná tu rol"
+                      />
+                      {errors.rol && touched.rol && (
+                        <div className="invalid-feedback d-block">
+                          {errors.rol}
                         </div>
                       )}
                     </FormGroup>
