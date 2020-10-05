@@ -249,11 +249,20 @@ class EvaluacionesOrales extends Component {
               modalOpen={modalEditOpen}
               toggleModal={this.toggleEditModal}
               modalHeader="evaluation.edit"
-            ></ModalGrande>
+            >
+              <FormEvaluacionOral
+                toggleModal={this.toggleEditModal}
+                onOralGuardado={this.onOralGuardado}
+                textConfirm="Editar"
+                operationType="add"
+                idMateria={this.state.materiaId}
+                datosUsuarios={datosUsuarios}
+              />
+            </ModalGrande>
           )}
           {modalDeleteOpen && (
             <ModalConfirmacion
-              texto="¿Estás seguro de borrar la evaluación oral?"
+              texto="¿Estás seguro de borrar la evaluación?"
               titulo="Borrar Evaluación"
               buttonPrimary="Aceptar"
               buttonSecondary="Cancelar"

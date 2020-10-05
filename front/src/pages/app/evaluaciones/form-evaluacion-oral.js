@@ -101,7 +101,7 @@ class FormEvaluacionOral extends React.Component {
         onSubmit={this.onOralSubmit}
         validationSchema={evaluationOralSchema}
       >
-        {({ setFieldValue, setFieldTouched, errors, touched }) => (
+        {({ setFieldValue, setFieldTouched, values, errors, touched }) => (
           <Form className="av-tooltip tooltip-label-right">
             <FormGroup className="mb-3 error-l-150">
               <Label>Título de la evaluación</Label>
@@ -127,7 +127,7 @@ class FormEvaluacionOral extends React.Component {
               /> */}
               <FormikDatePicker
                 name="fecha_evaluacion"
-                // value={values.fecha_evaluacion}
+                value={values.fecha_evaluacion}
                 placeholder="Ingrese la fecha de la evaluación"
                 onChange={setFieldValue}
                 onBlur={setFieldTouched}
