@@ -79,8 +79,10 @@ module.exports = {
   'menu.mis-clases': 'Mis Clases',
   'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
-  'menu.my-activities': 'Mis Prácticas',
-  'menu.my-evaluations': 'Mis Evaluaciones',
+  'menu.my-activities': 'Mis Prácticas Actuales',
+  'menu.my-old-activities': 'Mis Prácticas Finalizadas',
+  'menu.my-evaluations': 'Mis Evaluaciones Actuales',
+  'menu.my-old-evaluations': 'Mis Evaluaciones Finalizadas',
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
   'menu.agregar': 'Agregar Evaluación',
@@ -89,6 +91,8 @@ module.exports = {
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
   'menu.mis-foros': 'Mis Temas',
+  'menu.alumnos-materia': 'Usuarios de la Materia',
+  'menu.volver': 'VOLVER',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -112,11 +116,19 @@ module.exports = {
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
   'pizarron.abrir-pizarron': 'Abrir pizarrón',
-  'pizarron.abrir-nueva-ventana': 'Abrir pizarrón en una nueva ventana',
+  'pizarron.abrir-nueva-ventana': 'ABRIR PIZARRÓN EN UNA NUEVA VENTANA',
   'clase.agregar-link': 'Link *',
   'clase.descripcion-link': 'Descripción link',
   'clase.crear-pregunta': 'Crear Preguntas para la Clase',
   'clase.lanzar-pregunta': 'Lanzar Pregunta',
+  'clase.realizar-pregunta': 'Realizar Pregunta',
+  'clase.realizar-pregunta-tip': 'Acá podés realizarle preguntas a tu docente.',
+  'clase.realizar-pregunta-tip-recorda':
+    'Recordá que tu nombre será visible para tu docente, pero no para tus compañeros.',
+  'clase.realizar-pregunta-tip-reaccion':
+    'También podés reaccionar a preguntas ya hechas por tus compañeros si tenés la misma consulta.',
+  'clase.escribir-pregunta': 'Escribí tu pregunta',
+  'clase.ver-preguntas-realizadas': 'Ver Preguntas Realizadas',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',
@@ -143,10 +155,18 @@ module.exports = {
   'activity.edit': 'EDITAR PRÁCTICA',
   'activity.upload': 'SUBIR PRÁCTICA',
   'activity.delete': 'ELIMINAR PRÁCTICA',
+  'activity.old': 'VER PRÁCTICAS FINALIZADAS',
+  'activity.active': 'VER PRÁCTICAS ACTUALES',
   'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluacion.adjuntar-desarrollo-extensiones':
+    'Las extensiones admitidas son .pdf, .png, .jpg, .jpeg',
+  'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',
+  'evaluacion.sinCapturas': '¡Ups!',
+  'evaluation.old': 'VER EVALUACIONES FINALIZADAS',
+  'evaluation.active': 'VER EVALUACIONES ACTUALES',
 
   /* 12. Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',
@@ -163,6 +183,14 @@ module.exports = {
 
   /* 14. Inicio */
   'ayuda.slider-alumno': '¿Cómo te sentís hoy?',
+
+  /* 15. Correcciones */
+  'correcciones.corregir': 'Corregir',
+  'correcciones.ver': 'Ver Corrección',
+  'correcciones.volver': 'VOLVER',
+  'correcciones.estado': 'Estado de Corrección *',
+  'correcciones.calificacion': 'Calificación de Corrección',
+  'correcciones.comentario': 'Agregar Comentario',
 
   /* 15. Foros */
   'forums.add': 'AGREGAR TEMA',

@@ -9,7 +9,6 @@ import {
   Label,
   CustomInput,
   FormGroup,
-  FormText,
 } from 'reactstrap';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
@@ -40,7 +39,7 @@ const PaginaVideollamada = (props) => {
 
   useEffect(() => {
     getDatosClaseOnSnapshot('clases', props.idClase, onClaseIniciada);
-  }, []);
+  }, [props.idClase]);
 
   const onClaseIniciada = (doc) => {
     const { iniciada } = doc.data();
@@ -68,6 +67,7 @@ const PaginaVideollamada = (props) => {
         rol={props.rol}
         idClase={props.idClase}
         preguntas={props.preguntas}
+        idUser={props.user}
       />
     </>
   ) : (
@@ -84,6 +84,7 @@ const PaginaVideollamada = (props) => {
                 placeholder="Nombre"
                 value={`${props.nombre} ${props.apellido}`}
                 disabled
+                autocomplete="off"
               />
             </FormGroup>
             <FormGroup>
@@ -133,6 +134,7 @@ const mapStateToProps = ({ authUser }) => {
   const { user, userData } = authUser;
   const { nombre, apellido, rol } = userData;
   return {
+    user,
     nombre,
     apellido,
     rol,

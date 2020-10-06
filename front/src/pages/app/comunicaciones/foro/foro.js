@@ -13,6 +13,7 @@ import {
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
+import { isEmpty } from 'helpers/Utils';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenForo = `${publicUrl}/assets/img/imagen-foro.jpeg`;
 
@@ -124,10 +125,10 @@ class Foro extends Component {
       isLoading,
       modalDeleteOpen,
       modalEditOpen,
-      idForoEditado: idForoEditado,
-      nombreForoEditado: nombreForoEditado,
-      descForoEditado: descForoEditado,
-      fechaForoEditado: fechaForoEditado,
+      idForoEditado,
+      nombreForoEditado,
+      descForoEditado,
+      fechaForoEditado,
       mensajes: mensajesForo,
     } = this.state;
     const { rol } = this.props;
@@ -153,20 +154,26 @@ class Foro extends Component {
             />
           </ModalGrande>
           <Row>
-            {items.map((foro) => {
-              return (
-                <ListaConImagen
-                  key={foro.id}
-                  item={foro}
-                  imagen={imagenForo}
-                  isSelect={this.state.selectedItems.includes(foro.id)}
-                  collect={collect}
-                  navTo={`/app/comunicaciones/foro/detalle-foro/${foro.id}`}
-                  onEdit={rolDocente ? this.onEdit : null}
-                  onDelete={rolDocente ? this.onDelete : null}
-                />
-              );
-            })}{' '}
+            {!isEmpty(items) &&
+              items.map((foro) => {
+                return (
+                  <ListaConImagen
+                    key={foro.id}
+                    item={foro}
+                    imagen={imagenForo}
+                    isSelect={this.state.selectedItems.includes(foro.id)}
+                    collect={collect}
+                    navTo={`/app/comunicaciones/foro/detalle-foro/${foro.id}`}
+                    onEdit={rolDocente ? this.onEdit : null}
+                    onDelete={rolDocente ? this.onDelete : null}
+                  />
+                );
+              })}
+            {isEmpty(items) && (
+              <Row className="ml-3">
+                <span>No hay temas creados</span>
+              </Row>
+            )}
           </Row>
           {modalEditOpen && (
             <ModalGrande

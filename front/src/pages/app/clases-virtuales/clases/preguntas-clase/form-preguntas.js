@@ -6,6 +6,7 @@ import {
   deleteDocument,
   addArrayToSubCollection,
 } from 'helpers/Firebase-db';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarPregunta from './agregar-pregunta';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
@@ -109,7 +110,7 @@ class FormPreguntas extends React.Component {
       this.props.updatePreguntas();
       return;
     } catch (err) {
-      console.log(err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
 

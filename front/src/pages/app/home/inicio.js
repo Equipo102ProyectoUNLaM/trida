@@ -30,6 +30,7 @@ class Inicio extends Component {
       eventos: [],
       eventosDia: [],
       valorSlider: 3,
+      themeColorArray: ['#8acaf5e3', '#f6c797', '#d7e6f0'],
     };
   }
 
@@ -80,6 +81,7 @@ class Inicio extends Component {
     const { rol } = this.props;
     const valorCritico = valorSlider === 1 || valorSlider === 2;
     const rolAlumno = rol === ROLES.Alumno;
+
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
@@ -106,7 +108,11 @@ class Inicio extends Component {
                       key={evento.id + 'dataList'}
                       id={evento.id}
                       title={evento.title}
-                      navTo={`/app/${evento.tipo}`}
+                      navTo={
+                        evento.tipo === 'clase'
+                          ? `/app/${evento.url}`
+                          : `/app/${evento.url}#${evento.id}`
+                      }
                     />
                   );
                 })}{' '}
@@ -173,6 +179,28 @@ class Inicio extends Component {
                   startAccessor="start"
                   endAccessor="end"
                   className="calendar-home"
+                  eventPropGetter={(event) => {
+                    let newStyle = {
+                      backgroundColor: 'white',
+                      color: 'black',
+                      border: 'none',
+                    };
+
+                    if (event.tipo === 'practica') {
+                      newStyle.backgroundColor = this.state.themeColorArray[0];
+                    }
+                    if (event.tipo === 'evaluacion') {
+                      newStyle.backgroundColor = this.state.themeColorArray[1];
+                    }
+                    if (event.tipo === 'clase') {
+                      newStyle.backgroundColor = this.state.themeColorArray[2];
+                    }
+
+                    return {
+                      className: '',
+                      style: newStyle,
+                    };
+                  }}
                   messages={{
                     next: '>',
                     previous: '<',

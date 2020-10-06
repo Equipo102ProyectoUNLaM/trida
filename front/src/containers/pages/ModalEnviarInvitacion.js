@@ -81,7 +81,7 @@ class ModalEnviarInvitacion extends React.Component {
         instOptions: datos,
       });
     } catch (err) {
-      console.log('Error', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
 
@@ -101,7 +101,7 @@ class ModalEnviarInvitacion extends React.Component {
         courseOptions: datos,
       });
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       this.setState({
         isLoading: false,

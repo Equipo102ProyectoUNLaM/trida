@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Row } from 'reactstrap';
+import { Row, Button, Badge } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabs from 'components/card-tabs';
+import Calendario from 'components/common/Calendario';
+import { Colxx } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalVistaPreviaEvaluacion from 'pages/app/evaluaciones/detalle-evaluacion/vista-previa-evaluacion';
 import ModalRealizarEvaluacion from 'pages/app/evaluaciones/realizar-evaluacion/realizar-evaluacion-confirmar';
@@ -13,12 +15,20 @@ import {
   getCollectionWithSubCollections,
   getCollection,
   getDocumentWithSubCollection,
+  editDocument,
 } from 'helpers/Firebase-db';
 import firebase from 'firebase/app';
 import {
   desencriptarEvaluacion,
   desencriptarTexto,
 } from 'handlers/DecryptionHandler';
+import {
+  isEmpty,
+  getDateTimeStringFromDate,
+  getTimestampDifference,
+} from 'helpers/Utils';
+import * as _moment from 'moment';
+const moment = _moment;
 
 function collect(props) {
   return { data: props.data };
@@ -30,6 +40,7 @@ class Evaluaciones extends Component {
 
     this.state = {
       items: [],
+      arrayOriginal: [],
       modalDeleteOpen: false,
       modalPreviewOpen: false,
       modalMakeOpen: false,
@@ -38,6 +49,9 @@ class Evaluaciones extends Component {
       materiaId: this.props.subject.id,
       eval: null,
       evalId: '',
+      oldTestActive: false,
+      rolDocente: this.props.rol === ROLES.Docente,
+      filtroFecha: '',
     };
   }
 
@@ -45,7 +59,7 @@ class Evaluaciones extends Component {
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
       [
-        this.props.rol === ROLES.Docente
+        this.state.rolDocente
           ? {
               field: 'fecha_creacion',
               operator: '>',
@@ -56,6 +70,33 @@ class Evaluaciones extends Component {
               operator: '<=',
               id: firebase.firestore.Timestamp.now(),
             },
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'activo', operator: '==', id: true },
+      ],
+      false,
+      'ejercicios'
+    );
+    const evaluaciones = await desencriptarEvaluacion(arrayDeObjetos);
+    const evaluacionesActuales = evaluaciones.filter((elem) => {
+      return (
+        getTimestampDifference(
+          elem.data.base.fecha_finalizacion.toDate(),
+          moment().toDate()
+        ) >= 0
+      );
+    });
+    this.dataListRenderer(evaluacionesActuales);
+  };
+
+  getEvaluacionesVencidas = async (materiaId) => {
+    const arrayDeObjetos = await getCollectionWithSubCollections(
+      'evaluaciones',
+      [
+        {
+          field: 'fecha_finalizacion',
+          operator: '<',
+          id: firebase.firestore.Timestamp.now(),
+        },
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
@@ -91,7 +132,8 @@ class Evaluaciones extends Component {
   async dataListRenderer(arrayDeObjetos) {
     for (let element of arrayDeObjetos) {
       const result = await getCollection('correcciones', [
-        { field: 'id_entrega', operator: '==', id: element.id },
+        { field: 'idEntrega', operator: '==', id: element.id },
+        { field: 'idAlumno', operator: '==', id: this.props.user },
       ]);
       element = Object.assign(
         element,
@@ -103,6 +145,7 @@ class Evaluaciones extends Component {
     }
     this.setState({
       items: arrayDeObjetos,
+      arrayOriginal: arrayDeObjetos,
       selectedItems: [],
       isLoading: false,
     });
@@ -152,7 +195,8 @@ class Evaluaciones extends Component {
     }));
   };
 
-  realizarEvaluacion = () => {
+  realizarEvaluacion = async () => {
+    await editDocument(`usuarios`, this.props.user, { enEvaluacion: true });
     this.props.history.push({
       pathname: '/app/evaluaciones/realizar-evaluacion',
       evalId: this.state.evalId,
@@ -175,6 +219,84 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
+  toggleOldPracticesModal = async () => {
+    await this.setState({
+      oldTestActive: !this.state.oldTestActive,
+      isLoading: true,
+    });
+    if (this.state.oldTestActive) {
+      this.getEvaluacionesVencidas(this.state.materiaId);
+    } else {
+      this.getEvaluaciones(this.state.materiaId);
+    }
+  };
+
+  normalizarFecha = (fecha) => {
+    let fechaNormal = getDateTimeStringFromDate(fecha).split(' ')[0];
+    fechaNormal = fechaNormal.replace(/\//g, '');
+    return fechaNormal;
+  };
+
+  normalizarNombre = (nombre) => {
+    let nombreNormal = nombre.replace(/á/g, 'a');
+    nombreNormal = nombreNormal.replace(/é/g, 'e');
+    nombreNormal = nombreNormal.replace(/í/g, 'i');
+    nombreNormal = nombreNormal.replace(/ó/g, 'o');
+    nombreNormal = nombreNormal.replace(/ú/g, 'u');
+    return nombreNormal.toLowerCase();
+  };
+
+  normalizarBusqueda = (search) => {
+    const { target } = search;
+    const { value } = target;
+    let busqueda = value.toLowerCase();
+    busqueda = busqueda.replace(/\//g, '');
+    busqueda = busqueda.replace(/-/g, '');
+    busqueda = this.normalizarNombre(busqueda);
+    return busqueda;
+  };
+
+  onSearchKey = (search) => {
+    const busqueda = this.normalizarBusqueda(search);
+    const itemsArray = [...this.state.arrayOriginal];
+
+    const arrayFiltrado = itemsArray.filter((elem) => {
+      const fechaPublicacion = this.normalizarFecha(
+        elem.data.base.fecha_publicacion
+      );
+      const fechaFin = this.normalizarFecha(elem.data.base.fecha_finalizacion);
+      const nombre = this.normalizarNombre(elem.data.base.nombre);
+      return (
+        nombre.includes(busqueda) ||
+        fechaPublicacion.includes(busqueda) ||
+        fechaFin.includes(busqueda)
+      );
+    });
+    this.setState({
+      items: arrayFiltrado,
+    });
+  };
+
+  handleClickCalendario = (date) => {
+    if (date) {
+      this.setState({ filtroFecha: moment(date).format('DD/MM/YYYY') });
+      return this.onSearchKey({
+        target: { value: moment(date).format('DDMMYYYY') },
+      });
+    }
+    return this.setState({
+      filtroFecha: '',
+      items: [...this.state.arrayOriginal],
+    });
+  };
+
+  handleFiltroDelete = () => {
+    this.setState({
+      filtroFecha: '',
+      items: [...this.state.arrayOriginal],
+    });
+  };
+
   render() {
     const {
       modalDeleteOpen,
@@ -184,25 +306,70 @@ class Evaluaciones extends Component {
       modalPreviewOpen,
       evalId,
       evaluacion,
+      oldTestActive,
+      rolDocente,
+      filtroFecha,
     } = this.state;
-    const { rol } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.evaluations"
-            toggleModal={rol === ROLES.Docente ? this.onAdd : null}
-            buttonText={rol === ROLES.Docente ? 'evaluation.add' : null}
+            heading={
+              oldTestActive ? 'menu.my-old-evaluations' : 'menu.my-evaluations'
+            }
+            toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
+            buttonText={rolDocente && !oldTestActive ? 'evaluation.add' : null}
+            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryButtonText={
+              oldTestActive ? 'evaluation.active' : 'evaluation.old'
+            }
           />
           <Row>
+            <Colxx xxs="8" md="8">
+              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                <input
+                  type="text"
+                  name="keyword"
+                  id="search"
+                  placeholder="Búsqueda por nombre de evaluación, fecha de publicación, fecha de finalización..."
+                  onChange={(e) => this.onSearchKey(e)}
+                  autoComplete="off"
+                />
+              </div>
+            </Colxx>
+            <Colxx xxs="4" md="4" className="columna-filtro-badge">
+              <Badge pill className="mb-1 position-absolute badge badge-filtro">
+                <Calendario
+                  handleClick={this.handleClickCalendario}
+                  text="Filtro por fecha de publicación o finalización"
+                  evalCalendar={false}
+                  filterCalendar={true}
+                  id="fechasFilter"
+                />
+                Filtro por Fechas
+                {filtroFecha && (
+                  <>
+                    {' '}
+                    - {filtroFecha}
+                    <Button
+                      className="delete-filter"
+                      onClick={this.handleFiltroDelete}
+                      close
+                    />
+                  </>
+                )}
+              </Badge>
+            </Colxx>
             {items.map((evaluacion) => {
               return (
                 <CardTabs
                   key={evaluacion.id}
+                  id={evaluacion.id}
                   item={evaluacion}
                   materiaId={this.state.materiaId}
+                  isOldTest={this.state.oldTestActive}
                   updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
@@ -217,6 +384,11 @@ class Evaluaciones extends Component {
               );
             })}{' '}
           </Row>
+          {isEmpty(items) && (
+            <Row className="ml-0">
+              <span>No hay evaluaciones</span>
+            </Row>
+          )}
           {modalDeleteOpen && (
             <ModalConfirmacion
               texto="¿Está seguro de que desea borrar la evaluación?"
@@ -252,10 +424,10 @@ class Evaluaciones extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { userData, user } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default connect(mapStateToProps)(withRouter(Evaluaciones));

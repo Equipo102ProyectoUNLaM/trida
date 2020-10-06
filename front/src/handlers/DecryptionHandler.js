@@ -67,10 +67,6 @@ export const desencriptarEvaluacion = (evaluaciones) => {
       evaluacion.data.base.nombre,
       secretKey
     ).toString(CryptoJS.enc.Utf8);
-    evaluacion.data.base.fecha_finalizacion =
-      evaluacion.data.base.fecha_finalizacion;
-    evaluacion.data.base.fecha_publicacion =
-      evaluacion.data.base.fecha_publicacion;
     evaluacion.data.base.sin_capturas =
       CryptoJS.AES.decrypt(
         evaluacion.data.base.sin_capturas,

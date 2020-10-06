@@ -10,7 +10,7 @@
     "source": "functions"
   },
   "hosting": {
-    "public": "front/public",
+    "public": "front/build",
     "headers": [
       {
         "source": "/service-worker.js",
@@ -26,6 +26,12 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+      "source": "**",
+      "destination": "/index.html"
+      }
     ]
   },
   "storage": {

@@ -4,6 +4,7 @@ export const TIPO_EJERCICIO_VALUE = {
   oral: 'Oral',
   opcion_multiple_imagen: 'Múltiple Choice de imágenes',
   preguntas_aleatorias: 'Preguntas Aleatorias',
+  adjuntar_desarrollo: 'Adjuntar Desarrollo',
 };
 
 export const TIPO_EJERCICIO = {
@@ -12,4 +13,5 @@ export const TIPO_EJERCICIO = {
   oral: 'oral',
   opcion_multiple_imagen: 'opcion_multiple_imagen',
   preguntas_aleatorias: 'preguntas_aleatorias',
+  adjuntar_desarrollo: 'adjuntar_desarrollo',
 };

@@ -21,7 +21,10 @@ import {
 import ModalVideo from './modal-video';
 import ModalAudio from './modal-audio';
 import ROLES from 'constants/roles';
-import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
+import {
+  enviarNotificacionExitosa,
+  enviarNotificacionError,
+} from 'helpers/Utils-ui';
 
 class Contenidos extends Component {
   constructor(props) {
@@ -119,7 +122,7 @@ class Contenidos extends Component {
         });
       });
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       this.setState((state) => ({
         isLoading: false,
@@ -188,7 +191,7 @@ class Contenidos extends Component {
         });
       });
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       return arrayFolder.concat(arrayFiles);
     }
@@ -264,8 +267,10 @@ class Contenidos extends Component {
             });
           })
           .catch(function (error) {
-            // Uh-oh, an error occurred!
-            console.log('Error deleting documents', error);
+            enviarNotificacionError(
+              'Hubo un error. Reintentá mas tarde',
+              'Ups!'
+            );
           });
       }
       cant = cant - 1;
@@ -330,7 +335,7 @@ class Contenidos extends Component {
         'state_changed',
         (snapshot) => {},
         (error) => {
-          console.error(error.message);
+          enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
         },
         () => {
           cant--;
@@ -383,7 +388,7 @@ class Contenidos extends Component {
         }
       );
     } catch (error) {
-      console.log(error);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   }
 

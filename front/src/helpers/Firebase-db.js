@@ -1,5 +1,8 @@
 import { firestore } from './Firebase';
-import { NotificationManager } from 'components/common/react-notifications';
+import {
+  enviarNotificacionError,
+  enviarNotificacionExitosa,
+} from 'helpers/Utils-ui';
 import { getFechaHoraActual } from 'helpers/Utils';
 import moment from 'moment';
 import * as CryptoJS from 'crypto-js';
@@ -40,7 +43,7 @@ export async function getCollection(collection, filterBy, orderBy) {
       arrayDeObjetos.push(obj);
     });
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   } finally {
     return arrayDeObjetos;
   }
@@ -85,7 +88,7 @@ export async function getCollectionWithSubCollections(
       arrayDeObjetos.push(obj);
     });
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 
   for (const obj of arrayDeObjetos) {
@@ -105,7 +108,7 @@ export async function getCollectionWithSubCollections(
         arrayDeSubcolecciones.push(scol);
       });
     } catch (err) {
-      console.log('Error getting subcollection documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
     obj.data.subcollections = arrayDeSubcolecciones;
   }
@@ -122,7 +125,7 @@ export const getDocument = async (docRef) => {
     const docId = refSnapShot.id;
     return { id: docId, data: refSnapShot.data() };
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 
@@ -144,7 +147,7 @@ export const getDocumentWithSubCollection = async (
     );
     return { id: id, data: data, subCollection: subColObj };
   } catch (err) {
-    console.log('Error getting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 
@@ -174,19 +177,12 @@ export const addDocument = async (
   try {
     const docRef = await firestore.collection(collection).add(object);
     if (mensajePrincipal) {
-      NotificationManager.success(
-        `${mensajeSecundario}`,
-        `${mensajePrincipal}`,
-        3000,
-        null,
-        null,
-        ''
-      );
+      enviarNotificacionExitosa(mensajeSecundario, mensajePrincipal);
     }
     return docRef;
   } catch (error) {
     if (mensajePrincipal) {
-      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+      enviarNotificacionError(mensajeError, 'Ups!');
     }
   }
 };
@@ -224,23 +220,15 @@ export const addDocumentWithSubcollection = async (
           .add(data)
           .then(function () {})
           .catch(function (error) {
-            NotificationManager.error(
+            enviarNotificacionError(
               `Error al agregar ${subCollectionMessage}`,
-              error,
-              3000,
-              null,
-              null,
-              ''
+              'Ups!'
             );
           });
       }
-      NotificationManager.success(
+      enviarNotificacionExitosa(
         `${message} agregada exitosamente`,
-        `${message} agregada!`,
-        3000,
-        null,
-        null,
-        ''
+        `${message} agregada!`
       );
     });
 };
@@ -269,19 +257,12 @@ export const addToSubCollection = async (
       .collection(subcollection)
       .add(object);
     if (mensajePrincipal) {
-      NotificationManager.success(
-        `${mensajeSecundario}`,
-        `${mensajePrincipal}`,
-        3000,
-        null,
-        null,
-        ''
-      );
+      enviarNotificacionExitosa(mensajeSecundario, mensajePrincipal);
     }
     return docRef;
   } catch (error) {
     if (mensajePrincipal) {
-      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+      enviarNotificacionError(mensajeError, 'Ups!');
     }
   }
 };
@@ -315,23 +296,12 @@ export const addArrayToSubCollection = async (
       .add(data)
       .then(function () {})
       .catch(function (error) {
-        NotificationManager.error(
-          `Error al agregar ${mensajeError}`,
-          error,
-          3000,
-          null,
-          null,
-          ''
-        );
+        enviarNotificacionError(`Error al agregar ${mensajeError}`, 'Ups!');
       });
   }
-  NotificationManager.success(
-    `${mensajePrincipal} agregada exitosamente`,
-    `${mensajeSecundario} agregada!`,
-    3000,
-    null,
-    null,
-    ''
+  enviarNotificacionExitosa(
+    `${mensajeSecundario} agregada exitosamente`,
+    `${mensajePrincipal} agregada!`
   );
 };
 
@@ -360,19 +330,12 @@ export const addToMateriasCollection = async (
       .collection('materias')
       .add(object);
     if (mensajePrincipal) {
-      NotificationManager.success(
-        `${mensajeSecundario}`,
-        `${mensajePrincipal}`,
-        3000,
-        null,
-        null,
-        ''
-      );
+      enviarNotificacionExitosa(mensajeSecundario, mensajePrincipal);
     }
     return docRef;
   } catch (error) {
     if (mensajePrincipal) {
-      NotificationManager.error(`${mensajeError}`, error, 3000, null, null, '');
+      enviarNotificacionError(mensajeError, 'Ups!');
     }
   }
 };
@@ -391,38 +354,20 @@ export const addDocumentWithId = async (collection, id, object, message) => {
     .set(object)
     .then(function () {
       if (message) {
-        NotificationManager.success(
-          `${message} enviada exitosamente`,
-          `${message} enviada!`,
-          3000,
-          null,
-          null,
-          ''
+        enviarNotificacionExitosa(
+          `${message} agregada exitosamente`,
+          `${message} agregada!`
         );
       }
     })
     .catch(function (error) {
       if (message) {
-        NotificationManager.error(
-          `Error al enviar ${message}`,
-          error,
-          3000,
-          null,
-          null,
-          ''
-        );
+        enviarNotificacionError(`Error al agregar ${message}`, 'Ups!');
       }
-      NotificationManager.success(
-        `${message}`,
-        `${message}!`,
-        3000,
-        null,
-        null,
-        ''
-      );
+      enviarNotificacionExitosa(`${message}`, `${message}!`);
     })
     .catch(function (error) {
-      NotificationManager.error(`${message}`, error, 3000, null, null, '');
+      enviarNotificacionError(`${message}`, 'Ups!');
     });
 };
 
@@ -438,14 +383,7 @@ export const editDocument = async (collection, docId, obj, message) => {
   ref.set(obj, { merge: true });
 
   if (message) {
-    NotificationManager.success(
-      `${message} exitosamente`,
-      `${message}!`,
-      3000,
-      null,
-      null,
-      ''
-    );
+    enviarNotificacionExitosa(`${message} exitosamente`, `${message}!`);
   }
 };
 
@@ -456,16 +394,12 @@ export const deleteDocument = async (collection, document, message) => {
   try {
     await docRef.delete();
   } catch (err) {
-    console.log('Error deleting documents', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   } finally {
     if (message)
-      NotificationManager.success(
+      enviarNotificacionExitosa(
         `${message} borrada exitosamente`,
-        `${message} borrada!`,
-        3000,
-        null,
-        null,
-        ''
+        `${message} borrada!`
       );
   }
 };
@@ -475,15 +409,11 @@ export const logicDeleteDocument = async (collection, docId, message) => {
   try {
     ref.set({ activo: false }, { merge: true });
   } catch (err) {
-    console.log('Error borrando documentos', err);
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   } finally {
-    NotificationManager.success(
+    enviarNotificacionExitosa(
       `${message} borrada exitosamente`,
-      `${message} borrada!`,
-      3000,
-      null,
-      null,
-      ''
+      `${message} borrada!`
     );
   }
 };
@@ -506,7 +436,8 @@ export const getEventos = async (subject) => {
     const { id, data } = clase;
     arrayDeEventos.push({
       id,
-      tipo: `clases-virtuales/mis-clases/detalle-clase/${id}`,
+      tipo: 'clase',
+      url: `clases-virtuales/mis-clases/detalle-clase/${id}`,
       title: 'Clase: ' + data.nombre,
       start: new Date(`${data.fecha} 08:00:00`),
       end: new Date(`${data.fecha} 10:00:00`),
@@ -519,7 +450,8 @@ export const getEventos = async (subject) => {
     );
     arrayDeEventos.push({
       id,
-      tipo: 'evaluaciones',
+      tipo: 'evaluacion',
+      url: 'evaluaciones',
       title: 'Evaluación: ' + nombre,
       start: new Date(data.fecha_publicacion.toDate()),
       end: new Date(data.fecha_finalizacion.toDate()),
@@ -529,7 +461,8 @@ export const getEventos = async (subject) => {
     const { id, data } = practica;
     arrayDeEventos.push({
       id,
-      tipo: 'practicas',
+      tipo: 'practica',
+      url: 'practicas',
       title: 'Práctica: ' + data.nombre,
       start: new Date(`${data.fechaLanzada} 08:00:00`),
       end: new Date(`${data.fechaVencimiento} 18:00:00`),

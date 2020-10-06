@@ -13,7 +13,10 @@ import {
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { storage } from 'helpers/Firebase';
-import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
+import {
+  enviarNotificacionExitosa,
+  enviarNotificacionError,
+} from 'helpers/Utils-ui';
 import { getTimestamp } from 'helpers/Utils';
 
 const ModalAudio = ({
@@ -44,7 +47,7 @@ const ModalAudio = ({
         '¡Audio subido!'
       );
     } catch (error) {
-      console.log(error);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
 
@@ -63,6 +66,7 @@ const ModalAudio = ({
             className="form-control"
             name="nombre"
             onChange={(e) => setNombre(e.target.value)}
+            autocomplete="off"
           />
         </FormGroup>
         <p className="tip-text">

@@ -32,7 +32,26 @@ class CardTabs extends Component {
       activeFirstTab: '1',
       activeSecondTab: '1',
       modalMakeOpen: false,
+      focused: window.location.hash.replace('#', '') === this.props.item.id,
     };
+  }
+
+  componentDidMount() {
+    const { focused } = this.state;
+    if (focused) {
+      const el = document.querySelector(`[id='${this.props.item.id}']`);
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+
+      setTimeout(() => {
+        this.setState({ focused: null });
+      }, 3000);
+    }
   }
 
   toggleFirstTab(tab) {
@@ -107,8 +126,8 @@ class CardTabs extends Component {
       <Row lg="12" className="tab-card-evaluaciones">
         <Colxx xxs="12">
           <Row lg="12">
-            <Colxx xxs="12" xs="12" lg="12">
-              <Card className="mb-4">
+            <Colxx xxs="12" xs="12" lg="12" id={item.id}>
+              <Card className={`mb-4 ${this.state.focused ? 'focused' : ''}`}>
                 <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs ml-0 mr-0">
                     <NavItem
@@ -172,19 +191,20 @@ class CardTabs extends Component {
                             <Colxx xxs="12" xs="4" lg="4">
                               <div className="dropdown-calendar flex">
                                 <p>Fecha y Hora de Finalización&nbsp;</p>
-                                {rol === ROLES.Docente && (
-                                  <Calendario
-                                    handleClick={
-                                      this.handleClickChangeFinalDate
-                                    }
-                                    text="Modificar fecha de evaluación"
-                                    evalCalendar={true}
-                                    dateFormat={'DD/MM/YYYY - HH:mm'}
-                                    timeCaption="Hora"
-                                    timeIntervals={60}
-                                    timeFormat={'HH:mm'}
-                                  />
-                                )}
+                                {rol === ROLES.Docente &&
+                                  !this.props.isOldTest && (
+                                    <Calendario
+                                      handleClick={
+                                        this.handleClickChangeFinalDate
+                                      }
+                                      text="Modificar fecha de evaluación"
+                                      evalCalendar={true}
+                                      dateFormat={'DD/MM/YYYY - HH:mm'}
+                                      timeCaption="Hora"
+                                      timeIntervals={60}
+                                      timeFormat={'HH:mm'}
+                                    />
+                                  )}
                                 {data.base.fecha_finalizacion && (
                                   <p className="mb-4">
                                     {getDateTimeStringFromDate(
@@ -198,19 +218,20 @@ class CardTabs extends Component {
                               </div>
                               <div className="dropdown-calendar flex">
                                 <p>Fecha y Hora de Publicación&nbsp;</p>
-                                {rol === ROLES.Docente && (
-                                  <Calendario
-                                    handleClick={
-                                      this.handleClickChangePublicationDate
-                                    }
-                                    text="Modificar fecha de publicación"
-                                    evalCalendar={true}
-                                    dateFormat={'DD/MM/YYYY - HH:mm'}
-                                    timeCaption="Hora"
-                                    timeIntervals={60}
-                                    timeFormat={'HH:mm'}
-                                  />
-                                )}
+                                {rol === ROLES.Docente &&
+                                  !this.props.isOldTest && (
+                                    <Calendario
+                                      handleClick={
+                                        this.handleClickChangePublicationDate
+                                      }
+                                      text="Modificar fecha de publicación"
+                                      evalCalendar={true}
+                                      dateFormat={'DD/MM/YYYY - HH:mm'}
+                                      timeCaption="Hora"
+                                      timeIntervals={60}
+                                      timeFormat={'HH:mm'}
+                                    />
+                                  )}
                                 {data.base.fecha_publicacion && (
                                   <p className="mb-4">
                                     {getDateTimeStringFromDate(
@@ -225,7 +246,7 @@ class CardTabs extends Component {
                             </Colxx>
                           </Row>
                           <Row className="button-group">
-                            {rol === ROLES.Docente && (
+                            {rol === ROLES.Docente && !this.props.isOldTest && (
                               <Button
                                 outline
                                 onClick={this.handleClickEdit}
@@ -236,7 +257,7 @@ class CardTabs extends Component {
                                 Editar Evaluación
                               </Button>
                             )}
-                            {rol === ROLES.Docente && (
+                            {rol === ROLES.Docente && !this.props.isOldTest && (
                               <Button
                                 outline
                                 onClick={this.handleClickDelete}
@@ -258,17 +279,19 @@ class CardTabs extends Component {
                                 Exportar Evaluación
                               </Button>
                             )}
-                            {rol === ROLES.Alumno && !entregada && (
-                              <Button
-                                outline
-                                onClick={this.handleClickMake}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Realizar Evaluación
-                              </Button>
-                            )}
+                            {rol === ROLES.Alumno &&
+                              !entregada &&
+                              !this.props.isOldTest && (
+                                <Button
+                                  outline
+                                  onClick={this.handleClickMake}
+                                  size="sm"
+                                  color="primary"
+                                  className="button"
+                                >
+                                  Realizar Evaluación
+                                </Button>
+                              )}
                             {rol === ROLES.Alumno && entregada && (
                               <div>
                                 <Badge color="primary" pill className="mb-1">
@@ -276,6 +299,15 @@ class CardTabs extends Component {
                                 </Badge>
                               </div>
                             )}
+                            {rol === ROLES.Alumno &&
+                              !entregada &&
+                              this.props.isOldTest && (
+                                <div>
+                                  <Badge color="danger" pill className="mb-1">
+                                    NO ENTREGADA
+                                  </Badge>
+                                </div>
+                              )}
                           </Row>
                         </CardBody>
                       </Colxx>

@@ -8,13 +8,13 @@ import {
   addDocumentWithSubcollection,
   getUsernameById,
 } from 'helpers/Firebase-db';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarEjercicio from 'pages/app/evaluaciones/ejercicios/agregar-ejercicio';
 import { Formik, Form, Field } from 'formik';
 import { evaluationSchema } from 'pages/app/evaluaciones/validations';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
-import { getDate } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { encriptarEjercicios } from 'handlers/EncryptionHandler';
@@ -78,33 +78,23 @@ class FormEvaluacion extends React.Component {
   };
 
   async componentDidMount() {
-    try {
-      if (this.props.idEval) {
-        const userName = await getUsernameById(this.props.user);
-        this.setState({
-          evaluacionId: this.props.idEval,
-          nombre: this.props.evaluacion.nombre,
-          fecha_creacion: this.props.evaluacion.fecha_creacion,
-          fecha_finalizacion: getDate(
-            this.props.evaluacion.fecha_finalizacion.toDate(),
-            'YYYY-MM-DD, HH:mm'
-          ),
-          fecha_publicacion: getDate(
-            this.props.evaluacion.fecha_publicacion.toDate(),
-            'YYYY-MM-DD, HH:mm'
-          ),
-          descripcion: this.props.evaluacion.descripcion,
-          ejercicios: this.props.evaluacion.ejercicios,
-          sin_capturas: this.props.evaluacion.sin_capturas,
-          sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
-          creador: userName,
-          isLoading: false,
-        });
-      } else {
-        this.setState({ isLoading: false });
-      }
-    } catch (err) {
-      console.log(err);
+    if (this.props.idEval) {
+      const userName = await getUsernameById(this.props.user);
+      this.setState({
+        evaluacionId: this.props.idEval,
+        nombre: this.props.evaluacion.nombre,
+        fecha_creacion: this.props.evaluacion.fecha_creacion,
+        fecha_finalizacion: this.props.evaluacion.fecha_finalizacion.toDate(),
+        fecha_publicacion: this.props.evaluacion.fecha_publicacion.toDate(),
+        descripcion: this.props.evaluacion.descripcion,
+        ejercicios: this.props.evaluacion.ejercicios,
+        sin_capturas: this.props.evaluacion.sin_capturas,
+        sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
+        creador: userName,
+        isLoading: false,
+      });
+    } else {
+      this.setState({ isLoading: false });
     }
   }
 
@@ -244,7 +234,7 @@ class FormEvaluacion extends React.Component {
       this.props.onEvaluacionEditada();
       return;
     } catch (err) {
-      console.log(err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
   };
 
@@ -282,7 +272,11 @@ class FormEvaluacion extends React.Component {
           <Form className="av-tooltip tooltip-label-right" autoComplete="off">
             <FormGroup className="mb-3 error-l-150">
               <Label>Nombre de la evaluacion</Label>
-              <Field className="form-control" name="nombre" />
+              <Field
+                className="form-control"
+                name="nombre"
+                autocomplete="off"
+              />
               {errors.nombre && touched.nombre ? (
                 <div className="invalid-feedback d-block">{errors.nombre}</div>
               ) : null}
@@ -348,6 +342,7 @@ class FormEvaluacion extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
+                autocomplete="off"
                 className="form-control"
                 name="descripcion"
                 component="textarea"

@@ -24,6 +24,7 @@ import {
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import ModalGrande from 'containers/pages/ModalGrande';
 import Moment from 'moment';
 import ModalAsociarContenidos from './modal-asociar-contenidos';
@@ -125,24 +126,22 @@ class TabsDeClase extends Component {
         }
         //Archivos
         for (const res of result.items) {
-          await res.getMetadata().then(async (metadata) => {
-            await res.getDownloadURL().then(async (url) => {
-              var obj = {
-                key: metadata.fullPath.replace(
-                  'materias/' + this.props.idMateria + '/contenidos/',
-                  ''
-                ),
-                modified: Moment(metadata.updated),
-                size: metadata.size,
-                url: url,
-              };
-              array.push(obj);
-            });
-          });
+          const metadata = await res.getMetadata();
+          const url = await res.getDownloadURL();
+          const obj = {
+            key: metadata.fullPath.replace(
+              'materias/' + this.props.idMateria + '/contenidos/',
+              ''
+            ),
+            modified: Moment(metadata.updated),
+            size: metadata.size,
+            url,
+          };
+          array.push(obj);
         }
       });
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       this.setState({
         files: array,
@@ -165,24 +164,19 @@ class TabsDeClase extends Component {
         }
         //Archivos
         for (const res of result.items) {
-          await res.getMetadata().then(async (metadata) => {
-            await res.getDownloadURL().then(async (url) => {
-              var obj = {
-                key: metadata.fullPath.replace(
-                  'materias/' + subjectId + '/',
-                  ''
-                ),
-                modified: Moment(metadata.updated),
-                size: metadata.size,
-                url: url,
-              };
-              array.push(obj);
-            });
-          });
+          const metadata = await res.getMetadata();
+          const url = await res.getDownloadURL();
+          var obj = {
+            key: metadata.fullPath.replace('materias/' + subjectId + '/', ''),
+            modified: Moment(metadata.updated),
+            size: metadata.size,
+            url,
+          };
+          array.push(obj);
         }
       });
     } catch (err) {
-      console.log('Error getting documents', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     } finally {
       return array;
     }
@@ -202,6 +196,7 @@ class TabsDeClase extends Component {
         if (!isEmpty(foundFile)) {
           return foundFile.key;
         }
+        return null;
       });
 
       const contenidos = updatedContents.map(
@@ -211,21 +206,15 @@ class TabsDeClase extends Component {
           '/contenidos/' +
           nombre
       );
-
       this.setState(
         {
           propsContenidos: contenidos,
           isLoading: false,
         },
         async () =>
-          await editDocument(
-            'clases',
-            this.props.idClase,
-            {
-              contenidos: contenidos,
-            },
-            'Clase editada'
-          )
+          await editDocument('clases', this.props.idClase, {
+            contenidos: contenidos,
+          })
       );
     }
   };
@@ -269,7 +258,7 @@ class TabsDeClase extends Component {
         'Clase editada'
       );
     } catch (err) {
-      console.log('Error', err);
+      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
     }
     this.toggleDeleteModal();
     this.props.updateContenidos();
