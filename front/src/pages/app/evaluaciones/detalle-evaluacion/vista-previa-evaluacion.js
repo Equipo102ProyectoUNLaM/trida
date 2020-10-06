@@ -26,7 +26,8 @@ import {
   getDateTimeStringFromDate,
 } from 'helpers/Utils';
 import OpcionMultipleImagen from '../ejercicios/opcion-multiple-imagen';
-import PreguntasAleatorias from '../ejercicios/preguntas_aleatorias';
+import PreguntasAleatorias from '../ejercicios/preguntas-aleatorias';
+import AdjuntarDesarrollo from '../ejercicios/adjuntar-desarrollo';
 
 class ModalVistaPreviaEvaluacion extends Component {
   constructor(props) {
@@ -177,6 +178,15 @@ class ModalVistaPreviaEvaluacion extends Component {
                     {ejercicio.data.tipo ===
                       TIPO_EJERCICIO.preguntas_aleatorias && (
                       <PreguntasAleatorias
+                        ejercicioId={index}
+                        value={ejercicio.data}
+                        preview={true}
+                      />
+                    )}
+
+                    {ejercicio.data.tipo ===
+                      TIPO_EJERCICIO.adjuntar_desarrollo && (
+                      <AdjuntarDesarrollo
                         ejercicioId={index}
                         value={ejercicio.data}
                         preview={true}

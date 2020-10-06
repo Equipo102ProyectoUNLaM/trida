@@ -6,6 +6,8 @@ import AppLayout from '../../layout/AppLayout';
 
 const Home = React.lazy(() => import('./home'));
 
+const Alumnos = React.lazy(() => import('./alumnos'));
+
 const VirtualClasses = React.lazy(() => import('./clases-virtuales'));
 
 const Communications = React.lazy(() => import('./comunicaciones'));
@@ -31,6 +33,10 @@ class App extends Component {
               <Route
                 path={`${match.url}/home`}
                 render={(props) => <Home {...props} />}
+              />
+              <Route
+                path={`${match.url}/alumnos`}
+                render={(props) => <Alumnos {...props} />}
               />
               <Route
                 path={`${match.url}/clases-virtuales`}

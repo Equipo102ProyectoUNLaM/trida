@@ -125,10 +125,10 @@ class Foro extends Component {
       isLoading,
       modalDeleteOpen,
       modalEditOpen,
-      idForoEditado: idForoEditado,
-      nombreForoEditado: nombreForoEditado,
-      descForoEditado: descForoEditado,
-      fechaForoEditado: fechaForoEditado,
+      idForoEditado,
+      nombreForoEditado,
+      descForoEditado,
+      fechaForoEditado,
       mensajes: mensajesForo,
     } = this.state;
     const { rol } = this.props;

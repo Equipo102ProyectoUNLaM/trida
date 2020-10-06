@@ -53,6 +53,9 @@ Table of Contents
 48.Mensajeria
 49.Correcciones
 50.Evaluaciones
+51.Countdown
+52.Foro
+53.Correcciones
 
 */
 
@@ -126,6 +129,7 @@ html {
   --primary-color: #{$primary-color};
   --foreground-color: #{$foreground-color};
   --separator-color: #{$separator-color};
+  --inverse-theme-color: '#{$inverse-theme-color}';
 }
 
 #root {
@@ -3285,7 +3289,7 @@ nav .nomargin {
   }
 
   .card-body {
-    padding: 2rem 0.5rem;
+    padding: 1.5rem 0.5rem;
   }
 
   .card-text {
@@ -3295,6 +3299,7 @@ nav .nomargin {
   }
 
   .lead {
+    font-size: 0.9rem;
     color: $theme-color-1;
     margin-bottom: 0;
   }
@@ -3312,12 +3317,12 @@ nav .nomargin {
 
   @include respond-below(xl) {
     .card-text {
-      height: 48px;
+      height: 20px;
       line-height: 18px;
     }
 
     .lead {
-      font-size: 1.6rem;
+      font-size: 0.7rem;
     }
 
     i {
@@ -10006,45 +10011,35 @@ div.rendered-file-browser{
   }
 }
 
-// Correcciones
-
-.modal-correccion {
-  width: 100% !important;
+// 51 Countdown
+.countdown{
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1030;
+  display: flex;
+  justify-content: space-around;
+  font-family: sans-serif;
+  text-align: center;
 }
 
-.MuiTypography-h5, .MuiFormLabel-root, .MuiInputLabel-root, 
-.MuiInputLabel-formControl, .MuiInputLabel-animated, .MuiTypography-root,
-.MuiFormControlLabel-label, .MuiTypography-body1, .MuiButtonBase-root, .MuiListItem-root,
-.MuiMenuItem-root, .MuiMenuItem-gutters, .MuiListItem-gutters, .MuiListItem-button, 
-.MuiFormHelperText-root, .MuiSelect-root, .MuiSelect-select, .MuiSelect-selectMenu
-.MuiInputBase-input, .MuiInput-input {
-  font-family: "Nunito" !important;
+.card-countdown{
+  flex-direction: row;
+  margin-top: 5rem;
+  padding: 1rem;
 }
 
-.MuiCardContent-root {
-  font-size: 1rem !important;
+.card-countdown-body{
+  padding: 1rem !important;
 }
 
-.MuiPaper-root, .MuiCard-root, .MuiPaper-elevation1, .MuiPaper-rounded {
-  margin-bottom: 1rem !important;
-  box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.04) !important;
+.text-countdown{
+  text-align: center;
+  margin: auto;
+  padding-right: 10px;
 }
+// 52 Foro
 
-.MuiIconButton-colorPrimary {
-  color: $theme-color-1 !important;
-}
-
-.webviewer {
-  height: 800px !important;
-  margin-bottom: 1rem !important;
-}
-
-.status-correccion {
-  margin-left: 0;
-  margin-bottom: 1rem;
-}
-  
- // Foro
 .row-space-between {
   display: flex;
   justify-content: space-between;
@@ -10053,17 +10048,7 @@ div.rendered-file-browser{
     margin-right: 1rem;
 }
 
-// Correcciones
-
-.filtros-button {
-  padding: 0 1.5rem !important;
-}
-
-.filtros-button-group {
-  margin-left: 1rem;
-  height: 2.5rem;
-}
-
+// 53 Correcciones
 .modal-correccion {
   width: 100% !important;
 }
@@ -10097,4 +10082,40 @@ div.rendered-file-browser{
 
 .half-height {
   height: 60% !important;
+}
+
+.dropdown-padding-0 {
+
+  button {
+    padding: 0 !important;
+  }
+}
+
+.dropdown-arrow {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.dropdown-empty {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  color: $primary-color;
+  transition: color $animation-time-short;
+
+  &:hover,
+  &:active {
+    text-decoration: initial;
+    color: $theme-color-1;
+  }
+}
+
+.breadcrumb-flex {
+  display: flex;
+  align-items: center;
+}
+
+.status-correccion {
+  margin-left: 0;
+  margin-bottom: 1rem;
 }

@@ -7,8 +7,10 @@ import 'react-tagsinput/react-tagsinput.css';
 import Switch from 'rc-switch';
 import 'rc-switch/assets/index.css';
 
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import es from 'date-fns/locale/es';
+registerLocale('es', es);
 
 export class FormikReactSelect extends React.Component {
   handleChange = (value) => {
@@ -287,6 +289,7 @@ export class FormikDatePicker extends React.Component {
       <DatePicker
         id={name}
         name={name}
+        locale="es"
         dateFormat="dd/MM/yyyy - HH:mm"
         showTimeSelect
         timeFormat="HH:mm"

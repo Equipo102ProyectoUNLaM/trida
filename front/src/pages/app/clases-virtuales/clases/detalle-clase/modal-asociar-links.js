@@ -1,6 +1,6 @@
 import React from 'react';
 import { Separator } from 'components/common/CustomBootstrap';
-import { Row, Button, FormGroup, Label, ModalBody, NavLink } from 'reactstrap';
+import { Row, Button, FormGroup, Label, ModalBody } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import { editDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
@@ -69,7 +69,7 @@ class ModalAsociarLinks extends React.Component {
     if (!value) {
       error = 'El link es requerido';
     } else if (
-      !/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(
+      !/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(
         value
       )
     ) {

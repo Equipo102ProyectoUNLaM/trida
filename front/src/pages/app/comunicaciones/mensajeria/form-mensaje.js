@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
+import { ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';

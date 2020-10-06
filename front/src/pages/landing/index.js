@@ -1,7 +1,6 @@
 import React, { Suspense, Component } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Redirect, withRouter, Route } from 'react-router-dom';
-import { AuthRoute } from 'components/rutas/auth-route';
 
 const Landing = React.lazy(() =>
   import(/* webpackChunkName: "user-login" */ './landing')
