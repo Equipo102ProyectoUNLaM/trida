@@ -11,6 +11,7 @@ import FileUploader from 'react-firebase-file-uploader';
 import { Form } from 'formik';
 import { desencriptarEvaluacionImportada } from 'handlers/DecryptionHandler';
 import moment from 'moment';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 class AgregarEvaluacion extends Component {
   constructor(props) {
@@ -50,32 +51,42 @@ class AgregarEvaluacion extends Component {
   handleFileChange = async (e) => {
     const evaluaciones = [];
     const fileReader = new FileReader();
-    fileReader.readAsText(e.target.files[0], 'UTF-8');
-    fileReader.onload = (e) => {
-      this.setState({ isLoading: true });
-      const encryptedEval = JSON.parse(e.target.result);
-      evaluaciones.push(encryptedEval);
-      const evaluacionesDesencriptadas = desencriptarEvaluacionImportada(
-        evaluaciones
+    const fileExtension = e.target.files[0].name.split('.')[1];
+    if (fileExtension === 'trida') {
+      fileReader.readAsText(e.target.files[0], 'UTF-8');
+      fileReader.onload = (e) => {
+        this.setState({ isLoading: true });
+        const encryptedEval = JSON.parse(e.target.result);
+        evaluaciones.push(encryptedEval);
+        const evaluacionesDesencriptadas = desencriptarEvaluacionImportada(
+          evaluaciones
+        );
+        this.toggleImportModal();
+        this.setState({
+          evaluacionId: evaluacionesDesencriptadas[0].id,
+          nombre: evaluacionesDesencriptadas[0].data.nombre,
+          fecha_publicacion:
+            evaluacionesDesencriptadas[0].data.fecha_publicacion,
+          fecha_finalizacion:
+            evaluacionesDesencriptadas[0].data.fecha_finalizacion,
+          descripcion: evaluacionesDesencriptadas[0].data.descripcion,
+          sin_salir_de_ventana:
+            evaluacionesDesencriptadas[0].data.sin_salir_de_ventana,
+          sin_capturas: evaluacionesDesencriptadas[0].data.sin_capturas,
+          ejercicios: evaluacionesDesencriptadas[0].subCollection.sort(
+            (a, b) => a.data.numero - b.data.numero
+          ),
+          evaluacionImportada: true,
+          isLoading: false,
+        });
+      };
+    } else {
+      enviarNotificacionError(
+        'Se debe cargar una evaluación con extensión .trida',
+        'El archivo no es válido'
       );
-      this.toggleImportModal();
-      this.setState({
-        evaluacionId: evaluacionesDesencriptadas[0].id,
-        nombre: evaluacionesDesencriptadas[0].data.nombre,
-        fecha_publicacion: evaluacionesDesencriptadas[0].data.fecha_publicacion,
-        fecha_finalizacion:
-          evaluacionesDesencriptadas[0].data.fecha_finalizacion,
-        descripcion: evaluacionesDesencriptadas[0].data.descripcion,
-        sin_salir_de_ventana:
-          evaluacionesDesencriptadas[0].data.sin_salir_de_ventana,
-        sin_capturas: evaluacionesDesencriptadas[0].data.sin_capturas,
-        ejercicios: evaluacionesDesencriptadas[0].subCollection.sort(
-          (a, b) => a.data.numero - b.data.numero
-        ),
-        evaluacionImportada: true,
-        isLoading: false,
-      });
-    };
+      e.target.value = null;
+    }
   };
 
   render() {
