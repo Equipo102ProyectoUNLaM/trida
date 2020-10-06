@@ -10,17 +10,16 @@ import Services from 'components/landing/Services';
 import CTAOne from 'components/landing/CTAOne';
 import Team from 'components/landing/Team';
 import Pricing from 'components/landing/Pricing';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'assets/landing/css/apton-icons.css';
 import 'assets/landing/css/animate.min.css';
 import 'swiper/swiper-bundle.min.css';
 import 'assets/landing/css/fontawesome-all.min.css';
-import 'assets/landing/css/style.css';
-import 'assets/landing/css/responsive.css';
+import 'assets/landing/css/style.scss';
+import 'assets/landing/css/responsive.scss';
 import 'react-modal-video/css/modal-video.min.css';
 
 const HomePage = () => (
-  <div>
+  <div className="landing-page">
     <Layout pageTitle="Trída">
       <Header
         btnClass="main-nav__btn"

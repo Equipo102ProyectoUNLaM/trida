@@ -97,6 +97,8 @@ module.exports = {
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
   'menu.mis-foros': 'Mis Temas',
+  'menu.alumnos-materia': 'Usuarios de la Materia',
+  'menu.volver': 'VOLVER',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',

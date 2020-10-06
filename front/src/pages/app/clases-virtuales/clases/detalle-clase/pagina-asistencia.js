@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import DataTablePagination from 'components/datatable-pagination';
 import ReactTable from 'react-table';
 import { DATA_TABLE_COLUMNS } from 'constants/asistenciaTableColumns';
 
 class PaginaAsistencia extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { asistencia } = this.props;
     return (

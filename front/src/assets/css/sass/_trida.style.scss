@@ -3289,7 +3289,7 @@ nav .nomargin {
   }
 
   .card-body {
-    padding: 2rem 0.5rem;
+    padding: 1.5rem 0.5rem;
   }
 
   .card-text {
@@ -3299,6 +3299,7 @@ nav .nomargin {
   }
 
   .lead {
+    font-size: 0.9rem;
     color: $theme-color-1;
     margin-bottom: 0;
   }
@@ -3316,12 +3317,12 @@ nav .nomargin {
 
   @include respond-below(xl) {
     .card-text {
-      height: 48px;
+      height: 20px;
       line-height: 18px;
     }
 
     .lead {
-      font-size: 1.6rem;
+      font-size: 0.7rem;
     }
 
     i {
@@ -10077,6 +10078,41 @@ div.rendered-file-browser{
 .webviewer {
   height: 800px !important;
   margin-bottom: 1rem !important;
+}
+
+.half-height {
+  height: 60% !important;
+}
+
+.dropdown-padding-0 {
+
+  button {
+    padding: 0 !important;
+  }
+}
+
+.dropdown-arrow {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.dropdown-empty {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  color: $primary-color;
+  transition: color $animation-time-short;
+
+  &:hover,
+  &:active {
+    text-decoration: initial;
+    color: $theme-color-1;
+  }
+}
+
+.breadcrumb-flex {
+  display: flex;
+  align-items: center;
 }
 
 .status-correccion {

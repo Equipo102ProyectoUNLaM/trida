@@ -34,8 +34,6 @@ class Register extends Component {
         enviarNotificacionError('Completá email y contraseña', 'Error');
       }
     }
-    // En deploy a prod, descomentar esto y comentar lo de arriba
-    //this.props.history.push('/en-construccion');
   };
 
   validateEmail = (value) => {

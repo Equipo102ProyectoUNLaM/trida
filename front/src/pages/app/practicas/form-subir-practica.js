@@ -60,7 +60,7 @@ class FormSubirPractica extends React.Component {
   };
 
   handleUploadStart = () => {
-    if (this.state.file != '') {
+    if (this.state.file !== '') {
       this.handleDeleteFile();
     }
     this.setState({ isFileUploading: true, fileUploadProgress: 0 });
@@ -142,7 +142,6 @@ class FormSubirPractica extends React.Component {
       fechaLanzada,
       fechaVencimiento,
       idArchivo,
-      estado,
     } = data;
     const obj = {
       nombre: nombre,
