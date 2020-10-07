@@ -103,14 +103,8 @@ export const registerUserStart = (user, history) => ({
   payload: { user, history },
 });
 
-export const registerUserSuccess = (user) => ({
+export const registerUserSuccess = () => ({
   type: REGISTER_USER_SUCCESS,
-  payload: { user },
-});
-
-export const setLoginUser = (user) => ({
-  type: SET_LOGIN_USER,
-  payload: { user },
 });
 
 export const registerUserError = (message) => ({
@@ -127,8 +121,10 @@ export const registerUser = (user) => async (dispatch) => {
     const user = functions.httpsCallable('user');
     const userAuth = await user({ email, password, rol });
     const { data } = userAuth;
+
     if (data) {
       const { uid } = data;
+
       if (isInvited) {
         await sendInvitationEmail(email, inviteMail);
         await auth.sendPasswordResetEmail(email);
@@ -136,17 +132,17 @@ export const registerUser = (user) => async (dispatch) => {
         const asignarMateriasAction = functions.httpsCallable(
           'asignarMaterias'
         );
+
         await asignarMateriasAction({
           instId,
           courseId,
           subjectId,
           uid,
         });
-      } else {
-        dispatch(setLoginUser(registerUser));
       }
+
       await editDocument('usuarios', uid, { rol });
-      dispatch(registerUserSuccess(registerUser));
+      dispatch(registerUserSuccess());
     } else {
       dispatch(registerUserError(registerUser.message));
     }

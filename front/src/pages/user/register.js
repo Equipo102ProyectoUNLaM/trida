@@ -14,14 +14,12 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import ROLES_REGISTRO from 'constants/rolesRegistro';
 
 class Register extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      isInvited: false,
-    };
-  }
+  state = {
+    email: '',
+    password: '',
+    isInvited: false,
+  };
+
   onUserRegister = (values) => {
     const userObj = {
       email: values.email,
@@ -31,7 +29,7 @@ class Register extends Component {
     };
     if (!this.props.loading) {
       if (values.email !== '' && values.password !== '' && values.rol) {
-        this.props.registerUser(userObj, this.props.history);
+        this.props.registerUser(userObj);
       } else {
         enviarNotificacionError('Completá email, contraseña y rol', 'Error');
       }
@@ -59,11 +57,12 @@ class Register extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.user !== prevProps.user) {
+    if (prevProps.loading && !this.props.loading && !this.props.error) {
       enviarNotificacionExitosa(
         'Usuario registrado con éxito',
         'Registro exitoso'
       );
+
       this.props.history.push('/user/login');
     }
 
