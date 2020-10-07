@@ -363,8 +363,6 @@ const Videollamada = ({
       });
       jitsi.addEventListener('readyToClose', () => {
         if (rol === ROLES.Docente) guardarListaAsistencia();
-        if (rol === ROLES.Docente && preguntaLanzadaGlobal[0].id)
-          respuestaDeAlumno();
         setCallOff();
       });
       if (rol === ROLES.Docente) {
