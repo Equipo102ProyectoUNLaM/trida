@@ -45,7 +45,6 @@ const Videollamada = ({
   roomName,
   subject = 'Clase Virtual',
   userName,
-  userId,
   password,
   options,
   isHost,
@@ -57,7 +56,6 @@ const Videollamada = ({
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
-  const timeFormat = 'm:ss';
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
@@ -197,7 +195,7 @@ const Videollamada = ({
       // Verifico si el alumno respondio la pregunta lanzada por el profe
       getDatosClaseOnSnapshot(
         `clases/${idClase}/preguntas/${preguntaLanzadaGlobal[0].id}/respuestas`,
-        userId,
+        idUser,
         checkRespuestaAlumno
       );
       toggleModalPreviewPreguntaAlumno();
