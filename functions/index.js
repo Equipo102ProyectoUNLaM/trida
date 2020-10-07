@@ -4,17 +4,17 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-const cors = require('cors')({origin: true});
+const cors = require('cors')({ origin: true });
 admin.initializeApp(functions.config().firebase);
 
 /* healthcheck endpoint */
 exports.ping = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
-  response.send("pong");
+    response.send("pong");
   });
- });
+});
 
- /* create user creates a user into firebase auth service */
+/* create user creates a user into firebase auth service */
 /*exports.createUser = functions.https.onRequest( (data, context) => {
    console.log('Name', data.name);
     return admin.auth().createUser({
@@ -40,21 +40,21 @@ exports.ping = functions.https.onRequest((request, response) => {
 
 
 /* register sets the user record to firestore */
-exports.register = functions.auth.user().onCreate((data)=> {
-    const user = {
-      id: data.uid,
-      mail: data.email,
-      fechaCreacion: data.metadata.creationTime,
-      nombre: '',
-      apellido: '',
-      telefono: '',
-      primerLogin: true,
-      cambiarPassword: false,
-      instituciones: [],
-      rol: 0,
-    }
+exports.register = functions.auth.user().onCreate((data) => {
+  const user = {
+    id: data.uid,
+    mail: data.email,
+    fechaCreacion: data.metadata.creationTime,
+    nombre: '',
+    apellido: '',
+    telefono: '',
+    primerLogin: true,
+    cambiarPassword: false,
+    instituciones: [],
+    rol: 0,
+  }
 
-    return admin.firestore().collection('usuarios')
+  return admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set(user)
     .then(doc => console.log('user added', doc))
@@ -97,9 +97,9 @@ const getDocRef = (doc) => {
 
 exports.asignarFuncion = async ({ instId, courseId, subjectId, uid }) => {
   let instRef = '',
-  courseRef = [],
-  subjectRef = [],
-  cursosObj = [];
+    courseRef = [],
+    subjectRef = [],
+    cursosObj = [];
 
   let referenciaAInst = `/instituciones/${instId}`;
   instRef = getDocRef(referenciaAInst);
@@ -169,16 +169,16 @@ exports.asignarFuncion = async ({ instId, courseId, subjectId, uid }) => {
   return instObj;
 }
 
-exports.asignarMaterias = functions.https.onCall(async (data)=> {
+exports.asignarMaterias = functions.https.onCall(async (data) => {
   try {
     const instObj = await this.asignarFuncion(data);
     console.log(instObj);
     //TODO iterar instObj y agregar a usuarios por materia
     await this.agregarAUsusariosPorMateria(instObj, data.uid);
     await admin.firestore().collection('usuarios')
-    .doc(data.uid)
-    .set( { instituciones: instObj }, { merge: true });
-    
+      .doc(data.uid)
+      .set({ instituciones: instObj }, { merge: true });
+
   } catch (error) {
     console.log('error', error);
   }
@@ -200,9 +200,9 @@ exports.mergeInstituciones = async (instUser, instAsignar) => {
 
   // La que voy a asignar es nueva (no está dentro de instUser)
   if (!institucionYaAsignada) {
-    return [...instUser,  ...instAsignar]
+    return [...instUser, ...instAsignar]
   }
-  
+
   // El usuario ya posee la institución a la cual lo invitaron
   const { cursos } = institucionYaAsignada;
 
@@ -227,11 +227,11 @@ exports.mergeInstituciones = async (instUser, instAsignar) => {
     })
 
   })
-  
+
   return instUser;
 }
 
-exports.agregarMaterias = functions.https.onCall(async (data)=> {
+exports.agregarMaterias = functions.https.onCall(async (data) => {
 
   try {
     const instUser = await this.institucionesUsuario(data);
@@ -245,7 +245,7 @@ exports.agregarMaterias = functions.https.onCall(async (data)=> {
   } catch (error) {
     console.log('error', error);
   }
-  
+
 });
 
 exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
@@ -259,18 +259,18 @@ exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
           const usuariosPorMateria = await usuariosPorMateriaRef.get();
           const usuariosPorMateriaObj = usuariosPorMateria.data();
 
-          if(usuariosPorMateriaObj !== undefined) {
+          if (usuariosPorMateriaObj !== undefined) {
             usuario_id = usuariosPorMateriaObj.usuario_id;
           }
           usuario_id.push(userId);
-          await admin.firestore().collection('usuariosPorMateria').doc(materiaSnapShot.id).set( {usuario_id: usuario_id}, { merge: true });
+          await admin.firestore().collection('usuariosPorMateria').doc(materiaSnapShot.id).set({ usuario_id: usuario_id }, { merge: true });
         }
       }
     }
   } catch (error) {
     console.log('error', error);
   }
-  
+
 };
 
 
@@ -295,3 +295,35 @@ exports.sendMail = functions.https.onCall((data) => {
 
   return transporter.sendMail(mailOptions);
 });
+
+
+const createNotification = async (notification, users) => {
+  try {
+
+    users.forEach(async user => {
+      await admin.firestore().collection(`notificaciones/${user}/listado`)
+      .add(notification);
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+exports.messageRecived = functions.firestore
+  .document('mensajes/{mensajeId}')
+  .onCreate((doc) => {
+    try {
+      const message = doc.data();
+      const notification = {
+        contenido: `Tenés un nuevo mensaje de ${message.emisor.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        leida: false
+      }
+
+      return createNotification(notification, message.receptor);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
