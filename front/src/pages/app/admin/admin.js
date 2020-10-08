@@ -6,10 +6,10 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import IconCard from 'containers/pages/IconCards';
 import ModalEnviarInvitacion from 'containers/pages/ModalEnviarInvitacion';
 import ADMIN_ARRAY from 'constants/adminArray';
+import { getDocumentRef } from 'helpers/Firebase-db';
 
 class PaginaAdmin extends Component {
   state = {
-    isLoading: true,
     modalInvitacionOpen: false,
   };
 
@@ -19,8 +19,27 @@ class PaginaAdmin extends Component {
     });
   };
 
+  handleClick = (id) => {
+    if (id === 2) {
+      return this.toggleModalInvitacion();
+    }
+
+    if (id === 3) {
+      const instRef = getDocumentRef(
+        `instituciones/${this.props.institution.id}`
+      );
+      return this.props.history.push({
+        pathname: '/seleccion-curso/crear-curso',
+        instRef: instRef,
+        instId: this.props.institution.id,
+      });
+    }
+
+    return null;
+  };
+
   render() {
-    const { isLoading, modalInvitacionOpen } = this.state;
+    const { modalInvitacionOpen } = this.state;
     return (
       <>
         <HeaderDeModulo
@@ -33,11 +52,12 @@ class PaginaAdmin extends Component {
             return (
               <Colxx xxs="6" sm="4" md="3" lg="3" key={`icon_card_${item.id}`}>
                 <IconCard
+                  id={item.id}
                   icon={item.icon}
                   title={item.title}
                   to={item.to}
                   className="mb-4"
-                  onClick={item.id === 2 ? this.toggleModalInvitacion : null}
+                  onClick={this.handleClick}
                 />
               </Colxx>
             );
@@ -55,8 +75,9 @@ class PaginaAdmin extends Component {
 }
 
 const mapStateToProps = ({ seleccionCurso }) => {
-  const { subject } = seleccionCurso;
+  const { institution, subject } = seleccionCurso;
   return {
+    institution,
     subject,
   };
 };

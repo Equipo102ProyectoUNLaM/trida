@@ -2,10 +2,24 @@ import React from 'react';
 import { Card, CardBody, NavLink } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 
-const IconCard = ({ className = 'mb-4', icon, title, value, to, onClick }) => {
+const IconCard = ({
+  className = 'mb-4',
+  icon,
+  title,
+  value,
+  to,
+  onClick,
+  id,
+}) => {
+  const onCardClick = () => {
+    return onClick(id);
+  };
   return (
     <a href={to}>
-      <div className={`icon-row-item ${className}`} onClick={onClick}>
+      <div
+        className={`icon-row-item ${className}`}
+        onClick={onClick ? onCardClick : null}
+      >
         <Card>
           <CardBody className="text-center">
             <i className={icon} />
