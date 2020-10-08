@@ -263,7 +263,16 @@ class Sidebar extends Component {
   }
 
   handleMenuOptions = () => {
-    if (this.props.rol === ROLES.Docente) {
+    if (
+      this.props.rol === ROLES.Docente ||
+      this.props.rol === ROLES.Directivo
+    ) {
+      menuItems.push({
+        id: 'admin',
+        icon: 'simple-icon-settings',
+        label: 'menu.admin',
+        to: '/app/admin',
+      });
       const clasesMenu = menuItems.filter(
         (elem) => elem.id === 'virtual-classes'
       );

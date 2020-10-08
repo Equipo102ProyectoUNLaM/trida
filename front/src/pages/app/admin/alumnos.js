@@ -6,6 +6,7 @@ import IconCard from 'containers/pages/IconCards';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { getDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
+import { rolesData } from 'constants/rolesData';
 
 class PaginaAlumnos extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class PaginaAlumnos extends Component {
       <>
         <HeaderDeModulo
           heading="menu.alumnos-materia"
-          toggleModal={() => this.props.history.push('/app/home')}
+          toggleModal={() => this.props.history.push('/app/admin')}
           buttonText="menu.volver"
         />
         {isLoading && <div className="loading" />}
@@ -64,14 +65,11 @@ class PaginaAlumnos extends Component {
                   key={`icon_card_${item.id}`}
                 >
                   <IconCard
-                    icon={
-                      item.rol === 1
-                        ? 'iconsminds-male-female'
-                        : 'iconsminds-student-male-female'
-                    }
+                    icon={rolesData(item.rol).icon}
                     title={item.nombre}
-                    value={item.rol === 1 ? 'Docente' : 'Alumno'}
+                    value={rolesData(item.rol).rolTexto}
                     className="mb-4"
+                    to="#"
                   />
                 </Colxx>
               );
