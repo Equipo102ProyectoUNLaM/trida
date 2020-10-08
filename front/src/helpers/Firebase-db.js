@@ -267,6 +267,7 @@ export const addToSubCollection = async (
     }
     return docRef;
   } catch (error) {
+    console.log(error);
     if (mensajePrincipal) {
       enviarNotificacionError(mensajeError, 'Ups!');
     }

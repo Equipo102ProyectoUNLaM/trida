@@ -15,12 +15,16 @@ import 'react-tagsinput/react-tagsinput.css';
 class FormMateria extends Component {
   constructor(props) {
     super(props);
-
+    const { instId, instRef, cursos, agregado } = this.props.location;
     this.state = {
       isEmpty: false,
       nombre: '',
       isLoading: false,
       materiasTags: {},
+      instId,
+      instRef,
+      cursos,
+      agregado,
     };
   }
 
@@ -30,9 +34,8 @@ class FormMateria extends Component {
   };
 
   onUserSubmit = async () => {
-    const { instId, instRef, cursos } = this.props.location;
     let { user } = this.props;
-    const { materiasTags } = this.state;
+    const { materiasTags, instId, instRef, cursos, agregado } = this.state;
     let instObj,
       cursosObj = [];
 
@@ -63,19 +66,20 @@ class FormMateria extends Component {
       };
       cursosObj.push(cursoObj);
     }
-
-    instObj = [
-      {
-        institucion_id: instRef,
-        cursos: cursosObj,
-      },
-    ];
-    await editDocument(
-      'usuarios',
-      user,
-      { instituciones: instObj },
-      'Materia editada'
-    );
+    if (!agregado) {
+      instObj = [
+        {
+          institucion_id: instRef,
+          cursos: cursosObj,
+        },
+      ];
+      await editDocument(
+        'usuarios',
+        user,
+        { instituciones: instObj },
+        'Materia editada'
+      );
+    }
 
     this.setState({ isLoading: false });
     this.props.history.push('/seleccion-curso');

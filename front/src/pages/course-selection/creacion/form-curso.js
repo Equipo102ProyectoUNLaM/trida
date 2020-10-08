@@ -15,10 +15,14 @@ class FormCurso extends Component {
   constructor(props) {
     super(props);
 
+    const { instId, instRef, agregado } = this.props.location;
     this.state = {
       isEmpty: false,
       nombre: '',
       cursosTags: [],
+      instId,
+      instRef,
+      agregado,
     };
   }
 
@@ -32,9 +36,7 @@ class FormCurso extends Component {
   };
 
   onUserSubmit = async () => {
-    const { cursosTags } = this.state;
-
-    const { instId, instRef } = this.props.location;
+    const { cursosTags, instId, instRef, agregado } = this.state;
 
     const cursosMapeados = {};
 
@@ -60,6 +62,7 @@ class FormCurso extends Component {
       cursos: cursosMapeados,
       instId,
       instRef,
+      agregado,
     });
   };
 

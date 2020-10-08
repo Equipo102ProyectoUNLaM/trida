@@ -7,11 +7,25 @@ import IconCard from 'containers/pages/IconCards';
 import ModalEnviarInvitacion from 'containers/pages/ModalEnviarInvitacion';
 import ADMIN_ARRAY from 'constants/adminArray';
 import { getDocumentRef } from 'helpers/Firebase-db';
+import ROLES from 'constants/roles';
 
 class PaginaAdmin extends Component {
-  state = {
-    modalInvitacionOpen: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalInvitacionOpen: false,
+    };
+    if (this.props.rol === ROLES.Directivo) {
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 3)) {
+        ADMIN_ARRAY.push({
+          id: 3,
+          title: 'Agregar cursos',
+          icon: 'iconsminds-folder-add--',
+          to: '#',
+        });
+      }
+    }
+  }
 
   toggleModalInvitacion = () => {
     this.setState({
@@ -32,6 +46,7 @@ class PaginaAdmin extends Component {
         pathname: '/seleccion-curso/crear-curso',
         instRef: instRef,
         instId: this.props.institution.id,
+        agregado: true,
       });
     }
 
@@ -74,11 +89,14 @@ class PaginaAdmin extends Component {
   }
 }
 
-const mapStateToProps = ({ seleccionCurso }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { institution, subject } = seleccionCurso;
+  const { userData } = authUser;
+  const { rol } = userData;
   return {
     institution,
     subject,
+    rol,
   };
 };
 
