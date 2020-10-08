@@ -4,10 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from 'redux/actions';
 import { Formik, Form, Field } from 'formik';
-import {
-  enviarNotificacionError,
-  enviarNotificacionExitosa,
-} from 'helpers/Utils-ui';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { FormikReactSelect } from 'containers/form-validations/FormikFields';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
@@ -58,16 +55,7 @@ class Register extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.loading && !this.props.loading && !this.props.error) {
-      enviarNotificacionExitosa(
-        'Usuario registrado con éxito',
-        'Registro exitoso'
-      );
-
       this.props.history.push('/user/login');
-    }
-
-    if (this.props.error) {
-      enviarNotificacionError('Error en el registro', 'Error');
     }
   }
 
