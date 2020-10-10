@@ -129,6 +129,7 @@ module.exports = {
     'También podés reaccionar a preguntas ya hechas por tus compañeros si tenés la misma consulta.',
   'clase.escribir-pregunta': 'Escribí tu pregunta',
   'clase.ver-preguntas-realizadas': 'Ver Preguntas Realizadas',
+  'clase.ver-respuestas': 'Respuestas!',
 
   /* 07.Institucion */
   'institution.selection': '¿A qué Institución querés ingresar?',

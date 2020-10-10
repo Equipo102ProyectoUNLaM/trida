@@ -89,3 +89,41 @@ export const desencriptarEvaluacion = (evaluaciones) => {
 export const desencriptarTexto = (texto) => {
   return CryptoJS.AES.decrypt(texto, secretKey).toString(CryptoJS.enc.Utf8);
 };
+
+export const desencriptarPreguntasConRespuestasDeAlumnos = (
+  preguntas,
+  sinRespuesta
+) => {
+  let result = preguntas;
+  for (const pregunta of result) {
+    pregunta.data.base.tipo = CryptoJS.AES.decrypt(
+      pregunta.data.base.tipo,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    pregunta.data.base.consigna = CryptoJS.AES.decrypt(
+      pregunta.data.base.consigna,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    pregunta.data.base.nombre = CryptoJS.AES.decrypt(
+      pregunta.data.base.nombre,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    pregunta.data.base.numero = CryptoJS.AES.decrypt(
+      pregunta.data.base.numero,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+
+    for (const opcion of pregunta.data.base.opciones) {
+      opcion.opcion = CryptoJS.AES.decrypt(opcion.opcion, secretKey).toString(
+        CryptoJS.enc.Utf8
+      );
+      if (!sinRespuesta) {
+        opcion.verdadera =
+          CryptoJS.AES.decrypt(opcion.verdadera, secretKey).toString(
+            CryptoJS.enc.Utf8
+          ) === 'true';
+      }
+    }
+  }
+  return result;
+};
