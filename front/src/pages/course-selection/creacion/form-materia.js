@@ -10,6 +10,7 @@ import { editDocument } from 'helpers/Firebase-db';
 import TagsInput from 'react-tagsinput';
 import { toolTipMaterias } from 'constants/texts';
 import { isEmpty } from 'helpers/Utils';
+import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import 'react-tagsinput/react-tagsinput.css';
 
 class FormMateria extends Component {
@@ -49,10 +50,7 @@ class FormMateria extends Component {
           instId,
           id,
           { nombre: materiasPorCurso[materia] },
-          user,
-          'Materia agregada!',
-          'Materia agregada exitosamente',
-          'Error al agregar la materia'
+          user
         );
 
         await editDocument('usuariosPorMateria', matRef.id, {
