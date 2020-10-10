@@ -5,6 +5,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import IconCard from 'containers/pages/IconCards';
 import ModalEnviarInvitacion from 'containers/pages/ModalEnviarInvitacion';
+import ModalAsignacionMateria from 'containers/pages/ModalAsignacionMateria';
 import ADMIN_ARRAY from 'constants/adminArray';
 import { getDocumentRef } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
@@ -14,7 +15,9 @@ class PaginaAdmin extends Component {
     super(props);
     this.state = {
       modalInvitacionOpen: false,
+      modalAsignacionOpen: false,
     };
+
     if (this.props.rol === ROLES.Directivo) {
       if (!ADMIN_ARRAY.some((elem) => elem.id === 3)) {
         ADMIN_ARRAY.push({
@@ -24,12 +27,26 @@ class PaginaAdmin extends Component {
           to: '#',
         });
       }
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 4)) {
+        ADMIN_ARRAY.push({
+          id: 4,
+          title: 'Asignar cursos',
+          icon: 'iconsminds-network',
+          to: '#',
+        });
+      }
     }
   }
 
   toggleModalInvitacion = () => {
     this.setState({
       modalInvitacionOpen: !this.state.modalInvitacionOpen,
+    });
+  };
+
+  toggleModalAsignacion = () => {
+    this.setState({
+      modalAsignacionOpen: !this.state.modalAsignacionOpen,
     });
   };
 
@@ -50,11 +67,15 @@ class PaginaAdmin extends Component {
       });
     }
 
+    if (id === 4) {
+      return this.toggleModalAsignacion();
+    }
+
     return null;
   };
 
   render() {
-    const { modalInvitacionOpen } = this.state;
+    const { modalInvitacionOpen, modalAsignacionOpen } = this.state;
     return (
       <>
         <HeaderDeModulo
@@ -82,6 +103,12 @@ class PaginaAdmin extends Component {
           <ModalEnviarInvitacion
             isOpen={modalInvitacionOpen}
             toggle={this.toggleModalInvitacion}
+          />
+        )}
+        {modalAsignacionOpen && (
+          <ModalAsignacionMateria
+            isOpen={modalAsignacionOpen}
+            toggle={this.toggleModalAsignacion}
           />
         )}
       </>
