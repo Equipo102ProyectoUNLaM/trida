@@ -76,7 +76,7 @@ class Login extends Component {
               <p className="white mb-0">
                 Ingresá tus datos para acceder.
                 <br />
-                Si sos docente, por favor{' '}
+                Si todavía no tenés una cuenta, por favor{' '}
                 <NavLink to={`/user/register`} className="btn-link-inverse">
                   registrate acá
                 </NavLink>

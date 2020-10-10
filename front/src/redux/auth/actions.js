@@ -140,9 +140,10 @@ export const registerUser = (user) => async (dispatch) => {
           subjectId,
           uid,
         });
+
+        await editDocument('usuarios', uid, { rol });
       }
 
-      await editDocument('usuarios', uid, { rol });
       enviarNotificacionExitosa(
         'Usuario registrado con éxito',
         'Registro exitoso'

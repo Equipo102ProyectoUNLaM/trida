@@ -5,10 +5,8 @@ import { connect } from 'react-redux';
 import { registerUser } from 'redux/actions';
 import { Formik, Form, Field } from 'formik';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
-import { FormikReactSelect } from 'containers/form-validations/FormikFields';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
-import ROLES_REGISTRO from 'constants/rolesRegistro';
 
 class Register extends Component {
   state = {
@@ -22,13 +20,12 @@ class Register extends Component {
       email: values.email,
       password: values.password,
       isInvited: this.state.isInvited,
-      rol: values.rol ? values.rol.value : '',
     };
     if (!this.props.loading) {
-      if (values.email !== '' && values.password !== '' && values.rol) {
+      if (values.email !== '' && values.password !== '') {
         this.props.registerUser(userObj);
       } else {
-        enviarNotificacionError('Completá email, contraseña y rol', 'Error');
+        enviarNotificacionError('Completá email y contraseña', 'Error');
       }
     }
   };
@@ -122,24 +119,6 @@ class Register extends Component {
                       {errors.password && touched.password && (
                         <div className="invalid-feedback d-block">
                           {errors.password}
-                        </div>
-                      )}
-                    </FormGroup>
-                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
-                      <Label>
-                        <IntlMessages id="user.rol" />
-                      </Label>
-                      <FormikReactSelect
-                        options={ROLES_REGISTRO}
-                        onChange={setFieldValue}
-                        onBlur={setFieldTouched}
-                        value={values.rol}
-                        name="rol"
-                        placeholder="Seleccioná tu rol"
-                      />
-                      {errors.rol && touched.rol && (
-                        <div className="invalid-feedback d-block">
-                          {errors.rol}
                         </div>
                       )}
                     </FormGroup>
