@@ -19,21 +19,29 @@ class PaginaAdmin extends Component {
     };
 
     if (this.props.rol === ROLES.Directivo) {
-      if (!ADMIN_ARRAY.some((elem) => elem.id === 3)) {
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 5)) {
         ADMIN_ARRAY.push({
-          id: 3,
+          id: 5,
           title: 'Agregar cursos',
           icon: 'iconsminds-folder-add--',
           to: '#',
         });
       }
-      if (!ADMIN_ARRAY.some((elem) => elem.id === 4)) {
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 6)) {
         ADMIN_ARRAY.push({
-          id: 4,
+          id: 6,
           title: 'Asignar cursos',
           icon: 'iconsminds-network',
           to: '#',
         });
+        if (!ADMIN_ARRAY.some((elem) => elem.id === 7)) {
+          ADMIN_ARRAY.push({
+            id: 7,
+            title: 'Asignar rol',
+            icon: 'iconsminds-administrator',
+            to: '#',
+          });
+        }
       }
     }
   }
@@ -51,11 +59,17 @@ class PaginaAdmin extends Component {
   };
 
   handleClick = (id) => {
-    if (id === 2) {
+    if (id === 3) {
+      this.props.history.push(
+        `/seleccion-curso/course/${this.props.institution.id}`
+      );
+    }
+
+    if (id === 4) {
       return this.toggleModalInvitacion();
     }
 
-    if (id === 3) {
+    if (id === 5) {
       const instRef = getDocumentRef(
         `instituciones/${this.props.institution.id}`
       );
@@ -67,7 +81,7 @@ class PaginaAdmin extends Component {
       });
     }
 
-    if (id === 4) {
+    if (id === 6) {
       return this.toggleModalAsignacion();
     }
 
