@@ -4,20 +4,23 @@ import { getDocument } from 'helpers/Firebase-db';
 import EnEvaluacion from 'pages/en-evaluacion';
 
 export const AuthRoute = ({ component: Component, authUser, ...rest }) => {
-  const onEvaluacionIniciada = (doc) => {
-    const { enEvaluacion } = doc.data;
-    setIniciada(enEvaluacion);
-  };
-
   const [enEvaluacion, setIniciada] = useState(false);
 
+  const onEvaluacionIniciada = (doc) => {
+    const { enEvaluacion } = doc.data;
+    setIniciada(Boolean(enEvaluacion));
+  };
+
+  async function getUserState() {
+    const doc = await getDocument(`usuarios/${authUser}`);
+    onEvaluacionIniciada(doc);
+  }
+
   useEffect(() => {
-    async function getUserState() {
-      let doc = await getDocument(`usuarios/${authUser}`);
-      onEvaluacionIniciada(doc);
+    if (authUser) {
+      getUserState();
     }
-    getUserState();
-  }, []);
+  }, [authUser]);
 
   return (
     <Route

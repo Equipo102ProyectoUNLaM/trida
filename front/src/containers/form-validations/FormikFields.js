@@ -29,6 +29,7 @@ export class FormikReactSelect extends React.Component {
         onChange={this.handleChange}
         onBlur={this.handleBlur}
         value={this.props.value}
+        placeholder={this.props.placeholder}
       />
     );
   }

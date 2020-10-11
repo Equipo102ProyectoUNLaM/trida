@@ -42,7 +42,7 @@ export const buscarArchivosStorage = async (subjectId, newRef) => {
 
     return arrayFiles;
   } catch (err) {
-    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
+    console.log(err);
   }
 };
 

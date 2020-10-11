@@ -2,7 +2,6 @@ import {
   LOGIN_USER_START,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
-  SET_LOGIN_USER,
   UPDATE_DATOS_USUARIO,
   REGISTER_USER_START,
   REGISTER_USER_SUCCESS,
@@ -91,9 +90,6 @@ export default (state = INIT_STATE, action) => {
         resetPasswordCode: '',
         error: action.payload.message,
       };
-
-    case SET_LOGIN_USER:
-      return { ...state, user: action.payload.uid };
 
     case REGISTER_USER_SUCCESS:
       return { ...state, loading: false, error: '' };
