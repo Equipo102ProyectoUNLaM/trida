@@ -318,10 +318,36 @@ exports.messageRecived = functions.firestore
       const notification = {
         contenido: `Tenés un nuevo mensaje de ${message.emisor.nombre}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/comunicaciones/mensajeria`,
         leida: false
       }
 
       return createNotification(notification, message.receptor);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
+  exports.foroCreated = functions.firestore
+  .document('foros/{foroId}')
+  .onCreate(async (doc) => {
+    try {
+      const foro = doc.data();
+      const foroId = doc.id;
+      const notification = {
+        contenido: `Se ha creado el foro ${foro.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/comunicaciones/foro/detalle-foro/${foroId}`,
+        leida: false
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(foro.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      const alumnos =  usuariosPorMateriaObj.usuario_id.filter(item => item !== foro.creador);
+
+      return createNotification(notification, alumnos);
     } catch (error) {
       console.log('error', error);
     }

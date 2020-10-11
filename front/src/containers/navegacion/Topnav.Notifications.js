@@ -5,16 +5,16 @@ import { getCollectionOnSnapshotOrderedAndLimited } from 'helpers/Firebase-db';
 import moment from 'moment';
 import { editDocument } from 'helpers/Firebase-db';
 
-const NotificationItem = ({ leida, contenido, fecha }) => {
+const NotificationItem = ({ leida, contenido, fecha, url }) => {
   return (
     <div className="d-flex flex-row mb-3 pb-3 border-bottom">
       {!leida && (
-        <a className="margin-auto" href="/app/pages/product/details">
+        <a className="margin-auto" href={url}>
           <span className={`log-indicator align-middle border-danger`} />
         </a>
       )}
       <div className="pl-3 pr-2">
-        <a href="/app/pages/product/details">
+        <a href={url}>
           <p className="font-weight-medium mb-1">{contenido}</p>
           <p className="text-muted mb-0 text-small">
             {moment(fecha.toDate()).fromNow()}
@@ -39,6 +39,7 @@ const TopnavNotifications = ({ user }) => {
         leida: docData.leida,
         contenido: docData.contenido,
         fecha: docData.fecha,
+        url: docData.url,
         id: docId,
       });
     }
@@ -100,6 +101,10 @@ const TopnavNotifications = ({ user }) => {
               notifications.map((notification, index) => {
                 return <NotificationItem key={index} {...notification} />;
               })}
+            {!notifications ||
+              (notifications.length === 0 && (
+                <span>No tenés notificaciones</span>
+              ))}
           </PerfectScrollbar>
         </DropdownMenu>
       </UncontrolledDropdown>
