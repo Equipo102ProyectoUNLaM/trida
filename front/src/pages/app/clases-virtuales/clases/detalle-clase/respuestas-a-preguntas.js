@@ -9,14 +9,14 @@ import {
 } from 'helpers/Firebase-db';
 import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/DecryptionHandler';
 
-const RespuestasAPreguntas = ({
-  isLoading,
-  idClase,
-  cardClass = 'h-100',
-  preguntasConRespuestasDeAlumnos,
-}) => {
+const RespuestasAPreguntas = ({ isLoading, idClase, cardClass = 'h-100' }) => {
   const [respuestasPorPregunta, setRespuestasPorPregunta] = useState([]);
-
+  const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
+  const [
+    preguntasConRespuestasDeAlumnos,
+    setPreguntasConRespuestasDeAlumnos,
+  ] = useState([]);
+  var preguntasConRespuestasDeAlumnosGlobal = [];
   const data = [
     {
       title: 'Opción 1',
@@ -36,13 +36,36 @@ const RespuestasAPreguntas = ({
   ];
 
   useEffect(() => {
-    crearCantRespuestasPorPregunta();
-  });
+    getPreguntasConRespuestasDeAlumnos();
+  }, [idClase]);
+
+  const getPreguntasConRespuestasDeAlumnos = async () => {
+    let preguntasEncriptadasConRespuestas = [];
+    preguntasEncriptadasConRespuestas = await getCollectionWithSubCollections(
+      `clases/${idClase}/preguntas`,
+      false,
+      false,
+      'respuestas'
+    );
+
+    if (preguntasEncriptadasConRespuestas.length > 0) {
+      const sinRespuesta = false;
+      const preguntasConRespuestas = desencriptarPreguntasConRespuestasDeAlumnos(
+        preguntasEncriptadasConRespuestas,
+        sinRespuesta
+      );
+
+      setPreguntasConRespuestasDeAlumnos(preguntasConRespuestas);
+      preguntasConRespuestasDeAlumnosGlobal = preguntasConRespuestas;
+      crearCantRespuestasPorPregunta();
+    }
+  };
 
   const crearCantRespuestasPorPregunta = () => {
     const resumen = [];
-    if (preguntasConRespuestasDeAlumnos.length > 0) {
-      preguntasConRespuestasDeAlumnos.forEach((preg) => {
+
+    if (preguntasConRespuestasDeAlumnosGlobal.length > 0) {
+      preguntasConRespuestasDeAlumnosGlobal.forEach((preg) => {
         let resultado = [];
         let opciones = [];
         for (let i = 0; i < preg.data.base.opciones.length; i++) {
@@ -65,11 +88,13 @@ const RespuestasAPreguntas = ({
           respuestasVerdaderas: rtasVerdaderas,
         });
       });
+      console.log(resumen);
       setRespuestasPorPregunta(resumen);
+      setIsLoadingLocal(false);
     }
   };
 
-  return isLoading ? (
+  return isLoadingLocal ? (
     <div className="loading" />
   ) : (
     <Card className={cardClass}>

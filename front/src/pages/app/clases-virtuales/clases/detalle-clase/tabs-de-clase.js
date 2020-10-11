@@ -36,7 +36,6 @@ import ModalVistaPreviaPreguntas from '../preguntas-clase/vista-previa-preguntas
 import ROLES from 'constants/roles';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import RespuestasAPreguntas from './respuestas-a-preguntas';
-import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/DecryptionHandler';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -58,7 +57,6 @@ class TabsDeClase extends Component {
       modalPreguntasOpen: false,
       modalPreviewOpen: false,
       asistencia: [],
-      preguntasConRespuestasDeAlumnos: [],
     };
   }
 
@@ -74,7 +72,6 @@ class TabsDeClase extends Component {
     this.getLinksDeClase();
     this.dataListRenderer();
     this.getPreguntasDeClase();
-    this.getPreguntasConRespuestasDeAlumnos();
   }
 
   getAsistenciaDeClase = async () => {
@@ -296,29 +293,6 @@ class TabsDeClase extends Component {
     });
   };
 
-  getPreguntasConRespuestasDeAlumnos = async () => {
-    this.setState({ isLoading: true });
-    let preguntasEncriptadasConRespuestas = [];
-    preguntasEncriptadasConRespuestas = await getCollectionWithSubCollections(
-      `clases/${this.props.idClase}/preguntas`,
-      false,
-      false,
-      'respuestas'
-    );
-
-    if (preguntasEncriptadasConRespuestas.length > 0) {
-      const sinRespuesta = false;
-      const preguntasConRespuestas = desencriptarPreguntasConRespuestasDeAlumnos(
-        preguntasEncriptadasConRespuestas,
-        sinRespuesta
-      );
-      this.setState({
-        preguntasConRespuestasDeAlumnos: preguntasConRespuestas,
-        isLoading: false,
-      });
-    }
-  };
-
   render() {
     const {
       idSala,
@@ -341,7 +315,6 @@ class TabsDeClase extends Component {
       modalPreviewOpen,
       asistencia,
       linksDeClase,
-      preguntasConRespuestasDeAlumnos,
     } = this.state;
 
     return (
@@ -696,11 +669,8 @@ class TabsDeClase extends Component {
                             Resultados de preguntas
                           </CardTitle>
                           <RespuestasAPreguntas
-                            isLoading={false}
+                            isLoading={true}
                             idClase={idClase}
-                            preguntasConRespuestasDeAlumnos={
-                              preguntasConRespuestasDeAlumnos
-                            }
                           />
                         </CardBody>
                       </Colxx>
