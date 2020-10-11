@@ -353,3 +353,65 @@ exports.messageRecived = functions.firestore
     }
   })
 
+  exports.classCreated = functions.firestore
+  .document('clases/{claseId}')
+  .onCreate(async (doc) => {
+    try {
+      const clase = doc.data();
+      const claseId = doc.id;
+      const notification = {
+        contenido: `Se ha creado la clase ${clase.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/clases-virtuales/mis-clases/detalle-clase/${claseId}`,
+        leida: false
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(clase.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      const alumnos =  usuariosPorMateriaObj.usuario_id.filter(item => item !== clase.creador);
+
+      return createNotification(notification, alumnos);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
+  exports.correctionCreated = functions.firestore
+  .document('correcciones/{correccionId}')
+  .onCreate(async (doc) => {
+    try {
+      const correccion = doc.data();
+      const correccionId = doc.id;
+
+      const usuarioRef = admin.firestore().collection('usuarios').doc(correccion.creador);
+      const usuario = await usuarioRef.get();
+      const usuarioObj = usuario.data();
+
+      const notification = {
+        contenido: `${usuarioObj.nombre} ha entregado una ${correccion.tipo}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/correcciones#${correccionId}`,
+        leida: false
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(correccion.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let docentes = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if(usuarioObj.rol === 1)
+          docentes.push(usu);
+      }
+
+      return createNotification(notification, docentes);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
