@@ -23,10 +23,10 @@ const Activities = React.lazy(() => import('./practicas'));
 
 class App extends Component {
   componentDidMount() {
-    preguntarPermisos();
-    navigator.serviceWorker.addEventListener('message', (message) =>
-      console.log(message)
-    );
+    // preguntarPermisos();
+    // navigator.serviceWorker.addEventListener('message', (message) =>
+    //   console.log(message)
+    // );
   }
 
   render() {
