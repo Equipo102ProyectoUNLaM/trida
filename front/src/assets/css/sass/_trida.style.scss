@@ -56,7 +56,7 @@ Table of Contents
 51.Countdown
 52.Foro
 53.Correcciones
-
+54.Respuestas a Preguntas
 */
 
 /* 00.Variables and Imports */
@@ -10132,4 +10132,15 @@ div.rendered-file-browser{
 .status-correccion {
   margin-left: 0;
   margin-bottom: 1rem;
+}
+
+//54.Respuestas a preguntas
+
+.card-respuestas {
+  margin-bottom: 1rem;
+}
+
+.prueba {
+  display: flex;
+  justify-content: space-between;
 }
