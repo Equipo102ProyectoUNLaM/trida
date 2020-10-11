@@ -126,20 +126,18 @@ class TabsDeClase extends Component {
         }
         //Archivos
         for (const res of result.items) {
-          await res.getMetadata().then(async (metadata) => {
-            await res.getDownloadURL().then(async (url) => {
-              var obj = {
-                key: metadata.fullPath.replace(
-                  'materias/' + this.props.idMateria + '/contenidos/',
-                  ''
-                ),
-                modified: Moment(metadata.updated),
-                size: metadata.size,
-                url: url,
-              };
-              array.push(obj);
-            });
-          });
+          const metadata = await res.getMetadata();
+          const url = await res.getDownloadURL();
+          const obj = {
+            key: metadata.fullPath.replace(
+              'materias/' + this.props.idMateria + '/contenidos/',
+              ''
+            ),
+            modified: Moment(metadata.updated),
+            size: metadata.size,
+            url,
+          };
+          array.push(obj);
         }
       });
     } catch (err) {
@@ -166,20 +164,15 @@ class TabsDeClase extends Component {
         }
         //Archivos
         for (const res of result.items) {
-          await res.getMetadata().then(async (metadata) => {
-            await res.getDownloadURL().then(async (url) => {
-              var obj = {
-                key: metadata.fullPath.replace(
-                  'materias/' + subjectId + '/',
-                  ''
-                ),
-                modified: Moment(metadata.updated),
-                size: metadata.size,
-                url: url,
-              };
-              array.push(obj);
-            });
-          });
+          const metadata = await res.getMetadata();
+          const url = await res.getDownloadURL();
+          var obj = {
+            key: metadata.fullPath.replace('materias/' + subjectId + '/', ''),
+            modified: Moment(metadata.updated),
+            size: metadata.size,
+            url,
+          };
+          array.push(obj);
         }
       });
     } catch (err) {
@@ -203,6 +196,7 @@ class TabsDeClase extends Component {
         if (!isEmpty(foundFile)) {
           return foundFile.key;
         }
+        return null;
       });
 
       const contenidos = updatedContents.map(
@@ -212,21 +206,15 @@ class TabsDeClase extends Component {
           '/contenidos/' +
           nombre
       );
-
       this.setState(
         {
           propsContenidos: contenidos,
           isLoading: false,
         },
         async () =>
-          await editDocument(
-            'clases',
-            this.props.idClase,
-            {
-              contenidos: contenidos,
-            },
-            'Clase editada'
-          )
+          await editDocument('clases', this.props.idClase, {
+            contenidos: contenidos,
+          })
       );
     }
   };

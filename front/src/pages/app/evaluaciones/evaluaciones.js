@@ -15,13 +15,18 @@ import {
   getCollectionWithSubCollections,
   getCollection,
   getDocumentWithSubCollection,
+  editDocument,
 } from 'helpers/Firebase-db';
 import firebase from 'firebase/app';
 import {
   desencriptarEvaluacion,
   desencriptarTexto,
 } from 'handlers/DecryptionHandler';
-import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
+import {
+  isEmpty,
+  getDateTimeStringFromDate,
+  getTimestampDifference,
+} from 'helpers/Utils';
 import * as _moment from 'moment';
 const moment = _moment;
 
@@ -44,6 +49,7 @@ class Evaluaciones extends Component {
       materiaId: this.props.subject.id,
       eval: null,
       evalId: '',
+      oldTestActive: false,
       rolDocente: this.props.rol === ROLES.Docente,
       filtroFecha: '',
     };
@@ -53,7 +59,7 @@ class Evaluaciones extends Component {
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
       [
-        this.props.rol === ROLES.Docente
+        this.state.rolDocente
           ? {
               field: 'fecha_creacion',
               operator: '>',
@@ -64,6 +70,33 @@ class Evaluaciones extends Component {
               operator: '<=',
               id: firebase.firestore.Timestamp.now(),
             },
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'activo', operator: '==', id: true },
+      ],
+      false,
+      'ejercicios'
+    );
+    const evaluaciones = await desencriptarEvaluacion(arrayDeObjetos);
+    const evaluacionesActuales = evaluaciones.filter((elem) => {
+      return (
+        getTimestampDifference(
+          elem.data.base.fecha_finalizacion.toDate(),
+          moment().toDate()
+        ) >= 0
+      );
+    });
+    this.dataListRenderer(evaluacionesActuales);
+  };
+
+  getEvaluacionesVencidas = async (materiaId) => {
+    const arrayDeObjetos = await getCollectionWithSubCollections(
+      'evaluaciones',
+      [
+        {
+          field: 'fecha_finalizacion',
+          operator: '<',
+          id: firebase.firestore.Timestamp.now(),
+        },
         { field: 'idMateria', operator: '==', id: materiaId },
         { field: 'activo', operator: '==', id: true },
       ],
@@ -99,7 +132,8 @@ class Evaluaciones extends Component {
   async dataListRenderer(arrayDeObjetos) {
     for (let element of arrayDeObjetos) {
       const result = await getCollection('correcciones', [
-        { field: 'id_entrega', operator: '==', id: element.id },
+        { field: 'idEntrega', operator: '==', id: element.id },
+        { field: 'idUsuario', operator: '==', id: this.props.user },
       ]);
       element = Object.assign(
         element,
@@ -149,7 +183,7 @@ class Evaluaciones extends Component {
     });
     element.href = URL.createObjectURL(blob);
     const nombre = desencriptarTexto(obj.data.nombre);
-    element.download = nombre + '.txt';
+    element.download = nombre + '.trida';
     element.click();
   };
 
@@ -161,7 +195,8 @@ class Evaluaciones extends Component {
     }));
   };
 
-  realizarEvaluacion = () => {
+  realizarEvaluacion = async () => {
+    await editDocument(`usuarios`, this.props.user, { enEvaluacion: true });
     this.props.history.push({
       pathname: '/app/evaluaciones/realizar-evaluacion',
       evalId: this.state.evalId,
@@ -182,6 +217,18 @@ class Evaluaciones extends Component {
     });
     this.toggleDeleteModal();
     this.getEvaluaciones(this.state.materiaId);
+  };
+
+  toggleOldPracticesModal = async () => {
+    await this.setState({
+      oldTestActive: !this.state.oldTestActive,
+      isLoading: true,
+    });
+    if (this.state.oldTestActive) {
+      this.getEvaluacionesVencidas(this.state.materiaId);
+    } else {
+      this.getEvaluaciones(this.state.materiaId);
+    }
   };
 
   normalizarFecha = (fecha) => {
@@ -259,6 +306,7 @@ class Evaluaciones extends Component {
       modalPreviewOpen,
       evalId,
       evaluacion,
+      oldTestActive,
       rolDocente,
       filtroFecha,
     } = this.state;
@@ -268,9 +316,15 @@ class Evaluaciones extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.evaluations"
-            toggleModal={rolDocente ? this.onAdd : null}
-            buttonText={rolDocente ? 'evaluation.add' : null}
+            heading={
+              oldTestActive ? 'menu.my-old-evaluations' : 'menu.my-evaluations'
+            }
+            toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
+            buttonText={rolDocente && !oldTestActive ? 'evaluation.add' : null}
+            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryButtonText={
+              oldTestActive ? 'evaluation.active' : 'evaluation.old'
+            }
           />
           <Row>
             <Colxx xxs="8" md="8">
@@ -315,6 +369,7 @@ class Evaluaciones extends Component {
                   id={evaluacion.id}
                   item={evaluacion}
                   materiaId={this.state.materiaId}
+                  isOldTest={this.state.oldTestActive}
                   updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
@@ -369,10 +424,10 @@ class Evaluaciones extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { userData, user } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default connect(mapStateToProps)(withRouter(Evaluaciones));

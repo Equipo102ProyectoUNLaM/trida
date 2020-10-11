@@ -1,16 +1,38 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
-import { Button, Row, ModalFooter } from 'reactstrap';
+import {
+  Button,
+  Row,
+  ModalFooter,
+  FormGroup,
+  Label,
+  Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
+} from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { getTimestamp, getTimestampDifference } from 'helpers/Utils';
+import {
+  getTimestamp,
+  getTimestampDifference,
+  getFechaHoraActual,
+  isEmpty,
+} from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
-import { editDocument, getCollectionOnSnapshot } from 'helpers/Firebase-db';
+import {
+  getCollectionOnSnapshot,
+  editDocument,
+  getDocument,
+  addDocument,
+} from 'helpers/Firebase-db';
+import { timeStamp } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import classnames from 'classnames';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -25,6 +47,7 @@ const Videollamada = ({
   rol,
   idClase,
   preguntas,
+  idUser,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
@@ -35,9 +58,16 @@ const Videollamada = ({
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
+  const [modalPreguntasRealizadas, setModalPreguntasRealizadas] = useState(
+    false
+  );
   const [preguntaALanzar, setPreguntaALanzar] = useState();
-
+  const [realizarPregunta, setRealizarPregunta] = useState(false);
+  const [preguntasRealizadas, setPreguntasRealizadas] = useState([]);
+  const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
+  const [reacciones, setReacciones] = useState({});
+  const [hayPreguntas, setHayPreguntas] = useState(false);
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -75,9 +105,35 @@ const Videollamada = ({
     toggleModalPreguntas();
   };
 
-  useEffect(() => {
-    getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
-  }, []);
+  const onPreguntaRealizada = (doc) => {
+    const arrayPreguntas = [];
+    doc.forEach((document) => {
+      const {
+        alumno,
+        fecha,
+        pregunta,
+        reacciones,
+        creador,
+        timeStamp,
+      } = document.data();
+      arrayPreguntas.push({
+        id: document.id,
+        alumno,
+        fecha,
+        pregunta,
+        reacciones,
+        creador,
+        timeStamp,
+      });
+    });
+    if (!isEmpty(arrayPreguntas)) {
+      const arrayOrdenado = arrayPreguntas.sort(
+        (elemA, elemB) => elemA.timeStamp.valueOf() - elemB.timeStamp.valueOf()
+      );
+      setPreguntasRealizadas(arrayOrdenado);
+      setHayPreguntas(true);
+    }
+  };
 
   // Obtengo la pregunta que lanzó el profe y la muestro en el modal Preview al alumno
   const getPreguntaLanzada = (documents) => {
@@ -113,6 +169,14 @@ const Videollamada = ({
       toggleModalPreviewPreguntaAlumno();
     }
   };
+
+  useEffect(() => {
+    getCollectionOnSnapshot(`clases/${idClase}/preguntas`, getPreguntaLanzada);
+    getCollectionOnSnapshot(
+      `preguntasDeAlumno/${idClase}/preguntas`,
+      onPreguntaRealizada
+    );
+  }, [idClase]);
 
   const closeModalPreguntas = () => {
     setPreguntaALanzar(null);
@@ -158,6 +222,60 @@ const Videollamada = ({
       ...a2.find((item) => item.id === itm.id && item),
       ...itm,
     }));
+  };
+
+  const toggleRealizarPregunta = () => {
+    setRealizarPregunta(!realizarPregunta);
+  };
+
+  const toggleModalPreguntasRealizadas = () => {
+    setHayPreguntas(false);
+    setModalPreguntasRealizadas(!modalPreguntasRealizadas);
+  };
+
+  const onRealizarPregunta = async () => {
+    await addDocument(
+      `preguntasDeAlumno/${idClase}/preguntas`,
+      {
+        pregunta: preguntaDeAlumno,
+        alumno: userName,
+        fecha: getFechaHoraActual(),
+        reacciones: 0,
+        timeStamp: timeStamp.fromDate(new Date()),
+      },
+      idUser,
+      'Pregunta enviada!',
+      'Pregunta enviada exitosamente'
+    );
+    toggleRealizarPregunta();
+  };
+
+  const updateReacciones = async (pregunta) => {
+    const { id, creador } = pregunta;
+
+    if (creador !== idUser && rol === ROLES.Alumno) {
+      const { data } = await getDocument(
+        `preguntasDeAlumno/${idClase}/preguntas/${id}`
+      );
+
+      const newReacciones = reacciones[id]
+        ? data.reacciones - 1
+        : data.reacciones + 1;
+
+      editDocument(`preguntasDeAlumno/${idClase}/preguntas`, id, {
+        reacciones: newReacciones,
+      });
+
+      setReacciones({
+        ...reacciones,
+        [id]: !reacciones[id],
+      });
+    }
+  };
+
+  const handleCancelarRealizarPregunta = () => {
+    setPreguntaDeAlumno('');
+    toggleRealizarPregunta();
   };
 
   useEffect(() => {
@@ -227,33 +345,91 @@ const Videollamada = ({
   }, [jitsi, userName, password, subject]);
   return (
     <Fragment>
-      {rol === ROLES.Docente && (
-        <Row className="button-group mb-3 mr-3">
+      <Row className="button-group mb-3 mr-3">
+        <Button
+          className="button relative"
+          color="primary"
+          size="lg"
+          onClick={toggleModalPreguntasRealizadas}
+        >
+          {hayPreguntas && <span className="notificacion-pregunta">.</span>}
+
+          <IntlMessages id="clase.ver-preguntas-realizadas" />
+        </Button>
+        {rol === ROLES.Docente && (
+          <>
+            <Button
+              className="button"
+              color="primary"
+              size="lg"
+              onClick={toggleModalPreguntas}
+            >
+              <IntlMessages id="clase.lanzar-pregunta" />
+            </Button>
+            <Button
+              className="button"
+              color="primary"
+              size="lg"
+              onClick={toggleShareScreen}
+            >
+              {shareButtonText}
+            </Button>{' '}
+            <Button
+              className="button"
+              color="primary"
+              size="lg"
+              onClick={abrirPizarron}
+            >
+              <IntlMessages id="pizarron.abrir-pizarron" />
+            </Button>
+          </>
+        )}
+        {rol === ROLES.Alumno && (
           <Button
             className="button"
             color="primary"
             size="lg"
-            onClick={toggleModalPreguntas}
+            onClick={toggleRealizarPregunta}
           >
-            <IntlMessages id="clase.lanzar-pregunta" />
+            <IntlMessages id="clase.realizar-pregunta" />
           </Button>
-          <Button
-            className="button"
-            color="primary"
-            size="lg"
-            onClick={toggleShareScreen}
-          >
-            {shareButtonText}
-          </Button>{' '}
-          <Button
-            className="button"
-            color="primary"
-            size="lg"
-            onClick={abrirPizarron}
-          >
-            <IntlMessages id="pizarron.abrir-pizarron" />
-          </Button>
-        </Row>
+        )}
+      </Row>
+      {realizarPregunta && (
+        <ModalGrande
+          modalOpen={realizarPregunta}
+          toggleModal={toggleRealizarPregunta}
+          text="Realizá una pregunta a tu docente"
+        >
+          <Row className="tip-text ml-0">
+            {' '}
+            <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+            <IntlMessages id="clase.realizar-pregunta-tip-recorda" />
+          </Row>
+          <Row className="tip-text ml-0">
+            {' '}
+            <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+            <IntlMessages id="clase.realizar-pregunta-tip-reaccion" />
+          </Row>
+          <FormGroup className="form-group has-float-label">
+            <Label>
+              <IntlMessages id="clase.escribir-pregunta" />
+            </Label>
+            <Input
+              onChange={(e) => setPreguntaDeAlumno(e.target.value)}
+              className="form-control mt-3"
+              name="nombre"
+            />
+          </FormGroup>
+          <ModalFooter>
+            <Button color="primary" onClick={onRealizarPregunta}>
+              Realizar Pregunta
+            </Button>
+            <Button color="secondary" onClick={handleCancelarRealizarPregunta}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </ModalGrande>
       )}
       {modalPreguntasOpen && (
         <ModalGrande
@@ -299,6 +475,63 @@ const Videollamada = ({
           esRespuestaDeAlumno={true}
           onRespuestaDeAlumno={respuestaDeAlumno}
         />
+      )}
+      {modalPreguntasRealizadas && (
+        <Modal
+          isOpen={modalPreguntasRealizadas}
+          toggle={toggleModalPreguntasRealizadas}
+          wrapClassName="modal-right"
+          className="modal-ver-preguntas"
+        >
+          <ModalHeader toggle={toggleModalPreguntasRealizadas}>
+            <IntlMessages id="clase.ver-preguntas-realizadas" />
+          </ModalHeader>
+          <ModalBody>
+            {preguntasRealizadas.map((pregunta) => {
+              return (
+                <div className="notas mb-2 pt-2 pb-2" key={pregunta.id}>
+                  <Row className="tip-text-cursiva ml-1 mt-2">
+                    {pregunta.fecha}
+                    {rol === ROLES.Docente ? ' - ' + pregunta.alumno : null}
+                  </Row>
+                  <Row className="ml-1 mt-2 mr-2">
+                    <i className="iconsminds-speach-bubble-asking" />{' '}
+                    <span className="font-weight-semibold mr-1">
+                      {' '}
+                      Pregunta:{' '}
+                    </span>{' '}
+                    {pregunta.pregunta}
+                  </Row>
+                  <Row
+                    onClick={() => updateReacciones(pregunta)}
+                    className={classnames({
+                      'reaccion-pregunta': true,
+                      active: reacciones[pregunta.id],
+                      disabled: pregunta.creador === idUser,
+                    })}
+                  >
+                    <span role="img" aria-label="mal">
+                      👍
+                    </span>
+                    {pregunta.reacciones > 0 && (
+                      <span className="texto-reaccion-pregunta">
+                        + {pregunta.reacciones}
+                      </span>
+                    )}
+                    {pregunta.reacciones === 0 && (
+                      <span className="texto-reaccion-pregunta"> - </span>
+                    )}
+                  </Row>
+                </div>
+              );
+            })}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={toggleModalPreguntasRealizadas}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </Modal>
       )}
       <div id={parentNode}></div>
     </Fragment>

@@ -67,10 +67,6 @@ export const desencriptarEvaluacion = (evaluaciones) => {
       evaluacion.data.base.nombre,
       secretKey
     ).toString(CryptoJS.enc.Utf8);
-    evaluacion.data.base.fecha_finalizacion =
-      evaluacion.data.base.fecha_finalizacion;
-    evaluacion.data.base.fecha_publicacion =
-      evaluacion.data.base.fecha_publicacion;
     evaluacion.data.base.sin_capturas =
       CryptoJS.AES.decrypt(
         evaluacion.data.base.sin_capturas,
@@ -84,6 +80,37 @@ export const desencriptarEvaluacion = (evaluaciones) => {
     if (evaluacion.data.subcollections) {
       evaluacion.data.subcollections = desencriptarEjercicios(
         evaluacion.data.subcollections
+      );
+    }
+  });
+  return result;
+};
+
+export const desencriptarEvaluacionImportada = (evaluaciones) => {
+  let result = evaluaciones;
+  result.forEach((evaluacion) => {
+    evaluacion.data.descripcion = CryptoJS.AES.decrypt(
+      evaluacion.data.descripcion,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    evaluacion.data.nombre = CryptoJS.AES.decrypt(
+      evaluacion.data.nombre,
+      secretKey
+    ).toString(CryptoJS.enc.Utf8);
+    evaluacion.data.fecha_finalizacion = evaluacion.data.fecha_finalizacion;
+    evaluacion.data.fecha_publicacion = evaluacion.data.fecha_publicacion;
+    evaluacion.data.sin_capturas =
+      CryptoJS.AES.decrypt(evaluacion.data.sin_capturas, secretKey).toString(
+        CryptoJS.enc.Utf8
+      ) === 'true';
+    evaluacion.data.sin_salir_de_ventana =
+      CryptoJS.AES.decrypt(
+        evaluacion.data.sin_salir_de_ventana,
+        secretKey
+      ).toString(CryptoJS.enc.Utf8) === 'true';
+    if (evaluacion.subCollection) {
+      evaluacion.subCollection = desencriptarEjercicios(
+        evaluacion.subCollection
       );
     }
   });

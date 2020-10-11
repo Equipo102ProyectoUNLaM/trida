@@ -40,19 +40,19 @@ exports.ping = functions.https.onRequest((request, response) => {
 
 
 /* register sets the user record to firestore */
-exports.register = functions.auth.user().onCreate((data) => {
-  const user = {
-    id: data.uid,
-    mail: data.email,
-    fechaCreacion: data.metadata.creationTime,
-    nombre: '',
-    apellido: '',
-    telefono: '',
-    primerLogin: true,
-    cambiarPassword: false,
-    instituciones: [],
-    rol: 0,
-  }
+exports.register = functions.auth.user().onCreate((data)=> {
+    const user = {
+      id: data.uid,
+      mail: data.email,
+      fecha_creacion: data.metadata.creationTime,
+      nombre: '',
+      apellido: '',
+      telefono: '',
+      primerLogin: true,
+      cambiarPassword: false,
+      instituciones: [],
+      rol: 0,
+    }
 
   return admin.firestore().collection('usuarios')
     .doc(data.uid)
@@ -176,8 +176,8 @@ exports.asignarMaterias = functions.https.onCall(async (data) => {
     //TODO iterar instObj y agregar a usuarios por materia
     await this.agregarAUsusariosPorMateria(instObj, data.uid);
     await admin.firestore().collection('usuarios')
-      .doc(data.uid)
-      .set({ instituciones: instObj }, { merge: true });
+    .doc(data.uid)
+    .set( { instituciones: instObj }, { merge: true });
 
   } catch (error) {
     console.log('error', error);

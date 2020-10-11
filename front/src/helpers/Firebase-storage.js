@@ -46,8 +46,8 @@ export const buscarArchivosStorage = async (subjectId, newRef) => {
   }
 };
 
-export const subirArchivoAStorage = async (path, file) => {
-  const listRef = storage.ref(`${path}/${file.name}`);
+export const subirArchivoAStorage = async (path, file, name) => {
+  const listRef = storage.ref(`${path}/${name ? name : file.name}`);
   return await listRef.put(file).then(async (snapshot) => {
     return await snapshot.ref.getDownloadURL().then(async (url) => {
       return url;
