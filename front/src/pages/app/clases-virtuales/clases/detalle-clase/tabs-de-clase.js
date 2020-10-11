@@ -22,7 +22,6 @@ import {
   getDocument,
   editDocument,
   getDocumentWithSubCollection,
-  getCollectionWithSubCollections,
 } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import { enviarNotificacionError } from 'helpers/Utils-ui';

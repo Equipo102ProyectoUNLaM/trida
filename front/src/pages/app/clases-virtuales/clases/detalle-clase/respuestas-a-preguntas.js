@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardTitle, Progress, Badge } from 'reactstrap';
-
-import IntlMessages from 'helpers/IntlMessages';
-import {
-  getCollectionOnSnapshot,
-  getDatosClaseOnSnapshot,
-  getCollectionWithSubCollections,
-} from 'helpers/Firebase-db';
+import { getCollectionWithSubCollections } from 'helpers/Firebase-db';
 import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/DecryptionHandler';
 
 const RespuestasAPreguntas = ({ isLoading, idClase }) => {
@@ -38,7 +32,7 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
         sinRespuesta
       );
 
-      setPreguntasConRespuestasDeAlumnos(preguntasConRespuestas);
+      setPreguntasConRespuestasDeAlumnos(preguntasConRespuestas); // deberia hacer esto en vez del var preguntasConRespuestasDeAlumnosGlobal, pero no lo carga
       preguntasConRespuestasDeAlumnosGlobal = preguntasConRespuestas;
       crearCantRespuestasPorPregunta();
     }
@@ -53,15 +47,18 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
         let opciones = [];
         let cantTotalRtas = 0;
         for (let i = 0; i < preg.data.base.opciones.length; i++) {
+          // Obtengo el titulo de cada opcion
           opciones.push(preg.data.base.opciones[i].opcion);
           resultado.push(0);
         }
-        const rtasVerdaderas = preg.data.base.opciones
+        // Obtengo array de cuales son las rtas verdaderas
+        const idxRtasVerdaderas = preg.data.base.opciones
           .map((opc, idx) => (opc.verdadera ? idx : ''))
           .filter(String);
 
         preg.data.subcollections.forEach((sub) => {
           sub.data.respuestas.forEach((res) => {
+            // incremento la opcion elegida por el alumno
             resultado[res]++;
             cantTotalRtas++;
           });
@@ -71,11 +68,10 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
           consigna: preg.data.base.consigna,
           resultado: resultado,
           opciones: opciones,
-          respuestasVerdaderas: rtasVerdaderas,
+          respuestasVerdaderas: idxRtasVerdaderas,
           cantTotalRtas: cantTotalRtas,
         });
       });
-      console.log(resumen);
       setRespuestasPorPregunta(resumen);
       setIsLoadingLocal(false);
     }
@@ -90,23 +86,25 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
           <Card key={idx} className="h-100 card-respuestas">
             <CardBody>
               <CardTitle>{rta.consigna}</CardTitle>
-              {rta.resultado.map((s, index) => {
+              {rta.resultado.map((opcion, index) => {
                 return (
                   <div key={index} className="mb-4">
                     <div className="mb-2">
-                      <div className="prueba">
-                        {rta.opciones[index]}
+                      {rta.opciones[index]}
+                      <span className="float-right text-default">
                         {rta.respuestasVerdaderas.includes(index) && (
-                          <Badge color="danger" pill>
+                          <Badge
+                            color="danger"
+                            pill
+                            className="badge-respuestas"
+                          >
                             Correcta
                           </Badge>
                         )}
-                      </div>
-                      <span className="float-right text-muted">
-                        {s}/{rta.cantTotalRtas}
+                        {opcion}/{rta.cantTotalRtas}
                       </span>
                     </div>
-                    <Progress value={(s / rta.cantTotalRtas) * 100} />
+                    <Progress value={(opcion / rta.cantTotalRtas) * 100} />
                   </div>
                 );
               })}
