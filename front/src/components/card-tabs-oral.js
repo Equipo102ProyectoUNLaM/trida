@@ -10,7 +10,6 @@ import {
   TabContent,
   TabPane,
   Button,
-  Label,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { editDocument, getUsernameById } from 'helpers/Firebase-db';
@@ -97,6 +96,10 @@ class CardTabsOral extends Component {
     this.props.onDelete(this.props.item.id);
   };
 
+  handleClickMake = () => {
+    this.props.onMake(this.props.item);
+  };
+
   getNameOfReceivers = async (evaluacion) => {
     let nombreIntegrantes = [];
     if (evaluacion.data.integrantes.length > 0) {
@@ -120,13 +123,7 @@ class CardTabsOral extends Component {
               <Card className={`mb-4 ${this.state.focused ? 'focused' : ''}`}>
                 <CardHeader className="pl-0 pr-0">
                   <Nav tabs className=" card-header-tabs ml-0 mr-0">
-                    <NavItem
-                      className={
-                        rol === ROLES.Docente
-                          ? 'w-50 text-center'
-                          : 'w-100 text-center'
-                      }
-                    >
+                    <NavItem className={'w-50 text-center'}>
                       <NavLink
                         to="#"
                         location={{}}
@@ -141,23 +138,21 @@ class CardTabsOral extends Component {
                         Evaluación
                       </NavLink>
                     </NavItem>
-                    {rol === ROLES.Docente && (
-                      <NavItem className="w-50 text-center">
-                        <NavLink
-                          to="#"
-                          location={{}}
-                          className={classnames({
-                            active: this.state.activeSecondTab === '2',
-                            'nav-link': true,
-                          })}
-                          onClick={() => {
-                            this.toggleSecondTab('2');
-                          }}
-                        >
-                          Integrantes
-                        </NavLink>
-                      </NavItem>
-                    )}
+                    <NavItem className="w-50 text-center">
+                      <NavLink
+                        to="#"
+                        location={{}}
+                        className={classnames({
+                          active: this.state.activeSecondTab === '2',
+                          'nav-link': true,
+                        })}
+                        onClick={() => {
+                          this.toggleSecondTab('2');
+                        }}
+                      >
+                        Integrantes
+                      </NavLink>
+                    </NavItem>
                   </Nav>
                 </CardHeader>
                 <TabContent activeTab={this.state.activeSecondTab}>
@@ -198,9 +193,20 @@ class CardTabsOral extends Component {
                             </Colxx>
                           </Row>
                           <Row className="button-group">
+                            {!this.props.isOldTest && (
+                              <Button
+                                outline
+                                onClick={this.handleClickMake}
+                                size="sm"
+                                color="primary"
+                                className="button"
+                              >
+                                Realizar Evaluación
+                              </Button>
+                            )}
                             {rol === ROLES.Docente && !this.props.isOldTest && (
                               <div
-                                className="glyph-icon simple-icon-pencil edit-action-icon"
+                                className="glyph-icon simple-icon-pencil edit-action-icon ml-1"
                                 onClick={this.handleClickEdit}
                               />
                             )}

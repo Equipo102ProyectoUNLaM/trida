@@ -6,11 +6,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import CardTabsOral from 'components/card-tabs-oral';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import {
-  logicDeleteDocument,
-  getDocument,
-  getCollection,
-} from 'helpers/Firebase-db';
+import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { getUsersOfSubject } from 'helpers/Firebase-user';
 import { isEmpty, getTimestampDifference } from 'helpers/Utils';
@@ -61,7 +57,7 @@ class EvaluacionesOrales extends Component {
         getTimestampDifference(
           elem.data.fecha_evaluacion.toDate(),
           moment().toDate()
-        ) < 0
+        ) > 0
       );
     });
     this.dataListRenderer(evaluacionesActuales);
@@ -148,7 +144,6 @@ class EvaluacionesOrales extends Component {
   };
 
   onEdit = async (oral) => {
-    // const oral = await getDocument(`evaluacionesOrales/${idOral}`);
     const { data } = oral;
     const { nombre, fecha_evaluacion, integrantes } = data;
     this.setState({
@@ -160,9 +155,16 @@ class EvaluacionesOrales extends Component {
     this.toggleEditModal();
   };
 
+  onMake = async (evaluacion) => {
+    this.props.history.push({
+      pathname: '/app/evaluaciones/orales/realizar-evaluacion-oral',
+      evalId: evaluacion.id,
+    });
+  };
+
   borrarOral = async () => {
     await logicDeleteDocument(
-      'evaluacionesOral',
+      'evaluacionesOrales',
       this.state.idOral,
       'Evaluación'
     );
@@ -235,9 +237,9 @@ class EvaluacionesOrales extends Component {
                     updateEvaluaciones={this.getEvaluacionesOrales}
                     isSelect={this.state.selectedItems.includes(evaluacion.id)}
                     collect={collect}
-                    // navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
                     onEdit={this.onEdit}
                     onDelete={this.onDelete}
+                    onMake={this.onMake}
                   />
                 );
               })}

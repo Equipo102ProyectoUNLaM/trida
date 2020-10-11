@@ -108,7 +108,6 @@ export const createUserList = async (arrayDeUsuarios, currentUser) => {
   for (const user of users) {
     const docObj = await getDocument(`usuarios/${user}`);
     let i = 0;
-
     if (docObj.data.id !== currentUser) {
       const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
       // Armo el array que va a alimentar el Select

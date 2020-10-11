@@ -8,6 +8,9 @@ import { evaluationOralSchema } from 'pages/app/evaluaciones/validations';
 import { timeStamp } from 'helpers/Firebase';
 import Select from 'react-select';
 import { createUserList } from 'helpers/Firebase-user';
+import { createUUID, createRandomString } from 'helpers/Utils';
+import * as CryptoJS from 'crypto-js';
+import { secretKey } from 'constants/defaultValues';
 
 class FormEvaluacionOral extends React.Component {
   constructor(props) {
@@ -37,7 +40,6 @@ class FormEvaluacionOral extends React.Component {
         ),
       });
     }
-    console.log(this.state.selectedOptions);
   }
 
   componentWillUnmount() {
@@ -60,12 +62,17 @@ class FormEvaluacionOral extends React.Component {
 
     const integrantes = this.state.selectedOptions.map(({ value }) => value);
 
+    const uuid = createUUID();
+    const idSala = CryptoJS.AES.encrypt(uuid, secretKey).toString();
+
     if (this.props.operationType === 'add') {
       const obj = {
         nombre: nombre,
         fecha_evaluacion: timeStamp.fromDate(new Date(fecha_evaluacion)),
         idMateria: this.props.subject.id,
         integrantes: integrantes,
+        idSala: idSala,
+        password: createRandomString(),
       };
       await addDocument(
         'evaluacionesOrales',
@@ -137,6 +144,7 @@ class FormEvaluacionOral extends React.Component {
               <FormikDatePicker
                 name="fecha_evaluacion"
                 value={values.fecha_evaluacion}
+                autocomplete="off"
                 placeholder="Ingrese la fecha de la evaluación"
                 onChange={setFieldValue}
                 onBlur={setFieldTouched}

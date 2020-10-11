@@ -31,7 +31,6 @@ export async function getCollection(collection, filterBy, orderBy) {
   (orderBy || []).forEach(({ order, orderCond }) => {
     collectionRef = collectionRef.orderBy(order, orderCond);
   });
-
   try {
     var allClasesSnapShot = await collectionRef.get();
     allClasesSnapShot.forEach((doc) => {
@@ -43,6 +42,7 @@ export async function getCollection(collection, filterBy, orderBy) {
       arrayDeObjetos.push(obj);
     });
   } catch (err) {
+    console.log(err); //Este console es por si el error que tira es para agregar el índice.
     enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   } finally {
     return arrayDeObjetos;
@@ -401,13 +401,12 @@ export const logicDeleteDocument = async (collection, docId, message) => {
   var ref = firestore.collection(collection).doc(docId);
   try {
     ref.set({ activo: false }, { merge: true });
-  } catch (err) {
-    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
-  } finally {
     enviarNotificacionExitosa(
       `${message} borrada exitosamente`,
       `${message} borrada!`
     );
+  } catch (err) {
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 

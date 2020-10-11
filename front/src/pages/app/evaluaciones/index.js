@@ -14,6 +14,9 @@ const AgregarEvaluacion = React.lazy(() =>
   import('./detalle-evaluacion/agregar-evaluacion')
 );
 const RealizarEvaluacion = React.lazy(() => import('./realizar-evaluacion'));
+const RealizarEvaluacionOral = React.lazy(() =>
+  import('./realizar-evaluacion-oral/realizar-evaluacion-oral')
+);
 const OpcionMultiple = React.lazy(() => import('./ejercicios/opcion-multiple'));
 const RespuestaLibre = React.lazy(() => import('./ejercicios/respuesta-libre'));
 
@@ -49,6 +52,11 @@ const MenuEvaluaciones = ({ match }) => (
         exact
         path={`${match.url}/orales/`}
         render={(props) => <EvaluacionesOrales {...props} />}
+      />
+      <Route
+        exact
+        path={`${match.url}/orales/realizar-evaluacion-oral`}
+        render={(props) => <RealizarEvaluacionOral {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
