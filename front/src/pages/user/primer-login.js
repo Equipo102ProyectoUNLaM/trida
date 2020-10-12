@@ -72,36 +72,22 @@ class PrimerLogin extends Component {
           telefono,
           primerLogin: false,
         };
+        if (foto) {
+          await this.subirFoto(foto);
+        }
         await editDocument(
           'usuarios',
           this.props.loginUser,
           obj,
-          'Información editada'
+          'Información actualizada'
         );
         this.props.history.push('/seleccion-curso');
+        const userData = await getUserData(this.props.loginUser);
+        this.props.updateDatosUsuario(userData);
       } else {
         enviarNotificacionError('Complete el nombre y apellido', 'Error');
       }
     }
-    if (foto) {
-      await this.subirFoto(foto);
-    }
-
-    const obj = {
-      nombre,
-      apellido,
-      telefono,
-      primerLogin: false,
-    };
-    await editDocument(
-      'usuarios',
-      this.props.loginUser,
-      obj,
-      'Información editada'
-    );
-    this.props.history.push('/seleccion-curso');
-    const userData = await getUserData(this.props.loginUser);
-    this.props.updateDatosUsuario(userData);
   };
 
   componentDidUpdate() {

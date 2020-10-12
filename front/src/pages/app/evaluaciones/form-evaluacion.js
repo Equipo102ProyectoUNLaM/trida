@@ -58,7 +58,7 @@ class FormEvaluacion extends React.Component {
   toggleModalWithValues = async (values) => {
     const valid = await this.ejerciciosComponentRef.validateEjercicios();
     if (!valid) return;
-    if (this.state.evaluacionId) {
+    if (this.state.evaluacionId && !this.props.evaluacionImportada) {
       this.setState({
         fecha_finalizacion: values.fecha_finalizacion,
         fecha_publicacion: values.fecha_publicacion,
@@ -80,19 +80,33 @@ class FormEvaluacion extends React.Component {
   async componentDidMount() {
     if (this.props.idEval) {
       const userName = await getUsernameById(this.props.user);
-      this.setState({
-        evaluacionId: this.props.idEval,
-        nombre: this.props.evaluacion.nombre,
-        fecha_creacion: this.props.evaluacion.fecha_creacion,
-        fecha_finalizacion: this.props.evaluacion.fecha_finalizacion.toDate(),
-        fecha_publicacion: this.props.evaluacion.fecha_publicacion.toDate(),
-        descripcion: this.props.evaluacion.descripcion,
-        ejercicios: this.props.evaluacion.ejercicios,
-        sin_capturas: this.props.evaluacion.sin_capturas,
-        sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
-        creador: userName,
-        isLoading: false,
-      });
+      if (this.props.evaluacionImportada) {
+        this.setState({
+          evaluacionId: this.props.idEval,
+          nombre: this.props.evaluacion.nombre,
+          fecha_creacion: this.props.evaluacion.fecha_creacion,
+          descripcion: this.props.evaluacion.descripcion,
+          ejercicios: this.props.evaluacion.ejercicios,
+          creador: userName,
+          isLoading: false,
+          sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
+          sin_capturas: this.props.evaluacion.sin_capturas,
+        });
+      } else {
+        this.setState({
+          evaluacionId: this.props.idEval,
+          nombre: this.props.evaluacion.nombre,
+          fecha_creacion: this.props.evaluacion.fecha_creacion,
+          fecha_finalizacion: this.props.evaluacion.fecha_finalizacion.toDate(),
+          fecha_publicacion: this.props.evaluacion.fecha_publicacion.toDate(),
+          descripcion: this.props.evaluacion.descripcion,
+          ejercicios: this.props.evaluacion.ejercicios,
+          sin_capturas: this.props.evaluacion.sin_capturas,
+          sin_salir_de_ventana: this.props.evaluacion.sin_salir_de_ventana,
+          creador: userName,
+          isLoading: false,
+        });
+      }
     } else {
       this.setState({ isLoading: false });
     }
@@ -391,17 +405,18 @@ class FormEvaluacion extends React.Component {
             />
 
             <ModalFooter>
-              {!evaluacion.evaluacionId && (
-                <>
-                  <Button color="primary" type="submit">
-                    Crear Evaluación
-                  </Button>
-                  <Button color="secondary" onClick={onCancel}>
-                    Cancelar
-                  </Button>
-                </>
-              )}
-              {evaluacion.evaluacionId && (
+              {!evaluacion.evaluacionId ||
+                (this.props.evaluacionImportada && (
+                  <>
+                    <Button color="primary" type="submit">
+                      Crear Evaluación
+                    </Button>
+                    <Button color="secondary" onClick={onCancel}>
+                      Cancelar
+                    </Button>
+                  </>
+                ))}
+              {evaluacion.evaluacionId && !this.props.evaluacionImportada && (
                 <>
                   <Button color="primary" type="submit">
                     Guardar Evaluación

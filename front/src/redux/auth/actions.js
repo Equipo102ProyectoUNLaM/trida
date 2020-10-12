@@ -2,7 +2,6 @@ import {
   LOGIN_USER_START,
   LOGIN_USER_SUCCESS,
   LOGOUT_USER,
-  SET_LOGIN_USER,
   REGISTER_USER_START,
   REGISTER_USER_SUCCESS,
   UPDATE_DATOS_USUARIO,
@@ -21,7 +20,10 @@ import { getCollection, editDocument } from 'helpers/Firebase-db';
 import { getUserData } from 'helpers/Firebase-user';
 import { addMail, inviteMail } from 'constants/emailTexts';
 import { authErrorMessage } from 'constants/errorMessages';
-import { enviarNotificacionError } from 'helpers/Utils-ui';
+import {
+  enviarNotificacionError,
+  enviarNotificacionExitosa,
+} from 'helpers/Utils-ui';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -117,7 +119,6 @@ export const registerUser = (user) => async (dispatch) => {
   dispatch(registerUserStart());
 
   try {
-    let registerUser = '';
     const user = functions.httpsCallable('user');
     const userAuth = await user({ email, password, rol });
     const { data } = userAuth;
@@ -139,12 +140,17 @@ export const registerUser = (user) => async (dispatch) => {
           subjectId,
           uid,
         });
+
+        await editDocument('usuarios', uid, { rol });
       }
 
-      await editDocument('usuarios', uid, { rol });
+      enviarNotificacionExitosa(
+        'Usuario registrado con éxito',
+        'Registro exitoso'
+      );
       dispatch(registerUserSuccess());
     } else {
-      dispatch(registerUserError(registerUser.message));
+      dispatch(registerUserError({ message: 'Error al crear el usuario' }));
     }
   } catch (error) {
     if (
@@ -165,10 +171,10 @@ export const registerUser = (user) => async (dispatch) => {
         await sendInvitationEmail(email, addMail);
         return dispatch(registerUserSuccess(registerUser));
       } else {
-        dispatch(registerUserError(registerUser.message));
+        dispatch(registerUserError(error.message));
         return enviarNotificacionError(error.message, 'Error');
       }
-    } else return dispatch(registerUserError(registerUser.message));
+    } else return dispatch(registerUserError(error.message));
   }
 };
 
