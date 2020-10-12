@@ -63,7 +63,6 @@ const Videollamada = ({
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState(); // id de la pregunta a lanzar
-  //const [tiempoPregunta, setTiempoPregunta] = useState(); // tiempo que setea el docente en el modal de preguntas
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
   const [tiempoPreguntaOnSnapshot, setTiempoPreguntaOnSnapshot] = useState(); // Esta es la que escucha de firebase cuando se setea un tiempo a la pregunta
   const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(true);
@@ -347,11 +346,20 @@ const Videollamada = ({
       segundosSeleccionados === null
     )
       return false;
-    if (minutosSeleccionados === '00' && segundosSeleccionados !== '00')
+    if (
+      minutosSeleccionados.value === '00' &&
+      segundosSeleccionados.value !== '00'
+    )
       return true;
-    if (minutosSeleccionados !== '00' && segundosSeleccionados === '00')
+    if (
+      minutosSeleccionados.value !== '00' &&
+      segundosSeleccionados.value === '00'
+    )
       return true;
-    if (minutosSeleccionados !== '00' && segundosSeleccionados !== '00')
+    if (
+      minutosSeleccionados.value !== '00' &&
+      segundosSeleccionados.value !== '00'
+    )
       return true;
     return false;
   };
