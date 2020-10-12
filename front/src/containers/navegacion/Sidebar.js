@@ -269,7 +269,7 @@ class Sidebar extends Component {
     ) {
       menuItems.push({
         id: 'admin',
-        icon: 'simple-icon-settings',
+        icon: 'iconsminds-gear',
         label: 'menu.admin',
         to: '/app/admin',
       });

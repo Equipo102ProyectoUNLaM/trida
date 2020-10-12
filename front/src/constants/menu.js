@@ -14,7 +14,7 @@ const data = [
   },
   {
     id: 'content',
-    icon: 'simple-icon-cloud-upload',
+    icon: 'iconsminds-folder-cloud',
     label: 'menu.content',
     to: '/app/contenidos',
   },
@@ -49,13 +49,13 @@ const data = [
   },
   {
     id: 'evaluations',
-    icon: 'simple-icon-note',
+    icon: 'iconsminds-file-edit',
     label: 'menu.evaluations',
     to: '/app/evaluaciones',
   },
   {
     id: 'corrections',
-    icon: 'simple-icon-check',
+    icon: 'iconsminds-check',
     label: 'menu.corrections',
     to: '/app/correcciones',
   },
