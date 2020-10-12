@@ -342,7 +342,9 @@ const Videollamada = ({
   const esTiempoValido = () => {
     if (
       minutosSeleccionados === undefined ||
-      segundosSeleccionados === undefined
+      segundosSeleccionados === undefined ||
+      minutosSeleccionados === null ||
+      segundosSeleccionados === null
     )
       return false;
     if (minutosSeleccionados === '00' && segundosSeleccionados !== '00')
@@ -521,7 +523,7 @@ const Videollamada = ({
               <Select
                 className="timer-pregunta-clase"
                 classNamePrefix="select"
-                isClearable={false}
+                isClearable={true}
                 name="minutos-timer"
                 options={MINUTOS_OPTIONS}
                 value={minutosSeleccionados}
@@ -540,7 +542,7 @@ const Videollamada = ({
                 placeholder="Segundos"
                 onChange={handleSegundosChange}
                 isSearchable={true}
-                isClearable={false}
+                isClearable={true}
               />
             </Colxx>
           </Row>

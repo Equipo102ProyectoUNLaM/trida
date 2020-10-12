@@ -73,6 +73,4 @@ export const SEGUNDOS_OPTIONS = [
   { value: '57', label: '57', key: 57 },
   { value: '58', label: '58', key: 58 },
   { value: '59', label: '59', key: 59 },
-]; // hacer hasta 59
-
-export default MINUTOS_OPTIONS;
+];
