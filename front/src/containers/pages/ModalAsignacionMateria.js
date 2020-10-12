@@ -21,16 +21,15 @@ import {
 import { registerUser } from 'redux/actions';
 import { connect } from 'react-redux';
 import 'react-tagsinput/react-tagsinput.css';
-import { getInstituciones, getCourses } from 'helpers/Firebase-user';
+import { getCourses } from 'helpers/Firebase-user';
 import { isEmpty } from 'helpers/Utils';
-import { toolTipInst, toolTipMails } from 'constants/texts';
+import { toolTipMails } from 'constants/texts';
 
 class ModalAsignacionMateria extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      modalInvitacionOpen: false,
       tags: [],
       items: [],
       isLoading: true,
@@ -40,7 +39,13 @@ class ModalAsignacionMateria extends React.Component {
       courseId: '',
       courses: [],
       subjects: [],
-      instOptions: [],
+      instOptions: [
+        {
+          label: this.props.institution.name,
+          value: this.props.institution.name,
+          key: this.props.institution.id,
+        },
+      ],
       courseOptions: [],
       subjectOptions: [],
       selectedCourse: '',
@@ -52,7 +57,12 @@ class ModalAsignacionMateria extends React.Component {
   }
 
   componentDidMount() {
-    this.getInstituciones(this.props.user);
+    const { instOptions } = this.state;
+    const [instOpt] = instOptions;
+    this.showCourses(instOpt.key);
+    this.setState({
+      isLoading: false,
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -61,29 +71,6 @@ class ModalAsignacionMateria extends React.Component {
       this.setState({ isLoading: false });
     }
   }
-
-  getInstituciones = async (userId) => {
-    try {
-      let datos = [];
-      const inst = await getInstituciones(userId);
-      this.setState({
-        items: inst,
-        isLoading: false,
-      });
-      inst.map((item) => {
-        datos.push({
-          label: item.name,
-          value: item.name,
-          key: item.id,
-        });
-      });
-      this.setState({
-        instOptions: datos,
-      });
-    } catch (err) {
-      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
-    }
-  };
 
   async getUserCourses(institutionId, userId) {
     let array = [];
@@ -141,17 +128,13 @@ class ModalAsignacionMateria extends React.Component {
   };
 
   onConfirm = async () => {
-    const { tags, alumnosCheck } = this.state;
-    const rol = alumnosCheck ? 2 : 1;
+    const { tags } = this.state;
     for (const tag in tags) {
       const userObj = {
         email: tags[tag],
-        password: '123456',
-        isInvited: true,
         instId: this.state.selectedOption.key,
         courseId: this.state.selectedCourse.key,
         subjectId: this.state.selectedSubject.key,
-        rol,
       };
       try {
         this.setState({ isLoading: true });
@@ -181,21 +164,6 @@ class ModalAsignacionMateria extends React.Component {
     this.setState({ tags });
   };
 
-  handleInstChange = (selectedOption) => {
-    if (selectedOption) {
-      this.setState({ selectedOption });
-      this.showCourses(selectedOption.key);
-    } else {
-      this.setState({
-        selectedOption: '',
-        selectedCourse: '',
-        selectedSubject: '',
-        showCourses: false,
-        showSubjects: false,
-      });
-    }
-  };
-
   handleCourseChange = (selectedCourse) => {
     if (selectedCourse) {
       this.setState({ selectedCourse });
@@ -223,7 +191,6 @@ class ModalAsignacionMateria extends React.Component {
     const { isOpen, toggle } = this.props;
     const {
       instOptions,
-      selectedOption,
       showCourses,
       showSubjects,
       courseOptions,
@@ -241,16 +208,14 @@ class ModalAsignacionMateria extends React.Component {
               <Select
                 className="react-select"
                 classNamePrefix="select"
-                isClearable={true}
+                isClearable={false}
                 name="institucion"
                 options={instOptions}
-                value={selectedOption}
-                onChange={this.handleInstChange}
-                placeholder="Seleccionar institución..."
+                value={instOptions}
+                isDisabled
               />
-              <IntlMessages id="user.seleccion-institucion" />
+              <IntlMessages id="institucion.nombre" />
             </div>
-            <TooltipItem body={toolTipInst} id="inst" />
           </Row>
           {showCourses && (
             <Row>
@@ -266,7 +231,7 @@ class ModalAsignacionMateria extends React.Component {
                   isDisabled={false}
                   placeholder="Seleccionar curso..."
                 />
-                <IntlMessages id="user.seleccion-curso" />
+                <IntlMessages id="user.asignacion-curso" />
               </div>
             </Row>
           )}
@@ -284,7 +249,7 @@ class ModalAsignacionMateria extends React.Component {
                   isDisabled={false}
                   placeholder="Seleccionar materia..."
                 />
-                <IntlMessages id="user.seleccion-materia" />
+                <IntlMessages id="user.asignacion-materia" />
               </div>
             </Row>
           )}
@@ -301,19 +266,6 @@ class ModalAsignacionMateria extends React.Component {
                 <IntlMessages id="user.mail-invitado" />
               </div>
               <TooltipItem body={toolTipMails} id="mails" />
-            </Row>
-            <Row>
-              <CustomInput
-                id="invitacion-alumnos"
-                type="checkbox"
-                name="invitacion-alumnos"
-                className="margin-left-1"
-                label={<Label>Los usuarios a asignar son alumnos</Label>}
-                checked={this.state.alumnosCheck}
-                onChange={() =>
-                  this.setState({ alumnosCheck: !this.state.alumnosCheck })
-                }
-              />
             </Row>
           </Form>
           <p className="tip-text">* campos requeridos</p>
@@ -337,12 +289,14 @@ class ModalAsignacionMateria extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user, error } = authUser;
+  const { institution } = seleccionCurso;
 
   return {
     user,
     error,
+    institution,
   };
 };
 
