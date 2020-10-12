@@ -34,9 +34,6 @@ import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ContestarPregunta from './contestar-pregunta';
-import TimePicker from 'react-time-picker';
-import TooltipItem from 'components/common/TooltipItem';
-import { toolTipMinutosPreguntas } from 'constants/texts';
 import classnames from 'classnames';
 import Select from 'react-select';
 import { MINUTOS_OPTIONS, SEGUNDOS_OPTIONS } from 'constants/tiempoPreguntas';
@@ -78,8 +75,8 @@ const Videollamada = ({
   const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
   const [reacciones, setReacciones] = useState({});
   const [hayPreguntas, setHayPreguntas] = useState(false);
-  const [minutosSeleccionados, setMinutosSeleccionados] = useState('00');
-  const [segundosSeleccionados, setSegundosSeleccionados] = useState('10');
+  const [minutosSeleccionados, setMinutosSeleccionados] = useState();
+  const [segundosSeleccionados, setSegundosSeleccionados] = useState();
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -109,7 +106,8 @@ const Videollamada = ({
 
   // Metodo para lanzar pregunta cuando estás con rol de profesor
   const onLanzarPregunta = async () => {
-    const tiempoPregunta = minutosSeleccionados + ':' + segundosSeleccionados;
+    const tiempoPregunta =
+      minutosSeleccionados.value + ':' + segundosSeleccionados.value;
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
@@ -119,8 +117,12 @@ const Videollamada = ({
     toggleModalPreguntas();
 
     // Comienzo timer interno para cancelar la pregunta
-    const mins = minutosSeleccionados ? Number(minutosSeleccionados) * 60 : 0;
-    const segs = segundosSeleccionados ? Number(segundosSeleccionados) : 0;
+    const mins = minutosSeleccionados.value
+      ? Number(minutosSeleccionados.value) * 60
+      : 0;
+    const segs = segundosSeleccionados.value
+      ? Number(segundosSeleccionados.value)
+      : 0;
     const remainingTime = mins + segs; // queda en segundos
     if (remainingTime > 0) {
       setTimeout(() => {
@@ -330,16 +332,19 @@ const Videollamada = ({
   };
 
   const handleMinutoChange = (minSeleccionado) => {
-    console.log(minSeleccionado);
-    setMinutosSeleccionados(minSeleccionado.value);
+    setMinutosSeleccionados(minSeleccionado);
   };
 
   const handleSegundosChange = (segSeleccionado) => {
-    console.log(segSeleccionado);
-    setSegundosSeleccionados(segSeleccionado.value);
+    setSegundosSeleccionados(segSeleccionado);
   };
 
   const esTiempoValido = () => {
+    if (
+      minutosSeleccionados === undefined ||
+      segundosSeleccionados === undefined
+    )
+      return false;
     if (minutosSeleccionados === '00' && segundosSeleccionados !== '00')
       return true;
     if (minutosSeleccionados !== '00' && segundosSeleccionados === '00')
@@ -516,8 +521,8 @@ const Videollamada = ({
               <Select
                 className="timer-pregunta-clase"
                 classNamePrefix="select"
-                isClearable={true}
-                name="minutoss"
+                isClearable={false}
+                name="minutos-timer"
                 options={MINUTOS_OPTIONS}
                 value={minutosSeleccionados}
                 onChange={handleMinutoChange}
@@ -531,11 +536,11 @@ const Videollamada = ({
                 options={SEGUNDOS_OPTIONS}
                 classNamePrefix="select"
                 value={segundosSeleccionados}
-                name="minutoss"
+                name="segundos-timer"
                 placeholder="Segundos"
                 onChange={handleSegundosChange}
                 isSearchable={true}
-                isClearable={true}
+                isClearable={false}
               />
             </Colxx>
           </Row>
