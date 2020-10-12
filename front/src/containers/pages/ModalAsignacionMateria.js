@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { registerUser } from 'redux/actions';
 import {
   Button,
   Modal,
@@ -7,23 +9,21 @@ import {
   ModalFooter,
   Form,
   Row,
-  CustomInput,
-  Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import TagsInput from 'react-tagsinput';
-import IntlMessages from 'helpers/IntlMessages';
 import TooltipItem from 'components/common/TooltipItem';
+import { functions } from 'helpers/Firebase';
+import { getCollection } from 'helpers/Firebase-db';
+import { getCourses } from 'helpers/Firebase-user';
+import IntlMessages from 'helpers/IntlMessages';
 import {
   enviarNotificacionExitosa,
   enviarNotificacionError,
 } from 'helpers/Utils-ui';
-import { registerUser } from 'redux/actions';
-import { connect } from 'react-redux';
-import 'react-tagsinput/react-tagsinput.css';
-import { getCourses } from 'helpers/Firebase-user';
 import { isEmpty } from 'helpers/Utils';
 import { toolTipMails } from 'constants/texts';
+import 'react-tagsinput/react-tagsinput.css';
 
 class ModalAsignacionMateria extends React.Component {
   constructor(props) {
@@ -57,9 +57,7 @@ class ModalAsignacionMateria extends React.Component {
   }
 
   componentDidMount() {
-    const { instOptions } = this.state;
-    const [instOpt] = instOptions;
-    this.showCourses(instOpt.key);
+    this.showCourses(this.props.institution.id);
     this.setState({
       isLoading: false,
     });
@@ -127,36 +125,54 @@ class ModalAsignacionMateria extends React.Component {
     });
   };
 
+  getIdUsuario = async (email) => {
+    const usuario = await getCollection('usuarios', [
+      { field: 'mail', operator: '==', id: email },
+    ]);
+    const [datosUsuario] = usuario;
+    return datosUsuario ? datosUsuario.id : null;
+  };
+
   onConfirm = async () => {
+    this.setState({ isLoading: true });
+
     const { tags } = this.state;
     for (const tag in tags) {
-      const userObj = {
-        email: tags[tag],
-        instId: this.state.selectedOption.key,
-        courseId: this.state.selectedCourse.key,
-        subjectId: this.state.selectedSubject.key,
-      };
       try {
-        this.setState({ isLoading: true });
-        await this.props.registerUser(userObj);
-        if (isEmpty(this.props.error)) {
-          this.registroExitoso();
+        const idUsuario = await this.getIdUsuario(tags[tag]);
+        if (idUsuario) {
+          try {
+            const agregarMaterias = functions.httpsCallable('agregarMaterias');
+            await agregarMaterias({
+              instId: this.props.institution.id,
+              courseId: this.state.selectedCourse.key,
+              subjectId: this.state.selectedSubject.key,
+              uid: idUsuario,
+            });
+            this.asignacionExitosa();
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          this.setState({ isLoading: false });
+          return enviarNotificacionError(
+            `El email ${tags[tag]} no corresponde a un usuario registrado`,
+            'Error'
+          );
         }
       } catch (error) {
-        enviarNotificacionError(
-          'Hubo un error al enviar la invitación',
-          'Error'
-        );
+        this.setState({ isLoading: false });
+        enviarNotificacionError('Hubo un error al asignar al usuario', 'Error');
       }
     }
   };
 
-  registroExitoso = async () => {
+  asignacionExitosa = async () => {
     this.setState({ isLoading: false });
     this.props.toggle();
     enviarNotificacionExitosa(
-      'Invitación enviada exitosamente',
-      'Invitación enviada!'
+      'Usuarios asignados exitosamente',
+      'Usuarios asignados!'
     );
   };
 
