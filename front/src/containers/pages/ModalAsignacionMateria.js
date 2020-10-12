@@ -203,6 +203,22 @@ class ModalAsignacionMateria extends React.Component {
     }
   };
 
+  pasteSplit = (data) => {
+    const separators = [
+      ',',
+      ';',
+      '\\(',
+      '\\)',
+      '\\*',
+      '/',
+      ':',
+      '\\?',
+      '\n',
+      '\r',
+    ];
+    return data.split(new RegExp(separators.join('|'))).map((d) => d.trim());
+  };
+
   render() {
     const { isOpen, toggle } = this.props;
     const {
@@ -278,6 +294,8 @@ class ModalAsignacionMateria extends React.Component {
                   inputProps={{
                     placeholder: '',
                   }}
+                  pasteSplit={this.pasteSplit}
+                  addOnPaste
                 />
                 <IntlMessages id="user.mail-invitado" />
               </div>
