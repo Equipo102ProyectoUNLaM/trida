@@ -31,7 +31,7 @@ class Correcciones extends Component {
       idACorregir: '',
       archivoACorregir: '',
       idStorage: '',
-      rolDocente: this.props.rol === ROLES.Docente,
+      rolDocente: this.props.rol !== ROLES.Alumno,
       correccionAlumnoUrl: '',
       verCorreccion: false,
       arrayItemsFiltrado: [],

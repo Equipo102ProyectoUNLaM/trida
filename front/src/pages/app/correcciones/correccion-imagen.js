@@ -50,7 +50,7 @@ class CorreccionImagen extends React.Component {
       url: this.props.archivoACorregir,
       idACorregir: this.props.idACorregir,
       idStorage: this.props.idStorage,
-      rolDocente: this.props.rol === ROLES.Docente,
+      rolDocente: this.props.rol !== ROLES.Alumno,
       correccionAlumnoUrl: this.props.correccionAlumnoUrl,
     };
   }

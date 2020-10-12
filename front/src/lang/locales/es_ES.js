@@ -162,7 +162,8 @@ module.exports = {
   'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 11. Evaluaciones */
-  'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluation.add': 'AGREGAR / IMPORTAR EVALUACIÓN',
+  'evaluation.import': 'IMPORTAR EVALUACIÓN',
   'evaluacion.adjuntar-desarrollo-extensiones':
     'Las extensiones admitidas son .pdf, .png, .jpg, .jpeg',
   'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',
