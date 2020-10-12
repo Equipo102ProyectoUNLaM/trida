@@ -231,6 +231,7 @@ class ModalEnviarInvitacion extends React.Component {
       '\\?',
       '\n',
       '\r',
+      ' ',
     ];
     return data.split(new RegExp(separators.join('|'))).map((d) => d.trim());
   };

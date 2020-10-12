@@ -23,6 +23,7 @@ import {
 } from 'helpers/Utils-ui';
 import { isEmpty } from 'helpers/Utils';
 import { toolTipMails } from 'constants/texts';
+import { addMail } from 'constants/emailTexts';
 import 'react-tagsinput/react-tagsinput.css';
 
 class ModalAsignacionMateria extends React.Component {
@@ -133,6 +134,13 @@ class ModalAsignacionMateria extends React.Component {
     return datosUsuario ? datosUsuario.id : null;
   };
 
+  sendAssignEmail = async (email, options) => {
+    const sendMail = functions.httpsCallable('sendMail');
+    sendMail({ email, ...options }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
   onConfirm = async () => {
     this.setState({ isLoading: true });
 
@@ -149,6 +157,7 @@ class ModalAsignacionMateria extends React.Component {
               subjectId: this.state.selectedSubject.key,
               uid: idUsuario,
             });
+            await this.sendAssignEmail(tags[tag], addMail);
             this.asignacionExitosa();
           } catch (error) {
             console.log(error);
@@ -215,6 +224,7 @@ class ModalAsignacionMateria extends React.Component {
       '\\?',
       '\n',
       '\r',
+      ' ',
     ];
     return data.split(new RegExp(separators.join('|'))).map((d) => d.trim());
   };
