@@ -121,7 +121,7 @@ class FormMensaje extends Component {
       usuarioAResponder,
       esResponder,
     } = this.props;
-
+    const rolDocente = rol !== ROLES.Alumno;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -160,7 +160,7 @@ class FormMensaje extends Component {
                         isDisabled={esGeneral}
                       />
                     </Colxx>
-                    {rol === ROLES.Docente && (
+                    {rolDocente && (
                       <Colxx xxs="12" md="6" className="receivers-general">
                         <Field
                           autocomplete="off"

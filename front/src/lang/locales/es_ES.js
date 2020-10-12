@@ -94,6 +94,7 @@ module.exports = {
   'menu.mis-foros': 'Mis Temas',
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',
+  'menu.admin': 'Administración',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
