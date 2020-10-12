@@ -86,7 +86,7 @@ class ContestarPregunta extends Component {
       `clases/${this.state.idClase}/preguntas/${this.state.preguntas[0].id}/respuestas`,
       this.props.user,
       obj,
-      'Pregunta'
+      null
     );
     this.props.toggle();
   }
