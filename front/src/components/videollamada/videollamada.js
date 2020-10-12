@@ -39,6 +39,7 @@ import TooltipItem from 'components/common/TooltipItem';
 import { toolTipMinutosPreguntas } from 'constants/texts';
 import classnames from 'classnames';
 import Select from 'react-select';
+import { MINUTOS_OPTIONS, SEGUNDOS_OPTIONS } from 'constants/tiempoPreguntas';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -79,20 +80,6 @@ const Videollamada = ({
   const [hayPreguntas, setHayPreguntas] = useState(false);
   const [minutosSeleccionados, setMinutosSeleccionados] = useState('00');
   const [segundosSeleccionados, setSegundosSeleccionados] = useState('10');
-
-  const minutosOptions = [
-    { value: '00', label: '0', key: 0 },
-    { value: '01', label: '1', key: 1 },
-    { value: '02', label: '2', key: 2 },
-    { value: '03', label: '3', key: 3 },
-    { value: '04', label: '4', key: 4 },
-    { value: '05', label: '5', key: 5 },
-    { value: '06', label: '6', key: 6 },
-    { value: '07', label: '7', key: 7 },
-    { value: '08', label: '8', key: 8 },
-    { value: '09', label: '9', key: 9 },
-    { value: '10', label: '10', key: 10 },
-  ];
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -526,27 +513,22 @@ const Videollamada = ({
           </Label>
           <Row className="mb-3 mr-3">
             <Colxx xxs="4" md="4">
-              {/*               <TimePicker
-                onChange={setTiempoPregunta}
-                value={tiempoPregunta}
-                disableClock={true}
-                className="timer-pregunta-clase"
-              /> */}
               <Select
-                options={minutosOptions}
-                classNamePrefix="select"
-                value={minutosSeleccionados}
-                name="minutoss"
-                placeholder="Minutos"
-                onChange={handleMinutoChange}
-                isSearchable={true}
-                isClearable={true}
                 className="timer-pregunta-clase"
+                classNamePrefix="select"
+                isClearable={true}
+                name="minutoss"
+                options={MINUTOS_OPTIONS}
+                value={minutosSeleccionados}
+                onChange={handleMinutoChange}
+                isDisabled={false}
+                placeholder="Minutos"
+                isSearchable={true}
               />
             </Colxx>
             <Colxx xxs="4" md="4">
               <Select
-                options={minutosOptions}
+                options={SEGUNDOS_OPTIONS}
                 classNamePrefix="select"
                 value={segundosSeleccionados}
                 name="minutoss"
