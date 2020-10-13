@@ -125,6 +125,7 @@ export const getDocument = async (docRef) => {
     const docId = refSnapShot.id;
     return { id: docId, data: refSnapShot.data() };
   } catch (err) {
+    console.log(err);
     enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
