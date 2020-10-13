@@ -31,7 +31,7 @@ class Footer extends React.Component {
     const docObj = await getDocument(`usuariosPorInstitucion/${institucion}`);
     const { data } = docObj;
     for (const usuario of data.usuarios) {
-      if (usuario.rol === 1 || usuario.rol === 3) {
+      if (usuario.rol === ROLES.Docente || usuario.rol === ROLES.Directivo) {
         docentes++;
       } else {
         alumnos++;
