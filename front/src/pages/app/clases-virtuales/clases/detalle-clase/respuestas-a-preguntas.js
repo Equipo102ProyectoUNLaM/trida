@@ -6,11 +6,6 @@ import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/Decryption
 const RespuestasAPreguntas = ({ isLoading, idClase }) => {
   const [respuestasPorPregunta, setRespuestasPorPregunta] = useState([]);
   const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
-  const [
-    preguntasConRespuestasDeAlumnos,
-    setPreguntasConRespuestasDeAlumnos,
-  ] = useState([]);
-  var preguntasConRespuestasDeAlumnosGlobal = []; // ver de sacarla
 
   useEffect(() => {
     getPreguntasConRespuestasDeAlumnos();
@@ -32,17 +27,14 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
         sinRespuesta
       );
 
-      setPreguntasConRespuestasDeAlumnos(preguntasConRespuestas); // deberia hacer esto en vez del var preguntasConRespuestasDeAlumnosGlobal, pero no lo carga
-      preguntasConRespuestasDeAlumnosGlobal = preguntasConRespuestas;
-      crearCantRespuestasPorPregunta();
+      crearCantRespuestasPorPregunta(preguntasConRespuestas);
     }
   };
 
-  const crearCantRespuestasPorPregunta = () => {
+  const crearCantRespuestasPorPregunta = (preguntasConRespuestas) => {
     const resumen = [];
-
-    if (preguntasConRespuestasDeAlumnosGlobal.length > 0) {
-      preguntasConRespuestasDeAlumnosGlobal.forEach((preg) => {
+    if (preguntasConRespuestas.length > 0) {
+      preguntasConRespuestas.forEach((preg) => {
         let resultado = [];
         let opciones = [];
         let cantTotalRtas = 0;
