@@ -340,28 +340,13 @@ const Videollamada = ({
 
   const esTiempoValido = () => {
     if (
-      minutosSeleccionados === undefined ||
-      segundosSeleccionados === undefined ||
-      minutosSeleccionados === null ||
-      segundosSeleccionados === null
+      !minutosSeleccionados ||
+      !segundosSeleccionados ||
+      (minutosSeleccionados.value === '00' &&
+        segundosSeleccionados.value === '00')
     )
       return false;
-    if (
-      minutosSeleccionados.value === '00' &&
-      segundosSeleccionados.value !== '00'
-    )
-      return true;
-    if (
-      minutosSeleccionados.value !== '00' &&
-      segundosSeleccionados.value === '00'
-    )
-      return true;
-    if (
-      minutosSeleccionados.value !== '00' &&
-      segundosSeleccionados.value !== '00'
-    )
-      return true;
-    return false;
+    return true;
   };
 
   useEffect(() => {
