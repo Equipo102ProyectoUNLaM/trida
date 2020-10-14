@@ -8,15 +8,15 @@ import { editDocument } from 'helpers/Firebase-db';
 const NotificationItem = ({ leida, contenido, fecha, url }) => {
   const [now, setTime] = useState(new Date());
 
-  const updateTime = () => {
-    setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-  };
+  // const updateTime = () => {
+  //   setInterval(() => {
+  //     setTime(new Date());
+  //   }, 1000);
+  // };
 
   return (
     <Fragment>
-      {updateTime()}
+      {/* {updateTime()} */}
       {new Date(fecha.toDate()) <= now && (
         <div className="d-flex flex-row mb-3 pb-3 border-bottom">
           {!leida && (
@@ -44,11 +44,11 @@ const TopnavNotifications = ({ user }) => {
 
   const [now, setTime] = useState(new Date());
 
-  const updateTime = () => {
-    setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-  };
+  // const updateTime = () => {
+  //   setInterval(() => {
+  //     setTime(new Date());
+  //   }, 1000);
+  // };
 
   const onNewNotification = (documents) => {
     let arrayNotifications = [];
@@ -96,7 +96,7 @@ const TopnavNotifications = ({ user }) => {
     <div className="loading" />
   ) : (
     <div className="position-relative d-inline-block">
-      {updateTime()}
+      {/* {updateTime()} */}
       <UncontrolledDropdown className="dropdown-menu-right">
         <DropdownToggle
           className="header-icon notificationButton"
