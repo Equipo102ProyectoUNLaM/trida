@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { getCollectionOnSnapshotOrderedAndLimited } from 'helpers/Firebase-db';
@@ -6,28 +6,49 @@ import moment from 'moment';
 import { editDocument } from 'helpers/Firebase-db';
 
 const NotificationItem = ({ leida, contenido, fecha, url }) => {
+  const [now, setTime] = useState(new Date());
+
+  const updateTime = () => {
+    setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+  };
+
   return (
-    <div className="d-flex flex-row mb-3 pb-3 border-bottom">
-      {!leida && (
-        <a className="margin-auto" href={url}>
-          <span className={`log-indicator align-middle border-danger`} />
-        </a>
+    <Fragment>
+      {updateTime()}
+      {new Date(fecha.toDate()) <= now && (
+        <div className="d-flex flex-row mb-3 pb-3 border-bottom">
+          {!leida && (
+            <a className="margin-auto" href={url}>
+              <span className={`log-indicator align-middle border-danger`} />
+            </a>
+          )}
+          <div className="pl-3 pr-2">
+            <a href={url}>
+              <p className="font-weight-medium mb-1">{contenido}</p>
+              <p className="text-muted mb-0 text-small">
+                {moment(fecha.toDate()).fromNow()}
+              </p>
+            </a>
+          </div>
+        </div>
       )}
-      <div className="pl-3 pr-2">
-        <a href={url}>
-          <p className="font-weight-medium mb-1">{contenido}</p>
-          <p className="text-muted mb-0 text-small">
-            {moment(fecha.toDate()).fromNow()}
-          </p>
-        </a>
-      </div>
-    </div>
+    </Fragment>
   );
 };
 
 const TopnavNotifications = ({ user }) => {
   const [notifications, setNotificationsOnSnapshot] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [now, setTime] = useState(new Date());
+
+  const updateTime = () => {
+    setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+  };
 
   const onNewNotification = (documents) => {
     let arrayNotifications = [];
@@ -63,7 +84,7 @@ const TopnavNotifications = ({ user }) => {
     );
     if (element.length != 0) {
       notifications.forEach((element) => {
-        if (!element.leida)
+        if (!element.leida && new Date(element.fecha.toDate()) <= now)
           editDocument(`notificaciones/${user}/listado`, element.id, {
             leida: true,
           });
@@ -75,6 +96,7 @@ const TopnavNotifications = ({ user }) => {
     <div className="loading" />
   ) : (
     <div className="position-relative d-inline-block">
+      {updateTime()}
       <UncontrolledDropdown className="dropdown-menu-right">
         <DropdownToggle
           className="header-icon notificationButton"
@@ -83,9 +105,15 @@ const TopnavNotifications = ({ user }) => {
           onBlur={onClickDropdown}
         >
           <i className="simple-icon-bell" />
-          {notifications.filter((x) => !x.leida).length != 0 && (
+          {notifications.filter(
+            (x) => !x.leida && new Date(x.fecha.toDate()) <= now
+          ).length != 0 && (
             <span className="count">
-              {notifications.filter((x) => !x.leida).length}
+              {
+                notifications.filter(
+                  (x) => !x.leida && new Date(x.fecha.toDate()) <= now
+                ).length
+              }
             </span>
           )}
         </DropdownToggle>

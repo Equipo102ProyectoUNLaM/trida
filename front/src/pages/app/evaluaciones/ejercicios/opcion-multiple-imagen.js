@@ -211,7 +211,7 @@ class OpcionMultipleImagen extends React.Component {
               <FormGroup className="error-l-75">
                 <Label>Pregunta</Label>
                 <Input
-                  autocomplete="off"
+                  autoComplete="off"
                   name="consigna"
                   onInputCapture={this.handleChange}
                   defaultValue={consigna}

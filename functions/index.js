@@ -1,10 +1,14 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable no-await-in-loop */
+
+const cryptoJs = require('crypto-js');
+const secretKey = 'tridaSecretKey';
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const cors = require('cors')({ origin: true });
+const timeStamp = admin.firestore.Timestamp;
 admin.initializeApp(functions.config().firebase);
 
 /* healthcheck endpoint */
@@ -445,6 +449,157 @@ exports.contentCreated = functions.storage
 
         return createNotification(notification, alumnos);
       }
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.evaluationCreated = functions.firestore
+  .document('evaluaciones/{evaluacionId}')
+  .onCreate(async (doc) => {
+    try {
+      const evaluacion = doc.data();
+      const evaluacionId = doc.id;
+
+      const evaluacionNombre = cryptoJs.AES.decrypt(
+        evaluacion.nombre,
+        secretKey
+      ).toString(cryptoJs.enc.Utf8);
+
+      const notification = {
+        contenido: `Se ha creado la evaluación ${evaluacionNombre}`,
+        fecha: evaluacion.fecha_publicacion,
+        url: `/app/evaluaciones#${evaluacionId}`,
+        leida: false,
+        id: evaluacionId
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(evaluacion.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      return createNotification(notification, alumnos);
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.evaluationEdited = functions.firestore
+  .document('evaluaciones/{evaluacionId}')
+  .onUpdate(async (change, context) => {
+    try {
+      const newValue = change.after.data();
+      const evaluacionId = context.params.evaluacionId;
+      
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(newValue.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      for (const alumno of alumnos) {
+        const notificacionsRef = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+        .where('id', '==', `${evaluacionId}`);
+  
+        const notifications = await notificacionsRef.get();
+
+        notifications.forEach(async (doc) =>{
+          var ref = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+          .doc(doc.id)
+          .set({fecha: newValue.fecha_publicacion, leida: false}, { merge: true });
+        })
+      }
+      return;
+
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.activityCreated = functions.firestore
+  .document('practicas/{practicaId}')
+  .onCreate(async (doc) => {
+    try {
+      const practica = doc.data();
+      const practicaId = doc.id;
+      
+      const notification = {
+        contenido: `Se ha creado la práctica ${practica.nombre}`,
+        fecha: timeStamp.fromDate(new Date(newValue.fechaLanzada + 'T11:22:33+0000')),
+        url: `/app/practicas#${practicaId}`,
+        leida: false,
+        id: practicaId
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(practica.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      return createNotification(notification, alumnos);
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.activityEdited = functions.firestore
+  .document('practicas/{practicaId}')
+  .onUpdate(async (change, context) => {
+    try {
+      const newValue = change.after.data();
+      const practicaId = context.params.practicaId;
+      
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(newValue.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      for (const alumno of alumnos) {
+        const notificacionsRef = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+        .where('id', '==', `${practicaId}`);
+  
+        const notifications = await notificacionsRef.get();
+
+        notifications.forEach(async (doc) =>{
+          var ref = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+          .doc(doc.id)
+          .set({fecha: timeStamp.fromDate(new Date(newValue.fechaLanzada + 'T11:22:33+0000')), leida: false}, { merge: true });
+        })
+      }   
+      return;
+
     } catch (error) {
       console.log('error', error);
     }
