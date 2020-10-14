@@ -5,8 +5,8 @@ import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form } from 'formik';
-import { addToMateriasCollection } from 'helpers/Firebase-db';
-import { editDocument } from 'helpers/Firebase-db';
+import { addToMateriasCollection, editDocument } from 'helpers/Firebase-db';
+import { functions } from 'helpers/Firebase';
 import TagsInput from 'react-tagsinput';
 import { toolTipMaterias } from 'constants/texts';
 import { isEmpty } from 'helpers/Utils';
@@ -64,7 +64,7 @@ class FormMateria extends Component {
       };
       cursosObj.push(cursoObj);
     }
-    
+
     if (!agregado) {
       instObj = [
         {
@@ -78,10 +78,25 @@ class FormMateria extends Component {
         { instituciones: instObj },
         'Materia editada'
       );
+    } else {
+      for (const curso of cursosObj) {
+        for (const materia of curso.materias) {
+          const agregarMateriasAction = functions.httpsCallable(
+            'agregarMaterias'
+          );
+          await agregarMateriasAction({
+            instId,
+            courseId: curso.curso_id.id,
+            subjectId: materia.id,
+            uid: user,
+          });
+        }
+      }
     }
 
     this.setState({ isLoading: false });
     this.props.history.push('/seleccion-curso');
+    return this.props.history.go(0);
   };
 
   handleTagChange = (curso, materias) => {
