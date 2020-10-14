@@ -30,18 +30,20 @@ class Footer extends React.Component {
     const institucion = this.props.institution.id;
     const docObj = await getDocument(`usuariosPorInstitucion/${institucion}`);
     const { data } = docObj;
-    for (const usuario of data.usuarios) {
-      if (usuario.rol === ROLES.Docente || usuario.rol === ROLES.Directivo) {
-        docentes++;
-      } else {
-        alumnos++;
+    if (data) {
+      for (const usuario of data.usuarios) {
+        if (usuario.rol === ROLES.Docente || usuario.rol === ROLES.Directivo) {
+          docentes++;
+        } else {
+          alumnos++;
+        }
       }
-    }
 
-    this.setState({
-      docentes: docentes,
-      alumnos: alumnos,
-    });
+      this.setState({
+        docentes,
+        alumnos,
+      });
+    }
   };
 
   toggleModalInvitacion = () => {
