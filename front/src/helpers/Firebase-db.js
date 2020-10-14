@@ -486,7 +486,7 @@ export const guardarNotas = async (user, notas) => {
     .set({ notas: notas }, { merge: true });
 };
 
-export const getDatosClaseOnSnapshot = (collection, document, callback) => {
+export const getDocumentOnSnapshot = (collection, document, callback) => {
   return firestore.collection(collection).doc(document).onSnapshot(callback);
 };
 

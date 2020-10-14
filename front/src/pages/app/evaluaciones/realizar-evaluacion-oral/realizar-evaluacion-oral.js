@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { getDocument } from 'helpers/Firebase-db';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import PaginaVideollamada from './pagina-videollamada';
 
 class RealizarEvaluacionOrañ extends Component {
   constructor(props) {
@@ -22,8 +23,8 @@ class RealizarEvaluacionOrañ extends Component {
   }
 
   fetchDetalleDeEvaluacion = async () => {
-    const { evalId } = await this.props.match.params;
-    const docObj = await getDocument(`evaluacionesOrales/c7I2LSDivP4LAuyFo2Hl`);
+    const { evalId } = this.props.location;
+    const docObj = await getDocument(`evaluacionesOrales/${evalId}`);
     const { data } = docObj;
     const {
       nombre,
@@ -66,9 +67,7 @@ class RealizarEvaluacionOrañ extends Component {
   };
 
   render() {
-    const { nombre, idSala, isLoading, idMateria, password } = this.state;
-
-    const { match } = this.props;
+    const { nombre, idSala, isLoading, password, evalId } = this.state;
 
     return isLoading ? (
       <div className="loading" />
@@ -83,19 +82,15 @@ class RealizarEvaluacionOrañ extends Component {
             />
           </Colxx>
         </Row>
-        {/* <TabsDeClase
-          idMateria={idMateria}
-          idSala={idSala}
-          password={password}
-          idClase={claseId}
-          updateContenidos={this.getDetalleEvaluacionOral}
-          rol={this.props.rol}
-        /> */}
         <Row className="mb-4">
           <Colxx xxs="12">
             <Card>
               <CardBody>
-                <CardTitle>Hola</CardTitle>
+                <PaginaVideollamada
+                  idSala={idSala}
+                  evalId={evalId}
+                  password={password}
+                />
               </CardBody>
             </Card>
           </Colxx>

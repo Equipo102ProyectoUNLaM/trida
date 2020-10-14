@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Videollamada from 'components/videollamada/videollamada';
+import Videollamada from './videollamada';
 import {
   Container,
   Form,
@@ -28,20 +28,20 @@ const PaginaVideollamada = (props) => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    editDocument('clases', props.idClase, { iniciada: true });
+    editDocument('evaluacionesOrales', props.evalId, { iniciada: true });
     if (room) setCall(true);
   };
 
   const setVideollamadaOff = () => {
     setCall(false);
-    editDocument('clases', props.idClase, { iniciada: false });
+    editDocument('evaluacionesOrales', props.evalId, { iniciada: false });
   };
 
   useEffect(() => {
-    getDocumentOnSnapshot('clases', props.idClase, onClaseIniciada);
-  }, [props.idClase]);
+    getDocumentOnSnapshot('evaluacionesOrales', props.evalId, onOralIniciada);
+  }, [props.evalId]);
 
-  const onClaseIniciada = (doc) => {
+  const onOralIniciada = (doc) => {
     const { iniciada } = doc.data();
     setIniciada(iniciada);
   };
@@ -64,9 +64,6 @@ const PaginaVideollamada = (props) => {
         isHost={isHost}
         setCallOff={setVideollamadaOff}
         rol={props.rol}
-        idClase={props.idClase}
-        preguntas={props.preguntas}
-        idUser={props.user}
       />
     </>
   ) : (
