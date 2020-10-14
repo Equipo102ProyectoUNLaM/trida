@@ -259,17 +259,18 @@ exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
       
       /* usuariosPorInstitucion */
       let usuarios = [];
-      const usuariosPorInstitucionRef = admin.firestore().collection('usuariosPorInstitucion').doc(institucion.institucion_id);
+      const institucionSnapShot = await institucion.institucion_id.get();
+      const usuariosPorInstitucionRef = admin.firestore().collection('usuariosPorInstitucion').doc(institucionSnapShot.id);
       const usuariosPorInstitucion = await usuariosPorInstitucionRef.get();
-      const  usuariosPorInstitucionObj = usuariosPorInstitucion.data();
+      const usuariosPorInstitucionObj = usuariosPorInstitucion.data();
       if(usuariosPorInstitucionObj !== undefined) {
-        usuarios = usuariosPorMateriaObj.usuarios;
+        usuarios = usuariosPorInstitucionObj.usuarios;
       }
       usuarios.push({
         id: userId,
         rol: rol,
       });
-      await admin.firestore().collection('usuariosPorInstitucion').doc(institucion.institucion_id).set( {usuarios: usuarios}, { merge: true });
+      await admin.firestore().collection('usuariosPorInstitucion').doc(institucionSnapShot.id).set( {usuarios: usuarios}, { merge: true });
 
       for (const curso of institucion.cursos) {
         for (const materiaRef of curso.materias) {
