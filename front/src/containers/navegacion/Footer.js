@@ -72,7 +72,7 @@ class Footer extends React.Component {
   render() {
     const { modalInvitacionOpen, modalPlanesOpen } = this.state;
     const { rol } = this.props;
-    const rolDocente = rol === ROLES.Docente;
+    const rolDocente = rol !== ROLES.Alumno;
     return (
       <footer className="page-footer">
         <div className="footer-content">
