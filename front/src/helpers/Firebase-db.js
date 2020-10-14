@@ -423,6 +423,10 @@ export const getEventos = async (subject) => {
     { field: 'idMateria', operator: '==', id: subject },
     { field: 'activo', operator: '==', id: true },
   ]);
+  const arrayDeEvaluacionesOrales = await getCollection('evaluacionesOrales', [
+    { field: 'idMateria', operator: '==', id: subject },
+    { field: 'activo', operator: '==', id: true },
+  ]);
   const arrayDePracticas = await getCollection('practicas', [
     { field: 'idMateria', operator: '==', id: subject },
     { field: 'activo', operator: '==', id: true },
@@ -450,6 +454,18 @@ export const getEventos = async (subject) => {
       title: 'Evaluación: ' + nombre,
       start: new Date(data.fecha_publicacion.toDate()),
       end: new Date(data.fecha_finalizacion.toDate()),
+    });
+  });
+  arrayDeEvaluacionesOrales.forEach((oral) => {
+    const { id, data } = oral;
+    const nombre = data.nombre;
+    arrayDeEventos.push({
+      id,
+      tipo: 'evaluacionOral',
+      url: 'evaluaciones/orales',
+      title: 'Evaluación Oral: ' + nombre,
+      start: new Date(data.fecha_evaluacion.toDate()),
+      end: new Date(data.fecha_evaluacion.toDate()),
     });
   });
   arrayDePracticas.forEach((practica) => {

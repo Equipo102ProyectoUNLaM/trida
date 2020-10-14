@@ -288,10 +288,10 @@ class EvaluacionesOrales extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { user, userData } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default injectIntl(connect(mapStateToProps)(EvaluacionesOrales));

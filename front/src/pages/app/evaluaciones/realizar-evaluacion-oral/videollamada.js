@@ -15,6 +15,7 @@ const Videollamada = ({
   options,
   isHost,
   rol,
+  setCallOff,
 }) => {
   const { microfono, camara } = options;
   const parentNode = 'jitsi-container';
@@ -75,6 +76,9 @@ const Videollamada = ({
         jitsi.executeCommand('displayName', userName);
         jitsi.executeCommand('subject', subject);
         //jitsi.executeCommand('password', password);
+      });
+      jitsi.addEventListener('readyToClose', () => {
+        setCallOff();
       });
       if (rol === ROLES.Docente) {
         jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {

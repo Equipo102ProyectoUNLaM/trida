@@ -30,6 +30,7 @@ class FormEvaluacionOral extends React.Component {
 
   async componentDidMount() {
     if (this.props.integrantesEditados) {
+      console.log(this.props.integrantesEditados);
       this.setState({
         selectedOptions: await createUserList(
           this.props.integrantesEditados,
