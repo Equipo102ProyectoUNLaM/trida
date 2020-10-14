@@ -371,11 +371,12 @@ export const editDocument = async (collection, docId, obj, message) => {
     ...obj,
     fecha_edicion: getFechaHoraActual(),
   };
-  console.log(obj);
-  console.log(collection);
-  console.log(docId);
-  var ref = firestore.collection(collection).doc(docId);
-  ref.set(obj, { merge: true });
+  try {
+    const ref = firestore.collection(collection).doc(docId);
+    await ref.set(obj, { merge: true });
+  } catch (error) {
+    console.log(error);
+  }
 
   if (message) {
     enviarNotificacionExitosa(`${message} exitosamente`, `${message}!`);

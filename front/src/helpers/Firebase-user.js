@@ -9,7 +9,7 @@ export const getUserData = async (userId) => {
     try {
       foto = await storage.ref('usuarios').child(userId).getDownloadURL();
     } catch (error) {
-      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
+      console.log(error);
     }
 
     return {

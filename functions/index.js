@@ -51,7 +51,7 @@ exports.register = functions.auth.user().onCreate((data)=> {
       primerLogin: true,
       cambiarPassword: false,
       instituciones: [],
-      rol: 0,
+      rol: 3,
     }
 
     return admin.firestore().collection('usuarios')

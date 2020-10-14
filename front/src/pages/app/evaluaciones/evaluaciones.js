@@ -183,7 +183,7 @@ class Evaluaciones extends Component {
     });
     element.href = URL.createObjectURL(blob);
     const nombre = desencriptarTexto(obj.data.nombre);
-    element.download = nombre + '.txt';
+    element.download = nombre + '.trida';
     element.click();
   };
 

@@ -10,6 +10,7 @@ import { editDocument } from 'helpers/Firebase-db';
 import TagsInput from 'react-tagsinput';
 import { toolTipMaterias } from 'constants/texts';
 import { isEmpty } from 'helpers/Utils';
+import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import 'react-tagsinput/react-tagsinput.css';
 
 class FormMateria extends Component {
@@ -46,10 +47,7 @@ class FormMateria extends Component {
           instId,
           id,
           { nombre: materiasPorCurso[materia] },
-          user,
-          'Materia agregada!',
-          'Materia agregada exitosamente',
-          'Error al agregar la materia'
+          user
         );
 
         await editDocument('usuariosPorMateria', matRef.id, {
@@ -63,6 +61,10 @@ class FormMateria extends Component {
       };
       cursosObj.push(cursoObj);
     }
+    enviarNotificacionExitosa(
+      'Materias agregadas exitosamente',
+      'Materias agregadas!'
+    );
 
     instObj = [
       {
@@ -70,12 +72,7 @@ class FormMateria extends Component {
         cursos: cursosObj,
       },
     ];
-    await editDocument(
-      'usuarios',
-      user,
-      { instituciones: instObj },
-      'Materia editada'
-    );
+    await editDocument('usuarios', user, { instituciones: instObj });
 
     this.setState({ isLoading: false });
     this.props.history.push('/seleccion-curso');
