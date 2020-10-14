@@ -65,6 +65,7 @@ class CardTabsOral extends Component {
       });
     }
   }
+
   toggleSecondTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({

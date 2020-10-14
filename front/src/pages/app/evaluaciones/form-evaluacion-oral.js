@@ -87,7 +87,7 @@ class FormEvaluacionOral extends React.Component {
       };
       await editDocument(
         'evaluacionesOrales',
-        this.props.id,
+        this.props.idOralEditado,
         obj,
         'Evaluación oral editada'
       );
