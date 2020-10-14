@@ -21,9 +21,6 @@ class FormEvaluacionOral extends React.Component {
       fecha_evaluacion: this.props.fechaOralEditada
         ? this.props.fechaOralEditada.toDate()
         : '',
-      fecha_evaluacion: this.props.idOralEditada
-        ? this.props.idOralEditada
-        : '',
       idMateria: '',
       isLoading: false,
       usuariosDelSelect: this.props.datosUsuarios,

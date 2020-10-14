@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { Row, Card, CardBody, CardTitle } from 'reactstrap';
+import { Row, Card, CardBody } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { getDocument } from 'helpers/Firebase-db';
