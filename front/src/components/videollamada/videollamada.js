@@ -11,9 +11,9 @@ import {
   ModalHeader,
   ModalBody,
 } from 'reactstrap';
+import moment from 'moment';
 import IntlMessages from 'helpers/IntlMessages';
 import {
-  getTimestamp,
   getTimestampDifference,
   getFechaHoraActual,
   isEmpty,
@@ -326,13 +326,16 @@ const Videollamada = ({
             listaAsistencia.push({
               id,
               nombre: displayName,
-              timeStampConexion: getTimestamp(),
+              timeStampConexion: moment().format(),
             })
           );
         });
         jitsi.addEventListener('participantLeft', ({ id }) => {
           setListaAsistencia(
-            listaAsistencia.push({ id, timeStampDesconexion: getTimestamp() })
+            listaAsistencia.push({
+              id,
+              timeStampDesconexion: moment().format(),
+            })
           );
         });
       }
