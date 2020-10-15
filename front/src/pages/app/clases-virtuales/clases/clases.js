@@ -129,7 +129,7 @@ class Clase extends Component {
       salaEditada,
     } = this.state;
     const { rol } = this.props;
-    const rolDocente = rol === ROLES.Docente;
+    const rolDocente = rol !== ROLES.Alumno;
     return isLoading ? (
       <div className="loading" />
     ) : (

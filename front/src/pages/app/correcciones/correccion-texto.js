@@ -132,7 +132,7 @@ const CorreccionTexto = ({ subject, rol }) => {
         'menuButton',
         'stickyToolGroupButton',
       ]);
-      if (verCorr || rol !== ROLES.Docente) {
+      if (verCorr || rol === ROLES.Alumno) {
         instance.disableElements([
           'header',
           'viewControlsOverlay',
@@ -158,7 +158,7 @@ const CorreccionTexto = ({ subject, rol }) => {
         // need to draw the annotation otherwise it won't show up until the page is refreshed
         //annotManager.redrawAnnotation(rectangleAnnot);
       });
-      if (!verCorr && rol === ROLES.Docente) {
+      if (!verCorr && rol !== ROLES.Alumno) {
         document
           .getElementById('guardar')
           .addEventListener('click', async () => {
@@ -219,7 +219,7 @@ const CorreccionTexto = ({ subject, rol }) => {
         </>
       )}
       <div className="webviewer" ref={viewer}></div>
-      {!verCorr && rol === ROLES.Docente && (
+      {!verCorr && rol !== ROLES.Alumno && (
         <Row className="button-group">
           <Button color="primary" className="button" id="guardar">
             Enviar Corrección
