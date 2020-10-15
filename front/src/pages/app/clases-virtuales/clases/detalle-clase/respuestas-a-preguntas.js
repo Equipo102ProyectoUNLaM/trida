@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardTitle, Progress, Badge } from 'reactstrap';
 import { getCollectionWithSubCollections } from 'helpers/Firebase-db';
 import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/DecryptionHandler';
+import { isEmpty } from 'helpers/Utils';
 
 const RespuestasAPreguntas = ({ isLoading, idClase }) => {
   const [respuestasPorPregunta, setRespuestasPorPregunta] = useState([]);
@@ -28,6 +29,8 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
       );
 
       crearCantRespuestasPorPregunta(preguntasConRespuestas);
+    } else {
+      setIsLoadingLocal(false);
     }
   };
 
@@ -73,6 +76,9 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
     <div className="loading" />
   ) : (
     <>
+      {isEmpty(respuestasPorPregunta) && (
+        <span>No hay respuestas cargadas</span>
+      )}
       {respuestasPorPregunta.map((rta, idx) => {
         return (
           <Card key={idx} className="h-100 card-respuestas">
