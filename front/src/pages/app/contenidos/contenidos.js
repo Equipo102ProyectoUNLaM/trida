@@ -460,7 +460,7 @@ class Contenidos extends Component {
       subjectId,
     } = this.state;
     const { rol } = this.props;
-    const rolDocente = rol === ROLES.Docente;
+    const rolDocente = rol !== ROLES.Alumno;
     return (
       <Fragment>
         {isLoading ? <div id="cover-spin"></div> : <span></span>}

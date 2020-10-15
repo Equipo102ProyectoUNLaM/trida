@@ -132,7 +132,7 @@ class Foro extends Component {
       mensajes: mensajesForo,
     } = this.state;
     const { rol } = this.props;
-    const rolDocente = rol === ROLES.Docente;
+    const rolDocente = rol !== ROLES.Alumno;
     return isLoading ? (
       <div className="loading" />
     ) : (
