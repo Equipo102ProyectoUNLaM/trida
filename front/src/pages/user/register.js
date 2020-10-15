@@ -4,23 +4,17 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from 'redux/actions';
 import { Formik, Form, Field } from 'formik';
-import {
-  enviarNotificacionError,
-  enviarNotificacionExitosa,
-} from 'helpers/Utils-ui';
-
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
 
 class Register extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      isInvited: false,
-    };
-  }
+  state = {
+    email: '',
+    password: '',
+    isInvited: false,
+  };
+
   onUserRegister = (values) => {
     const userObj = {
       email: values.email,
@@ -29,7 +23,7 @@ class Register extends Component {
     };
     if (!this.props.loading) {
       if (values.email !== '' && values.password !== '') {
-        this.props.registerUser(userObj, this.props.history);
+        this.props.registerUser(userObj);
       } else {
         enviarNotificacionError('Completá email y contraseña', 'Error');
       }
@@ -57,16 +51,8 @@ class Register extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.user !== prevProps.user) {
-      enviarNotificacionExitosa(
-        'Usuario registrado con éxito',
-        'Registro exitoso'
-      );
+    if (prevProps.loading && !this.props.loading && !this.props.error) {
       this.props.history.push('/user/login');
-    }
-
-    if (this.props.error) {
-      enviarNotificacionError('Error en el registro', 'Error');
     }
   }
 
@@ -79,7 +65,6 @@ class Register extends Component {
           <Card className="auth-card">
             <div className="position-relative image-side ">
               <span className="logo-single" />
-              {/* <p className="text-white h2">třída</p> */}
               <p className="white mb-0">
                 Usá este formulario para registrarte. <br />
                 Una vez registrado, podés crear tus instituciones. <br />
@@ -91,9 +76,6 @@ class Register extends Component {
               </p>
             </div>
             <div className="form-side">
-              {/* <NavLink to={`/`} className="white">
-                <span className="logo-single" />
-              </NavLink> */}
               <CardTitle className="mb-4">
                 <IntlMessages id="user.register" />
               </CardTitle>
@@ -101,7 +83,13 @@ class Register extends Component {
                 initialValues={initialValues}
                 onSubmit={this.onUserRegister}
               >
-                {({ errors, touched }) => (
+                {({
+                  setFieldValue,
+                  setFieldTouched,
+                  values,
+                  errors,
+                  touched,
+                }) => (
                   <Form className="av-tooltip tooltip-label-right">
                     <FormGroup className="form-group has-float-label mb-3 error-l-150">
                       <Label>

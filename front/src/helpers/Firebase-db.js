@@ -130,6 +130,12 @@ export const getDocument = async (docRef) => {
   }
 };
 
+// trae una referencia a un documento
+// parámetro: referencia al documento
+export const getDocumentRef = (docRef) => {
+  return firestore.doc(docRef);
+};
+
 // trae un documento en formato objeto (id + data (objeto con datos del documento))
 // junto con la coleccion interior
 // parámetro: referencia al documento y nombre de la sub coleccion
@@ -262,6 +268,7 @@ export const addToSubCollection = async (
     }
     return docRef;
   } catch (error) {
+    console.log(error);
     if (mensajePrincipal) {
       enviarNotificacionError(mensajeError, 'Ups!');
     }
@@ -372,9 +379,12 @@ export const editDocument = async (collection, docId, obj, message) => {
     ...obj,
     fecha_edicion: getFechaHoraActual(),
   };
-
-  var ref = firestore.collection(collection).doc(docId);
-  ref.set(obj, { merge: true });
+  try {
+    const ref = firestore.collection(collection).doc(docId);
+    await ref.set(obj, { merge: true });
+  } catch (error) {
+    console.log(error);
+  }
 
   if (message) {
     enviarNotificacionExitosa(`${message} exitosamente`, `${message}!`);

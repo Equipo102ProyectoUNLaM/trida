@@ -10,15 +10,20 @@ import TagsInput from 'react-tagsinput';
 import { toolTipCursos } from 'constants/texts';
 import { isEmpty } from 'helpers/Utils';
 import 'react-tagsinput/react-tagsinput.css';
+import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 
 class FormCurso extends Component {
   constructor(props) {
     super(props);
 
+    const { instId, instRef, agregado } = this.props.location;
     this.state = {
       isEmpty: false,
       nombre: '',
       cursosTags: [],
+      instId,
+      instRef,
+      agregado,
     };
   }
 
@@ -32,9 +37,7 @@ class FormCurso extends Component {
   };
 
   onUserSubmit = async () => {
-    const { cursosTags } = this.state;
-
-    const { instId, instRef } = this.props.location;
+    const { cursosTags, instId, instRef, agregado } = this.state;
 
     const cursosMapeados = {};
 
@@ -47,19 +50,22 @@ class FormCurso extends Component {
         instId,
         'cursos',
         cursoObj,
-        this.props.user,
-        'Curso agregado!',
-        'Curso agregado exitosamente',
-        'Error al agregar el curso'
+        this.props.user
       );
       cursosMapeados[docRef.id] = { ref: docRef, nombre: cursoObj.nombre };
     }
+
+    enviarNotificacionExitosa(
+      'Cursos agregados exitosamente',
+      'Cursos agregados!'
+    );
 
     this.props.history.push({
       pathname: '/seleccion-curso/crear-materia',
       cursos: cursosMapeados,
       instId,
       instRef,
+      agregado,
     });
   };
 

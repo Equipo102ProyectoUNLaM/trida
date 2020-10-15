@@ -38,7 +38,7 @@ class Practica extends Component {
       idMateria: this.props.subject.id,
       modalUploadFileOpen: false,
       oldPracticesActive: false,
-      rolDocente: this.props.rol === ROLES.Docente,
+      rolDocente: this.props.rol !== ROLES.Alumno,
       fechaPublicacion: '',
     };
   }

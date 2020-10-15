@@ -6,7 +6,7 @@ import AppLayout from '../../layout/AppLayout';
 
 const Home = React.lazy(() => import('./home'));
 
-const Alumnos = React.lazy(() => import('./alumnos'));
+const Alumnos = React.lazy(() => import('./admin/alumnos'));
 
 const VirtualClasses = React.lazy(() => import('./clases-virtuales'));
 
@@ -19,6 +19,8 @@ const Corrections = React.lazy(() => import('./correcciones'));
 const Evaluations = React.lazy(() => import('./evaluaciones'));
 
 const Activities = React.lazy(() => import('./practicas'));
+
+const Admin = React.lazy(() => import('./admin'));
 
 class App extends Component {
   render() {
@@ -33,10 +35,6 @@ class App extends Component {
               <Route
                 path={`${match.url}/home`}
                 render={(props) => <Home {...props} />}
-              />
-              <Route
-                path={`${match.url}/alumnos`}
-                render={(props) => <Alumnos {...props} />}
               />
               <Route
                 path={`${match.url}/clases-virtuales`}
@@ -62,6 +60,10 @@ class App extends Component {
               <Route
                 path={`${match.url}/evaluaciones`}
                 render={(props) => <Evaluations {...props} />}
+              />
+              <Route
+                path={`${match.url}/admin`}
+                render={(props) => <Admin {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

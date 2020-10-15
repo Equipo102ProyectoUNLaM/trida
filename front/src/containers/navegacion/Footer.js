@@ -1,9 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Row, Badge } from 'reactstrap';
 import { Colxx } from '../../components/common/CustomBootstrap';
-import ModalEnviarInvitacion from 'containers/pages/ModalEnviarInvitacion';
 import ModalPlanes from 'containers/pages/ModalPlanes';
 import ROLES from 'constants/roles';
 import { getDocument } from 'helpers/Firebase-db';
@@ -46,12 +44,6 @@ class Footer extends React.Component {
     }
   };
 
-  toggleModalInvitacion = () => {
-    this.setState({
-      modalInvitacionOpen: !this.state.modalInvitacionOpen,
-    });
-  };
-
   toggleModalPlanes = () => {
     this.setState({
       modalPlanesOpen: !this.state.modalPlanesOpen,
@@ -70,7 +62,7 @@ class Footer extends React.Component {
   };
 
   render() {
-    const { modalInvitacionOpen, modalPlanesOpen } = this.state;
+    const { modalPlanesOpen } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
     return (
@@ -97,18 +89,6 @@ class Footer extends React.Component {
                       </Badge>
                     </li>
                   )}
-                  {rolDocente && (
-                    <li className="breadcrumb-item mb-0">
-                      <NavLink
-                        className="btn-link"
-                        to="#"
-                        location={{}}
-                        onClick={this.toggleModalInvitacion}
-                      >
-                        Enviar Invitación
-                      </NavLink>
-                    </li>
-                  )}
                   <li className="breadcrumb-item mb-0">
                     <NavLink className="btn-link" to="#" location={{}}>
                       Contacto
@@ -124,12 +104,6 @@ class Footer extends React.Component {
             </Row>
           </div>
         </div>
-        {modalInvitacionOpen && (
-          <ModalEnviarInvitacion
-            isOpen={modalInvitacionOpen}
-            toggle={this.toggleModalInvitacion}
-          />
-        )}
         {modalPlanesOpen && (
           <ModalPlanes
             isOpen={modalPlanesOpen}
