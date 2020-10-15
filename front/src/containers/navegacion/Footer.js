@@ -5,6 +5,7 @@ import { Colxx } from '../../components/common/CustomBootstrap';
 import ModalPlanes from 'containers/pages/ModalPlanes';
 import ROLES from 'constants/roles';
 import { getDocument } from 'helpers/Firebase-db';
+import { connect } from 'react-redux';
 
 class Footer extends React.Component {
   constructor(props) {
