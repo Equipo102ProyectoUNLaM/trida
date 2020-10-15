@@ -88,7 +88,6 @@ class ContestarPregunta extends Component {
       obj,
       null
     );
-    this.props.toggle();
   }
 
   render() {
