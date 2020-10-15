@@ -9817,6 +9817,11 @@ div.rendered-file-browser{
 
 .modalLanzarPreguntas {
   cursor: pointer;
+  width: 100%;
+
+  @media (min-width: 600px) {
+    min-width: max-content;
+  }
 }
 
 .timer-pregunta-clase {

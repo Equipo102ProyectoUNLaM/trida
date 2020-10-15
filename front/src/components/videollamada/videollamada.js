@@ -34,10 +34,9 @@ import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import ContestarPregunta from './contestar-pregunta';
-import TimePicker from 'react-time-picker';
-import TooltipItem from 'components/common/TooltipItem';
-import { toolTipMinutosPreguntas } from 'constants/texts';
 import classnames from 'classnames';
+import Select from 'react-select';
+import { MINUTOS_OPTIONS, SEGUNDOS_OPTIONS } from 'constants/tiempoPreguntas';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -64,7 +63,6 @@ const Videollamada = ({
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState(); // id de la pregunta a lanzar
-  const [tiempoPregunta, setTiempoPregunta] = useState(); // tiempo que setea el docente en el modal de preguntas
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
   const [tiempoPreguntaOnSnapshot, setTiempoPreguntaOnSnapshot] = useState(); // Esta es la que escucha de firebase cuando se setea un tiempo a la pregunta
   const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(true);
@@ -76,6 +74,8 @@ const Videollamada = ({
   const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
   const [reacciones, setReacciones] = useState({});
   const [hayPreguntas, setHayPreguntas] = useState(false);
+  const [minutosSeleccionados, setMinutosSeleccionados] = useState();
+  const [segundosSeleccionados, setSegundosSeleccionados] = useState();
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -105,6 +105,8 @@ const Videollamada = ({
 
   // Metodo para lanzar pregunta cuando estás con rol de profesor
   const onLanzarPregunta = async () => {
+    const tiempoPregunta =
+      minutosSeleccionados.value + ':' + segundosSeleccionados.value;
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
@@ -114,10 +116,12 @@ const Videollamada = ({
     toggleModalPreguntas();
 
     // Comienzo timer interno para cancelar la pregunta
-    const mins = tiempoPregunta
-      ? Number(tiempoPregunta.substring(0, 2)) * 60
+    const mins = minutosSeleccionados.value
+      ? Number(minutosSeleccionados.value) * 60
       : 0;
-    const segs = tiempoPregunta ? Number(tiempoPregunta.substring(3, 5)) : 0;
+    const segs = segundosSeleccionados.value
+      ? Number(segundosSeleccionados.value)
+      : 0;
     const remainingTime = mins + segs; // queda en segundos
     if (remainingTime > 0) {
       setTimeout(() => {
@@ -245,7 +249,7 @@ const Videollamada = ({
 
   const lanzamientoPreguntaValido = () => {
     return (
-      preguntaALanzar && tiempoPregunta && preguntaLanzadaGlobal.length == 0
+      preguntaALanzar && esTiempoValido() && preguntaLanzadaGlobal.length == 0
     );
   };
 
@@ -324,6 +328,25 @@ const Videollamada = ({
   const handleCancelarRealizarPregunta = () => {
     setPreguntaDeAlumno('');
     toggleRealizarPregunta();
+  };
+
+  const handleMinutoChange = (minSeleccionado) => {
+    setMinutosSeleccionados(minSeleccionado);
+  };
+
+  const handleSegundosChange = (segSeleccionado) => {
+    setSegundosSeleccionados(segSeleccionado);
+  };
+
+  const esTiempoValido = () => {
+    if (
+      !minutosSeleccionados ||
+      !segundosSeleccionados ||
+      (minutosSeleccionados.value === '00' &&
+        segundosSeleccionados.value === '00')
+    )
+      return false;
+    return true;
   };
 
   useEffect(() => {
@@ -489,14 +512,31 @@ const Videollamada = ({
             Seleccione durante cuanto tiempo lanzar la pregunta
           </Label>
           <Row className="mb-3 mr-3">
-            <Colxx xxs="4" md="5">
-              <TimePicker
-                onChange={setTiempoPregunta}
-                value={tiempoPregunta}
-                disableClock={true}
+            <Colxx xxs="4" md="4">
+              <Select
                 className="timer-pregunta-clase"
+                classNamePrefix="select"
+                isClearable={true}
+                name="minutos-timer"
+                options={MINUTOS_OPTIONS}
+                value={minutosSeleccionados}
+                onChange={handleMinutoChange}
+                isDisabled={false}
+                placeholder="Minutos"
+                isSearchable={true}
               />
-              <TooltipItem body={toolTipMinutosPreguntas} id="preguntas" />
+            </Colxx>
+            <Colxx xxs="4" md="4">
+              <Select
+                options={SEGUNDOS_OPTIONS}
+                classNamePrefix="select"
+                value={segundosSeleccionados}
+                name="segundos-timer"
+                placeholder="Segundos"
+                onChange={handleSegundosChange}
+                isSearchable={true}
+                isClearable={true}
+              />
             </Colxx>
           </Row>
           {preguntas.map((pregunta) => {
