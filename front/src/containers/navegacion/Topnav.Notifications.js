@@ -82,7 +82,7 @@ const TopnavNotifications = ({ user }) => {
     const element = document.getElementsByClassName(
       'dropdown-menu-right dropdown show'
     );
-    if (element.length != 0) {
+    if (element.length !== 0) {
       notifications.forEach((element) => {
         if (!element.leida && new Date(element.fecha.toDate()) <= now)
           editDocument(`notificaciones/${user}/listado`, element.id, {
@@ -107,7 +107,7 @@ const TopnavNotifications = ({ user }) => {
           <i className="simple-icon-bell" />
           {notifications.filter(
             (x) => !x.leida && new Date(x.fecha.toDate()) <= now
-          ).length != 0 && (
+          ).length !== 0 && (
             <span className="count">
               {
                 notifications.filter(
