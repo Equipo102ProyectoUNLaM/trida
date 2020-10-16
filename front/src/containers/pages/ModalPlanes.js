@@ -26,7 +26,7 @@ class ModalPlanes extends React.Component {
       <ModalGrande
         modalOpen={isOpen}
         toggleModal={this.toggleModal}
-        modalHeader="Planes de pago"
+        text="Planes de pago"
       >
         <div>
           <Pricing />
