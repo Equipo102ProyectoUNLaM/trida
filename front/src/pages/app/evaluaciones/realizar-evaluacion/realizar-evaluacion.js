@@ -200,6 +200,7 @@ class RealizarEvaluacion extends Component {
     let ejercicio = respuestas.find((x) => x.numero === numero);
     switch (ejercicio.tipo) {
       case TIPO_EJERCICIO.respuesta_libre:
+      case TIPO_EJERCICIO.adjuntar_desarrollo:
         ejercicio.respuesta = e.respuesta;
         break;
       case TIPO_EJERCICIO.opcion_multiple:
@@ -238,7 +239,7 @@ class RealizarEvaluacion extends Component {
     let obj = {
       estado: ESTADO_ENTREGA.no_corregido,
       fechaEntrega: getFechaHoraActual(),
-      idAlumno: this.props.user,
+      idUsuario: this.props.user,
       idMateria: this.props.subject.id,
       idEntrega: this.state.evaluacionId,
       tipo: TIPO_ENTREGA.evaluacion,

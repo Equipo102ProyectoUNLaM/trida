@@ -34,13 +34,13 @@ import ModalCrearPreguntas from './modal-crear-preguntas';
 import ModalVistaPreviaPreguntas from '../preguntas-clase/vista-previa-preguntas';
 import ROLES from 'constants/roles';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import RespuestasAPreguntas from './respuestas-a-preguntas';
 
 class TabsDeClase extends Component {
   constructor(props) {
     super(props);
 
     this.toggleSecondTab = this.toggleSecondTab.bind(this);
-
     this.state = {
       activeSecondTab: '1',
       modalContenidosOpen: false,
@@ -660,6 +660,10 @@ class TabsDeClase extends Component {
                           <CardTitle className="mb-4">
                             Resultados de preguntas
                           </CardTitle>
+                          <RespuestasAPreguntas
+                            isLoading={true}
+                            idClase={idClase}
+                          />
                         </CardBody>
                       </Colxx>
                     </Row>

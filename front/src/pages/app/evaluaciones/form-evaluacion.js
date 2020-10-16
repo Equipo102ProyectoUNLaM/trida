@@ -289,7 +289,7 @@ class FormEvaluacion extends React.Component {
               <Field
                 className="form-control"
                 name="nombre"
-                autocomplete="off"
+                autoComplete="off"
               />
               {errors.nombre && touched.nombre ? (
                 <div className="invalid-feedback d-block">{errors.nombre}</div>
@@ -356,7 +356,7 @@ class FormEvaluacion extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 className="form-control"
                 name="descripcion"
                 component="textarea"
@@ -405,17 +405,16 @@ class FormEvaluacion extends React.Component {
             />
 
             <ModalFooter>
-              {!evaluacion.evaluacionId ||
-                (this.props.evaluacionImportada && (
-                  <>
-                    <Button color="primary" type="submit">
-                      Crear Evaluación
-                    </Button>
-                    <Button color="secondary" onClick={onCancel}>
-                      Cancelar
-                    </Button>
-                  </>
-                ))}
+              {(!evaluacion.evaluacionId || this.props.evaluacionImportada) && (
+                <>
+                  <Button color="primary" type="submit">
+                    Crear Evaluación
+                  </Button>
+                  <Button color="secondary" onClick={onCancel}>
+                    Cancelar
+                  </Button>
+                </>
+              )}
               {evaluacion.evaluacionId && !this.props.evaluacionImportada && (
                 <>
                   <Button color="primary" type="submit">

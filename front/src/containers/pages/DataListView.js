@@ -95,13 +95,11 @@ class DataListView extends React.Component {
               }
             >
               {sonPreguntas && (
-                <p className=" list-item-heading mb-1 truncate card-body">
-                  {title}
-                </p>
+                <p className=" list-item-heading card-body">{title}</p>
               )}
               {modalLanzarPreguntas && (
                 <p
-                  className="list-item-heading mb-1 truncate card-body modalLanzarPreguntas"
+                  className="list-item-heading card-body modalLanzarPreguntas"
                   onClick={() => onSelectPregunta(id)}
                 >
                   {title}

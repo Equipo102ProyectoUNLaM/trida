@@ -52,6 +52,18 @@ const data = [
     icon: 'simple-icon-note',
     label: 'menu.evaluations',
     to: '/app/evaluaciones',
+    subs: [
+      {
+        icon: 'iconsminds-testimonal',
+        label: 'menu.evaluations-write',
+        to: '/app/evaluaciones/escritas',
+      },
+      {
+        icon: 'iconsminds-speach-bubble-dialog',
+        label: 'menu.evaluations-oral',
+        to: '/app/evaluaciones/orales',
+      },
+    ],
   },
   {
     id: 'corrections',
