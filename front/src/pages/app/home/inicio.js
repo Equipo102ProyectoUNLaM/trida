@@ -30,7 +30,7 @@ class Inicio extends Component {
       eventos: [],
       eventosDia: [],
       valorSlider: 3,
-      themeColorArray: ['#8acaf5e3', '#f6c797', '#d7e6f0'],
+      themeColorArray: ['#8acaf5e3', '#f6c797', '#d7e6f0', '#d7f0e1'],
     };
   }
 
@@ -194,6 +194,9 @@ class Inicio extends Component {
                     }
                     if (event.tipo === 'clase') {
                       newStyle.backgroundColor = this.state.themeColorArray[2];
+                    }
+                    if (event.tipo === 'evaluacionOral') {
+                      newStyle.backgroundColor = this.state.themeColorArray[3];
                     }
 
                     return {

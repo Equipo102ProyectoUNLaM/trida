@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Videollamada from 'components/videollamada/videollamada';
+import Videollamada from './videollamada';
 import {
   Container,
   Form,
@@ -20,7 +20,7 @@ const PaginaVideollamada = (props) => {
     CryptoJS.enc.Utf8
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
-  const isHost = props.rol !== ROLES.Alumno;
+  const isHost = props.rol === ROLES.Docente;
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [call, setCall] = useState(false);
@@ -28,20 +28,20 @@ const PaginaVideollamada = (props) => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    editDocument('clases', props.idClase, { iniciada: true });
+    editDocument('evaluacionesOrales', props.evalId, { iniciada: true });
     if (room) setCall(true);
   };
 
   const setVideollamadaOff = () => {
     setCall(false);
-    editDocument('clases', props.idClase, { iniciada: false });
+    editDocument('evaluacionesOrales', props.evalId, { iniciada: false });
   };
 
   useEffect(() => {
-    getDocumentOnSnapshot('clases', props.idClase, onClaseIniciada);
-  }, [props.idClase]);
+    getDocumentOnSnapshot('evaluacionesOrales', props.evalId, onOralIniciada);
+  }, [props.evalId]);
 
-  const onClaseIniciada = (doc) => {
+  const onOralIniciada = (doc) => {
     const { iniciada } = doc.data();
     setIniciada(iniciada);
   };
@@ -64,9 +64,6 @@ const PaginaVideollamada = (props) => {
         isHost={isHost}
         setCallOff={setVideollamadaOff}
         rol={props.rol}
-        idClase={props.idClase}
-        preguntas={props.preguntas}
-        idUser={props.user}
       />
     </>
   ) : (
@@ -107,7 +104,7 @@ const PaginaVideollamada = (props) => {
                 />
               </div>
             </FormGroup>
-            {props.rol !== ROLES.Alumno && (
+            {props.rol === ROLES.Docente && (
               <Button color="primary" size="lg" type="submit">
                 Iniciar
               </Button>
