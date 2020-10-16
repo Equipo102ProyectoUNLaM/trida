@@ -20,6 +20,15 @@ const Contact = () => {
       html: `<p>mail: ${email} nombre: ${nombre} <br /> telefono: ${telefono} 
       <br /> mensaje: ${mensaje}</p>`,
     });
+    clearFields();
+  };
+
+  const clearFields = () => {
+    setNombre('');
+    setEmail('');
+    setAsunto('');
+    setTelefono('');
+    setMensaje('');
   };
 
   const sendEmail = async (email, options) => {
@@ -36,10 +45,7 @@ const Contact = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-7">
-            <form
-              className="contact-form-validated contact-one__form"
-              onSubmit={handleSubmit}
-            >
+            <div className="contact-form-validated contact-one__form">
               <BlockTitle
                 textAlign="left"
                 paraText="Contactanos"
@@ -96,12 +102,16 @@ const Contact = () => {
                   ></textarea>
                 </div>
                 <div className="contact-button-wrapper">
-                  <button type="submit" className="contact-button">
+                  <button
+                    type="submit"
+                    className="contact-button"
+                    onClick={handleSubmit}
+                  >
                     <span>Enviar Mensaje</span>
                   </button>
                 </div>
               </div>
-            </form>
+            </div>
             <div className="result"></div>
           </div>
           <div

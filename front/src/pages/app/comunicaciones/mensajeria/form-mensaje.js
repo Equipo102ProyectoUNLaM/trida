@@ -59,7 +59,6 @@ class FormMensaje extends Component {
   }
 
   handleSubmit = async (values) => {
-    //Si no es un mensaje general, convierto el array de seleccionados al formato { id, nombre }
     let receptores = null;
     if (!this.state.esGeneral) {
       receptores = this.state.selectedOptions.map(({ value }) => value);

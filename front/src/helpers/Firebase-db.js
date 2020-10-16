@@ -31,7 +31,6 @@ export async function getCollection(collection, filterBy, orderBy) {
   (orderBy || []).forEach(({ order, orderCond }) => {
     collectionRef = collectionRef.orderBy(order, orderCond);
   });
-
   try {
     var allClasesSnapShot = await collectionRef.get();
     allClasesSnapShot.forEach((doc) => {
@@ -43,6 +42,7 @@ export async function getCollection(collection, filterBy, orderBy) {
       arrayDeObjetos.push(obj);
     });
   } catch (err) {
+    console.log(err); //Este console es por si el error que tira es para agregar el índice.
     enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   } finally {
     return arrayDeObjetos;
@@ -419,13 +419,12 @@ export const logicDeleteDocument = async (collection, docId, message) => {
   var ref = firestore.collection(collection).doc(docId);
   try {
     ref.set({ activo: false }, { merge: true });
-  } catch (err) {
-    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
-  } finally {
     enviarNotificacionExitosa(
       `${message} borrada exitosamente`,
       `${message} borrada!`
     );
+  } catch (err) {
+    enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
   }
 };
 
@@ -436,6 +435,10 @@ export const getEventos = async (subject) => {
     { field: 'activo', operator: '==', id: true },
   ]);
   const arrayDeEvaluaciones = await getCollection('evaluaciones', [
+    { field: 'idMateria', operator: '==', id: subject },
+    { field: 'activo', operator: '==', id: true },
+  ]);
+  const arrayDeEvaluacionesOrales = await getCollection('evaluacionesOrales', [
     { field: 'idMateria', operator: '==', id: subject },
     { field: 'activo', operator: '==', id: true },
   ]);
@@ -466,6 +469,18 @@ export const getEventos = async (subject) => {
       title: 'Evaluación: ' + nombre,
       start: new Date(data.fecha_publicacion.toDate()),
       end: new Date(data.fecha_finalizacion.toDate()),
+    });
+  });
+  arrayDeEvaluacionesOrales.forEach((oral) => {
+    const { id, data } = oral;
+    const nombre = data.nombre;
+    arrayDeEventos.push({
+      id,
+      tipo: 'evaluacionOral',
+      url: 'evaluaciones/orales',
+      title: 'Evaluación Oral: ' + nombre,
+      start: new Date(data.fecha_evaluacion.toDate()),
+      end: new Date(data.fecha_evaluacion.toDate()),
     });
   });
   arrayDePracticas.forEach((practica) => {
@@ -505,7 +520,7 @@ export const guardarNotas = async (user, notas) => {
     .set({ notas: notas }, { merge: true });
 };
 
-export const getDatosClaseOnSnapshot = (collection, document, callback) => {
+export const getDocumentOnSnapshot = (collection, document, callback) => {
   return firestore.collection(collection).doc(document).onSnapshot(callback);
 };
 

@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Row, Badge } from 'reactstrap';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import ModalPlanes from 'containers/pages/ModalPlanes';
+import ModalContacto from 'containers/pages/ModalContacto';
 import ROLES from 'constants/roles';
 import { getDocument } from 'helpers/Firebase-db';
 import { connect } from 'react-redux';
@@ -13,9 +14,11 @@ class Footer extends React.Component {
 
     this.state = {
       modalInvitacionOpen: false,
+      modalContactoOpen: false,
       modalPlanesOpen: false,
       docentes: 0,
       alumnos: 0,
+      plan: '',
     };
   }
 
@@ -43,11 +46,22 @@ class Footer extends React.Component {
         alumnos,
       });
     }
+
+    const plan = this.calculatePlan();
+    this.setState({
+      plan,
+    });
   };
 
   toggleModalPlanes = () => {
     this.setState({
       modalPlanesOpen: !this.state.modalPlanesOpen,
+    });
+  };
+
+  toggleModalContacto = () => {
+    this.setState({
+      modalContactoOpen: !this.state.modalContactoOpen,
     });
   };
 
@@ -63,7 +77,7 @@ class Footer extends React.Component {
   };
 
   render() {
-    const { modalPlanesOpen } = this.state;
+    const { modalPlanesOpen, plan, modalContactoOpen } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
     return (
@@ -85,18 +99,23 @@ class Footer extends React.Component {
                           location={{}}
                           onClick={this.toggleModalPlanes}
                         >
-                          {this.calculatePlan()}
+                          {plan}
                         </NavLink>
                       </Badge>
                     </li>
                   )}
                   <li className="breadcrumb-item mb-0">
-                    <NavLink className="btn-link" to="#" location={{}}>
+                    <NavLink
+                      className="btn-link"
+                      to="#"
+                      location={{}}
+                      onClick={this.toggleModalContacto}
+                    >
                       Contacto
                     </NavLink>
                   </li>
                   <li className="breadcrumb-item mb-0">
-                    <NavLink className="btn-link" to="#" location={{}}>
+                    <NavLink className="btn-link" to="/app/ayuda" location={{}}>
                       Ayuda
                     </NavLink>
                   </li>
@@ -109,6 +128,12 @@ class Footer extends React.Component {
           <ModalPlanes
             isOpen={modalPlanesOpen}
             toggle={this.toggleModalPlanes}
+          />
+        )}
+        {modalContactoOpen && (
+          <ModalContacto
+            isOpen={modalContactoOpen}
+            toggle={this.toggleModalContacto}
           />
         )}
       </footer>
