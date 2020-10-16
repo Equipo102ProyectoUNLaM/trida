@@ -314,7 +314,7 @@ class TabsDeClase extends Component {
       asistencia,
       linksDeClase,
     } = this.state;
-
+    const rolDocente = rol !== ROLES.Alumno;
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
@@ -325,9 +325,7 @@ class TabsDeClase extends Component {
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
                     <NavItem
                       className={
-                        rol === ROLES.Docente
-                          ? 'w-20 text-center'
-                          : 'w-50 text-center'
+                        rolDocente ? 'w-20 text-center' : 'w-50 text-center'
                       }
                     >
                       <NavLink
@@ -346,9 +344,7 @@ class TabsDeClase extends Component {
                     </NavItem>
                     <NavItem
                       className={
-                        rol === ROLES.Docente
-                          ? 'w-20 text-center'
-                          : 'w-50 text-center'
+                        rolDocente ? 'w-20 text-center' : 'w-50 text-center'
                       }
                     >
                       <NavLink
@@ -365,7 +361,7 @@ class TabsDeClase extends Component {
                         Contenidos
                       </NavLink>
                     </NavItem>
-                    {rol === ROLES.Docente && (
+                    {rolDocente && (
                       <NavItem className="w-20 text-center">
                         <NavLink
                           to="#3"
@@ -382,7 +378,7 @@ class TabsDeClase extends Component {
                         </NavLink>
                       </NavItem>
                     )}
-                    {rol === ROLES.Docente && (
+                    {rolDocente && (
                       <NavItem className="w-20 text-center">
                         <NavLink
                           to="#4"
@@ -399,7 +395,7 @@ class TabsDeClase extends Component {
                         </NavLink>
                       </NavItem>
                     )}
-                    {rol === ROLES.Docente && (
+                    {rolDocente && (
                       <NavItem className="w-20 text-center">
                         <NavLink
                           to="#5"
@@ -466,9 +462,7 @@ class TabsDeClase extends Component {
                                       id={contenido}
                                       title={gsReference.name}
                                       onDelete={
-                                        rol === ROLES.Docente
-                                          ? this.onDelete
-                                          : null
+                                        rolDocente ? this.onDelete : null
                                       }
                                       navTo="#"
                                     />
@@ -487,7 +481,7 @@ class TabsDeClase extends Component {
                               onConfirm={this.unlinkContenido}
                             />
                           )}
-                          {rol === ROLES.Docente && (
+                          {rolDocente && (
                             <Row className="button-group">
                               <Button
                                 onClick={this.toggleModalContenidos}
@@ -545,7 +539,7 @@ class TabsDeClase extends Component {
                                 );
                               })
                             ))}
-                          {rol === ROLES.Docente && (
+                          {rolDocente && (
                             <Row className="button-group">
                               <Button
                                 onClick={this.toggleModalLinks}
@@ -609,7 +603,7 @@ class TabsDeClase extends Component {
                                 })}
                               </Row>
                             ))}
-                          {rol === ROLES.Docente && (
+                          {rolDocente && (
                             <Row className="button-group">
                               {!isEmpty(preguntasDeClase) && (
                                 <Button

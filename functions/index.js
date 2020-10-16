@@ -51,7 +51,7 @@ exports.register = functions.auth.user().onCreate((data)=> {
       primerLogin: true,
       cambiarPassword: false,
       instituciones: [],
-      rol: 0,
+      rol: 3,
     }
 
     return admin.firestore().collection('usuarios')
@@ -251,6 +251,27 @@ exports.agregarMaterias = functions.https.onCall(async (data)=> {
 exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
   try {
     for (const institucion of instituciones) {
+      /* USUARIO */
+      const userRef = admin.firestore().collection('usuarios').doc(userId);
+      const userDoc = await userRef.get();
+      const userObj = userDoc.data();
+      const rol = userObj.rol;
+      
+      /* usuariosPorInstitucion */
+      let usuarios = [];
+      const institucionSnapShot = await institucion.institucion_id.get();
+      const usuariosPorInstitucionRef = admin.firestore().collection('usuariosPorInstitucion').doc(institucionSnapShot.id);
+      const usuariosPorInstitucion = await usuariosPorInstitucionRef.get();
+      const usuariosPorInstitucionObj = usuariosPorInstitucion.data();
+      if(usuariosPorInstitucionObj !== undefined) {
+        usuarios = usuariosPorInstitucionObj.usuarios;
+      }
+      usuarios.push({
+        id: userId,
+        rol: rol,
+      });
+      await admin.firestore().collection('usuariosPorInstitucion').doc(institucionSnapShot.id).set( {usuarios: usuarios}, { merge: true });
+
       for (const curso of institucion.cursos) {
         for (const materiaRef of curso.materias) {
           let usuario_id = [];

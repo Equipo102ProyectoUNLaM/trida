@@ -2,7 +2,6 @@ import {
   LOGIN_USER_START,
   LOGIN_USER_SUCCESS,
   LOGOUT_USER,
-  SET_LOGIN_USER,
   REGISTER_USER_START,
   REGISTER_USER_SUCCESS,
   UPDATE_DATOS_USUARIO,
@@ -21,6 +20,10 @@ import { getCollection, editDocument } from 'helpers/Firebase-db';
 import { getUserData } from 'helpers/Firebase-user';
 import { addMail, inviteMail } from 'constants/emailTexts';
 import { authErrorMessage } from 'constants/errorMessages';
+import {
+  enviarNotificacionError,
+  enviarNotificacionExitosa,
+} from 'helpers/Utils-ui';
 
 export const logoutUser = () => ({
   type: LOGOUT_USER,
@@ -102,14 +105,8 @@ export const registerUserStart = (user, history) => ({
   payload: { user, history },
 });
 
-export const registerUserSuccess = (user) => ({
+export const registerUserSuccess = () => ({
   type: REGISTER_USER_SUCCESS,
-  payload: { user },
-});
-
-export const setLoginUser = (user) => ({
-  type: SET_LOGIN_USER,
-  payload: { user },
 });
 
 export const registerUserError = (message) => ({
@@ -122,12 +119,13 @@ export const registerUser = (user) => async (dispatch) => {
   dispatch(registerUserStart());
 
   try {
-    let registerUser = '';
     const user = functions.httpsCallable('user');
     const userAuth = await user({ email, password, rol });
     const { data } = userAuth;
+
     if (data) {
       const { uid } = data;
+
       if (isInvited) {
         await sendInvitationEmail(email, inviteMail);
         await auth.sendPasswordResetEmail(email);
@@ -135,37 +133,47 @@ export const registerUser = (user) => async (dispatch) => {
         const asignarMateriasAction = functions.httpsCallable(
           'asignarMaterias'
         );
+
         await asignarMateriasAction({
           instId,
           courseId,
           subjectId,
           uid,
         });
-      } else {
-        dispatch(setLoginUser(registerUser));
+
+        await editDocument('usuarios', uid, { rol });
       }
-      await editDocument('usuarios', uid, { rol });
-      dispatch(registerUserSuccess(registerUser));
+
+      enviarNotificacionExitosa(
+        'Usuario registrado con éxito',
+        'Registro exitoso'
+      );
+      dispatch(registerUserSuccess());
     } else {
-      dispatch(registerUserError(registerUser.message));
+      dispatch(registerUserError({ message: 'Error al crear el usuario' }));
     }
   } catch (error) {
     if (
       error.message === 'Este correo ya está siendo usado por otro usuario.'
     ) {
-      const [userObj] = await getCollection('usuarios', [
-        { field: 'mail', operator: '==', id: email },
-      ]);
-      const { id } = userObj;
-      const agregarMaterias = functions.httpsCallable('agregarMaterias');
-      await agregarMaterias({
-        instId,
-        courseId,
-        subjectId,
-        uid: id,
-      });
-      await sendInvitationEmail(email, addMail);
-      return dispatch(registerUserSuccess(registerUser));
+      if (isInvited) {
+        const [userObj] = await getCollection('usuarios', [
+          { field: 'mail', operator: '==', id: email },
+        ]);
+        const { id } = userObj;
+        const agregarMaterias = functions.httpsCallable('agregarMaterias');
+        await agregarMaterias({
+          instId,
+          courseId,
+          subjectId,
+          uid: id,
+        });
+        await sendInvitationEmail(email, addMail);
+        return dispatch(registerUserSuccess(registerUser));
+      } else {
+        dispatch(registerUserError(error.message));
+        return enviarNotificacionError(error.message, 'Error');
+      }
     } else return dispatch(registerUserError(error.message));
   }
 };
