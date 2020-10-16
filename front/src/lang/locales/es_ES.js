@@ -18,6 +18,7 @@ Tabla de Contenidos
 13. Mensajería
 14. Inicio
 15. Foros
+16. Ayuda
 */
 
 module.exports = {
@@ -30,6 +31,7 @@ module.exports = {
   'user.confirmar-password': 'Confirmá tu contraseña',
   'user.email': 'Email',
   'user.password': 'Contraseña',
+  'user.rol': 'Rol',
   'user.forgot-password-question': '¿Contraseña olvidada?',
   'user.cambie-password': 'Cambiá tu contraseña',
   'user.fullname': 'Nombre completo',
@@ -71,6 +73,8 @@ module.exports = {
   'menu.clases-virtuales': 'Clases Virtuales',
   'menu.activities': 'Prácticas',
   'menu.evaluations': 'Evaluaciones',
+  'menu.evaluations-write': 'Evaluaciones Escritas',
+  'menu.evaluations-oral': 'Evaluaciones Orales',
   'menu.forum': 'Foro',
   'menu.messages': 'Mensajería',
   'menu.formal': 'Comunicaciones Formales',
@@ -83,9 +87,13 @@ module.exports = {
   'menu.my-old-activities': 'Mis Prácticas Finalizadas',
   'menu.my-evaluations': 'Mis Evaluaciones Actuales',
   'menu.my-old-evaluations': 'Mis Evaluaciones Finalizadas',
+  'menu.my-oral-evaluations': 'Mis Evaluaciones Orales Actuales',
+  'menu.my-old-oral-evaluations': 'Mis Evaluaciones Orales Finalizados',
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
+  'menu.oral-evaluaciones': 'Evaluaciones Orales',
   'menu.agregar': 'Agregar Evaluación',
+  'menu.agregar-oral': 'Agregar Evaluación Oral',
   'menu.editar-evaluacion': 'Editar Evaluación',
   'menu.mis-instituciones': 'Mis Instituciones',
   'menu.mis-cursos': 'Mis Cursos',
@@ -93,6 +101,8 @@ module.exports = {
   'menu.mis-foros': 'Mis Temas',
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',
+  'menu.admin': 'Administración',
+  'menu.ayuda': 'Ayuda',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -168,6 +178,11 @@ module.exports = {
   'evaluacion.sinCapturas': '¡Ups!',
   'evaluation.old': 'VER EVALUACIONES FINALIZADAS',
   'evaluation.active': 'VER EVALUACIONES ACTUALES',
+  'evaluation.add-oral': 'AGREGAR EVALUACIÓN ORAL',
+  'evaluation.old-oral': 'VER EVALUACIONES ORALES FINALIZADAS',
+  'evaluation.active-oral': 'VER EVALUACIONES ORALES ACTUALES',
+  'evaluation-oral.edit': 'EDITAR EVALUACIÓN ORAL',
+  'evaluation-oral.back': 'VOLVER A EVALUACIONES ORALES',
 
   /* 12. Contenidos */
   'contenido.agregar': 'AGREGAR CONTENIDO',
@@ -196,4 +211,9 @@ module.exports = {
   /* 15. Foros */
   'forums.add': 'AGREGAR TEMA',
   'forums.edit': 'EDITAR TEMA',
+
+  /* 16. Ayuda */
+  'ayuda.bienvenido': 'Te damos la bienvenida a la sección de ayuda.',
+  'ayuda.bienvenido-subtitulo':
+    ' En esta sección encontrarás toda la información sobre cómo usar la aplicación.',
 };

@@ -50,7 +50,7 @@ class Evaluaciones extends Component {
       eval: null,
       evalId: '',
       oldTestActive: false,
-      rolDocente: this.props.rol === ROLES.Docente,
+      rolDocente: this.props.rol !== ROLES.Alumno,
       filtroFecha: '',
     };
   }

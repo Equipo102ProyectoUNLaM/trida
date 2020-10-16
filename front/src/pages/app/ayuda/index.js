@@ -1,18 +1,20 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-const PaginaAlumnos = React.lazy(() =>
-  import(/* webpackChunkName: "start" */ './alumnos')
+const PaginaAyuda = React.lazy(() =>
+  import(/* webpackChunkName: "start" */ './ayuda')
 );
-const Alumnos = ({ match }) => (
+
+const Ayuda = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
         path={`${match.url}/`}
-        render={(props) => <PaginaAlumnos {...props} />}
+        render={(props) => <PaginaAyuda {...props} />}
+        exact
       />
       <Redirect to="/error" />
     </Switch>
   </Suspense>
 );
-export default Alumnos;
+export default Ayuda;

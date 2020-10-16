@@ -9,7 +9,7 @@ export const getUserData = async (userId) => {
     try {
       foto = await storage.ref('usuarios').child(userId).getDownloadURL();
     } catch (error) {
-      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
+      console.log(error);
     }
 
     return {
@@ -96,14 +96,18 @@ export const getCourses = async (institutionId, userId) => {
 };
 
 export const getUsersOfSubject = async (idMateria, currentUser) => {
-  let datos = [];
   const arrayDeObjetos = await getDocument(`usuariosPorMateria/${idMateria}`);
-  // Me quedo con el array de usuarios que pertenecen a esta materia
-  const users = arrayDeObjetos.data.usuario_id;
+  const usuarios = createUserList(arrayDeObjetos.data.usuario_id, currentUser);
+
+  return usuarios;
+};
+
+export const createUserList = async (arrayDeUsuarios, currentUser) => {
+  let datos = [];
+  const users = arrayDeUsuarios;
   for (const user of users) {
     const docObj = await getDocument(`usuarios/${user}`);
     let i = 0;
-
     if (docObj.data.id !== currentUser) {
       const nombre = docObj.data.nombre + ' ' + docObj.data.apellido;
       // Armo el array que va a alimentar el Select

@@ -13,14 +13,14 @@ import {
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import ROLES from 'constants/roles';
-import { editDocument, getDatosClaseOnSnapshot } from 'helpers/Firebase-db';
+import { editDocument, getDocumentOnSnapshot } from 'helpers/Firebase-db';
 
 const PaginaVideollamada = (props) => {
   const room = CryptoJS.AES.decrypt(props.idSala, secretKey).toString(
     CryptoJS.enc.Utf8
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
-  const isHost = props.rol === ROLES.Docente;
+  const isHost = props.rol !== ROLES.Alumno;
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [call, setCall] = useState(false);
@@ -38,7 +38,7 @@ const PaginaVideollamada = (props) => {
   };
 
   useEffect(() => {
-    getDatosClaseOnSnapshot('clases', props.idClase, onClaseIniciada);
+    getDocumentOnSnapshot('clases', props.idClase, onClaseIniciada);
   }, [props.idClase]);
 
   const onClaseIniciada = (doc) => {
@@ -107,7 +107,7 @@ const PaginaVideollamada = (props) => {
                 />
               </div>
             </FormGroup>
-            {props.rol === ROLES.Docente && (
+            {props.rol !== ROLES.Alumno && (
               <Button color="primary" size="lg" type="submit">
                 Iniciar
               </Button>
@@ -137,6 +137,7 @@ const mapStateToProps = ({ authUser }) => {
     nombre,
     apellido,
     rol,
+    user,
   };
 };
 
