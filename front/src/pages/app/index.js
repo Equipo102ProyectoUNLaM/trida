@@ -22,6 +22,8 @@ const Activities = React.lazy(() => import('./practicas'));
 
 const Admin = React.lazy(() => import('./admin'));
 
+const Ayuda = React.lazy(() => import('./ayuda'));
+
 class App extends Component {
   render() {
     const { match } = this.props;
@@ -64,6 +66,10 @@ class App extends Component {
               <Route
                 path={`${match.url}/admin`}
                 render={(props) => <Admin {...props} />}
+              />
+              <Route
+                path={`${match.url}/ayuda`}
+                render={(props) => <Ayuda {...props} />}
               />
               <Redirect to="/error" />
             </Switch>
