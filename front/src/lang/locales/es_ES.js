@@ -204,5 +204,5 @@ module.exports = {
   /* 16. Ayuda */
   'ayuda.bienvenido': 'Te damos la bienvenida a la sección de ayuda.',
   'ayuda.bienvenido-subtitulo':
-    'En esta sección encontrarás toda la información sobre cómo usar la aplicación.',
+    ' En esta sección encontrarás toda la información sobre cómo usar la aplicación.',
 };
