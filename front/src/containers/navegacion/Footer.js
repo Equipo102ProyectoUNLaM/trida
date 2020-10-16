@@ -96,7 +96,7 @@ class Footer extends React.Component {
                     </NavLink>
                   </li>
                   <li className="breadcrumb-item mb-0">
-                    <NavLink className="btn-link" to="#" location={{}}>
+                    <NavLink className="btn-link" to="/app/ayuda" location={{}}>
                       Ayuda
                     </NavLink>
                   </li>

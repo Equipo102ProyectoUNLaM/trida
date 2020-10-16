@@ -18,6 +18,7 @@ Tabla de Contenidos
 13. Mensajería
 14. Inicio
 15. Foros
+16. Ayuda
 */
 
 module.exports = {
@@ -101,6 +102,7 @@ module.exports = {
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',
   'menu.admin': 'Administración',
+  'menu.ayuda': 'Ayuda',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -209,4 +211,9 @@ module.exports = {
   /* 15. Foros */
   'forums.add': 'AGREGAR TEMA',
   'forums.edit': 'EDITAR TEMA',
+
+  /* 16. Ayuda */
+  'ayuda.bienvenido': 'Te damos la bienvenida a la sección de ayuda.',
+  'ayuda.bienvenido-subtitulo':
+    ' En esta sección encontrarás toda la información sobre cómo usar la aplicación.',
 };
