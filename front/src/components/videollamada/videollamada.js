@@ -25,7 +25,7 @@ import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
 import {
   getCollectionOnSnapshot,
-  getDatosClaseOnSnapshot,
+  getDocumentOnSnapshot,
   editDocument,
   getDocument,
   addDocument,
@@ -198,7 +198,7 @@ const Videollamada = ({
         sinRespuesta
       );
       // Verifico si el alumno respondio la pregunta lanzada por el profe
-      getDatosClaseOnSnapshot(
+      getDocumentOnSnapshot(
         `clases/${idClase}/preguntas/${preguntaLanzadaGlobal[0].id}/respuestas`,
         idUser,
         checkRespuestaAlumno
