@@ -69,6 +69,7 @@ class FormInstitucion extends Component {
       pathname: '/seleccion-curso/crear-curso',
       instRef: instRef,
       instId: instRef.id,
+      agregado: false,
     });
   };
 

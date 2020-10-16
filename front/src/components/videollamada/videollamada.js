@@ -361,9 +361,7 @@ const Videollamada = ({
     roomName,
     parentNode,
     interfaceConfigOverwrite:
-      rol === ROLES.Docente
-        ? INTERFACE_CONFIG.DOCENTE
-        : INTERFACE_CONFIG.ALUMNO,
+      rol !== ROLES.Alumno ? INTERFACE_CONFIG.DOCENTE : INTERFACE_CONFIG.ALUMNO,
     configOverwrite: {
       disableDeepLinking: true,
       startWithAudioMuted: microfono,
@@ -385,10 +383,10 @@ const Videollamada = ({
         //jitsi.executeCommand('password', password);
       });
       jitsi.addEventListener('readyToClose', () => {
-        if (rol === ROLES.Docente) guardarListaAsistencia();
+        if (rol !== ROLES.Alumno) guardarListaAsistencia();
         setCallOff();
       });
-      if (rol === ROLES.Docente) {
+      if (rol !== ROLES.Alumno) {
         jitsi.addEventListener('screenSharingStatusChanged', ({ on }) => {
           on
             ? setShareScreenButtonText('Dejar de Compartir pantalla')
@@ -427,7 +425,7 @@ const Videollamada = ({
 
           <IntlMessages id="clase.ver-preguntas-realizadas" />
         </Button>
-        {rol === ROLES.Docente && (
+        {rol !== ROLES.Alumno && (
           <>
             <Button
               className="button"
@@ -596,7 +594,7 @@ const Videollamada = ({
                 <div className="notas mb-2 pt-2 pb-2" key={pregunta.id}>
                   <Row className="tip-text-cursiva ml-1 mt-2">
                     {pregunta.fecha}
-                    {rol === ROLES.Docente ? ' - ' + pregunta.alumno : null}
+                    {rol !== ROLES.Alumno ? ' - ' + pregunta.alumno : null}
                   </Row>
                   <Row className="ml-1 mt-2 mr-2">
                     <i className="iconsminds-speach-bubble-asking" />{' '}

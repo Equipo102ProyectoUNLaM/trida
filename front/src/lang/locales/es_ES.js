@@ -30,6 +30,7 @@ module.exports = {
   'user.confirmar-password': 'Confirmá tu contraseña',
   'user.email': 'Email',
   'user.password': 'Contraseña',
+  'user.rol': 'Rol',
   'user.forgot-password-question': '¿Contraseña olvidada?',
   'user.cambie-password': 'Cambiá tu contraseña',
   'user.fullname': 'Nombre completo',
@@ -93,6 +94,7 @@ module.exports = {
   'menu.mis-foros': 'Mis Temas',
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',
+  'menu.admin': 'Administración',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -161,7 +163,8 @@ module.exports = {
   'fecha.modificar': 'Modificar fecha de entrega',
 
   /* 11. Evaluaciones */
-  'evaluation.add': 'AGREGAR EVALUACIÓN',
+  'evaluation.add': 'AGREGAR / IMPORTAR EVALUACIÓN',
+  'evaluation.import': 'IMPORTAR EVALUACIÓN',
   'evaluacion.adjuntar-desarrollo-extensiones':
     'Las extensiones admitidas son .pdf, .png, .jpg, .jpeg',
   'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',

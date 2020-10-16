@@ -20,7 +20,7 @@ const PaginaVideollamada = (props) => {
     CryptoJS.enc.Utf8
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
-  const isHost = props.rol === ROLES.Docente;
+  const isHost = props.rol !== ROLES.Alumno;
 
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [call, setCall] = useState(false);
@@ -107,7 +107,7 @@ const PaginaVideollamada = (props) => {
                 />
               </div>
             </FormGroup>
-            {props.rol === ROLES.Docente && (
+            {props.rol !== ROLES.Alumno && (
               <Button color="primary" size="lg" type="submit">
                 Iniciar
               </Button>
