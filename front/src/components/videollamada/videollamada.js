@@ -10,6 +10,7 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
+  Alert,
 } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
@@ -555,6 +556,12 @@ const Videollamada = ({
             );
           })}
           <ModalFooter>
+            {preguntaLanzadaGlobal.length > 0 && (
+              <Alert color="warning" className="rounded alert-preguntas">
+                Ups, tenés que esperar a que finalice el tiempo de la pregunta
+                actual
+              </Alert>
+            )}
             <Button
               color="primary"
               disabled={!lanzamientoPreguntaValido()}
