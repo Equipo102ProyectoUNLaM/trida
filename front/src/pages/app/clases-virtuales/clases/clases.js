@@ -148,6 +148,9 @@ class Clase extends Component {
             <FormClase
               toggleModal={this.toggleModal}
               onClaseGuardada={this.onClaseGuardada}
+              textConfirm="Agregar"
+              operationType="add"
+              idMateria={this.state.idMateria}
             />
           </ModalGrande>
           <Row>
@@ -163,6 +166,7 @@ class Clase extends Component {
                     navTo={`/app/clases-virtuales/mis-clases/detalle-clase/${clase.id}`}
                     onEdit={rolDocente ? this.onEdit : null}
                     onDelete={rolDocente ? this.onDelete : null}
+                    isClase={true}
                   />
                 );
               })}
@@ -181,11 +185,9 @@ class Clase extends Component {
               <FormClase
                 toggleModal={this.toggleEditModal}
                 onClaseGuardada={this.onClaseGuardada}
-                idClase={idClaseEditada}
-                nombre={nombreClaseEditada}
-                fecha={fechaClaseEditada}
-                descripcion={descClaseEditada}
-                sala={salaEditada}
+                textConfirm="Editar"
+                operationType="edit"
+                id={idClaseEditada}
               />
             </ModalGrande>
           )}

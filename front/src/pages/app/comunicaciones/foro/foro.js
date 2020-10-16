@@ -166,6 +166,7 @@ class Foro extends Component {
                     navTo={`/app/comunicaciones/foro/detalle-foro/${foro.id}`}
                     onEdit={rolDocente ? this.onEdit : null}
                     onDelete={rolDocente ? this.onDelete : null}
+                    isClase={false}
                   />
                 );
               })}
