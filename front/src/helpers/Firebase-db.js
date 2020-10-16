@@ -349,6 +349,13 @@ export const addToMateriasCollection = async (
 };
 
 export const addDocumentWithId = async (collection, id, object, message) => {
+  object = {
+    ...object,
+    fecha_creacion: getFechaHoraActual(),
+    activo: true,
+    creador: id,
+  };
+
   firestore
     .collection(collection)
     .doc(id)
@@ -523,4 +530,19 @@ export const getCollectionOnSnapshot = async (collection, callback) => {
 
 export const generateId = (path) => {
   return firestore.collection(path).doc().id;
+};
+
+export const documentExistsOnSnapshot = (collection, document) => {
+  const usersRef = firestore.collection(collection).doc(document);
+
+  return usersRef.get().then((docSnapshot) => {
+    //si por algún motivo queremos tener la rta completa, devolver un docSnapshot.data()
+    if (docSnapshot.exists) {
+      usersRef.onSnapshot((doc) => {
+        return true;
+      });
+    } else {
+      return false;
+    }
+  });
 };

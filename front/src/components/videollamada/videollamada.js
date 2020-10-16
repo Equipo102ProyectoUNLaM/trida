@@ -10,7 +10,9 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
+  Alert,
 } from 'reactstrap';
+import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import {
   getTimestamp,
@@ -23,6 +25,7 @@ import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
 import {
   getCollectionOnSnapshot,
+  getDatosClaseOnSnapshot,
   editDocument,
   getDocument,
   addDocument,
@@ -30,9 +33,11 @@ import {
 import { timeStamp } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
-import ModalVistaPreviaPreguntas from 'pages/app/clases-virtuales/clases/preguntas-clase/vista-previa-preguntas';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import ContestarPregunta from './contestar-pregunta';
 import classnames from 'classnames';
+import Select from 'react-select';
+import { MINUTOS_OPTIONS, SEGUNDOS_OPTIONS } from 'constants/tiempoPreguntas';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -58,16 +63,20 @@ const Videollamada = ({
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
+  const [preguntaALanzar, setPreguntaALanzar] = useState(); // id de la pregunta a lanzar
+  const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
+  const [tiempoPreguntaOnSnapshot, setTiempoPreguntaOnSnapshot] = useState(); // Esta es la que escucha de firebase cuando se setea un tiempo a la pregunta
+  const [alumnoRespondioPregunta, setAlumnoRespondioPregunta] = useState(true);
   const [modalPreguntasRealizadas, setModalPreguntasRealizadas] = useState(
     false
   );
-  const [preguntaALanzar, setPreguntaALanzar] = useState();
   const [realizarPregunta, setRealizarPregunta] = useState(false);
   const [preguntasRealizadas, setPreguntasRealizadas] = useState([]);
   const [preguntaDeAlumno, setPreguntaDeAlumno] = useState('');
-  const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
   const [reacciones, setReacciones] = useState({});
   const [hayPreguntas, setHayPreguntas] = useState(false);
+  const [minutosSeleccionados, setMinutosSeleccionados] = useState();
+  const [segundosSeleccionados, setSegundosSeleccionados] = useState();
 
   const setElementHeight = () => {
     const element = document.querySelector(`#${parentNode}`);
@@ -96,13 +105,34 @@ const Videollamada = ({
   };
 
   // Metodo para lanzar pregunta cuando estás con rol de profesor
-  const onLanzarPregunta = () => {
+  const onLanzarPregunta = async () => {
+    const tiempoPregunta =
+      minutosSeleccionados.value + ':' + segundosSeleccionados.value;
     editDocument(`clases/${idClase}/preguntas`, preguntaALanzar, {
       lanzada: true,
       seLanzo: true,
+      tiempoDuracion: tiempoPregunta,
     });
     setPreguntaALanzar(null);
     toggleModalPreguntas();
+
+    // Comienzo timer interno para cancelar la pregunta
+    const mins = minutosSeleccionados.value
+      ? Number(minutosSeleccionados.value) * 60
+      : 0;
+    const segs = segundosSeleccionados.value
+      ? Number(segundosSeleccionados.value)
+      : 0;
+    const remainingTime = mins + segs; // queda en segundos
+    if (remainingTime > 0) {
+      setTimeout(() => {
+        onCancelarPregunta(preguntaALanzar);
+      }, remainingTime * 1000);
+    }
+  };
+
+  const checkRespuestaAlumno = (document) => {
+    setAlumnoRespondioPregunta(document.exists);
   };
 
   const onPreguntaRealizada = (doc) => {
@@ -156,6 +186,7 @@ const Videollamada = ({
     //Me quedo con la pregunta lanzada, si la hay (lanzada == true)
     if (preguntaLanzada) {
       preguntaLanzadaEncriptada.push(preguntaLanzada);
+      setTiempoPreguntaOnSnapshot(preguntaLanzada.data.tiempoDuracion);
     }
 
     //Desencripto la pregunta lanzada (si la hay)
@@ -165,6 +196,12 @@ const Videollamada = ({
       preguntaLanzadaGlobal = desencriptarEjercicios(
         preguntaLanzadaEncriptada,
         sinRespuesta
+      );
+      // Verifico si el alumno respondio la pregunta lanzada por el profe
+      getDatosClaseOnSnapshot(
+        `clases/${idClase}/preguntas/${preguntaLanzadaGlobal[0].id}/respuestas`,
+        idUser,
+        checkRespuestaAlumno
       );
       toggleModalPreviewPreguntaAlumno();
     }
@@ -185,10 +222,8 @@ const Videollamada = ({
 
   //Metodo que se ejecuta cuando el alumno responde una pregunta
   const respuestaDeAlumno = () => {
-    // NOTA: POR AHORA, PONGO EN FALSE EL LANZADA CUANDO EL ALUMNO CLICKEA EN "CERRAR", DESPUÉS AGREGO LA LÓGICA DE QUE SE HAGA CON TIMER
-    editDocument(`clases/${idClase}/preguntas`, preguntaLanzadaGlobal[0].id, {
-      lanzada: false,
-    });
+    // Cuando termina el timer en el modal ContestarPregunta, seteo lanzada=false
+    onCancelarPregunta();
 
     // Limpio la pregunta lanzada
     preguntaLanzadaGlobal = [];
@@ -196,9 +231,27 @@ const Videollamada = ({
     toggleModalPreviewPreguntaAlumno();
   };
 
+  const onCancelarPregunta = async (preguntaALanzar = null) => {
+    const idPregunta = preguntaALanzar
+      ? preguntaALanzar
+      : preguntaLanzadaGlobal[0].id;
+
+    await editDocument(`clases/${idClase}/preguntas`, idPregunta, {
+      lanzada: false,
+    });
+
+    preguntaLanzadaGlobal = [];
+  };
+
   //Este metodo se ejecuta cuando se clickea en Cerrar en la modal de Preview de la pregunta
   const toggleModalPreviewPreguntaAlumno = () => {
     setModalPreviewOpen(!modalPreviewOpen);
+  };
+
+  const lanzamientoPreguntaValido = () => {
+    return (
+      preguntaALanzar && esTiempoValido() && preguntaLanzadaGlobal.length == 0
+    );
   };
 
   const guardarListaAsistencia = async () => {
@@ -276,6 +329,25 @@ const Videollamada = ({
   const handleCancelarRealizarPregunta = () => {
     setPreguntaDeAlumno('');
     toggleRealizarPregunta();
+  };
+
+  const handleMinutoChange = (minSeleccionado) => {
+    setMinutosSeleccionados(minSeleccionado);
+  };
+
+  const handleSegundosChange = (segSeleccionado) => {
+    setSegundosSeleccionados(segSeleccionado);
+  };
+
+  const esTiempoValido = () => {
+    if (
+      !minutosSeleccionados ||
+      !segundosSeleccionados ||
+      (minutosSeleccionados.value === '00' &&
+        segundosSeleccionados.value === '00')
+    )
+      return false;
+    return true;
   };
 
   useEffect(() => {
@@ -435,6 +507,37 @@ const Videollamada = ({
           toggleModal={toggleModalPreguntas}
           text="Preguntas de la Clase"
         >
+          <Label className="timer-pregunta-clase">
+            Seleccione durante cuanto tiempo lanzar la pregunta
+          </Label>
+          <Row className="mb-3 mr-3">
+            <Colxx xxs="4" md="4">
+              <Select
+                className="timer-pregunta-clase"
+                classNamePrefix="select"
+                isClearable={true}
+                name="minutos-timer"
+                options={MINUTOS_OPTIONS}
+                value={minutosSeleccionados}
+                onChange={handleMinutoChange}
+                isDisabled={false}
+                placeholder="Minutos"
+                isSearchable={true}
+              />
+            </Colxx>
+            <Colxx xxs="4" md="4">
+              <Select
+                options={SEGUNDOS_OPTIONS}
+                classNamePrefix="select"
+                value={segundosSeleccionados}
+                name="segundos-timer"
+                placeholder="Segundos"
+                onChange={handleSegundosChange}
+                isSearchable={true}
+                isClearable={true}
+              />
+            </Colxx>
+          </Row>
           {preguntas.map((pregunta) => {
             const consignaPregunta = pregunta.data.consigna;
             const preguntaLanzadaAlmenosUnaVez = pregunta.data.seLanzo;
@@ -451,9 +554,15 @@ const Videollamada = ({
             );
           })}
           <ModalFooter>
+            {preguntaLanzadaGlobal.length > 0 && (
+              <Alert color="warning" className="rounded alert-preguntas">
+                Ups, tenés que esperar a que finalice el tiempo de la pregunta
+                actual
+              </Alert>
+            )}
             <Button
               color="primary"
-              disabled={!preguntaALanzar}
+              disabled={!lanzamientoPreguntaValido()}
               onClick={onLanzarPregunta}
             >
               Lanzar Pregunta
@@ -464,16 +573,18 @@ const Videollamada = ({
           </ModalFooter>
         </ModalGrande>
       )}
-      {/* CUANDO SE HAGA LOGICA DE LA RTA, SE AGREGA LA VALIDACIÓN DE QUE NO ESTÉ RESPONDIDA PARA MOSTRAR EL MODAL */}
-      {rol === ROLES.Alumno && preguntaLanzadaGlobal.length > 0 && (
-        <ModalVistaPreviaPreguntas
-          toggle={toggleModalPreviewPreguntaAlumno}
-          isOpen={modalPreviewOpen}
-          preguntas={preguntaLanzadaGlobal}
-          esRespuestaDeAlumno={true}
-          onRespuestaDeAlumno={respuestaDeAlumno}
-        />
-      )}
+      {rol === ROLES.Alumno &&
+        preguntaLanzadaGlobal.length > 0 &&
+        !alumnoRespondioPregunta && (
+          <ContestarPregunta
+            toggle={toggleModalPreviewPreguntaAlumno}
+            isOpen={modalPreviewOpen}
+            preguntas={preguntaLanzadaGlobal}
+            onRespuestaDeAlumno={respuestaDeAlumno}
+            idClase={idClase}
+            tiempoPreguntaOnSnapshot={tiempoPreguntaOnSnapshot}
+          />
+        )}
       {modalPreguntasRealizadas && (
         <Modal
           isOpen={modalPreguntasRealizadas}

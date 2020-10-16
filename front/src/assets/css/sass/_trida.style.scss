@@ -9817,6 +9817,19 @@ div.rendered-file-browser{
 
 .modalLanzarPreguntas {
   cursor: pointer;
+  width: 100%;
+
+  @media (min-width: 600px) {
+    min-width: max-content;
+  }
+}
+
+.timer-pregunta-clase {
+  margin-left: 1rem;
+
+  input {
+    width: 9rem;
+  }
 }
 
 .preguntaSeleccionada {
@@ -9880,6 +9893,10 @@ div.rendered-file-browser{
 
 .relative {
   position: relative;
+}
+
+.alert-preguntas {
+  margin-bottom: 0px;
 }
 // Grabaciones
 
@@ -10027,6 +10044,12 @@ div.rendered-file-browser{
   flex-direction: row;
   margin-top: 5rem;
   padding: 1rem;
+}
+
+.card-countdown-preguntas{
+  flex-direction: row;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .card-countdown-body{

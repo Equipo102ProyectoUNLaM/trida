@@ -40,7 +40,6 @@ class TabsDeClase extends Component {
     super(props);
 
     this.toggleSecondTab = this.toggleSecondTab.bind(this);
-
     this.state = {
       activeSecondTab: '1',
       modalContenidosOpen: false,
