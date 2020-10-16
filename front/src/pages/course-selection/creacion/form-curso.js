@@ -21,7 +21,7 @@ class FormCurso extends Component {
       isEmpty: false,
       nombre: '',
       cursosTags: [],
-      instId,
+      instId: agregado ? this.props.institution.id : instId,
       instRef,
       agregado,
     };
