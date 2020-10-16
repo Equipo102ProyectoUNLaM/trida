@@ -168,7 +168,7 @@ class CardTabsOral extends Component {
                             <Colxx xxs="12" xs="12" lg="12">
                               <p>Fecha y Hora de Evaluación</p>
                               <div className="dropdown-calendar flex ml-0">
-                                {rol === ROLES.Docente &&
+                                {rol !== ROLES.Alumno &&
                                   !this.props.isOldTest && (
                                     <Calendario
                                       handleClick={
@@ -202,16 +202,18 @@ class CardTabsOral extends Component {
                                 color="primary"
                                 className="button"
                               >
-                                Realizar Evaluación
+                                {rol !== ROLES.Alumno
+                                  ? 'Tomar Evaluación'
+                                  : 'Realizar Evaluación'}
                               </Button>
                             )}
-                            {rol === ROLES.Docente && !this.props.isOldTest && (
+                            {rol !== ROLES.Alumno && !this.props.isOldTest && (
                               <div
                                 className="glyph-icon simple-icon-pencil edit-action-icon ml-1"
                                 onClick={this.handleClickEdit}
                               />
                             )}
-                            {rol === ROLES.Docente && !this.props.isOldTest && (
+                            {rol !== ROLES.Alumno && !this.props.isOldTest && (
                               <div
                                 className="glyph-icon simple-icon-trash delete-action-icon"
                                 onClick={this.handleClickDelete}
