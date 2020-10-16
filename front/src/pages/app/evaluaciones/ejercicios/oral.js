@@ -47,7 +47,7 @@ class Oral extends React.Component {
             <FormGroup className="mb-3 error-l-50">
               <Label>Tema</Label>
               <Input
-                autocomplete="off"
+                autoComplete="off"
                 name="tema"
                 defaultValue={tema}
                 onInputCapture={this.handleChange}

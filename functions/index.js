@@ -1,20 +1,24 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable no-await-in-loop */
+
+const cryptoJs = require('crypto-js');
+const secretKey = 'tridaSecretKey';
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-const cors = require('cors')({origin: true});
+const cors = require('cors')({ origin: true });
+const timeStamp = admin.firestore.Timestamp;
 admin.initializeApp(functions.config().firebase);
 
 /* healthcheck endpoint */
 exports.ping = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
-  response.send("pong");
+    response.send("pong");
   });
- });
+});
 
- /* create user creates a user into firebase auth service */
+/* create user creates a user into firebase auth service */
 /*exports.createUser = functions.https.onRequest( (data, context) => {
    console.log('Name', data.name);
     return admin.auth().createUser({
@@ -54,7 +58,7 @@ exports.register = functions.auth.user().onCreate((data)=> {
       rol: 3,
     }
 
-    return admin.firestore().collection('usuarios')
+  return admin.firestore().collection('usuarios')
     .doc(data.uid)
     .set(user)
     .then(doc => console.log('user added', doc))
@@ -97,9 +101,9 @@ const getDocRef = (doc) => {
 
 exports.asignarFuncion = async ({ instId, courseId, subjectId, uid }) => {
   let instRef = '',
-  courseRef = [],
-  subjectRef = [],
-  cursosObj = [];
+    courseRef = [],
+    subjectRef = [],
+    cursosObj = [];
 
   let referenciaAInst = `/instituciones/${instId}`;
   instRef = getDocRef(referenciaAInst);
@@ -169,15 +173,15 @@ exports.asignarFuncion = async ({ instId, courseId, subjectId, uid }) => {
   return instObj;
 }
 
-exports.asignarMaterias = functions.https.onCall(async (data)=> {
+exports.asignarMaterias = functions.https.onCall(async (data) => {
   try {
     const instObj = await this.asignarFuncion(data);
     console.log(instObj);
     //TODO iterar instObj y agregar a usuarios por materia
     await this.agregarAUsusariosPorMateria(instObj, data.uid);
     await admin.firestore().collection('usuarios')
-    .doc(data.uid)
-    .set( { instituciones: instObj }, { merge: true });
+      .doc(data.uid)
+      .set({ instituciones: instObj }, { merge: true });
 
   } catch (error) {
     console.log('error', error);
@@ -200,7 +204,7 @@ exports.mergeInstituciones = async (instUser, instAsignar) => {
 
   // La que voy a asignar es nueva (no está dentro de instUser)
   if (!institucionYaAsignada) {
-    return [...instUser,  ...instAsignar]
+    return [...instUser, ...instAsignar]
   }
 
   // El usuario ya posee la institución a la cual lo invitaron
@@ -231,7 +235,7 @@ exports.mergeInstituciones = async (instUser, instAsignar) => {
   return instUser;
 }
 
-exports.agregarMaterias = functions.https.onCall(async (data)=> {
+exports.agregarMaterias = functions.https.onCall(async (data) => {
 
   try {
     const instUser = await this.institucionesUsuario(data);
@@ -280,11 +284,11 @@ exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
           const usuariosPorMateria = await usuariosPorMateriaRef.get();
           const usuariosPorMateriaObj = usuariosPorMateria.data();
 
-          if(usuariosPorMateriaObj !== undefined) {
+          if (usuariosPorMateriaObj !== undefined) {
             usuario_id = usuariosPorMateriaObj.usuario_id;
           }
           usuario_id.push(userId);
-          await admin.firestore().collection('usuariosPorMateria').doc(materiaSnapShot.id).set( {usuario_id: usuario_id}, { merge: true });
+          await admin.firestore().collection('usuariosPorMateria').doc(materiaSnapShot.id).set({ usuario_id: usuario_id }, { merge: true });
         }
       }
     }
@@ -316,3 +320,308 @@ exports.sendMail = functions.https.onCall((data) => {
 
   return transporter.sendMail(mailOptions);
 });
+
+
+const createNotification = async (notification, users) => {
+  try {
+
+    users.forEach(async user => {
+      await admin.firestore().collection(`notificaciones/${user}/listado`)
+        .add(notification);
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+exports.messageRecived = functions.firestore
+  .document('mensajes/{mensajeId}')
+  .onCreate((doc) => {
+    try {
+      const message = doc.data();
+      const notification = {
+        contenido: `Tenés un nuevo mensaje de ${message.emisor.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/comunicaciones/mensajeria`,
+        leida: false
+      }
+
+      return createNotification(notification, message.receptor);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
+exports.foroCreated = functions.firestore
+  .document('foros/{foroId}')
+  .onCreate(async (doc) => {
+    try {
+      const foro = doc.data();
+      const foroId = doc.id;
+      const notification = {
+        contenido: `Se ha creado el foro ${foro.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/comunicaciones/foro/detalle-foro/${foroId}`,
+        leida: false
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(foro.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      const alumnos = usuariosPorMateriaObj.usuario_id.filter(item => item !== foro.creador);
+
+      return createNotification(notification, alumnos);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
+exports.classCreated = functions.firestore
+  .document('clases/{claseId}')
+  .onCreate(async (doc) => {
+    try {
+      const clase = doc.data();
+      const claseId = doc.id;
+      const notification = {
+        contenido: `Se ha creado la clase ${clase.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/clases-virtuales/mis-clases/detalle-clase/${claseId}`,
+        leida: false
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(clase.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      const alumnos = usuariosPorMateriaObj.usuario_id.filter(item => item !== clase.creador);
+
+      return createNotification(notification, alumnos);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
+exports.correctionCreated = functions.firestore
+  .document('correcciones/{correccionId}')
+  .onCreate(async (doc) => {
+    try {
+      const correccion = doc.data();
+      const correccionId = doc.id;
+
+      const usuarioRef = admin.firestore().collection('usuarios').doc(correccion.creador);
+      const usuario = await usuarioRef.get();
+      const usuarioObj = usuario.data();
+
+      const notification = {
+        contenido: `${usuarioObj.nombre} ha entregado una ${correccion.tipo}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/correcciones#${correccionId}`,
+        leida: false
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(correccion.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let docentes = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 1)
+          docentes.push(usu);
+      }
+
+      return createNotification(notification, docentes);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
+exports.contentCreated = functions.storage
+  .object().onFinalize(async (object) => {
+    try {
+      const filePath = object.name; // File path in the bucket.
+
+      //Si están subiendo algo en contenidos, envío la notificación a los usuarios.
+      if (filePath.includes('contenidos')) {
+        const values = filePath.split('/');
+        const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(values[1]);
+        const usuariosPorMateria = await usuariosPorMateriaRef.get();
+        const usuariosPorMateriaObj = usuariosPorMateria.data();
+  
+        let alumnos = [];
+        for (const usu of usuariosPorMateriaObj.usuario_id) {
+          const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+          const usuario = await usuarioRef.get();
+          const usuarioObj = usuario.data();
+          if (usuarioObj.rol === 2)
+            alumnos.push(usu);
+        }
+
+        const notification = {
+          contenido: `Se han cargado nuevos contenidos`,
+          fecha: admin.firestore.FieldValue.serverTimestamp(),
+          url: `/app/contenidos`,
+          leida: false
+        };
+
+        return createNotification(notification, alumnos);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.evaluationCreated = functions.firestore
+  .document('evaluaciones/{evaluacionId}')
+  .onCreate(async (doc) => {
+    try {
+      const evaluacion = doc.data();
+      const evaluacionId = doc.id;
+
+      const evaluacionNombre = cryptoJs.AES.decrypt(
+        evaluacion.nombre,
+        secretKey
+      ).toString(cryptoJs.enc.Utf8);
+
+      const notification = {
+        contenido: `Se ha creado la evaluación ${evaluacionNombre}`,
+        fecha: evaluacion.fecha_publicacion,
+        url: `/app/evaluaciones#${evaluacionId}`,
+        leida: false,
+        id: evaluacionId
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(evaluacion.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      return createNotification(notification, alumnos);
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.evaluationEdited = functions.firestore
+  .document('evaluaciones/{evaluacionId}')
+  .onUpdate(async (change, context) => {
+    try {
+      const newValue = change.after.data();
+      const evaluacionId = context.params.evaluacionId;
+      
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(newValue.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      for (const alumno of alumnos) {
+        const notificacionsRef = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+        .where('id', '==', `${evaluacionId}`);
+  
+        const notifications = await notificacionsRef.get();
+
+        notifications.forEach(async (doc) =>{
+          var ref = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+          .doc(doc.id)
+          .set({fecha: newValue.fecha_publicacion, leida: false}, { merge: true });
+        })
+      }
+      return;
+
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.activityCreated = functions.firestore
+  .document('practicas/{practicaId}')
+  .onCreate(async (doc) => {
+    try {
+      const practica = doc.data();
+      const practicaId = doc.id;
+      
+      const notification = {
+        contenido: `Se ha creado la práctica ${practica.nombre}`,
+        fecha: timeStamp.fromDate(new Date(newValue.fechaLanzada + 'T11:22:33+0000')),
+        url: `/app/practicas#${practicaId}`,
+        leida: false,
+        id: practicaId
+      };
+
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(practica.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      return createNotification(notification, alumnos);
+    } catch (error) {
+      console.log('error', error);
+    }
+  });
+
+  exports.activityEdited = functions.firestore
+  .document('practicas/{practicaId}')
+  .onUpdate(async (change, context) => {
+    try {
+      const newValue = change.after.data();
+      const practicaId = context.params.practicaId;
+      
+      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(newValue.idMateria);
+      const usuariosPorMateria = await usuariosPorMateriaRef.get();
+      const usuariosPorMateriaObj = usuariosPorMateria.data();
+
+      let alumnos = [];
+      for (const usu of usuariosPorMateriaObj.usuario_id) {
+        const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
+        const usuario = await usuarioRef.get();
+        const usuarioObj = usuario.data();
+        if (usuarioObj.rol === 2)
+          alumnos.push(usu);
+      }
+
+      for (const alumno of alumnos) {
+        const notificacionsRef = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+        .where('id', '==', `${practicaId}`);
+  
+        const notifications = await notificacionsRef.get();
+
+        notifications.forEach(async (doc) =>{
+          var ref = admin.firestore().collection(`notificaciones/${alumno}/listado`)
+          .doc(doc.id)
+          .set({fecha: timeStamp.fromDate(new Date(newValue.fechaLanzada + 'T11:22:33+0000')), leida: false}, { merge: true });
+        })
+      }   
+      return;
+
+    } catch (error) {
+      console.log('error', error);
+    }
+  });

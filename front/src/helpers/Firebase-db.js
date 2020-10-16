@@ -528,6 +528,20 @@ export const getCollectionOnSnapshot = async (collection, callback) => {
   return await firestore.collection(collection).onSnapshot(callback);
 };
 
+export const getCollectionOnSnapshotOrderedAndLimited = async (
+  collection,
+  callback,
+  orderBy,
+  order,
+  limit
+) => {
+  return await firestore
+    .collection(collection)
+    .orderBy(orderBy, order)
+    .limit(limit)
+    .onSnapshot(callback);
+};
+
 export const generateId = (path) => {
   return firestore.collection(path).doc().id;
 };
