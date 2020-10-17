@@ -219,7 +219,7 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
-  toggleOldPracticesModal = async () => {
+  toggleOldEvaluationModal = async () => {
     await this.setState({
       oldTestActive: !this.state.oldTestActive,
       isLoading: true,
@@ -321,7 +321,7 @@ class Evaluaciones extends Component {
             }
             toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
             buttonText={rolDocente && !oldTestActive ? 'evaluation.add' : null}
-            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryToggleModal={this.toggleOldEvaluationModal}
             secondaryButtonText={
               oldTestActive ? 'evaluation.active' : 'evaluation.old'
             }

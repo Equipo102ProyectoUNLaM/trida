@@ -81,6 +81,7 @@ module.exports = {
   'menu.my-contents': 'Mis Contenidos',
   'menu.my-corrections': 'Mis Correcciones',
   'menu.mis-clases': 'Mis Clases',
+  'menu.mis-clases-finalizadas': 'Mis Clases Finalizadas',
   'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas Actuales',
@@ -122,6 +123,8 @@ module.exports = {
   /* 06.01.My Classes */
   'classes.add': 'AGREGAR CLASE',
   'classes.edit': 'EDITAR CLASE',
+  'classes.active': 'VER CLASES ACTUALES',
+  'classes.old': 'VER CLASES FINALIZADAS',
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
