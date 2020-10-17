@@ -267,21 +267,29 @@ class Sidebar extends Component {
       this.props.rol === ROLES.Docente ||
       this.props.rol === ROLES.Directivo
     ) {
-      menuItems.push({
-        id: 'admin',
-        icon: 'iconsminds-gear',
-        label: 'menu.admin',
-        to: '/app/admin',
-      });
+      const isAdminPresent = menuItems.some((elem) => elem.id === 'admin');
+      if (!isAdminPresent) {
+        menuItems.push({
+          id: 'admin',
+          icon: 'iconsminds-gear',
+          label: 'menu.admin',
+          to: '/app/admin',
+        });
+      }
       const clasesMenu = menuItems.filter(
         (elem) => elem.id === 'virtual-classes'
       );
-      const pizarronMenu = {
-        icon: 'iconsminds-blackboard',
-        label: 'menu.board',
-        to: '/app/clases-virtuales/pizarron',
-      };
-      clasesMenu[0].subs.push(pizarronMenu);
+      const isPizarronPresent = clasesMenu[0].subs.some(
+        (elem) => elem.label === 'menu.board'
+      );
+      if (!isPizarronPresent) {
+        const pizarronMenu = {
+          icon: 'iconsminds-blackboard',
+          label: 'menu.board',
+          to: '/app/clases-virtuales/pizarron',
+        };
+        clasesMenu[0].subs.push(pizarronMenu);
+      }
     }
     return;
   };
