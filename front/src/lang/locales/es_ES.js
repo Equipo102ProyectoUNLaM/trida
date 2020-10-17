@@ -93,6 +93,7 @@ module.exports = {
   'menu.my-old-oral-evaluations': 'Mis Evaluaciones Orales Finalizados',
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
+  'menu.escritas': 'Evaluaciones Escritas',
   'menu.oral-evaluaciones': 'Evaluaciones Orales',
   'menu.agregar': 'Agregar Evaluación',
   'menu.agregar-oral': 'Agregar Evaluación Oral',
