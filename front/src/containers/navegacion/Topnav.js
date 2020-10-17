@@ -252,20 +252,8 @@ class TopNav extends Component {
                   {this.props.course.name}
                 </a>
               </BreadcrumbItem>
-              <BreadcrumbItem active className="breadcrumb-flex">
-                <UncontrolledDropdown className="dropdown-padding-0">
-                  <DropdownToggle className="dropdown-empty">
-                    <span>{this.props.subject.name}</span>
-                    <i className="simple-icon-arrow-down dropdown-arrow" />
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem
-                      onClick={() => this.props.history.push('/app/alumnos')}
-                    >
-                      Ver Usuarios
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+              <BreadcrumbItem active>
+                <span>{this.props.subject.name}</span>
               </BreadcrumbItem>
             </Breadcrumb>
           </div>
@@ -276,14 +264,14 @@ class TopNav extends Component {
           <span className="logo-mobile d-block d-xs-none" />
         </a>
         <div className="navbar-right">
-          <NavLink
-            className="header-icons glyph-icon simple-icon-home"
-            to="/app/home"
-          />
           {isDarkSwitchActive && <TopnavDarkSwitch />}
 
           <div className="header-icons d-inline-block align-middle">
             {/* <TopnavEasyAccess /> */}
+            <NavLink
+              className="header-icon glyph-icon simple-icon-home ml-1"
+              to="/app/home"
+            />
             <TopnavNotifications user={this.props.user} />
             <button
               className="header-icon btn btn-empty d-none d-sm-inline-block"

@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { registerUser } from 'redux/actions';
 import {
   Button,
   Modal,
@@ -7,30 +9,28 @@ import {
   ModalFooter,
   Form,
   Row,
-  CustomInput,
-  Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import TagsInput from 'react-tagsinput';
-import IntlMessages from 'helpers/IntlMessages';
 import TooltipItem from 'components/common/TooltipItem';
+import { functions } from 'helpers/Firebase';
+import { getCollection } from 'helpers/Firebase-db';
+import { getCourses } from 'helpers/Firebase-user';
+import IntlMessages from 'helpers/IntlMessages';
 import {
   enviarNotificacionExitosa,
   enviarNotificacionError,
 } from 'helpers/Utils-ui';
-import { registerUser } from 'redux/actions';
-import { connect } from 'react-redux';
-import 'react-tagsinput/react-tagsinput.css';
-import { getInstituciones, getCourses } from 'helpers/Firebase-user';
 import { isEmpty } from 'helpers/Utils';
-import { toolTipInst, toolTipMails } from 'constants/texts';
+import { toolTipMails } from 'constants/texts';
+import { addMail } from 'constants/emailTexts';
+import 'react-tagsinput/react-tagsinput.css';
 
-class ModalEnviarInvitacion extends React.Component {
+class ModalAsignacionMateria extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      modalInvitacionOpen: false,
       tags: [],
       items: [],
       isLoading: true,
@@ -40,7 +40,13 @@ class ModalEnviarInvitacion extends React.Component {
       courseId: '',
       courses: [],
       subjects: [],
-      instOptions: [],
+      instOptions: [
+        {
+          label: this.props.institution.name,
+          value: this.props.institution.name,
+          key: this.props.institution.id,
+        },
+      ],
       courseOptions: [],
       subjectOptions: [],
       selectedCourse: '',
@@ -52,7 +58,10 @@ class ModalEnviarInvitacion extends React.Component {
   }
 
   componentDidMount() {
-    this.getInstituciones(this.props.user);
+    this.showCourses(this.props.institution.id);
+    this.setState({
+      isLoading: false,
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -61,29 +70,6 @@ class ModalEnviarInvitacion extends React.Component {
       this.setState({ isLoading: false });
     }
   }
-
-  getInstituciones = async (userId) => {
-    try {
-      let datos = [];
-      const inst = await getInstituciones(userId);
-      this.setState({
-        items: inst,
-        isLoading: false,
-      });
-      inst.map((item) => {
-        datos.push({
-          label: item.name,
-          value: item.name,
-          key: item.id,
-        });
-      });
-      this.setState({
-        instOptions: datos,
-      });
-    } catch (err) {
-      enviarNotificacionError('Hubo un error. Reintentá mas tarde', 'Ups!');
-    }
-  };
 
   async getUserCourses(institutionId, userId) {
     let array = [];
@@ -140,60 +126,67 @@ class ModalEnviarInvitacion extends React.Component {
     });
   };
 
+  getIdUsuario = async (email) => {
+    const usuario = await getCollection('usuarios', [
+      { field: 'mail', operator: '==', id: email },
+    ]);
+    const [datosUsuario] = usuario;
+    return datosUsuario ? datosUsuario.id : null;
+  };
+
+  sendAssignEmail = async (email, options) => {
+    const sendMail = functions.httpsCallable('sendMail');
+    sendMail({ email, ...options }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
   onConfirm = async () => {
-    const { tags, alumnosCheck } = this.state;
-    const rol = alumnosCheck ? 2 : 1;
+    this.setState({ isLoading: true });
+
+    const { tags } = this.state;
     for (const tag in tags) {
-      const userObj = {
-        email: tags[tag],
-        password: '123456',
-        isInvited: true,
-        instId: this.state.selectedOption.key,
-        courseId: this.state.selectedCourse.key,
-        subjectId: this.state.selectedSubject.key,
-        rol,
-      };
       try {
-        this.setState({ isLoading: true });
-        await this.props.registerUser(userObj);
-        if (isEmpty(this.props.error)) {
-          this.registroExitoso();
+        const idUsuario = await this.getIdUsuario(tags[tag]);
+        if (idUsuario) {
+          try {
+            const agregarMaterias = functions.httpsCallable('agregarMaterias');
+            await agregarMaterias({
+              instId: this.props.institution.id,
+              courseId: this.state.selectedCourse.key,
+              subjectId: this.state.selectedSubject.key,
+              uid: idUsuario,
+            });
+            await this.sendAssignEmail(tags[tag], addMail);
+            this.asignacionExitosa();
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          this.setState({ isLoading: false });
+          return enviarNotificacionError(
+            `El email ${tags[tag]} no corresponde a un usuario registrado`,
+            'Error'
+          );
         }
       } catch (error) {
-        enviarNotificacionError(
-          'Hubo un error al enviar la invitación',
-          'Error'
-        );
+        this.setState({ isLoading: false });
+        enviarNotificacionError('Hubo un error al asignar al usuario', 'Error');
       }
     }
   };
 
-  registroExitoso = async () => {
+  asignacionExitosa = async () => {
     this.setState({ isLoading: false });
     this.props.toggle();
     enviarNotificacionExitosa(
-      'Invitación enviada exitosamente',
-      'Invitación enviada!'
+      'Usuarios asignados exitosamente',
+      'Usuarios asignados!'
     );
   };
 
   handleTagChange = (tags) => {
     this.setState({ tags });
-  };
-
-  handleInstChange = (selectedOption) => {
-    if (selectedOption) {
-      this.setState({ selectedOption });
-      this.showCourses(selectedOption.key);
-    } else {
-      this.setState({
-        selectedOption: '',
-        selectedCourse: '',
-        selectedSubject: '',
-        showCourses: false,
-        showSubjects: false,
-      });
-    }
   };
 
   handleCourseChange = (selectedCourse) => {
@@ -240,7 +233,6 @@ class ModalEnviarInvitacion extends React.Component {
     const { isOpen, toggle } = this.props;
     const {
       instOptions,
-      selectedOption,
       showCourses,
       showSubjects,
       courseOptions,
@@ -251,23 +243,21 @@ class ModalEnviarInvitacion extends React.Component {
     } = this.state;
     return (
       <Modal isOpen={isOpen} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Enviar Invitación</ModalHeader>
+        <ModalHeader toggle={toggle}>Asignar Materias</ModalHeader>
         <ModalBody>
           <Row>
             <div className="form-group has-float-label with-tooltip">
               <Select
                 className="react-select"
                 classNamePrefix="select"
-                isClearable={true}
+                isClearable={false}
                 name="institucion"
                 options={instOptions}
-                value={selectedOption}
-                onChange={this.handleInstChange}
-                placeholder="Seleccionar institución..."
+                value={instOptions}
+                isDisabled
               />
-              <IntlMessages id="user.seleccion-institucion" />
+              <IntlMessages id="institucion.nombre" />
             </div>
-            <TooltipItem body={toolTipInst} id="inst" />
           </Row>
           {showCourses && (
             <Row>
@@ -283,7 +273,7 @@ class ModalEnviarInvitacion extends React.Component {
                   isDisabled={false}
                   placeholder="Seleccionar curso..."
                 />
-                <IntlMessages id="user.seleccion-curso" />
+                <IntlMessages id="user.asignacion-curso" />
               </div>
             </Row>
           )}
@@ -301,7 +291,7 @@ class ModalEnviarInvitacion extends React.Component {
                   isDisabled={false}
                   placeholder="Seleccionar materia..."
                 />
-                <IntlMessages id="user.seleccion-materia" />
+                <IntlMessages id="user.asignacion-materia" />
               </div>
             </Row>
           )}
@@ -320,19 +310,6 @@ class ModalEnviarInvitacion extends React.Component {
                 <IntlMessages id="user.mail-invitado" />
               </div>
               <TooltipItem body={toolTipMails} id="mails" />
-            </Row>
-            <Row>
-              <CustomInput
-                id="invitacion-alumnos"
-                type="checkbox"
-                name="invitacion-alumnos"
-                className="margin-left-1"
-                label={<Label>Los usuarios a invitar son alumnos</Label>}
-                checked={this.state.alumnosCheck}
-                onChange={() =>
-                  this.setState({ alumnosCheck: !this.state.alumnosCheck })
-                }
-              />
             </Row>
           </Form>
           <p className="tip-text">* campos requeridos</p>
@@ -356,15 +333,17 @@ class ModalEnviarInvitacion extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user, error } = authUser;
+  const { institution } = seleccionCurso;
 
   return {
     user,
     error,
+    institution,
   };
 };
 
 export default connect(mapStateToProps, {
   registerUser,
-})(ModalEnviarInvitacion);
+})(ModalAsignacionMateria);
