@@ -465,7 +465,7 @@ export const getEventos = async (subject) => {
     arrayDeEventos.push({
       id,
       tipo: 'evaluacion',
-      url: 'evaluaciones',
+      url: 'evaluaciones/escritas',
       title: 'Evaluación: ' + nombre,
       start: new Date(data.fecha_publicacion.toDate()),
       end: new Date(data.fecha_finalizacion.toDate()),
