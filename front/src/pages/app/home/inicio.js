@@ -55,8 +55,11 @@ class Inicio extends Component {
   };
 
   getEventos = async () => {
-    const eventos = await getEventos(this.props.subject.id);
-    const eventosDia = await getEventosDelDia(this.props.subject.id);
+    const eventos = await getEventos(this.props.subject.id, this.props.user);
+    const eventosDia = await getEventosDelDia(
+      this.props.subject.id,
+      this.props.user
+    );
     this.setState({
       isLoading: false,
       eventos,
