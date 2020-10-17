@@ -5,6 +5,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import IconCard from 'containers/pages/IconCards';
 import ModalEnviarInvitacion from 'containers/pages/ModalEnviarInvitacion';
+import ModalAsignacionMateria from 'containers/pages/ModalAsignacionMateria';
 import ADMIN_ARRAY from 'constants/adminArray';
 import { getDocumentRef } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
@@ -14,15 +15,33 @@ class PaginaAdmin extends Component {
     super(props);
     this.state = {
       modalInvitacionOpen: false,
+      modalAsignacionOpen: false,
     };
+
     if (this.props.rol === ROLES.Directivo) {
-      if (!ADMIN_ARRAY.some((elem) => elem.id === 3)) {
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 5)) {
         ADMIN_ARRAY.push({
-          id: 3,
+          id: 5,
           title: 'Agregar cursos',
           icon: 'iconsminds-folder-add--',
           to: '#',
         });
+      }
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 6)) {
+        ADMIN_ARRAY.push({
+          id: 6,
+          title: 'Asignar cursos',
+          icon: 'iconsminds-network',
+          to: '#',
+        });
+        if (!ADMIN_ARRAY.some((elem) => elem.id === 7)) {
+          ADMIN_ARRAY.push({
+            id: 7,
+            title: 'Asignar rol',
+            icon: 'iconsminds-administrator',
+            to: '#',
+          });
+        }
       }
     }
   }
@@ -33,12 +52,24 @@ class PaginaAdmin extends Component {
     });
   };
 
+  toggleModalAsignacion = () => {
+    this.setState({
+      modalAsignacionOpen: !this.state.modalAsignacionOpen,
+    });
+  };
+
   handleClick = (id) => {
-    if (id === 2) {
+    if (id === 3) {
+      this.props.history.push(
+        `/seleccion-curso/course/${this.props.institution.id}`
+      );
+    }
+
+    if (id === 4) {
       return this.toggleModalInvitacion();
     }
 
-    if (id === 3) {
+    if (id === 5) {
       const instRef = getDocumentRef(
         `instituciones/${this.props.institution.id}`
       );
@@ -50,11 +81,15 @@ class PaginaAdmin extends Component {
       });
     }
 
+    if (id === 6) {
+      return this.toggleModalAsignacion();
+    }
+
     return null;
   };
 
   render() {
-    const { modalInvitacionOpen } = this.state;
+    const { modalInvitacionOpen, modalAsignacionOpen } = this.state;
     return (
       <>
         <HeaderDeModulo
@@ -82,6 +117,12 @@ class PaginaAdmin extends Component {
           <ModalEnviarInvitacion
             isOpen={modalInvitacionOpen}
             toggle={this.toggleModalInvitacion}
+          />
+        )}
+        {modalAsignacionOpen && (
+          <ModalAsignacionMateria
+            isOpen={modalAsignacionOpen}
+            toggle={this.toggleModalAsignacion}
           />
         )}
       </>
