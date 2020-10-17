@@ -10,3 +10,10 @@ export const evaluationSchema = Yup.object().shape({
     .nullable()
     .required('La fecha de publicación es requerida'),
 });
+
+export const evaluationOralSchema = Yup.object().shape({
+  nombre: Yup.string().required('El nombre es requerido'),
+  fecha_evaluacion: Yup.date()
+    .nullable()
+    .required('La fecha de evaluación es requerida'),
+});

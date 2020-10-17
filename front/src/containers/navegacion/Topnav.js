@@ -28,6 +28,7 @@ import {
 
 import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
+import TopnavNotifications from './Topnav.Notifications';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
 const publicUrl = process.env.PUBLIC_URL;
@@ -271,7 +272,7 @@ class TopNav extends Component {
 
           <div className="header-icons d-inline-block align-middle">
             {/* <TopnavEasyAccess /> */}
-            {/* <TopnavNotifications /> */}
+            <TopnavNotifications user={this.props.user} />
             <button
               className="header-icon btn btn-empty d-none d-sm-inline-block"
               type="button"

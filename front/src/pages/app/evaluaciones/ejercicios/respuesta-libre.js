@@ -47,7 +47,7 @@ class RespuestaLibre extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>{consigna}</Label>
               <Input
-                autocomplete="off"
+                autoComplete="off"
                 name="respuesta"
                 defaultValue={respuesta}
                 onInputCapture={this.handleRespuestaChange}
@@ -65,7 +65,7 @@ class RespuestaLibre extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Consigna</Label>
               <Input
-                autocomplete="off"
+                autoComplete="off"
                 name="consigna"
                 defaultValue={consigna}
                 onInputCapture={this.handleChange}

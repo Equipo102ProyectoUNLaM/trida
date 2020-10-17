@@ -31,7 +31,9 @@ class TabsDeMensajeria extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log(this.props.itemsReceive);
+  }
 
   toggleFirstTab(tab) {
     if (this.state.activeTab !== tab) {
