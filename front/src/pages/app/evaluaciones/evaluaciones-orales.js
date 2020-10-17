@@ -82,7 +82,7 @@ class EvaluacionesOrales extends Component {
         id: firebase.firestore.Timestamp.now(),
       },
     ];
-    if (this.state.rolDocente) {
+    if (!this.state.rolDocente) {
       filtros.push({
         field: 'integrantes',
         operator: 'array-contains',
