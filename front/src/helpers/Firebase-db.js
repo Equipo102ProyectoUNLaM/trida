@@ -453,8 +453,8 @@ export const getEventos = async (subject) => {
       tipo: 'clase',
       url: `clases-virtuales/mis-clases/detalle-clase/${id}`,
       title: 'Clase: ' + data.nombre,
-      start: new Date(`${data.fecha} 08:00:00`),
-      end: new Date(`${data.fecha} 10:00:00`),
+      start: new Date(data.fecha_clase.toDate()),
+      end: new Date(data.fecha_clase.toDate()),
     });
   });
   arrayDeEvaluaciones.forEach((prueba) => {
