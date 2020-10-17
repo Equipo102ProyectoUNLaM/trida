@@ -4,6 +4,9 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Evaluaciones = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './evaluaciones')
 );
+const EvaluacionesOrales = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './evaluaciones-orales')
+);
 const EditarEvaluacion = React.lazy(() =>
   import('./detalle-evaluacion/editar-evaluacion')
 );
@@ -11,35 +14,49 @@ const AgregarEvaluacion = React.lazy(() =>
   import('./detalle-evaluacion/agregar-evaluacion')
 );
 const RealizarEvaluacion = React.lazy(() => import('./realizar-evaluacion'));
+const RealizarEvaluacionOral = React.lazy(() =>
+  import('./realizar-evaluacion-oral/realizar-evaluacion-oral')
+);
 const OpcionMultiple = React.lazy(() => import('./ejercicios/opcion-multiple'));
 const RespuestaLibre = React.lazy(() => import('./ejercicios/respuesta-libre'));
+
 const MenuEvaluaciones = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
         exact
-        path={`${match.url}/`}
+        path={`${match.url}/escritas/`}
         render={(props) => <Evaluaciones {...props} />}
       />
       <Route
-        path={`${match.url}/editar-evaluacion/:evaluacionId`}
+        path={`${match.url}/escritas/editar-evaluacion/:evaluacionId`}
         render={(props) => <EditarEvaluacion {...props} />}
       />
       <Route
-        path={`${match.url}/agregar`}
+        path={`${match.url}/escritas/agregar`}
         render={(props) => <AgregarEvaluacion {...props} />}
       />
       <Route
-        path={`${match.url}/ejercicios/opcion-multiple`}
+        path={`${match.url}/escritas/ejercicios/opcion-multiple`}
         render={(props) => <OpcionMultiple {...props} />}
       />
       <Route
-        path={`${match.url}/ejercicios/respuesta-libre`}
+        path={`${match.url}/escritas/ejercicios/respuesta-libre`}
         render={(props) => <RespuestaLibre {...props} />}
       />
       <Route
-        path={`${match.url}/realizar-evaluacion`}
+        path={`${match.url}/escritas/realizar-evaluacion`}
         render={(props) => <RealizarEvaluacion {...props} />}
+      />
+      <Route
+        exact
+        path={`${match.url}/orales/`}
+        render={(props) => <EvaluacionesOrales {...props} />}
+      />
+      <Route
+        exact
+        path={`${match.url}/orales/realizar-evaluacion-oral`}
+        render={(props) => <RealizarEvaluacionOral {...props} />}
       />
       <Redirect to="/error" />
     </Switch>

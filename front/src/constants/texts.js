@@ -8,3 +8,5 @@ export const toolTipCursos =
   'Ingresá el o los cursos que quieras agregar a la Institución. Presioná "ENTER" o "TAB" por cada curso que ingreses.';
 export const toolTipMaterias =
   'Ingresá el o las materias que quieras agregar a cada curso. Presioná "ENTER" o "TAB" por cada materia que ingreses.';
+export const toolTipMinutosPreguntas =
+  'Ingresá con el formato minutos:segundos';
