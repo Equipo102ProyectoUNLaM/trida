@@ -47,7 +47,7 @@ class EvaluacionesOrales extends Component {
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
     ];
-    if (this.state.rolDocente) {
+    if (!this.state.rolDocente) {
       filtros.push({
         field: 'integrantes',
         operator: 'array-contains',
