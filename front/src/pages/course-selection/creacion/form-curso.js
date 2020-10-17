@@ -21,10 +21,15 @@ class FormCurso extends Component {
       isEmpty: false,
       nombre: '',
       cursosTags: [],
-      instId,
+      instId: agregado ? this.props.institution.id : instId,
       instRef,
       agregado,
     };
+  }
+
+  componentDidMount() {
+    const { instId, instRef, agregado } = this.props.location;
+    this.setState({ instId, instRef, agregado });
   }
 
   handleChange = (event) => {
@@ -63,7 +68,7 @@ class FormCurso extends Component {
     this.props.history.push({
       pathname: '/seleccion-curso/crear-materia',
       cursos: cursosMapeados,
-      instId,
+      instId: agregado ? this.props.institution.id : instId,
       instRef,
       agregado,
     });
@@ -127,11 +132,13 @@ class FormCurso extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
   const { user } = authUser;
+  const { institution } = seleccionCurso;
 
   return {
     user,
+    institution,
   };
 };
 
