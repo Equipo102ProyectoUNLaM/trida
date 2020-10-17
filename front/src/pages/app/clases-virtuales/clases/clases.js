@@ -123,10 +123,6 @@ class Clase extends Component {
       modalDeleteOpen,
       modalEditOpen,
       idClaseEditada,
-      nombreClaseEditada,
-      descClaseEditada,
-      fechaClaseEditada,
-      salaEditada,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
