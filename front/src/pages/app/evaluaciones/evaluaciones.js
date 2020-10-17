@@ -153,16 +153,16 @@ class Evaluaciones extends Component {
 
   onEdit = (idEvaluacion) => {
     this.props.history.push(
-      `/app/evaluaciones/editar-evaluacion/${idEvaluacion}`
+      `/app/evaluaciones/escritas/editar-evaluacion/${idEvaluacion}`
     );
   };
 
   onCancel = () => {
-    this.props.history.push(`/app/evaluaciones`);
+    this.props.history.push(`/app/evaluaciones/escritas`);
   };
 
   onAdd = () => {
-    this.props.history.push(`/app/evaluaciones/agregar`);
+    this.props.history.push(`/app/evaluaciones/escritas/agregar`);
   };
 
   onDelete = (idEvaluacion) => {
@@ -198,7 +198,7 @@ class Evaluaciones extends Component {
   realizarEvaluacion = async () => {
     await editDocument(`usuarios`, this.props.user, { enEvaluacion: true });
     this.props.history.push({
-      pathname: '/app/evaluaciones/realizar-evaluacion',
+      pathname: '/app/evaluaciones/escritas/realizar-evaluacion',
       evalId: this.state.evalId,
     });
   };
@@ -373,7 +373,7 @@ class Evaluaciones extends Component {
                   updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
-                  navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
+                  navTo={`/app/evaluaciones/escritas/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
                   onExport={this.onExport}
