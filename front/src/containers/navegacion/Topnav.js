@@ -264,14 +264,14 @@ class TopNav extends Component {
           <span className="logo-mobile d-block d-xs-none" />
         </a>
         <div className="navbar-right">
-          <NavLink
-            className="header-icons glyph-icon simple-icon-home"
-            to="/app/home"
-          />
           {isDarkSwitchActive && <TopnavDarkSwitch />}
 
           <div className="header-icons d-inline-block align-middle">
             {/* <TopnavEasyAccess /> */}
+            <NavLink
+              className="header-icon glyph-icon simple-icon-home ml-1"
+              to="/app/home"
+            />
             <TopnavNotifications user={this.props.user} />
             <button
               className="header-icon btn btn-empty d-none d-sm-inline-block"
