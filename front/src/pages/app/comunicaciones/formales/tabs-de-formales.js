@@ -167,67 +167,38 @@ class TabsDeMensajeria extends Component {
           </Row>
         )}
         {!rolDirectivo && (
-          <Row lg="12">
-            <Colxx xxs="12" xs="12" lg="12">
-              <Card className="mb-4">
-                <CardHeader className="pl-0 pr-0">
-                  <Nav tabs className=" card-header-tabs  ml-0 mr-0">
-                    <NavItem className="w-50 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '1',
-                          'nav-link': true,
-                        })}
-                        onClick={() => {
-                          this.toggleSecondTab('1');
-                        }}
-                      >
-                        Comunicaciones Recibidas
-                      </NavLink>
-                    </NavItem>
-                  </Nav>
-                </CardHeader>
-                <TabContent activeTab={this.state.activeSecondTab}>
-                  <TabPane tabId="1">
-                    <Row>
-                      <Colxx sm="12" lg="12">
-                        <CardBody>
-                          <ReactTable
-                            data={itemsReceive}
-                            paginationMaxSize={3}
-                            columns={dataReceiveTableColumns}
-                            sorted={[{ id: 1, desc: true }]}
-                            defaultPageSize={10}
-                            showPageJump={itemsReceive.length > 0}
-                            showPageSizeOptions={true}
-                            noDataText="No tenés comunicaciones recibidas"
-                            PaginationComponent={DataTablePagination}
-                            className={'react-table-fixed-height'}
-                            getTrGroupProps={(
-                              state,
-                              rowInfo,
-                              column,
-                              instance
-                            ) => {
-                              if (rowInfo !== undefined) {
-                                return {
-                                  onClick: (e, handleOriginal) => {
-                                    clickOnRow(rowInfo);
-                                  },
-                                };
-                              }
-                            }}
-                          />
-                        </CardBody>
-                      </Colxx>
-                    </Row>
-                  </TabPane>
-                </TabContent>
-              </Card>
-            </Colxx>
-          </Row>
+          <>
+            <Row className="subtitle mb-2 ml-0">Comunicaciones Recibidas</Row>
+            <Card>
+              <Row className="mt-2">
+                <Colxx sm="12" lg="12">
+                  <CardBody>
+                    <ReactTable
+                      data={itemsReceive}
+                      paginationMaxSize={3}
+                      columns={dataReceiveTableColumns}
+                      sorted={[{ id: 1, desc: true }]}
+                      defaultPageSize={10}
+                      showPageJump={itemsReceive.length > 0}
+                      showPageSizeOptions={true}
+                      noDataText="No tenés comunicaciones recibidas"
+                      PaginationComponent={DataTablePagination}
+                      className={'react-table-fixed-height'}
+                      getTrGroupProps={(state, rowInfo, column, instance) => {
+                        if (rowInfo !== undefined) {
+                          return {
+                            onClick: (e, handleOriginal) => {
+                              clickOnRow(rowInfo);
+                            },
+                          };
+                        }
+                      }}
+                    />
+                  </CardBody>
+                </Colxx>
+              </Row>
+            </Card>
+          </>
         )}
       </>
     );

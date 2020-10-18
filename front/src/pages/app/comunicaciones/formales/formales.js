@@ -49,6 +49,18 @@ class Formales extends Component {
           operator: 'array-contains',
           id: this.state.usuarioId,
         },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      ],
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
+    );
+    const mensajesRecibidosDirectivo = await getCollection(
+      'formales',
+      [
+        {
+          field: 'receptor',
+          operator: 'array-contains',
+          id: this.state.usuarioId,
+        },
         {
           field: 'emisor.id',
           operator: '>',
@@ -66,7 +78,10 @@ class Formales extends Component {
         { order: 'fecha_creacion', orderCond: 'asc' },
       ]
     );
-    this.dataMessageReceivedRenderer(mensajesRecibidos);
+
+    this.props.rol === ROLES.Directivo
+      ? this.dataMessageReceivedRenderer(mensajesRecibidosDirectivo)
+      : this.dataMessageReceivedRenderer(mensajesRecibidos);
 
     const mensajesEnviados = await getCollection(
       'formales',
