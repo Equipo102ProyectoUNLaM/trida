@@ -56,23 +56,22 @@ class Evaluaciones extends Component {
   }
 
   getEvaluaciones = async (materiaId) => {
+    let filtros = [
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ];
+
+    if (!this.state.rolDocente) {
+      filtros.push({
+        field: 'fecha_publicacion',
+        operator: '<=',
+        id: firebase.firestore.Timestamp.now(),
+      });
+    }
+
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
-      [
-        this.state.rolDocente
-          ? {
-              field: 'fecha_creacion',
-              operator: '>',
-              id: '',
-            }
-          : {
-              field: 'fecha_publicacion',
-              operator: '<=',
-              id: firebase.firestore.Timestamp.now(),
-            },
-        { field: 'idMateria', operator: '==', id: materiaId },
-        { field: 'activo', operator: '==', id: true },
-      ],
+      filtros,
       false,
       'ejercicios'
     );

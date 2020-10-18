@@ -44,21 +44,20 @@ class Practica extends Component {
   }
 
   getPracticas = async (materiaId) => {
-    const arrayDeObjetos = await getCollection('practicas', [
-      this.state.rolDocente
-        ? {
-            field: 'fecha_creacion',
-            operator: '>',
-            id: '',
-          }
-        : {
-            field: 'fechaLanzada',
-            operator: '<=',
-            id: new Date().toISOString().slice(0, 10),
-          },
+    let filtros = [
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
-    ]);
+    ];
+
+    if (!this.state.rolDocente) {
+      filtros.push({
+        field: 'fechaLanzada',
+        operator: '<=',
+        id: new Date().toISOString().slice(0, 10),
+      });
+    }
+
+    const arrayDeObjetos = await getCollection('practicas', filtros, false);
 
     let practicasActuales = arrayDeObjetos.filter((elem) => {
       return moment(elem.data.fechaVencimiento).isAfter(moment(new Date()));
