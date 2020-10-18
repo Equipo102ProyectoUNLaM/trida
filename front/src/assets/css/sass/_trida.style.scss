@@ -10071,6 +10071,13 @@ div.rendered-file-browser{
     margin-right: 1rem;
 }
 
+.borrar-mensaje {
+  font-size: 0.8rem;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+}
+
 // 53 Correcciones
 
 .filtros-button {
@@ -10086,10 +10093,10 @@ div.rendered-file-browser{
   width: 100% !important;
 }
 
-.MuiTypography-h5, .MuiFormLabel-root, .MuiInputLabel-root, 
+.MuiTypography-h5, .MuiFormLabel-root, .MuiInputLabel-root,
 .MuiInputLabel-formControl, .MuiInputLabel-animated, .MuiTypography-root,
 .MuiFormControlLabel-label, .MuiTypography-body1, .MuiButtonBase-root, .MuiListItem-root,
-.MuiMenuItem-root, .MuiMenuItem-gutters, .MuiListItem-gutters, .MuiListItem-button, 
+.MuiMenuItem-root, .MuiMenuItem-gutters, .MuiListItem-gutters, .MuiListItem-button,
 .MuiFormHelperText-root, .MuiSelect-root, .MuiSelect-select, .MuiSelect-selectMenu
 .MuiInputBase-input, .MuiInput-input {
   font-family: "Nunito" !important;
