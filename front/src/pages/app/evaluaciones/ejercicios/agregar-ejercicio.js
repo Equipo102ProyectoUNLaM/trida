@@ -208,7 +208,7 @@ class AgregarEjercicio extends React.Component {
                                 className="react-select ejerciciosSelect"
                                 classNamePrefix="react-select"
                                 name="ejercicios-select-1"
-                                placeholder="Seleccione el ejercicio que desea crear"
+                                placeholder="Seleccioná el ejercicio que querés crear"
                                 value={selectData.find(
                                   (obj) => obj.value === ejercicio.tipo
                                 )}

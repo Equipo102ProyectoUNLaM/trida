@@ -17,8 +17,8 @@ const ConfirmDeletion = (props) => {
             <Card>
               <CardBody className="col-inline">
                 <Alert color="danger" className="rounded center">
-                  ¿Está seguro que desea eliminar el archivo seleccionado? Esta
-                  acción no podrá deshacerse
+                  ¿Estás seguro de eliminar el archivo seleccionado? Esta acción
+                  no podrá deshacerse
                 </Alert>
                 <Button
                   color="danger"

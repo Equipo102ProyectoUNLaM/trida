@@ -391,7 +391,7 @@ class Evaluaciones extends Component {
           )}
           {modalDeleteOpen && (
             <ModalConfirmacion
-              texto="¿Está seguro de que desea borrar la evaluación?"
+              texto="¿Estás seguro de borrar la evaluación?"
               titulo="Borrar Evaluación"
               buttonPrimary="Aceptar"
               buttonSecondary="Cancelar"

@@ -10,7 +10,7 @@ export const dropzoneConfig = {
   maxFilesize: 2,
   uploadMultiple: true,
   dictDefaultMessage:
-    'Arrastre sus archivos, o haga click para agregar. Luego seleccione la carpeta en la que desea cargarlos.',
+    'Arrastrá tus archivos, o hacé click para agregar. Luego seleccioná la carpeta en la que querés cargarlos.',
   previewTemplate: ReactDOMServer.renderToStaticMarkup(
     <div className="dz-preview dz-file-preview mb-3">
       <div className="d-flex flex-row ">

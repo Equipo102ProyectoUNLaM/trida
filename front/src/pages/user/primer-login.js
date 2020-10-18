@@ -28,7 +28,7 @@ class PrimerLogin extends Component {
     this.state = {
       telefono: 0,
       isLoading: false,
-      fotoPerfilText: 'Seleccione una foto de perfil',
+      fotoPerfilText: 'Seleccioná una foto de perfil',
     };
   }
 

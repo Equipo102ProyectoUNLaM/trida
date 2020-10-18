@@ -425,7 +425,7 @@ class Practica extends Component {
           )}
           {modalDeleteOpen && (
             <ModalConfirmacion
-              texto="¿Está seguro de que desea borrar la práctica?"
+              texto="¿Estás seguro de borrar la práctica?"
               titulo="Borrar Práctica"
               buttonPrimary="Aceptar"
               buttonSecondary="Cancelar"

@@ -150,7 +150,7 @@ class FormMensaje extends Component {
                         className="react-select"
                         classNamePrefix="react-select"
                         isMulti
-                        placeholder="Seleccione los destinatarios"
+                        placeholder="Seleccioná los destinatarios"
                         name="select_usuarios"
                         value={selectedOptions}
                         onChange={this.handleChangeMulti}
