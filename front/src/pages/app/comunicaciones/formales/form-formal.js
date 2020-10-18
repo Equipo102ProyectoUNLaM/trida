@@ -4,8 +4,7 @@ import { ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { addDocument, getDocument } from 'helpers/Firebase-db';
-import ROLES from 'constants/roles';
+import { addDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 import { mensajesSchema } from './validations';
 import { encriptarTexto } from 'handlers/EncryptionHandler';
@@ -106,8 +105,7 @@ class FormMensaje extends Component {
       opcionesDelSelect,
     } = this.state;
 
-    const { toggleModal, rol } = this.props;
-    const rolDocente = rol !== ROLES.Alumno;
+    const { toggleModal } = this.props;
 
     return isLoading ? (
       <div className="loading" />

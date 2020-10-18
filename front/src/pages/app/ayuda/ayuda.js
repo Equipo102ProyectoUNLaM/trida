@@ -56,6 +56,16 @@ class PaginaAyuda extends Component {
           data: ayudaDirectivo,
         });
         break;
+      default:
+        ayudaAlumno.forEach(() => {
+          accordionData.push(false);
+        });
+        this.setState({
+          collapse: false,
+          accordion: accordionData,
+          data: ayudaAlumno,
+        });
+        break;
     }
   }
 
