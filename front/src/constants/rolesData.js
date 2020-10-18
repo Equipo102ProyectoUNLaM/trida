@@ -10,3 +10,9 @@ export const rolesData = (rol) => {
       return rol;
   }
 };
+
+export const rolesSelect = [
+  { label: 'Docentes', value: 'Docentes', key: 1 },
+  { label: 'Alumnos', value: 'Alumnos', key: 2 },
+  { label: 'Directivos', value: 'Directivos', key: 3 },
+];

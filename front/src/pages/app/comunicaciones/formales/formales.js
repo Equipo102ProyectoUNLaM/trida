@@ -1,19 +1,293 @@
-import React, { Component, Fragment } from "react";
-import { Row } from "reactstrap";
-import IntlMessages from "../../../../helpers/IntlMessages";
-import { Colxx, Separator } from "../../../../components/common/CustomBootstrap";
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import TabsDeMensajeria from './tabs-de-formales';
+import { getCollection } from 'helpers/Firebase-db';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
+import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import ModalGrande from 'containers/pages/ModalGrande';
+import FormFormales from './form-formal';
+import { addDocument } from 'helpers/Firebase-db';
+import { desencriptarTexto } from 'handlers/DecryptionHandler';
+import { encriptarTexto } from 'handlers/EncryptionHandler';
 
-export default class Formales extends Component {
-    render() {
-        return (
-            <Fragment>
-            <Row>
-              <Colxx xxs="12">
-                <h1><IntlMessages id="menu.formal"/></h1>
-                <Separator className="mb-5" />
-              </Colxx>
-            </Row>
-          </Fragment>
-        )
+class Formales extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      itemsSent: [],
+      itemsReceive: [],
+      selectedOptions: [],
+      modalMessageOpen: false,
+      modalEnviarOpen: false,
+      materiaId: this.props.subject.id,
+      usuarioId: this.props.user,
+      isLoading: true,
+      asuntoMensaje: '',
+      contenidoMensaje: '',
+      fechaMensaje: '',
+      botonDetalle: 'Responder',
+      usuariosMail: '',
+      esEnviado: false,
+    };
+  }
+
+  async componentDidMount() {
+    this.getMensajes();
+  }
+
+  getMensajes = async () => {
+    this.setState({
+      itemsReceive: [],
+    });
+    const mensajesRecibidos = await getCollection(
+      'formales',
+      [
+        {
+          field: 'receptor',
+          operator: 'array-contains',
+          id: this.state.usuarioId,
+        },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      ],
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
+    );
+    this.dataMessageReceivedRenderer(mensajesRecibidos);
+
+    const mensajesGeneralesRecibidos_1 = await getCollection(
+      'formales',
+      [
+        { field: 'emisor.id', operator: '<', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      ],
+      [
+        { order: 'emisor.id', orderCond: 'asc' },
+        { order: 'fecha_creacion', orderCond: 'asc' },
+      ]
+    );
+    this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_1);
+
+    const mensajesGeneralesRecibidos_2 = await getCollection(
+      'formales',
+      [
+        { field: 'emisor.id', operator: '>', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      ],
+      [
+        { order: 'emisor.id', orderCond: 'asc' },
+        { order: 'fecha_creacion', orderCond: 'asc' },
+      ]
+    );
+    this.dataMessageReceivedRenderer(mensajesGeneralesRecibidos_2);
+
+    const mensajesEnviados = await getCollection(
+      'formales',
+      [
+        { field: 'emisor.id', operator: '==', id: this.state.usuarioId },
+        { field: 'idMateria', operator: '==', id: this.state.materiaId },
+      ],
+      [{ order: 'fecha_creacion', orderCond: 'asc' }]
+    );
+    console.log(mensajesEnviados);
+    await this.dataMessageSentRenderer(mensajesEnviados);
+
+    await this.orderMessages();
+  };
+
+  dataMessageSentRenderer = async (arrayDeObjetos) => {
+    console.log(arrayDeObjetos);
+    let arrayDeData = arrayDeObjetos.map((elem) => ({
+      id: elem.id,
+      asunto: elem.data.asunto,
+      contenido: elem.data.contenido,
+      fecha_creacion: elem.data.fecha_creacion,
+      destinatarios: elem.data.rolesReceptores,
+    }));
+    this.setState({
+      itemsSent: arrayDeData,
+      isLoading: false,
+    });
+  };
+
+  dataMessageReceivedRenderer = (arrayDeObjetos) => {
+    let arrayDeData = arrayDeObjetos.map((elem) => ({
+      id: elem.id,
+      asunto: elem.data.asunto,
+      contenido: elem.data.contenido,
+      fecha_creacion: elem.data.fecha_creacion,
+      remitente: elem.data.emisor.nombre,
+      idRemitente: elem.data.emisor.id,
+    }));
+
+    const data = this.state.itemsReceive;
+    if (arrayDeData.length > 0) {
+      arrayDeData.forEach(async (message) => {
+        data.push(message);
+      });
     }
+    this.setState({
+      itemsReceive: data,
+    });
+  };
+
+  orderMessages = async () => {
+    const recibidos = this.state.itemsReceive.sort(
+      (a, b) => a.fecha_creacion - b.fecha_creacion
+    );
+    const enviado = this.state.itemsSent.sort(
+      (a, b) => a.fecha_creacion - b.fecha_creacion
+    );
+
+    this.setState({
+      itemsReceive: recibidos,
+      itemsSent: enviado,
+    });
+  };
+
+  clickOnRow = (rowInfo) => {
+    let botonMensaje = 'Responder';
+    let usuarios = null;
+    let enviado = false;
+
+    if (rowInfo.original.destinatarios) {
+      botonMensaje = 'Reenviar';
+      usuarios = rowInfo.original.destinatarios;
+      enviado = true;
+    } else {
+      usuarios = rowInfo.original.remitente;
+    }
+
+    this.setState({
+      asuntoMensaje: rowInfo.original.asunto,
+      contenidoMensaje: desencriptarTexto(rowInfo.original.contenido),
+      fechaMensaje: rowInfo.original.fecha_creacion,
+      botonDetalle: botonMensaje,
+      usuariosMail: usuarios,
+      esEnviado: enviado,
+    });
+    this.toggleDetailModal();
+  };
+
+  onMensajeEnviado = () => {
+    this.toggleModal();
+    this.getMensajes();
+  };
+
+  toggleModal = () => {
+    this.setState({
+      modalEnviarOpen: !this.state.modalEnviarOpen,
+      modalMessageOpen: false,
+    });
+  };
+
+  toggleDetailModal = () => {
+    this.setState({
+      modalMessageOpen: !this.state.modalMessageOpen,
+    });
+  };
+
+  handleSubmit = async (event) => {
+    event.preventDefault();
+
+    let receptores = this.state.selectedOptions.map(({ value }) => value);
+
+    const msg = {
+      emisor: {
+        id: this.state.usuarioId,
+        nombre: this.props.nombre + ' ' + this.props.apellido,
+      },
+      receptor: receptores,
+      contenido: encriptarTexto(this.state.contenidoMensaje),
+      asunto: this.state.asuntoMensaje,
+      formal: false,
+      general: false,
+      idMateria: this.state.materiaId,
+    };
+    //guardar msj en bd
+    await addDocument(
+      'mensajes',
+      msg,
+      this.props.user,
+      'Mensaje reenviado',
+      'Mensaje reenviado exitosamente',
+      'Error al reenviar el mensaje'
+    );
+
+    this.toggleReenviarModal();
+    this.setState({
+      selectedOptions: [],
+    });
+    this.getMensajes();
+  };
+
+  render() {
+    const {
+      isLoading,
+      itemsSent,
+      itemsReceive,
+      modalEnviarOpen,
+      modalMessageOpen,
+      contenidoMensaje,
+      asuntoMensaje,
+      fechaMensaje,
+      botonDetalle,
+      usuariosMail,
+      esEnviado,
+    } = this.state;
+
+    return isLoading ? (
+      <div className="loading" />
+    ) : (
+      <Fragment>
+        <div className="disable-text-selection">
+          <HeaderDeModulo
+            heading="menu.formal"
+            toggleModal={this.toggleModal}
+            buttonText="formales.nueva"
+          />
+          <ModalGrande
+            modalOpen={modalEnviarOpen}
+            toggleModal={this.toggleModal}
+            modalHeader={'formales.nueva'}
+          >
+            <FormFormales
+              toggleModal={this.toggleModal}
+              onMensajeEnviado={this.onMensajeEnviado}
+            />
+          </ModalGrande>
+          <TabsDeMensajeria
+            clickOnRow={this.clickOnRow}
+            itemsSent={itemsSent}
+            itemsReceive={itemsReceive}
+          />
+          {this.state.modalMessageOpen && (
+            <ModalConfirmacion
+              texto={contenidoMensaje}
+              titulo={asuntoMensaje}
+              fecha={fechaMensaje}
+              usuarios={usuariosMail}
+              esEnviado={esEnviado}
+              buttonPrimary={botonDetalle}
+              buttonSecondary="Cerrar"
+              toggle={this.toggleDetailModal}
+              isOpen={modalMessageOpen}
+              modalFooterClassname="modal-footer-mensajeria"
+              onConfirm={
+                esEnviado ? this.toggleReenviarModal : this.toggleResponderModal
+              }
+            />
+          )}
+        </div>
+      </Fragment>
+    );
+  }
 }
+
+const mapStateToProps = ({ authUser, seleccionCurso }) => {
+  const { user, userData } = authUser;
+  const { nombre, apellido } = userData;
+  const { subject } = seleccionCurso;
+  return { user, subject, nombre, apellido };
+};
+
+export default connect(mapStateToProps)(Formales);
