@@ -38,17 +38,26 @@ class EvaluacionesOrales extends Component {
       fechaOralEditada: '',
       integrantesEditados: [],
       oldTestActive: false,
-      rolDocente: this.props.rol === ROLES.Docente,
+      rolDocente: this.props.rol !== ROLES.Alumno,
     };
   }
 
   getEvaluacionesOrales = async (materiaId) => {
+    let filtros = [
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ];
+    if (!this.state.rolDocente) {
+      filtros.push({
+        field: 'integrantes',
+        operator: 'array-contains',
+        id: this.props.user,
+      });
+    }
+
     const arrayDeObjetos = await getCollection(
       'evaluacionesOrales',
-      [
-        { field: 'idMateria', operator: '==', id: materiaId },
-        { field: 'activo', operator: '==', id: true },
-      ],
+      filtros,
       false
     );
 
@@ -64,17 +73,26 @@ class EvaluacionesOrales extends Component {
   };
 
   getEvaluacionesOralesVencidas = async (materiaId) => {
+    let filtros = [
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+      {
+        field: 'fecha_evaluacion',
+        operator: '<',
+        id: firebase.firestore.Timestamp.now(),
+      },
+    ];
+    if (!this.state.rolDocente) {
+      filtros.push({
+        field: 'integrantes',
+        operator: 'array-contains',
+        id: this.props.user,
+      });
+    }
+
     const arrayDeObjetos = await getCollection(
       'evaluacionesOrales',
-      [
-        {
-          field: 'fecha_evaluacion',
-          operator: '<',
-          id: firebase.firestore.Timestamp.now(),
-        },
-        { field: 'idMateria', operator: '==', id: materiaId },
-        { field: 'activo', operator: '==', id: true },
-      ],
+      filtros,
       false
     );
     this.dataListRenderer(arrayDeObjetos);

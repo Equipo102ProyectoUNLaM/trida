@@ -56,23 +56,22 @@ class Evaluaciones extends Component {
   }
 
   getEvaluaciones = async (materiaId) => {
+    let filtros = [
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ];
+
+    if (!this.state.rolDocente) {
+      filtros.push({
+        field: 'fecha_publicacion',
+        operator: '<=',
+        id: firebase.firestore.Timestamp.now(),
+      });
+    }
+
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
-      [
-        this.state.rolDocente
-          ? {
-              field: 'fecha_creacion',
-              operator: '>',
-              id: '',
-            }
-          : {
-              field: 'fecha_publicacion',
-              operator: '<=',
-              id: firebase.firestore.Timestamp.now(),
-            },
-        { field: 'idMateria', operator: '==', id: materiaId },
-        { field: 'activo', operator: '==', id: true },
-      ],
+      filtros,
       false,
       'ejercicios'
     );
@@ -153,16 +152,16 @@ class Evaluaciones extends Component {
 
   onEdit = (idEvaluacion) => {
     this.props.history.push(
-      `/app/evaluaciones/editar-evaluacion/${idEvaluacion}`
+      `/app/evaluaciones/escritas/editar-evaluacion/${idEvaluacion}`
     );
   };
 
   onCancel = () => {
-    this.props.history.push(`/app/evaluaciones`);
+    this.props.history.push(`/app/evaluaciones/escritas`);
   };
 
   onAdd = () => {
-    this.props.history.push(`/app/evaluaciones/agregar`);
+    this.props.history.push(`/app/evaluaciones/escritas/agregar`);
   };
 
   onDelete = (idEvaluacion) => {
@@ -198,7 +197,7 @@ class Evaluaciones extends Component {
   realizarEvaluacion = async () => {
     await editDocument(`usuarios`, this.props.user, { enEvaluacion: true });
     this.props.history.push({
-      pathname: '/app/evaluaciones/realizar-evaluacion',
+      pathname: '/app/evaluaciones/escritas/realizar-evaluacion',
       evalId: this.state.evalId,
     });
   };
@@ -373,7 +372,7 @@ class Evaluaciones extends Component {
                   updateEvaluaciones={this.getEvaluaciones}
                   isSelect={this.state.selectedItems.includes(evaluacion.id)}
                   collect={collect}
-                  navTo={`/app/evaluaciones/detalle-evaluacion/${evaluacion.id}`}
+                  navTo={`/app/evaluaciones/escritas/detalle-evaluacion/${evaluacion.id}`}
                   onEdit={this.onEdit}
                   onDelete={this.onDelete}
                   onExport={this.onExport}

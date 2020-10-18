@@ -10072,6 +10072,16 @@ div.rendered-file-browser{
 }
 
 // 53 Correcciones
+
+.filtros-button {
+  padding: 0 1.5rem !important;
+}
+
+.filtros-button-group {
+  margin-left: 1rem;
+  height: 2.5rem;
+}
+
 .modal-correccion {
   width: 100% !important;
 }
@@ -10131,11 +10141,6 @@ div.rendered-file-browser{
     text-decoration: initial;
     color: $theme-color-1;
   }
-}
-
-.breadcrumb-flex {
-  display: flex;
-  align-items: center;
 }
 
 .status-correccion {

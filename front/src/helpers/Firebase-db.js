@@ -428,7 +428,7 @@ export const logicDeleteDocument = async (collection, docId, message) => {
   }
 };
 
-export const getEventos = async (subject) => {
+export const getEventos = async (subject, user) => {
   let arrayDeEventos = [];
   const arrayDeClases = await getCollection('clases', [
     { field: 'idMateria', operator: '==', id: subject },
@@ -441,6 +441,11 @@ export const getEventos = async (subject) => {
   const arrayDeEvaluacionesOrales = await getCollection('evaluacionesOrales', [
     { field: 'idMateria', operator: '==', id: subject },
     { field: 'activo', operator: '==', id: true },
+    {
+      field: 'integrantes',
+      operator: 'array-contains',
+      id: user,
+    },
   ]);
   const arrayDePracticas = await getCollection('practicas', [
     { field: 'idMateria', operator: '==', id: subject },
@@ -453,8 +458,8 @@ export const getEventos = async (subject) => {
       tipo: 'clase',
       url: `clases-virtuales/mis-clases/detalle-clase/${id}`,
       title: 'Clase: ' + data.nombre,
-      start: new Date(`${data.fecha} 08:00:00`),
-      end: new Date(`${data.fecha} 10:00:00`),
+      start: new Date(data.fecha_clase.toDate()),
+      end: new Date(data.fecha_clase.toDate()),
     });
   });
   arrayDeEvaluaciones.forEach((prueba) => {
@@ -465,7 +470,7 @@ export const getEventos = async (subject) => {
     arrayDeEventos.push({
       id,
       tipo: 'evaluacion',
-      url: 'evaluaciones',
+      url: 'evaluaciones/escritas',
       title: 'Evaluación: ' + nombre,
       start: new Date(data.fecha_publicacion.toDate()),
       end: new Date(data.fecha_finalizacion.toDate()),
@@ -498,8 +503,8 @@ export const getEventos = async (subject) => {
   return arrayDeEventos;
 };
 
-export const getEventosDelDia = async (subject) => {
-  const arrayEventos = await getEventos(subject);
+export const getEventosDelDia = async (subject, user) => {
+  const arrayEventos = await getEventos(subject, user);
   const arrayEventosDia = arrayEventos.filter((evento) => {
     const { start, end } = evento;
     const inicio = moment(new Date(start)).format('YYYY-MM-DD');

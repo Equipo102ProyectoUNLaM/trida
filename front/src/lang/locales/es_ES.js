@@ -51,6 +51,8 @@ module.exports = {
     '¿A qué institución querés invitar al usuario? *',
   'user.seleccion-curso': '¿A qué curso querés invitar al usuario?',
   'user.seleccion-materia': '¿A qué materia querés invitar al usuario?',
+  'user.asignacion-curso': '¿A qué curso querés asignar al usuario?',
+  'user.asignacion-materia': '¿A qué materia querés asignar al usuario?',
 
   /* 03.Menú */
   'menu.app': 'Inicio',
@@ -92,6 +94,7 @@ module.exports = {
   'menu.my-old-oral-evaluations': 'Mis Evaluaciones Orales Finalizados',
   'menu.excersises': 'Ejercicios',
   'menu.evaluaciones': 'Evaluaciones',
+  'menu.escritas': 'Evaluaciones Escritas',
   'menu.oral-evaluaciones': 'Evaluaciones Orales',
   'menu.agregar': 'Agregar Evaluación',
   'menu.agregar-oral': 'Agregar Evaluación Oral',

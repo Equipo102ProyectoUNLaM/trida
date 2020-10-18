@@ -35,7 +35,7 @@ class AgregarEvaluacion extends Component {
   }
 
   onEvaluacionAgregada = () => {
-    this.props.history.push(`/app/evaluaciones`);
+    this.props.history.push(`/app/evaluaciones/escritas`);
   };
 
   toggleImportModal = () => {
