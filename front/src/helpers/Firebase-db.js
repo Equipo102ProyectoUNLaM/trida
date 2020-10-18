@@ -27,6 +27,7 @@ export async function getCollection(collection, filterBy, orderBy) {
   (filterBy || []).forEach(({ field, operator, id }) => {
     collectionRef = collectionRef.where(field, operator, id);
   });
+
   (orderBy || []).forEach(({ order, orderCond }) => {
     collectionRef = collectionRef.orderBy(order, orderCond);
   });
@@ -179,7 +180,7 @@ export const addDocument = async (
     activo: true,
     creador: userId,
   };
-  console.log(object);
+
   try {
     const docRef = await firestore.collection(collection).add(object);
     if (mensajePrincipal) {
@@ -187,7 +188,6 @@ export const addDocument = async (
     }
     return docRef;
   } catch (error) {
-    console.log(error);
     if (mensajePrincipal) {
       enviarNotificacionError(mensajeError, 'Ups!');
     }
