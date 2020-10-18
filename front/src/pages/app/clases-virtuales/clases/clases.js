@@ -15,8 +15,7 @@ import {
 import ROLES from 'constants/roles';
 import firebase from 'firebase/app';
 import { isEmpty, getTimestampDifference } from 'helpers/Utils';
-import * as _moment from 'moment';
-const moment = _moment;
+import moment from 'moment';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
 
