@@ -285,7 +285,7 @@ export class FormikDatePicker extends React.Component {
   };
 
   render() {
-    const { name, value, className } = this.props;
+    const { name, value, className, minDate } = this.props;
     return (
       <DatePicker
         id={name}
@@ -300,6 +300,7 @@ export class FormikDatePicker extends React.Component {
         selected={value}
         onChange={this.handleChange}
         onBlur={this.handleBlur}
+        minDate={minDate}
       />
     );
   }

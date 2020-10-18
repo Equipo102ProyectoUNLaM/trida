@@ -171,6 +171,7 @@ class FormClase extends React.Component {
                 placeholder="Ingrese la fecha de la clase"
                 onChange={setFieldValue}
                 onBlur={setFieldTouched}
+                minDate={new Date()}
               />
               {errors.fecha_clase && touched.fecha_clase ? (
                 <div className="invalid-feedback d-block">
