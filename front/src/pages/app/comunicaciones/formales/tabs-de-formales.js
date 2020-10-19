@@ -1,203 +1,250 @@
 import React, { Component } from 'react';
-import {
-  Row,
-  Card,
-  CardBody,
-  CardHeader,
-  Nav,
-  NavItem,
-  TabContent,
-  TabPane,
-} from 'reactstrap';
-import { NavLink, withRouter } from 'react-router-dom';
-import classnames from 'classnames';
-import { Colxx } from 'components/common/CustomBootstrap';
-import DataTablePagination from 'components/datatable-pagination';
-import ReactTable from 'react-table';
-import {
-  dataSentTableColumns,
-  dataReceiveTableColumns,
-} from 'constants/messageTableColumns';
+import { Row, Card, CardBody, Collapse, Button } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
+import { Colxx, Separator } from 'components/common/CustomBootstrap';
+import { desencriptarTexto } from 'handlers/DecryptionHandler';
+import { isEmpty } from 'helpers/Utils';
 
 class TabsDeMensajeria extends Component {
   constructor(props) {
     super(props);
 
-    this.toggleFirstTab = this.toggleFirstTab.bind(this);
-    this.toggleSecondTab = this.toggleSecondTab.bind(this);
     this.state = {
-      activeFirstTab: '1',
-      activeSecondTab: '1',
+      collapse: false,
+      collapseSent: false,
+      accordion: [],
+      accordionSent: [],
+      data: [],
+      dataSent: [],
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    let accordionData = [];
+    let accordionDataSent = [];
 
-  toggleFirstTab(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeFirstTab: tab,
-      });
-    }
+    this.props.itemsReceive.forEach(() => {
+      accordionData.push(false);
+    });
+    this.props.itemsSent.forEach(() => {
+      accordionDataSent.push(false);
+    });
+    this.setState({
+      collapse: false,
+      accordion: accordionData,
+      data: this.props.itemsReceive,
+      collapseSent: false,
+      accordionSent: accordionDataSent,
+      dataSent: this.props.itemsSent,
+    });
   }
 
-  toggleSecondTab(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeSecondTab: tab,
-      });
-    }
-  }
+  toggleAccordion = (tab) => {
+    const prevState = this.state.accordion;
+    const state = prevState.map((x, index) => (tab === index ? !x : false));
+    this.setState({
+      accordion: state,
+    });
+  };
+
+  toggleAccordionSent = (tab) => {
+    const prevState = this.state.accordionSent;
+    const state = prevState.map((x, index) => (tab === index ? !x : false));
+    this.setState({
+      accordionSent: state,
+    });
+  };
 
   render() {
-    const { itemsSent, itemsReceive, clickOnRow, rolDirectivo } = this.props;
+    const { itemsSent, itemsReceive, rolDirectivo } = this.props;
     return (
       <>
         {rolDirectivo && (
-          <Row lg="12">
-            <Colxx xxs="12" xs="12" lg="12">
-              <Card className="mb-4">
-                <CardHeader className="pl-0 pr-0">
-                  <Nav tabs className=" card-header-tabs  ml-0 mr-0">
-                    <NavItem className="w-50 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '1',
-                          'nav-link': true,
+          <div className="display-column">
+            <span className="subtitle">Comunicaciones Enviadas</span>
+            <Row>
+              <Colxx sm="12" lg="12" className="pl-0">
+                <CardBody>
+                  <Row className="mt-2">
+                    <Colxx xxs="12" className="mb-4">
+                      <>
+                        {itemsSent.map((item, index) => {
+                          return (
+                            <Card className="d-flex mb-3" key={index}>
+                              <div className="d-flex flex-grow-1 min-width-zero">
+                                <Button
+                                  color="link"
+                                  className="card-body padding-1 btn-empty btn-link list-item-heading text-left text-one"
+                                  onClick={() =>
+                                    this.toggleAccordionSent(index)
+                                  }
+                                  aria-expanded={
+                                    this.state.accordionSent[index]
+                                  }
+                                >
+                                  <div className="display-column">
+                                    <Row className="row-space-between-pl-1">
+                                      <div>
+                                        <span className="subtitle">
+                                          Enviado a:{' '}
+                                        </span>
+                                        <span className="subtext">
+                                          {item.destinatarios}
+                                        </span>
+                                      </div>
+                                      <div>
+                                        <span className="subtitle">
+                                          Fecha:{' '}
+                                        </span>
+                                        <span className="subtext">
+                                          {item.fecha_creacion}
+                                        </span>
+                                      </div>
+                                    </Row>
+                                    <div>
+                                      <span className="subtitle">Asunto: </span>
+                                      <span className="subtext">
+                                        {item.asunto}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Button>
+                              </div>
+                              <Collapse
+                                isOpen={this.state.accordionSent[index]}
+                              >
+                                <div
+                                  className="card-body accordion-content pt-0"
+                                  dangerouslySetInnerHTML={{
+                                    __html: desencriptarTexto(item.contenido),
+                                  }}
+                                />
+                              </Collapse>
+                            </Card>
+                          );
                         })}
-                        onClick={() => {
-                          this.toggleSecondTab('1');
-                        }}
-                      >
-                        Comunicaciones Recibidas
-                      </NavLink>
-                    </NavItem>
-
-                    <NavItem className="w-50 text-center">
-                      <NavLink
-                        to="#"
-                        location={{}}
-                        className={classnames({
-                          active: this.state.activeSecondTab === '2',
-                          'nav-link': true,
+                      </>
+                    </Colxx>
+                  </Row>
+                </CardBody>
+              </Colxx>
+            </Row>
+            <Separator className="mb-4" />
+            <span className="subtitle">Comunicaciones Recibidas</span>
+            <Row>
+              <Colxx sm="12" lg="12">
+                <CardBody>
+                  <Row className="mt-2">
+                    <Colxx xxs="12" className="mb-4">
+                      <>
+                        {isEmpty(itemsReceive) && (
+                          <span>No hay comunicaciones recibidas</span>
+                        )}
+                        {itemsReceive.map((item, index) => {
+                          return (
+                            <div className="d-flex mb-3" key={index}>
+                              <div className="d-flex flex-grow-1 min-width-zero">
+                                <Button
+                                  color="link"
+                                  className="card-body padding-1 btn-empty btn-link list-item-heading text-left text-one"
+                                  onClick={() => this.toggleAccordion(index)}
+                                  aria-expanded={this.state.accordion[index]}
+                                >
+                                  <div className="display-column">
+                                    <Row className="row-space-between-pl-1">
+                                      <div>
+                                        <span className="subtitle">
+                                          Enviado por:{' '}
+                                        </span>
+                                        <span className="subtext">
+                                          {item.remitente}
+                                        </span>
+                                      </div>
+                                      <div>
+                                        <span className="subtitle">
+                                          Fecha:{' '}
+                                        </span>
+                                        <span className="subtext">
+                                          {item.fecha_creacion}
+                                        </span>
+                                      </div>
+                                    </Row>
+                                    Asunto: {item.asunto}
+                                  </div>
+                                </Button>
+                              </div>
+                              <Collapse isOpen={this.state.accordion[index]}>
+                                <div
+                                  className="card-body accordion-content pt-0"
+                                  dangerouslySetInnerHTML={{
+                                    __html: desencriptarTexto(item.contenido),
+                                  }}
+                                />
+                              </Collapse>
+                            </div>
+                          );
                         })}
-                        onClick={() => {
-                          this.toggleSecondTab('2');
-                        }}
-                      >
-                        Comunicaciones Enviadas
-                      </NavLink>
-                    </NavItem>
-                  </Nav>
-                </CardHeader>
-                <TabContent activeTab={this.state.activeSecondTab}>
-                  <TabPane tabId="1">
-                    <Row>
-                      <Colxx sm="12" lg="12">
-                        <CardBody>
-                          <ReactTable
-                            data={itemsReceive}
-                            paginationMaxSize={3}
-                            columns={dataReceiveTableColumns}
-                            sorted={[{ id: 1, desc: true }]}
-                            defaultPageSize={10}
-                            showPageJump={itemsReceive.length > 0}
-                            showPageSizeOptions={true}
-                            noDataText="No tenés comunicaciones recibidas"
-                            PaginationComponent={DataTablePagination}
-                            className={'react-table-fixed-height'}
-                            getTrGroupProps={(
-                              state,
-                              rowInfo,
-                              column,
-                              instance
-                            ) => {
-                              if (rowInfo !== undefined) {
-                                return {
-                                  onClick: (e, handleOriginal) => {
-                                    clickOnRow(rowInfo);
-                                  },
-                                };
-                              }
-                            }}
-                          />
-                        </CardBody>
-                      </Colxx>
-                    </Row>
-                  </TabPane>
-                  <TabPane tabId="2">
-                    <Row>
-                      <Colxx sm="12" lg="12">
-                        <CardBody>
-                          <ReactTable
-                            data={itemsSent}
-                            paginationMaxSize={3}
-                            columns={dataSentTableColumns}
-                            sorted={[{ id: 1, desc: true }]}
-                            defaultPageSize={10}
-                            showPageJump={itemsSent.length > 0}
-                            showPageSizeOptions={true}
-                            PaginationComponent={DataTablePagination}
-                            className={'react-table-fixed-height'}
-                            noDataText="No tenés comunicaciones enviadas"
-                            getTrGroupProps={(
-                              state,
-                              rowInfo,
-                              column,
-                              instance
-                            ) => {
-                              if (rowInfo !== undefined) {
-                                return {
-                                  onClick: (e, handleOriginal) => {
-                                    clickOnRow(rowInfo);
-                                  },
-                                };
-                              }
-                            }}
-                          />
-                        </CardBody>
-                      </Colxx>
-                    </Row>
-                  </TabPane>
-                </TabContent>
-              </Card>
-            </Colxx>
-          </Row>
+                      </>
+                    </Colxx>
+                  </Row>
+                </CardBody>
+              </Colxx>
+            </Row>
+          </div>
         )}
         {!rolDirectivo && (
           <>
-            <Row className="subtitle mb-2 ml-0">Comunicaciones Recibidas</Row>
-            <Card>
-              <Row className="mt-2">
-                <Colxx sm="12" lg="12">
-                  <CardBody>
-                    <ReactTable
-                      data={itemsReceive}
-                      paginationMaxSize={3}
-                      columns={dataReceiveTableColumns}
-                      sorted={[{ id: 1, desc: true }]}
-                      defaultPageSize={10}
-                      showPageJump={itemsReceive.length > 0}
-                      showPageSizeOptions={true}
-                      noDataText="No tenés comunicaciones recibidas"
-                      PaginationComponent={DataTablePagination}
-                      className={'react-table-fixed-height'}
-                      getTrGroupProps={(state, rowInfo, column, instance) => {
-                        if (rowInfo !== undefined) {
-                          return {
-                            onClick: (e, handleOriginal) => {
-                              clickOnRow(rowInfo);
-                            },
-                          };
-                        }
-                      }}
-                    />
-                  </CardBody>
-                </Colxx>
-              </Row>
-            </Card>
+            <Row className="mt-2">
+              <Colxx xxs="12" className="mb-4">
+                <>
+                  {itemsReceive.map((item, index) => {
+                    return (
+                      <Card className="d-flex mb-3" key={index}>
+                        <div className="d-flex flex-grow-1 min-width-zero">
+                          <Button
+                            color="link"
+                            className="card-body padding-1 btn-empty btn-link list-item-heading text-left text-one"
+                            onClick={() => this.toggleAccordion(index)}
+                            aria-expanded={this.state.accordion[index]}
+                          >
+                            <div className="display-column">
+                              <Row className="row-space-between-pl-1">
+                                <div>
+                                  <span className="subtitle">
+                                    Enviado por:{' '}
+                                  </span>
+                                  <span className="subtext">
+                                    {item.remitente}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="subtitle">Fecha: </span>
+                                  <span className="subtext">
+                                    {item.fecha_creacion}
+                                  </span>
+                                </div>
+                              </Row>
+                              <div>
+                                <span className="subtitle">Asunto: </span>
+                                <span className="subtext">{item.asunto}</span>
+                              </div>
+                            </div>
+                          </Button>
+                        </div>
+                        <Collapse isOpen={this.state.accordion[index]}>
+                          <div
+                            className="card-body accordion-content pt-0"
+                            dangerouslySetInnerHTML={{
+                              __html: desencriptarTexto(item.contenido),
+                            }}
+                          />
+                        </Collapse>
+                      </Card>
+                    );
+                  })}
+                </>
+              </Colxx>
+            </Row>
           </>
         )}
       </>
