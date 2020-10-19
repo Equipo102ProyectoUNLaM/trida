@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { ModalFooter, Button, FormGroup, Label } from 'reactstrap';
 import Switch from 'rc-switch';
 import { createUUID, createRandomString } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
@@ -141,7 +140,7 @@ class FormClase extends React.Component {
                 className="form-control"
                 name="nombre"
                 type="textarea"
-                autocomplete="off"
+                autoComplete="off"
               />
               {errors.nombre && touched.nombre && (
                 <div className="invalid-feedback d-block">{errors.nombre}</div>
@@ -151,7 +150,7 @@ class FormClase extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 className="form-control"
                 name="descripcion"
                 type="textarea"
@@ -171,7 +170,6 @@ class FormClase extends React.Component {
                 placeholder="Ingrese la fecha de la clase"
                 onChange={setFieldValue}
                 onBlur={setFieldTouched}
-                minDate={new Date()}
               />
               {errors.fecha_clase && touched.fecha_clase ? (
                 <div className="invalid-feedback d-block">
