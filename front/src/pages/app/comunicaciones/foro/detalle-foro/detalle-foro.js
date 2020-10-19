@@ -7,9 +7,12 @@ import EncabezadoForo from './encabezado-foro';
 import DetalleMensaje from './detalle-mensaje';
 import InputMensajeForo from './input-mensaje-foro';
 import { injectIntl } from 'react-intl';
+import ROLES from 'constants/roles';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import {
   getDocumentWithSubCollection,
   addToSubCollection,
+  deleteDocument,
 } from 'helpers/Firebase-db';
 
 class DetalleForo extends Component {
@@ -22,6 +25,8 @@ class DetalleForo extends Component {
       titulo: '',
       descripcion: '',
       loading: true,
+      modalDeleteOpen: false,
+      mensajeABorrar: '',
     };
   }
 
@@ -138,13 +143,51 @@ class DetalleForo extends Component {
     this.getTemaForo();
   };
 
+  removeMessageToForum = async () => {
+    this.setState({
+      isLoading: true,
+    });
+    await deleteDocument(
+      `foros/${this.state.idForo}/mensajes`,
+      this.state.mensajeABorrar,
+      'Mensaje'
+    );
+    this.setState({
+      isLoading: false,
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+
+    this.getTemaForo();
+  };
+
   goToForos = () => {
     this.props.history.push(`/app/comunicaciones/foro/`);
   };
 
+  toggleDeleteModal = () => {
+    this.setState({
+      modalDeleteOpen: !this.state.modalDeleteOpen,
+    });
+  };
+
+  borrarMensaje = (mensaje) => {
+    this.setState({
+      mensajeABorrar: mensaje,
+    });
+
+    this.toggleDeleteModal();
+  };
+
   render() {
     const { id } = this.props;
-    const { mensajes, titulo, descripcion, loading, messageInput } = this.state;
+    const {
+      mensajes,
+      titulo,
+      descripcion,
+      loading,
+      messageInput,
+      modalDeleteOpen,
+    } = this.state;
     return !loading ? (
       <Fragment>
         <Row>
@@ -167,6 +210,11 @@ class DetalleForo extends Component {
                     key={index}
                     item={item}
                     idUsuarioActual={id}
+                    onDelete={
+                      this.props.rol !== ROLES.Alumno
+                        ? this.borrarMensaje
+                        : false
+                    }
                   />
                 );
               })}
@@ -178,6 +226,17 @@ class DetalleForo extends Component {
               handleSendButtonClick={this.handleSendButtonClick}
             />
           </Colxx>
+          {modalDeleteOpen && (
+            <ModalConfirmacion
+              texto="¿Estás seguro de borrar el mensaje?"
+              titulo="Borrar Mensaje"
+              buttonPrimary="Aceptar"
+              buttonSecondary="Cancelar"
+              toggle={this.toggleDeleteModal}
+              isOpen={modalDeleteOpen}
+              onConfirm={this.removeMessageToForum}
+            />
+          )}
         </Row>
       </Fragment>
     ) : (
