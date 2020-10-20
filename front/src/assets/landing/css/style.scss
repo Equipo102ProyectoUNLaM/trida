@@ -71,7 +71,7 @@ font-family: 'Quicksand', sans-serif;
     }
   }
   
-  .thm-btn {
+  .thm-btn{
     cursor: pointer;
     display: inline-block;
     vertical-align: middle;
@@ -102,6 +102,10 @@ font-family: 'Quicksand', sans-serif;
   
   .margin-left {
     margin-left: 100px;
+  }
+
+  .margin-left-rem{
+    margin-left: 1rem;
   }
   
   .thm-btn::before {
@@ -1773,6 +1777,18 @@ font-family: 'Quicksand', sans-serif;
     .side-menu__social a {
       width: 45px;
       height: 45px;
+    }
+  }
+
+  .side-menu__btn {
+    border-color: var(--thm-black);
+    background-image: none;
+    font-size: 14px;
+    padding: 6px 37.5px;
+
+    span{
+      color: var(--thm-black);
+      -webkit-text-fill-color: var(--thm-black);
     }
   }
   

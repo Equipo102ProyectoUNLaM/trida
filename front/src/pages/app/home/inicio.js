@@ -166,15 +166,14 @@ class Inicio extends Component {
                 </CardBody>
               </Card>
             )}
-          </Colxx>
-          <Colxx>
-            <Row className="row-home">
-              <Card className="card-home">
+            <Card className="mt-3">
+              <CardBody>
                 <Calendar
                   culture="es-ES"
                   localizer={localizer}
                   events={eventos}
                   min={horas.minTime}
+                  style={{ minHeight: '35rem' }}
                   max={horas.maxTime}
                   startAccessor="start"
                   endAccessor="end"
@@ -213,8 +212,8 @@ class Inicio extends Component {
                     day: 'Día',
                   }}
                 />
-              </Card>
-            </Row>
+              </CardBody>
+            </Card>
           </Colxx>
         </Row>
       </Fragment>

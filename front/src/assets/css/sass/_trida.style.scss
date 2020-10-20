@@ -1825,11 +1825,11 @@ nav .nomargin {
     }
 
     @include respond-below(sm) {
-      width: 80px;
+      width: 7rem;
     }
 
     @include respond-below(xxs) {
-      width: 20px;
+      width: 7rem;
     }
   }
 
@@ -2050,6 +2050,12 @@ nav .nomargin {
   .main,
   .sub {
     fill: $secondary-color;
+  }
+}
+
+.breadcrumb-course{
+  @include respond-below(md) {
+    display: none !important;
   }
 }
 
@@ -9664,7 +9670,9 @@ div.rendered-file-browser{
     align-items: center;
     margin-bottom: 10px;
     font-size: 12px !important;
-    flex-wrap: unset;
+    flex-wrap: wrap;
+    margin: 0.5rem;
+    place-content: space-between;
 }
 
 .public-DraftEditorPlaceholder-inner {
