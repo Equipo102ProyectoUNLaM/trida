@@ -12,6 +12,7 @@ import {
   Button,
 } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
+import moment from 'moment';
 import DataListView from 'containers/pages/DataListView';
 import classnames from 'classnames';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
@@ -289,6 +290,12 @@ class TabsDeClase extends Component {
       ),
       isLoading: false,
     });
+  };
+
+  isEditarDisabled = () => {
+    return (
+      moment(this.props.fechaClase.toDate()).diff(moment(), 'minutes') < 10
+    );
   };
 
   render() {
@@ -620,6 +627,7 @@ class TabsDeClase extends Component {
                                 color="primary"
                                 size="lg"
                                 className="button"
+                                disabled={this.isEditarDisabled()}
                               >
                                 {isEmpty(preguntasDeClase)
                                   ? 'Crear Preguntas'

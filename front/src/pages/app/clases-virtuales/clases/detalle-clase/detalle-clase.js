@@ -19,6 +19,7 @@ class DetalleClase extends Component {
       idSala: '',
       password: '',
       isLoading: true,
+      fechaClase: '',
     };
   }
 
@@ -35,6 +36,7 @@ class DetalleClase extends Component {
       idMateria,
       contenidos,
       password,
+      fecha_clase,
     } = data;
 
     this.setState({
@@ -46,6 +48,7 @@ class DetalleClase extends Component {
       idMateria,
       contenidos,
       password,
+      fechaClase: fecha_clase,
       isLoading: false,
     });
   };
@@ -74,6 +77,7 @@ class DetalleClase extends Component {
       contenidos,
       claseId,
       password,
+      fechaClase,
     } = this.state;
 
     const { match } = this.props;
@@ -95,6 +99,7 @@ class DetalleClase extends Component {
           idClase={claseId}
           updateContenidos={this.getDetalleDeClase}
           rol={this.props.rol}
+          fechaClase={fechaClase}
         />
       </Fragment>
     );
