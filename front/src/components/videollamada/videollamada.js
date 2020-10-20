@@ -511,7 +511,7 @@ const Videollamada = ({
           text="Preguntas de la Clase"
         >
           <Label className="timer-pregunta-clase">
-            Seleccione durante cuanto tiempo lanzar la pregunta
+            Seleccioná durante cuanto tiempo lanzar la pregunta
           </Label>
           <Row className="mb-3 mr-3">
             <Colxx xxs="4" md="4">

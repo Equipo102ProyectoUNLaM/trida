@@ -158,7 +158,7 @@ class FormEvaluacionOral extends React.Component {
               className="react-select"
               classNamePrefix="react-select"
               isMulti
-              placeholder="Seleccione los integrantes"
+              placeholder="Seleccioná los integrantes"
               name="select_usuarios"
               value={selectedOptions}
               onChange={this.handleChangeMulti}

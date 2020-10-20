@@ -308,8 +308,8 @@ export const addArrayToSubCollection = async (
       });
   }
   enviarNotificacionExitosa(
-    `${mensajeSecundario} agregada exitosamente`,
-    `${mensajePrincipal} agregada!`
+    `${mensajeSecundario} agregadas exitosamente`,
+    `${mensajePrincipal} agregadas!`
   );
 };
 

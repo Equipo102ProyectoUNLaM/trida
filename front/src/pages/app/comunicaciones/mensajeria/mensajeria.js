@@ -386,7 +386,7 @@ class Mensajeria extends Component {
                     className="react-select"
                     classNamePrefix="react-select"
                     isMulti
-                    placeholder="Seleccione los destinatarios"
+                    placeholder="Seleccioná los destinatarios"
                     name="form-field-name"
                     value={selectedOptions}
                     onChange={this.handleChangeMulti}

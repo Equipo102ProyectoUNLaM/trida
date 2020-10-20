@@ -472,7 +472,7 @@ class TabsDeClase extends Component {
                             ))}
                           {modalDeleteOpen && (
                             <ModalConfirmacion
-                              texto="¿Está seguro de que desea quitar el contenido?"
+                              texto="¿Estás seguro de quitar el contenido?"
                               titulo="Desvincular Contenido"
                               buttonPrimary="Aceptar"
                               buttonSecondary="Cancelar"
