@@ -13,7 +13,9 @@ import {
   getDocument,
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
-import { isEmpty } from 'helpers/Utils';
+import firebase from 'firebase/app';
+import { isEmpty, getTimestampDifference } from 'helpers/Utils';
+import moment from 'moment';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
 
@@ -39,11 +41,34 @@ class Clase extends Component {
       descClaseEditada: '',
       fechaClaseEditada: '',
       salaEditada: false,
+      oldClassActive: false,
     };
   }
 
   getClases = async (materiaId) => {
     const arrayDeObjetos = await getCollection('clases', [
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ]);
+
+    const clasesActuales = arrayDeObjetos.filter((elem) => {
+      return (
+        getTimestampDifference(
+          elem.data.fecha_clase.toDate(),
+          moment().toDate()
+        ) >= 0
+      );
+    });
+    this.dataListRenderer(clasesActuales);
+  };
+
+  getClasesVencidas = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('clases', [
+      {
+        field: 'fecha_clase',
+        operator: '<',
+        id: firebase.firestore.Timestamp.now(),
+      },
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
     ]);
@@ -115,6 +140,18 @@ class Clase extends Component {
     this.getClases(this.state.idMateria);
   };
 
+  toggleOldClassModal = async () => {
+    await this.setState({
+      oldClassActive: !this.state.oldClassActive,
+      isLoading: true,
+    });
+    if (this.state.oldClassActive) {
+      this.getClasesVencidas(this.state.idMateria);
+    } else {
+      this.getClases(this.state.idMateria);
+    }
+  };
+
   render() {
     const {
       modalOpen,
@@ -123,6 +160,7 @@ class Clase extends Component {
       modalDeleteOpen,
       modalEditOpen,
       idClaseEditada,
+      oldClassActive,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
@@ -132,9 +170,17 @@ class Clase extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.mis-clases"
-            toggleModal={rolDocente ? this.toggleModal : null}
-            buttonText={rolDocente ? 'classes.add' : null}
+            heading={
+              oldClassActive ? 'menu.mis-clases-finalizadas' : 'menu.mis-clases'
+            }
+            toggleModal={
+              rolDocente && !oldClassActive ? this.toggleModal : null
+            }
+            buttonText={rolDocente && !oldClassActive ? 'classes.add' : null}
+            secondaryToggleModal={this.toggleOldClassModal}
+            secondaryButtonText={
+              oldClassActive ? 'classes.active' : 'classes.old'
+            }
           />
           <ModalGrande
             modalOpen={modalOpen}
@@ -160,8 +206,10 @@ class Clase extends Component {
                     isSelect={this.state.selectedItems.includes(clase.id)}
                     collect={collect}
                     navTo={`/app/clases-virtuales/mis-clases/detalle-clase/${clase.id}`}
-                    onEdit={rolDocente ? this.onEdit : null}
-                    onDelete={rolDocente ? this.onDelete : null}
+                    onEdit={rolDocente && !oldClassActive ? this.onEdit : null}
+                    onDelete={
+                      rolDocente && !oldClassActive ? this.onDelete : null
+                    }
                     isClase={true}
                   />
                 );
