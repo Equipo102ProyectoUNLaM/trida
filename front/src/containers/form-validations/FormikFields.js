@@ -297,17 +297,17 @@ export class FormikDatePicker extends React.Component {
   calculateMinTime = (date) => {
     let isToday = moment(date).isSame(moment(), 'day');
     if (isToday) {
-      let nowAddOneHour = moment(new Date()).add({ hours: 1 }).toDate();
-      return nowAddOneHour;
+      return moment(new Date()).toDate();
     }
     return moment().startOf('day').toDate();
   };
 
   render() {
-    const { name, value, className, maxTime } = this.props;
+    const { name, value } = this.props;
     const { minTime } = this.state;
     return (
       <DatePicker
+        autoComplete="off"
         id={name}
         name={name}
         locale="es"
@@ -316,7 +316,6 @@ export class FormikDatePicker extends React.Component {
         timeFormat="HH:mm"
         timeCaption="Hora"
         timeIntervals={60}
-        className={className}
         selected={value}
         onChange={this.handleChange}
         onBlur={this.handleBlur}
