@@ -3,9 +3,17 @@ import { Row, Card, CardBody, CardTitle, CardImg, CardText } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { getFormattedDate } from 'helpers/Utils';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
 
-const ListaConImagen = ({ item, imagen, collect, navTo, onEdit, onDelete }) => {
+const ListaConImagen = ({
+  item,
+  imagen,
+  collect,
+  navTo,
+  onEdit,
+  onDelete,
+  isClase,
+}) => {
   const { data } = item;
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={item.id}>
@@ -45,7 +53,9 @@ const ListaConImagen = ({ item, imagen, collect, navTo, onEdit, onDelete }) => {
                     {data.descripcion}
                   </CardText>
                   <CardText className="text-muted text-medium mb-0 font-weight-semibold">
-                    {getFormattedDate(data.fecha)}
+                    {isClase
+                      ? getDateTimeStringFromDate(data.fecha_clase)
+                      : data.fecha_creacion}
                   </CardText>
                 </Colxx>
               </Row>
