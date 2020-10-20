@@ -176,7 +176,7 @@ class OpcionMultiple extends React.Component {
                       className="opcionMultipleInput margin-auto"
                       name="opcion"
                       onInputCapture={(e) => this.handleOptionsChange(e, index)}
-                      defaultValue={op.opcion}
+                      value={op.opcion}
                     />
                     <div
                       className="glyph-icon simple-icon-close remove-icon"
