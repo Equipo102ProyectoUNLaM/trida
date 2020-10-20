@@ -4,7 +4,6 @@ import { Card } from 'reactstrap';
 
 const minuteSeconds = 60;
 const hourSeconds = 3600;
-const daySeconds = 86400;
 
 const timerProps = {
   isPlaying: true,

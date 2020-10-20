@@ -223,4 +223,7 @@ module.exports = {
   'ayuda.bienvenido': 'Te damos la bienvenida a la sección de ayuda.',
   'ayuda.bienvenido-subtitulo':
     ' En esta sección encontrarás toda la información sobre cómo usar la aplicación.',
+
+  /* 17. Formales */
+  'formales.nueva': 'CREAR NUEVA COMUNICACIÓN',
 };

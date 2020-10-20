@@ -10168,3 +10168,29 @@ div.rendered-file-browser{
 .btn-plan {
   color: white;
 }
+
+// Comunicaciones formales
+.subtitle {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.subtext {
+  font-size: 0.7rem;
+}
+
+.display-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-space-between-pl-1 {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.padding-1 {
+  padding: 1rem !important;
+}
