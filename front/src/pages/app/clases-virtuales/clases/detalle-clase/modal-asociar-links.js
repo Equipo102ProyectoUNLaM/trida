@@ -98,7 +98,7 @@ class ModalAsociarLinks extends React.Component {
                 <Field
                   className="form-control"
                   name="link"
-                  autocomplete="off"
+                  autoComplete="off"
                   validate={this.validateLink}
                 />
                 {errors.link && touched.link && (
@@ -115,7 +115,7 @@ class ModalAsociarLinks extends React.Component {
                 <Field
                   className="form-control"
                   name="descripcion"
-                  autocomplete="off"
+                  autoComplete="off"
                 />
               </FormGroup>
               <Row className="agregar-btn-row">

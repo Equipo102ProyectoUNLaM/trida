@@ -153,25 +153,22 @@ class FormForo extends Component {
   }
 
   disableCrearButton() {
-    return (
-      !this.state.esPrivado ||
-      (this.state.selectedOptions.length === 0 && this.state.esPrivado)
-    );
+    return this.state.selectedOptions.length === 0 && this.state.esPrivado;
   }
 
   handleSubmit = async (values) => {
     let integrantes = null;
-    if (!this.state.esPrivado) {
+    if (this.state.esPrivado) {
       integrantes = this.state.selectedOptions.map(({ value }) => value);
       integrantes.push(this.props.user);
     }
 
     const obj = {
-      nombre: capitalizeString(values.nombre),
+      nombre: values.nombre,
       descripcion: values.descripcion,
       idMateria: this.state.idMateria,
       privado: this.state.esPrivado,
-      integrantes: this.state.esPrivado ? [] : integrantes,
+      integrantes: !this.state.esPrivado ? [] : integrantes,
     };
 
     if (this.props.idForo) {
@@ -255,13 +252,13 @@ class FormForo extends Component {
                 </div>
               ) : null}
             </FormGroup>
-            <Row>
+            <Row className="mb-3">
               <Colxx xxs="12" md="12">
                 <label>
                   <IntlMessages id="forums.participants" />
                 </label>
                 <Row>
-                  <Colxx xxs="12" md="6" className="receivers-general">
+                  <Colxx xxs="12" md="4" className="receivers-general">
                     <Field
                       autoComplete="off"
                       name="esPrivado"
@@ -272,7 +269,7 @@ class FormForo extends Component {
                     />
                     <label>¿Es un foro privado?</label>
                   </Colxx>
-                  <Colxx xxs="12" md="4">
+                  <Colxx xxs="12" md="8">
                     <Select
                       className="react-select"
                       classNamePrefix="react-select"

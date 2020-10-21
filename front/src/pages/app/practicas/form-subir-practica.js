@@ -185,7 +185,7 @@ class FormSubirPractica extends React.Component {
                 className="form-control"
                 name="mensaje"
                 type="textarea"
-                autocomplete="off"
+                autoComplete="off"
               />
               {errors.mensaje && touched.mensaje && (
                 <div className="invalid-feedback d-block">{errors.mensaje}</div>

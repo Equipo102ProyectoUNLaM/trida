@@ -102,7 +102,7 @@ module.exports = {
   'menu.mis-instituciones': 'Mis Instituciones',
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
-  'menu.mis-foros': 'Mis Temas',
+  'menu.mis-foros': 'Mis Temas Públicos',
   'menu.mis-foros-privados': 'Mis Temas Privados',
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',

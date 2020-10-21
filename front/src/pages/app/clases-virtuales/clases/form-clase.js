@@ -141,7 +141,7 @@ class FormClase extends React.Component {
                 className="form-control"
                 name="nombre"
                 type="textarea"
-                autocomplete="off"
+                autoComplete="off"
               />
               {errors.nombre && touched.nombre && (
                 <div className="invalid-feedback d-block">{errors.nombre}</div>
@@ -151,7 +151,7 @@ class FormClase extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 className="form-control"
                 name="descripcion"
                 type="textarea"

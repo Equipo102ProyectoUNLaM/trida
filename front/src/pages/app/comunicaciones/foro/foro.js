@@ -69,6 +69,14 @@ class Foro extends Component {
     this.dataListRenderer(arrayDeObjetos);
   };
 
+  getTemas = () => {
+    if (this.state.forosPrivadosActive) {
+      this.getForosPrivados(this.state.idMateria);
+    } else {
+      this.getForos(this.state.idMateria);
+    }
+  };
+
   async componentDidMount() {
     const datos = await getUsersOfSubject(
       this.state.idMateria,
@@ -90,7 +98,8 @@ class Foro extends Component {
   onForoGuardado = () => {
     if (this.state.modalEditOpen) this.toggleEditModal();
     else this.toggleModal();
-    this.getForos(this.state.idMateria);
+
+    this.getTemas();
   };
 
   dataListRenderer(arrayDeObjetos) {
@@ -144,7 +153,7 @@ class Foro extends Component {
       idForo: '',
     });
     this.toggleDeleteModal();
-    this.getForos(this.state.idMateria);
+    this.getTemas();
   };
 
   togglePrivateForumsModal = async () => {
@@ -152,11 +161,7 @@ class Foro extends Component {
       forosPrivadosActive: !this.state.forosPrivadosActive,
       isLoading: true,
     });
-    if (this.state.forosPrivadosActive) {
-      this.getForosPrivados(this.state.idMateria);
-    } else {
-      this.getForos(this.state.idMateria);
-    }
+    this.getTemas();
   };
 
   render() {
@@ -173,6 +178,7 @@ class Foro extends Component {
       forosPrivadosActive,
       datosUsuarios,
       integrantesEditado,
+      privadoEditado,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
@@ -185,12 +191,8 @@ class Foro extends Component {
             heading={
               forosPrivadosActive ? 'menu.mis-foros-privados' : 'menu.mis-foros'
             }
-            toggleModal={
-              rolDocente && !forosPrivadosActive ? this.toggleModal : null
-            }
-            buttonText={
-              rolDocente && !forosPrivadosActive ? 'forums.add' : null
-            }
+            toggleModal={rolDocente ? this.toggleModal : null}
+            buttonText={rolDocente ? 'forums.add' : null}
             secondaryToggleModal={this.togglePrivateForumsModal}
             secondaryButtonText={
               forosPrivadosActive ? 'forums.public' : 'forums.privates'
@@ -249,6 +251,7 @@ class Foro extends Component {
                 mensajes={mensajesForo}
                 datosUsuarios={datosUsuarios}
                 integrantes={integrantesEditado}
+                privado={privadoEditado}
               />
             </ModalGrande>
           )}
