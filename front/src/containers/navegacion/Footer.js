@@ -109,7 +109,11 @@ class Footer extends React.Component {
                 <ul className="breadcrumb pt-0 pr-0 float-right">
                   {rolDocente && (
                     <li className="breadcrumb-item mb-0">
-                      <Badge pill className="badge">
+                      <Badge
+                        pill
+                        color="primary"
+                        className="font-weight-semibold"
+                      >
                         <NavLink
                           className="btn-plan"
                           to="#"

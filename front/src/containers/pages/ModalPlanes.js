@@ -52,7 +52,7 @@ class ModalPlanes extends React.Component {
           </div>
         )}
         <ModalFooter>
-          <Button color="secondary" size="sm" onClick={toggle}>
+          <Button color="primary" size="sm" onClick={toggle}>
             Cerrar
           </Button>
         </ModalFooter>
