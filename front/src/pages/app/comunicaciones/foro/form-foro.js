@@ -153,13 +153,17 @@ class FormForo extends Component {
   }
 
   disableCrearButton() {
-    return this.state.selectedOptions.length === 0 && !this.state.esPrivado;
+    return (
+      !this.state.esPrivado ||
+      (this.state.selectedOptions.length === 0 && this.state.esPrivado)
+    );
   }
 
   handleSubmit = async (values) => {
     let integrantes = null;
     if (!this.state.esPrivado) {
       integrantes = this.state.selectedOptions.map(({ value }) => value);
+      integrantes.push(this.props.user);
     }
 
     const obj = {
@@ -196,8 +200,12 @@ class FormForo extends Component {
   handleCheckBoxChange = async () => {
     this.setState({
       esPrivado: !this.state.esPrivado,
-      selectedOptions: [],
     });
+    if (this.state.esPrivado) {
+      this.setState({
+        selectedOptions: [],
+      });
+    }
   };
 
   render() {
@@ -236,7 +244,7 @@ class FormForo extends Component {
             <FormGroup className="mb-3">
               <Label>Descripcion</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 name="descripcion"
                 component="textarea"
                 className="form-control"
@@ -255,7 +263,7 @@ class FormForo extends Component {
                 <Row>
                   <Colxx xxs="12" md="6" className="receivers-general">
                     <Field
-                      autocomplete="off"
+                      autoComplete="off"
                       name="esPrivado"
                       className="general-check"
                       type="checkbox"
@@ -275,7 +283,7 @@ class FormForo extends Component {
                       onChange={this.handleChangeMulti}
                       options={usuariosDelSelect}
                       required
-                      isDisabled={esPrivado}
+                      isDisabled={!esPrivado}
                     />
                   </Colxx>
                 </Row>
