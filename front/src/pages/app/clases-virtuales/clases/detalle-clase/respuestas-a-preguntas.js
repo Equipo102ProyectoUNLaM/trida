@@ -103,15 +103,17 @@ const RespuestasAPreguntas = ({ isLoading, idClase, idMateria }) => {
     }
 
     // Lo que viene abajo es para remover la coma del último del array
-    usuariosNoContestaronNombres[
-      usuariosNoContestaronNombres.length - 1
-    ] = usuariosNoContestaronNombres[
-      usuariosNoContestaronNombres.length - 1
-    ].slice(
-      0,
-      usuariosNoContestaronNombres[usuariosNoContestaronNombres.length - 1]
-        .length - 2
-    );
+    if (!isEmpty(usuariosNoContestaronNombres)) {
+      usuariosNoContestaronNombres[
+        usuariosNoContestaronNombres.length - 1
+      ] = usuariosNoContestaronNombres[
+        usuariosNoContestaronNombres.length - 1
+      ].slice(
+        0,
+        usuariosNoContestaronNombres[usuariosNoContestaronNombres.length - 1]
+          .length - 2
+      );
+    }
     //
     return usuariosNoContestaronNombres;
   };
