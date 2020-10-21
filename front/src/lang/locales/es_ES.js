@@ -103,6 +103,7 @@ module.exports = {
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
   'menu.mis-foros': 'Mis Temas',
+  'menu.mis-foros-privados': 'Mis Temas Privados',
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',
   'menu.admin': 'Administración',
@@ -218,6 +219,10 @@ module.exports = {
   /* 15. Foros */
   'forums.add': 'AGREGAR TEMA',
   'forums.edit': 'EDITAR TEMA',
+  'forums.private': 'FOROS PRIVADOS',
+  'forums.public': 'VER FOROS PUBLICOS',
+  'forums.privates': 'VER FOROS PRIVADOS',
+  'forums.participants': 'Integrantes',
 
   /* 16. Ayuda */
   'ayuda.bienvenido': 'Te damos la bienvenida a la sección de ayuda.',
