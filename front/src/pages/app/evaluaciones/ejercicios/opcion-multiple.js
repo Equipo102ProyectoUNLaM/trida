@@ -175,7 +175,7 @@ class OpcionMultiple extends React.Component {
                     <Input
                       className="opcionMultipleInput margin-auto"
                       name="opcion"
-                      onInputCapture={(e) => this.handleOptionsChange(e, index)}
+                      onChange={(e) => this.handleOptionsChange(e, index)}
                       value={op.opcion}
                     />
                     <div
