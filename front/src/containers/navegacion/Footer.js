@@ -19,6 +19,7 @@ class Footer extends React.Component {
       docentes: 0,
       alumnos: 0,
       plan: '',
+      esPublica: false,
     };
   }
 
@@ -30,27 +31,43 @@ class Footer extends React.Component {
     let docentes = 0;
     let alumnos = 0;
     const institucion = this.props.institution.id;
-    const docObj = await getDocument(`usuariosPorInstitucion/${institucion}`);
-    const { data } = docObj;
-    if (data) {
-      for (const usuario of data.usuarios) {
-        if (usuario.rol === ROLES.Docente || usuario.rol === ROLES.Directivo) {
-          docentes++;
-        } else {
-          alumnos++;
-        }
-      }
+    const { data } = await getDocument(
+      `instituciones/${this.props.institution.id}`
+    );
 
+    if (data.tipo !== 'Colegio Público') {
+      const docObj = await getDocument(
+        `usuariosPorInstitucion/${this.props.institution.id}`
+      );
+      const { data } = docObj;
+      if (data) {
+        for (const usuario of data.usuarios) {
+          if (
+            usuario.rol === ROLES.Docente ||
+            usuario.rol === ROLES.Directivo
+          ) {
+            docentes++;
+          } else {
+            alumnos++;
+          }
+        }
+
+        this.setState({
+          docentes,
+          alumnos,
+          esPublica: false,
+        });
+      }
+      const plan = this.calculatePlan();
       this.setState({
-        docentes,
-        alumnos,
+        plan,
+      });
+    } else {
+      this.setState({
+        esPublica: true,
+        plan: 'Plan Gratuito',
       });
     }
-
-    const plan = this.calculatePlan();
-    this.setState({
-      plan,
-    });
   };
 
   toggleModalPlanes = () => {
@@ -77,7 +94,7 @@ class Footer extends React.Component {
   };
 
   render() {
-    const { modalPlanesOpen, plan, modalContactoOpen } = this.state;
+    const { modalPlanesOpen, plan, modalContactoOpen, esPublica } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
     return (
@@ -128,6 +145,7 @@ class Footer extends React.Component {
           <ModalPlanes
             isOpen={modalPlanesOpen}
             toggle={this.toggleModalPlanes}
+            esPublica={esPublica}
           />
         )}
         {modalContactoOpen && (

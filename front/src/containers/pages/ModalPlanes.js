@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Row,
-} from 'reactstrap';
-import { connect } from 'react-redux';
-import Pricing from 'components/landing/Pricing';
+import { Button, ModalFooter } from 'reactstrap';
+import Planes from './Planes';
 import ModalGrande from 'containers/pages/ModalGrande';
+import 'assets/landing/css/style.scss';
+import 'assets/landing/css/responsive.scss';
 
 class ModalPlanes extends React.Component {
   constructor(props) {
@@ -21,17 +15,42 @@ class ModalPlanes extends React.Component {
   }
 
   render() {
-    const { isOpen, toggle } = this.props;
+    const { isOpen, toggle, esPublica } = this.props;
     return (
       <ModalGrande
         modalOpen={isOpen}
         toggleModal={this.toggleModal}
-        text="Planes de pago"
+        text="Planes de Pago"
       >
-        <div>
-          <Pricing />
-        </div>
-
+        {!esPublica && (
+          <div className="landing-page">
+            <Planes />
+          </div>
+        )}
+        {esPublica && (
+          <div className="landing-page">
+            <div className="cta-one__text">
+              <p>
+                Para instituciones estatales, el acceso a la plataforma es
+                gratuito.
+              </p>
+            </div>
+            <ul className="list-unstyled cta-one__list">
+              <li>
+                <i className="fa fa-check-circle"></i>
+                Cantidad de cursos ilimitados
+              </li>
+              <li>
+                <i className="fa fa-check-circle"></i>
+                Cantidad de materias por curso ilimitadas
+              </li>
+              <li>
+                <i className="fa fa-check-circle"></i>
+                Cantidad de usuarios ilimitados
+              </li>
+            </ul>
+          </div>
+        )}
         <ModalFooter>
           <Button color="secondary" size="sm" onClick={toggle}>
             Cerrar
@@ -42,13 +61,4 @@ class ModalPlanes extends React.Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
-  const { user, error } = authUser;
-
-  return {
-    user,
-    error,
-  };
-};
-
-export default connect(mapStateToProps, {})(ModalPlanes);
+export default ModalPlanes;
