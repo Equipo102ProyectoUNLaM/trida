@@ -130,7 +130,7 @@ class AdjuntarDesarrollo extends React.Component {
                     {imageFiles.includes(respuesta.file.type) && (
                       <Colxx className="flex">
                         <img
-                          className="image-preview"
+                          className="image-preview adj-desarrollo-img"
                           alt="img"
                           src={respuesta.desarrollo}
                         />
