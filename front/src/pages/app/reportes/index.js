@@ -17,27 +17,27 @@ const ReportesGenerales = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './reportes-generales')
 );
 
-const MenuReportes = ({ match }) => (
+const Reportes = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
       <Route
-        path={`${match.url}/clases/`}
+        path={`${match.url}/clases`}
         render={(props) => <ReportesClases {...props} />}
       />
       <Route
-        path={`${match.url}/evaluaciones/`}
+        path={`${match.url}/evaluaciones`}
         render={(props) => <ReportesEvaluaciones {...props} />}
       />
       <Route
-        path={`${match.url}/practicas/`}
+        path={`${match.url}/practicas`}
         render={(props) => <ReportesPracticas {...props} />}
       />
       <Route
-        path={`${match.url}/generales/`}
+        path={`${match.url}/generales`}
         render={(props) => <ReportesGenerales {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
   </Suspense>
 );
-export default MenuReportes;
+export default Reportes;
