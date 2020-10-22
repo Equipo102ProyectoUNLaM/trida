@@ -3723,6 +3723,21 @@ font-family: 'Quicksand', sans-serif;
     padding-bottom: 60px;
   }
 
+  .pricing-one__inner-highlight > span {
+    display: block;
+    line-height: 1em;
+    color: #737789;
+    font-weight: 600;
+    position: relative;
+    font-size: 14px;
+    margin-top: 25px;
+    -webkit-transition: all 500ms;
+    transition: all 500ms;
+  }
+
+  
+
+
   
   /*--------------------------------------------------------------
   # Testimonials
