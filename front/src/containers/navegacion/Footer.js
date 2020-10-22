@@ -5,6 +5,7 @@ import { Colxx } from '../../components/common/CustomBootstrap';
 import ModalPlanes from 'containers/pages/ModalPlanes';
 import ModalContacto from 'containers/pages/ModalContacto';
 import ROLES from 'constants/roles';
+import PLANES from 'constants/planes';
 import { getDocument } from 'helpers/Firebase-db';
 import { connect } from 'react-redux';
 
@@ -65,7 +66,7 @@ class Footer extends React.Component {
     } else {
       this.setState({
         esPublica: true,
-        plan: 'Plan Gratuito',
+        plan: PLANES.Gratuito,
       });
     }
   };
@@ -84,13 +85,13 @@ class Footer extends React.Component {
 
   calculatePlan = () => {
     if (this.state.docentes <= 1 && this.state.alumnos <= 5) {
-      return 'Plan Gratuito';
+      return PLANES.Gratuito;
     } else if (this.state.docentes <= 5 && this.state.alumnos <= 50) {
-      return 'Plan Pequeño';
+      return PLANES.Pequeño;
     } else if (this.state.docentes <= 70 && this.state.alumnos <= 700) {
-      return 'Plan Mediano';
+      return PLANES.Mediano;
     }
-    return 'Plan Grande';
+    return PLANES.Grande;
   };
 
   render() {
@@ -150,6 +151,7 @@ class Footer extends React.Component {
             isOpen={modalPlanesOpen}
             toggle={this.toggleModalPlanes}
             esPublica={esPublica}
+            plan={plan}
           />
         )}
         {modalContactoOpen && (

@@ -15,7 +15,7 @@ class ModalPlanes extends React.Component {
   }
 
   render() {
-    const { isOpen, toggle, esPublica } = this.props;
+    const { isOpen, toggle, esPublica, plan } = this.props;
     return (
       <ModalGrande
         modalOpen={isOpen}
@@ -24,7 +24,7 @@ class ModalPlanes extends React.Component {
       >
         {!esPublica && (
           <div className="landing-page">
-            <Planes />
+            <Planes plan={plan} />
           </div>
         )}
         {esPublica && (
