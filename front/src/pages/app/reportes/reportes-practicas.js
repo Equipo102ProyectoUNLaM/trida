@@ -4,7 +4,7 @@ import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx, Separator } from '../../components/common/CustomBootstrap';
 import Breadcrumb from '../../containers/navs/Breadcrumb';
 
-export default class BlankPage extends Component {
+export default class ReportesPracticas extends Component {
   render() {
     return (
       <Fragment>
