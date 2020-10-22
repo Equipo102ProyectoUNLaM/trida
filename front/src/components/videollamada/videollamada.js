@@ -383,7 +383,7 @@ const Videollamada = ({
         jitsi.executeCommand('subject', subject);
         //jitsi.executeCommand('password', password);
       });
-      jitsi.addEventListener('readyToClose', () => {
+      jitsi.addEventListener('videoConferenceLeft', () => {
         if (rol !== ROLES.Alumno) guardarListaAsistencia();
         setCallOff();
       });
