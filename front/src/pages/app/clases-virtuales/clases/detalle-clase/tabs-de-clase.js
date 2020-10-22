@@ -674,6 +674,7 @@ class TabsDeClase extends Component {
                             isLoading={true}
                             idClase={idClase}
                             rolDocente={rolDocente}
+                            idMateria={idMateria}
                           />
                         </CardBody>
                       </Colxx>

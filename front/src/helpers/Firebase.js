@@ -16,7 +16,7 @@ const functions = firebase.functions();
 const firestore = firebase.firestore();
 const storage = firebase.storage();
 const timeStamp = firebase.firestore.Timestamp;
-const messaging = firebase.messaging();
+/* const messaging = firebase.messaging();
 
 // Add the public key generated from the console here.
 messaging.usePublicVapidKey(
@@ -41,6 +41,6 @@ export const preguntarPermisos = async () => {
   } catch (error) {
     console.error(error);
   }
-};
+}; */
 
-export { auth, database, functions, firestore, storage, timeStamp, messaging };
+export { auth, database, functions, firestore, storage, timeStamp };

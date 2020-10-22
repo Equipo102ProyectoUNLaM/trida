@@ -13,7 +13,6 @@ import {
 import Select from 'react-select';
 import TagsInput from 'react-tagsinput';
 import IntlMessages from 'helpers/IntlMessages';
-import TooltipItem from 'components/common/TooltipItem';
 import {
   enviarNotificacionExitosa,
   enviarNotificacionError,
@@ -254,6 +253,19 @@ class ModalEnviarInvitacion extends React.Component {
         <ModalHeader toggle={toggle}>Enviar Invitación</ModalHeader>
         <ModalBody>
           <Row>
+            <span className="form-group with-tooltip tip-text mb-3">
+              {toolTipInst[0]}
+              <Row className="tip-text ml-0 mt-1">
+                {' '}
+                <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                <span>{toolTipInst[1]}</span>
+              </Row>
+              <Row className="tip-text ml-0">
+                {' '}
+                <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                <span>{toolTipInst[2]}</span>
+              </Row>
+            </span>
             <div className="form-group has-float-label with-tooltip">
               <Select
                 className="react-select"
@@ -267,7 +279,6 @@ class ModalEnviarInvitacion extends React.Component {
               />
               <IntlMessages id="user.seleccion-institucion" />
             </div>
-            <TooltipItem body={toolTipInst} id="inst" />
           </Row>
           {showCourses && (
             <Row>
@@ -307,19 +318,31 @@ class ModalEnviarInvitacion extends React.Component {
           )}
           <Form>
             <Row>
-              <div className="form-group has-float-label with-tooltip">
+              <span className="form-group with-tooltip tip-text mt-3 mb-2">
+                {toolTipMails[0]}
+                <Row className="tip-text ml-0 mt-1">
+                  {' '}
+                  <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                  <span>{toolTipMails[1]}</span>
+                </Row>
+                <Row className="tip-text ml-0">
+                  {' '}
+                  <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                  <span>{toolTipMails[2]}</span>
+                </Row>
+              </span>
+              <div className="form-group has-float-label with-tooltip mt-2">
                 <TagsInput
                   value={this.state.tags}
                   onChange={this.handleTagChange}
                   inputProps={{
-                    placeholder: '',
+                    placeholder: 'trida.app@gmail.com',
                   }}
                   pasteSplit={this.pasteSplit}
                   addOnPaste
                 />
                 <IntlMessages id="user.mail-invitado" />
               </div>
-              <TooltipItem body={toolTipMails} id="mails" />
             </Row>
             <Row>
               <CustomInput
