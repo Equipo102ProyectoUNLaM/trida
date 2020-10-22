@@ -18,7 +18,7 @@ class InputMensajeForo extends Component {
           value={messageInput}
           onKeyPress={(e) => handleChatInputPress(e)}
           onChange={(e) => handleChatInputChange(e)}
-          autocomplete="off"
+          autoComplete="off"
         />
         <div>
           <Button

@@ -155,7 +155,7 @@ class FormMensaje extends Component {
             <FormGroup className="mb-3">
               <Label>Mensaje</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 name="textoMensaje"
                 component="textarea"
                 className="form-control"
