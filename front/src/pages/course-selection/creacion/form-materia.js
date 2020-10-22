@@ -5,7 +5,11 @@ import { withRouter } from 'react-router-dom';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form } from 'formik';
-import { addToMateriasCollection, editDocument } from 'helpers/Firebase-db';
+import {
+  addToMateriasCollection,
+  editDocument,
+  getDocument,
+} from 'helpers/Firebase-db';
 import { functions } from 'helpers/Firebase';
 import TagsInput from 'react-tagsinput';
 import { toolTipMaterias } from 'constants/texts';
@@ -78,6 +82,17 @@ class FormMateria extends Component {
         { instituciones: instObj },
         'Materia editada'
       );
+
+      var docUser = await getDocument(`usuarios/${user}`);
+      const { data } = docUser;
+      await editDocument('usuariosPorInstitucion', instId, {
+        usuarios: [
+          {
+            id: user,
+            rol: data.rol,
+          },
+        ],
+      });
     } else {
       for (const curso of cursosObj) {
         for (const materia of curso.materias) {
