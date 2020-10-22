@@ -10,7 +10,7 @@ class InputMensajeForo extends Component {
       handleSendButtonClick,
     } = this.props;
     return (
-      <div className="chat-input-container d-flex justify-content-between align-items-center">
+      <div className="chat-input-container d-flex justify-content-between align-items-center ">
         <Input
           className="form-control flex-grow-1"
           type="text"
@@ -18,7 +18,7 @@ class InputMensajeForo extends Component {
           value={messageInput}
           onKeyPress={(e) => handleChatInputPress(e)}
           onChange={(e) => handleChatInputChange(e)}
-          autocomplete="off"
+          autoComplete="off"
         />
         <div>
           <Button

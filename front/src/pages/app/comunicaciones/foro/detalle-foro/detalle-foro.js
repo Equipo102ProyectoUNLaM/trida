@@ -147,7 +147,7 @@ class DetalleForo extends Component {
     const { mensajes, titulo, descripcion, loading, messageInput } = this.state;
     return !loading ? (
       <Fragment>
-        <Row>
+        <Row className="app-row">
           <Colxx xxs="12" className="chat-app">
             <EncabezadoForo
               nombre={titulo}
@@ -171,14 +171,14 @@ class DetalleForo extends Component {
                 );
               })}
             </PerfectScrollbar>
-            <InputMensajeForo
-              messageInput={messageInput}
-              handleChatInputPress={this.handleChatInputPress}
-              handleChatInputChange={this.handleChatInputChange}
-              handleSendButtonClick={this.handleSendButtonClick}
-            />
           </Colxx>
         </Row>
+        <InputMensajeForo
+          messageInput={messageInput}
+          handleChatInputPress={this.handleChatInputPress}
+          handleChatInputChange={this.handleChatInputChange}
+          handleSendButtonClick={this.handleSendButtonClick}
+        />
       </Fragment>
     ) : (
       <div className="loading" />

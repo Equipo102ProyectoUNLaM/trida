@@ -66,7 +66,7 @@ $main-menu-item-height: 110px;
 $main-menu-width: 120px;
 $main-menu-width-lg: 110px;
 $main-menu-width-md: 110px;
-$main-menu-width-xs: 90px;
+$main-menu-width-xs: 110px;
 
 $sub-menu-width: 230px;
 $sub-menu-width-lg: 230px;
@@ -1604,6 +1604,18 @@ nav .nomargin {
 .nav-tabs .nav-link:focus {
   border: initial;
   color: $theme-color-1;
+}
+
+@include respond-below(sm) {
+  .nav-item{
+    width: auto !important;
+  }
+}
+
+@include respond-below(xxs) {
+  .nav-item{
+    width: auto !important;
+  }
 }
 
 /* 08.Carousel */
@@ -9274,7 +9286,7 @@ to {transform:rotate(360deg);}
 
 // 47 Contenidos
 
-tr.folder{
+tr.folder {
   th { color: transparent; }
   th:after {
     content: "Archivo";
@@ -9451,9 +9463,6 @@ tr.folder{
 }
 
 //49 Correcciones
-div.rendered-file-browser{
-  padding-right: 3rem;
-}
 
 .hide-button {
   display: none;

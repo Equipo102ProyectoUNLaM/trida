@@ -73,7 +73,7 @@ const ModalAudio = ({
           Para escuchar tu grabación, presioná ▶ al detenerla
         </p>
         <Row className="no-margin-left">
-          <audio src={audioURL} controls />
+          <audio className="mb-4" src={audioURL} controls />
           <Button
             color="primary"
             className="button-margin"

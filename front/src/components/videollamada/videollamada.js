@@ -420,7 +420,7 @@ const Videollamada = ({
     <Fragment>
       <Row className="button-group mb-3 mr-3">
         <Button
-          className="button relative"
+          className="button relative mt-1"
           color="primary"
           size="lg"
           onClick={toggleModalPreguntasRealizadas}
@@ -432,7 +432,7 @@ const Videollamada = ({
         {rol !== ROLES.Alumno && (
           <>
             <Button
-              className="button"
+              className="button mt-1"
               color="primary"
               size="lg"
               onClick={toggleModalPreguntas}
@@ -440,7 +440,7 @@ const Videollamada = ({
               <IntlMessages id="clase.lanzar-pregunta" />
             </Button>
             <Button
-              className="button"
+              className="button mt-1"
               color="primary"
               size="lg"
               onClick={toggleShareScreen}
@@ -448,7 +448,7 @@ const Videollamada = ({
               {shareButtonText}
             </Button>{' '}
             <Button
-              className="button"
+              className="button mt-1"
               color="primary"
               size="lg"
               onClick={abrirPizarron}
@@ -459,7 +459,7 @@ const Videollamada = ({
         )}
         {rol === ROLES.Alumno && (
           <Button
-            className="button"
+            className="button mt-1"
             color="primary"
             size="lg"
             onClick={toggleRealizarPregunta}

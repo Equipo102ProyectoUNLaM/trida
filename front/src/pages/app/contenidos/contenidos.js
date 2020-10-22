@@ -482,29 +482,33 @@ class Contenidos extends Component {
                 </Card>
               </Colxx>
             </Row>
+            <Row>
+              <Colxx>
+                <Button
+                  color="primary"
+                  disabled={canSubmitFiles}
+                  className="mb-2 ml-1"
+                  onClick={this.validateDuplicatedFiles.bind(this)}
+                >
+                  <IntlMessages id="contenido.agregar" />
+                </Button>
+                <Button
+                  color="primary"
+                  className="mb-2 ml-1"
+                  onClick={this.toggleModalVideo}
+                >
+                  <IntlMessages id="contenido.grabar-video" />
+                </Button>
+                <Button
+                  color="primary"
+                  className="mb-2 ml-1"
+                  onClick={this.toggleModalAudio}
+                >
+                  <IntlMessages id="contenido.grabar-audio" />
+                </Button>
+              </Colxx>
+            </Row>
 
-            <Button
-              color="primary"
-              disabled={canSubmitFiles}
-              className="mb-2"
-              onClick={this.validateDuplicatedFiles.bind(this)}
-            >
-              <IntlMessages id="contenido.agregar" />
-            </Button>
-            <Button
-              color="primary"
-              className="mb-2 ml-1"
-              onClick={this.toggleModalVideo}
-            >
-              <IntlMessages id="contenido.grabar-video" />
-            </Button>
-            <Button
-              color="primary"
-              className="mb-2 ml-1"
-              onClick={this.toggleModalAudio}
-            >
-              <IntlMessages id="contenido.grabar-audio" />
-            </Button>
             {modalVideoOpen && (
               <ModalVideo
                 toggleModal={this.toggleModalVideo}
@@ -523,7 +527,7 @@ class Contenidos extends Component {
             )}
           </>
         )}
-        <div className="demo-mount-nested-editable">
+        <div className="demo-mount-nested-editable mt-4">
           <FileBrowser
             files={this.state.files}
             icons={Icons.FontAwesome(4)}

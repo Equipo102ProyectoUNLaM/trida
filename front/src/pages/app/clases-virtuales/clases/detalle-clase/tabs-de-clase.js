@@ -608,6 +608,7 @@ class TabsDeClase extends Component {
                               {!isEmpty(preguntasDeClase) && (
                                 <Button
                                   outline
+                                  className="mt-1"
                                   size="lg"
                                   color="secondary"
                                   onClick={this.togglePreviewModal}
@@ -619,7 +620,7 @@ class TabsDeClase extends Component {
                                 onClick={this.toggleModalPreguntas}
                                 color="primary"
                                 size="lg"
-                                className="button"
+                                className="button mt-1"
                               >
                                 {isEmpty(preguntasDeClase)
                                   ? 'Crear Preguntas'
