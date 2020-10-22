@@ -242,14 +242,31 @@ class RealizarEvaluacion extends Component {
 
   printDocument = async () => {
     await html2canvas(this.state.encabezadoAImprimir, {
-      scale: 1,
+      scale: 0.9,
       scrollY: -window.scrollY,
     }).then(async (canvas) => {
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 0, 0);
-      pdf.save('evaluacion.pdf'); //TODO delete
-      //const file = pdf.output('blob');
+      const imgData = canvas.toDataURL('image/png');
+
+      /*Calculo de paginado */
+      var imgWidth = 210;
+      var pageHeight = 295;
+      var imgHeight = (canvas.height * imgWidth) / canvas.width;
+      var heightLeft = imgHeight;
+      var position = 0;
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      /* ------------ */
+
+      //pdf.save('evaluacion.pdf'); //lo dejo para debug, esto descarga el PDF
+      const file = pdf.output('blob');
       this.setState({ evalFile: file });
     });
   };
@@ -257,7 +274,7 @@ class RealizarEvaluacion extends Component {
   entregarEvaluacion = async (navigate, abandonarEvaluacion) => {
     this.setState({ isLoading: true });
     await this.printDocument();
-    /*const uuid = createUUID();
+    const uuid = createUUID();
     const path = `materias/${this.props.subject.id}/correcciones/`;
     const url = await subirArchivoAStorage(path, this.state.evalFile, uuid);
     let respuestasConUrl;
@@ -285,7 +302,7 @@ class RealizarEvaluacion extends Component {
       'Tu evaluación fue entregada correctamente',
       'Tu evaluación no pudo ser entregada'
     );
-    await this.reiniciarEstadoEvaluacion();*/
+    await this.reiniciarEstadoEvaluacion();
     if (navigate) this.volverAEvaluaciones();
   };
 
@@ -392,7 +409,7 @@ class RealizarEvaluacion extends Component {
       <div className="loading" />
     ) : (
       <Fragment>
-        <Card>
+        <Card className="no-box-shadow">
           <CardBody>
             <div id="encabezadoAImprimir" className="eval-print">
               <div className="background-evaluaciones">

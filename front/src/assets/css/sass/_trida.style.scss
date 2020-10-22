@@ -10196,7 +10196,7 @@ div.rendered-file-browser{
 }
 
 .eval-print {
-  background-color: #ffffff;
+  background-color: #f5f5f5f5;
   width: 50rem;
   min-height: 210mm;
   margin-left: auto;
@@ -10204,5 +10204,9 @@ div.rendered-file-browser{
 }
 
 .adj-desarrollo-img {
-  height: 20rem !important;
+  height: 23rem !important;
+}
+
+.no-box-shadow {
+  box-shadow: unset !important;
 }
