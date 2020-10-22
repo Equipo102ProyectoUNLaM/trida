@@ -4597,6 +4597,10 @@ select.form-control:not([size]):not([multiple]) {
   color: $button-text-color !important;
 }
 
+.react-datepicker__day--disabled  {
+  color: #ccc !important;
+}
+
 .dropzone {
   min-height: 115px !important;
   border: 1px solid $separator-color !important;
