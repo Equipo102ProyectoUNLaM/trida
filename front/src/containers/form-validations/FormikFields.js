@@ -280,11 +280,20 @@ export class FormikSwitch extends React.Component {
 export class FormikDatePicker extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      minTime: moment().startOf('day').toDate(),
+      minTime: this.getCurrentHour(),
     };
   }
+
+  getCurrentHour = () => {
+    const m = moment(new Date());
+    const roundUp =
+      m.minute() || m.second() || m.millisecond()
+        ? m.add(1, 'hour').startOf('hour')
+        : m.startOf('hour');
+    return roundUp.toDate();
+  };
+
   handleChange = (val) => {
     this.props.onChange(this.props.name, val);
     const minTime = this.calculateMinTime(val);
@@ -297,7 +306,7 @@ export class FormikDatePicker extends React.Component {
   calculateMinTime = (date) => {
     let isToday = moment(date).isSame(moment(), 'day');
     if (isToday) {
-      return moment(new Date()).toDate();
+      return this.getCurrentHour();
     }
     return moment().startOf('day').toDate();
   };
