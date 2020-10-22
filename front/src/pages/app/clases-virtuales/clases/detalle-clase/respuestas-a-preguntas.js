@@ -10,7 +10,13 @@ import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/Decryption
 import { isEmpty } from 'helpers/Utils';
 import ROLES from 'constants/roles';
 
-const RespuestasAPreguntas = ({ isLoading, idClase, rolDocente, user }) => {
+const RespuestasAPreguntas = ({
+  isLoading,
+  idClase,
+  rolDocente,
+  user,
+  idMateria,
+}) => {
   const [respuestasPorPregunta, setRespuestasPorPregunta] = useState([]);
   const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
   const [respuestasDeAlumno, setRespuestasDeAlumno] = useState([]);
@@ -55,7 +61,7 @@ const RespuestasAPreguntas = ({ isLoading, idClase, rolDocente, user }) => {
     setRespuestasDeAlumno(respuestasDeAlumno);
   };
 
-  const crearCantRespuestasPorPregunta = (preguntasConRespuestas) => {
+  const crearCantRespuestasPorPregunta = async (preguntasConRespuestas) => {
     const resumen = [];
     if (preguntasConRespuestas.length > 0) {
       for (const preg of preguntasConRespuestas) {
