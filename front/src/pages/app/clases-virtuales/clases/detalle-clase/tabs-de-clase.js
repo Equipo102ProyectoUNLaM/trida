@@ -671,6 +671,7 @@ class TabsDeClase extends Component {
                           <RespuestasAPreguntas
                             isLoading={true}
                             idClase={idClase}
+                            idMateria={idMateria}
                           />
                         </CardBody>
                       </Colxx>

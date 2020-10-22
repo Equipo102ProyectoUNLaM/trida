@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardTitle, Progress, Badge } from 'reactstrap';
-import { getCollectionWithSubCollections } from 'helpers/Firebase-db';
+import {
+  getCollectionWithSubCollections,
+  getDocument,
+} from 'helpers/Firebase-db';
+import { getUsuariosPorMateriaConRol } from 'helpers/Firebase-user';
 import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/DecryptionHandler';
 import { isEmpty } from 'helpers/Utils';
+import ROLES from 'constants/roles';
 
-const RespuestasAPreguntas = ({ isLoading, idClase }) => {
+const RespuestasAPreguntas = ({ isLoading, idClase, idMateria }) => {
   const [respuestasPorPregunta, setRespuestasPorPregunta] = useState([]);
   const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
 
@@ -34,13 +39,14 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
     }
   };
 
-  const crearCantRespuestasPorPregunta = (preguntasConRespuestas) => {
+  const crearCantRespuestasPorPregunta = async (preguntasConRespuestas) => {
     const resumen = [];
     if (preguntasConRespuestas.length > 0) {
-      preguntasConRespuestas.forEach((preg) => {
+      for (const preg of preguntasConRespuestas) {
         let resultado = [];
         let opciones = [];
         let cantTotalRtas = 0;
+        let alumnosContestaron = [];
         for (let i = 0; i < preg.data.base.opciones.length; i++) {
           // Obtengo el titulo de cada opcion
           opciones.push(preg.data.base.opciones[i].opcion);
@@ -52,12 +58,16 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
           .filter(String);
 
         preg.data.subcollections.forEach((sub) => {
+          alumnosContestaron.push(sub.id);
           sub.data.respuestas.forEach((res) => {
             // incremento la opcion elegida por el alumno
             resultado[res]++;
             cantTotalRtas++;
           });
         });
+        const alumnosSinRespuesta = await getAlumnosSinRespuesta(
+          alumnosContestaron
+        );
         resumen.push({
           id: preg.id,
           consigna: preg.data.base.consigna,
@@ -65,11 +75,47 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
           opciones: opciones,
           respuestasVerdaderas: idxRtasVerdaderas,
           cantTotalRtas: cantTotalRtas,
+          alumnosSinRespuesta,
         });
-      });
+      }
       setRespuestasPorPregunta(resumen);
       setIsLoadingLocal(false);
     }
+  };
+
+  const getAlumnosSinRespuesta = async (alumnosContestaron) => {
+    let usuariosNoContestaronNombres = [];
+    // Traigo los usuarios de la materia y filtro solo los que son alumnos
+    const usuariosMateria = await getUsuariosPorMateriaConRol(idMateria);
+    const usuariosAlumnos = usuariosMateria.filter(
+      (user) => user.rol === ROLES.Alumno
+    );
+
+    // Filtro los usuarios que no contestaron
+    const usuariosNoContestaron = usuariosAlumnos.filter((user) => {
+      return alumnosContestaron.indexOf(user.id) === -1;
+    });
+    for (const user of usuariosNoContestaron) {
+      const { data } = await getDocument(`usuarios/${user.id}`);
+      usuariosNoContestaronNombres.push(
+        data.nombre + ' ' + data.apellido + ', '
+      );
+    }
+
+    // Lo que viene abajo es para remover la coma del último del array
+    if (!isEmpty(usuariosNoContestaronNombres)) {
+      usuariosNoContestaronNombres[
+        usuariosNoContestaronNombres.length - 1
+      ] = usuariosNoContestaronNombres[
+        usuariosNoContestaronNombres.length - 1
+      ].slice(
+        0,
+        usuariosNoContestaronNombres[usuariosNoContestaronNombres.length - 1]
+          .length - 2
+      );
+    }
+    //
+    return usuariosNoContestaronNombres;
   };
 
   return isLoadingLocal ? (
@@ -106,6 +152,14 @@ const RespuestasAPreguntas = ({ isLoading, idClase }) => {
                   </div>
                 );
               })}
+              {!isEmpty(rta.alumnosSinRespuesta) && (
+                <div>
+                  <span className="font-weight-bold">
+                    Alumnos que no contestaron:{' '}
+                  </span>
+                  {rta.alumnosSinRespuesta}
+                </div>
+              )}
             </CardBody>
           </Card>
         );
