@@ -332,7 +332,7 @@ class TabsDeClase extends Component {
                   <Nav tabs className=" card-header-tabs  ml-0 mr-0">
                     <NavItem
                       className={
-                        rolDocente ? 'w-20 text-center' : 'w-50 text-center'
+                        rolDocente ? 'w-20 text-center' : 'w-33 text-center'
                       }
                     >
                       <NavLink
@@ -351,7 +351,7 @@ class TabsDeClase extends Component {
                     </NavItem>
                     <NavItem
                       className={
-                        rolDocente ? 'w-20 text-center' : 'w-50 text-center'
+                        rolDocente ? 'w-20 text-center' : 'w-33 text-center'
                       }
                     >
                       <NavLink
@@ -385,23 +385,25 @@ class TabsDeClase extends Component {
                         </NavLink>
                       </NavItem>
                     )}
-                    {rolDocente && (
-                      <NavItem className="w-20 text-center">
-                        <NavLink
-                          to="#4"
-                          location={{}}
-                          className={classnames({
-                            active: this.state.activeSecondTab === '4',
-                            'nav-link': true,
-                          })}
-                          onClick={() => {
-                            this.toggleSecondTab('4');
-                          }}
-                        >
-                          Respuestas
-                        </NavLink>
-                      </NavItem>
-                    )}
+                    <NavItem
+                      className={
+                        rolDocente ? 'w-20 text-center' : 'w-33 text-center'
+                      }
+                    >
+                      <NavLink
+                        to="#4"
+                        location={{}}
+                        className={classnames({
+                          active: this.state.activeSecondTab === '4',
+                          'nav-link': true,
+                        })}
+                        onClick={() => {
+                          this.toggleSecondTab('4');
+                        }}
+                      >
+                        Respuestas
+                      </NavLink>
+                    </NavItem>
                     {rolDocente && (
                       <NavItem className="w-20 text-center">
                         <NavLink
@@ -671,6 +673,7 @@ class TabsDeClase extends Component {
                           <RespuestasAPreguntas
                             isLoading={true}
                             idClase={idClase}
+                            rolDocente={rolDocente}
                           />
                         </CardBody>
                       </Colxx>
