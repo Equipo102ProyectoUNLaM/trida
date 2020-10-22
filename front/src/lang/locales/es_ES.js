@@ -106,6 +106,11 @@ module.exports = {
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',
   'menu.admin': 'Administración',
+  'menu.reportes': 'Reportes',
+  'menu.reportes-clases': 'Clases',
+  'menu.reportes-practicas': 'Practicas',
+  'menu.reportes-evaluaciones': 'Evaluaciones',
+  'menu.reportes-generales': 'Generales',
   'menu.ayuda': 'Ayuda',
 
   /* 04.Error  */

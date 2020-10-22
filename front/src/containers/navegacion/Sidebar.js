@@ -267,6 +267,38 @@ class Sidebar extends Component {
       this.props.rol === ROLES.Docente ||
       this.props.rol === ROLES.Directivo
     ) {
+      const isReportPresent = menuItems.some((elem) => elem.id === 'report');
+      if (!isReportPresent) {
+        menuItems.push({
+          id: 'report',
+          icon: 'iconsminds-statistic',
+          label: 'menu.reportes',
+          to: '/app/reportes',
+          subs: [
+            {
+              icon: 'iconsminds-blackboard',
+              label: 'menu.reportes-clases',
+              to: '/app/reportes/clases',
+            },
+            {
+              icon: 'iconsminds-file-edit',
+              label: 'menu.reportes-evaluaciones',
+              to: '/app/reportes/evaluaciones',
+            },
+            {
+              icon: 'iconsminds-library',
+              label: 'menu.reportes-practicas',
+              to: '/app/reportes/practicas',
+            },
+            {
+              icon: 'iconsminds-box-with-folders',
+              label: 'menu.reportes-generales',
+              to: '/app/reportes/generales',
+            },
+          ],
+        });
+      }
+
       const isAdminPresent = menuItems.some((elem) => elem.id === 'admin');
       if (!isAdminPresent) {
         menuItems.push({
@@ -276,6 +308,7 @@ class Sidebar extends Component {
           to: '/app/admin',
         });
       }
+
       const clasesMenu = menuItems.filter(
         (elem) => elem.id === 'virtual-classes'
       );
