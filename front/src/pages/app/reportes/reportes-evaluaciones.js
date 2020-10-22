@@ -17,7 +17,7 @@ export default class BlankPage extends Component {
         <Row>
           <Colxx xxs="12" className="mb-4">
             <p>
-              <IntlMessages id="menu.blank-page" />
+              <IntlMessages id="menu.my-reportes-evaluaciones" />
             </p>
           </Colxx>
         </Row>
