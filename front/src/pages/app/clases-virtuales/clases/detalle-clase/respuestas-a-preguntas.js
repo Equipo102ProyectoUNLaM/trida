@@ -193,7 +193,7 @@ const RespuestasAPreguntas = ({
                   </div>
                 );
               })}
-              {!isEmpty(rta.alumnosSinRespuesta) && (
+              {rolDocente && !isEmpty(rta.alumnosSinRespuesta) && (
                 <div>
                   <span className="font-weight-bold">
                     Alumnos que no contestaron:{' '}
