@@ -123,7 +123,7 @@ class RealizarEvaluacion extends Component {
   getEvaluacion = async () => {
     if (!this.props.location.evalId) {
       this.setState({ isLoading: false });
-      this.props.history.push(`/app/evaluaciones`);
+      this.props.history.push(`/app/evaluaciones/escritas`);
       return;
     }
     const evaluacion = await getDocumentWithSubCollection(
@@ -358,7 +358,7 @@ class RealizarEvaluacion extends Component {
         case TIPO_EJERCICIO.preguntas_aleatorias:
           if (
             rta.respuesta.find((x) => !x.respuesta) ||
-            rta.respuesta.length !==
+            rta.respuesta.length.toString() !==
               this.state.ejercicios.find(
                 (x) => x.data.numero.toString() === rta.numero.toString()
               ).data.cantidad
