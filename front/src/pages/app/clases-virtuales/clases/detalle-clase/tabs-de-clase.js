@@ -12,6 +12,7 @@ import {
   Button,
 } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
+import moment from 'moment';
 import DataListView from 'containers/pages/DataListView';
 import classnames from 'classnames';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
@@ -291,6 +292,12 @@ class TabsDeClase extends Component {
     });
   };
 
+  isEditarDisabled = () => {
+    return (
+      moment(this.props.fechaClase.toDate()).diff(moment(), 'minutes') < 10
+    );
+  };
+
   render() {
     const {
       idSala,
@@ -472,7 +479,7 @@ class TabsDeClase extends Component {
                             ))}
                           {modalDeleteOpen && (
                             <ModalConfirmacion
-                              texto="¿Está seguro de que desea quitar el contenido?"
+                              texto="¿Estás seguro de quitar el contenido?"
                               titulo="Desvincular Contenido"
                               buttonPrimary="Aceptar"
                               buttonSecondary="Cancelar"
@@ -621,6 +628,7 @@ class TabsDeClase extends Component {
                                 color="primary"
                                 size="lg"
                                 className="button mt-1"
+                                disabled={this.isEditarDisabled()}
                               >
                                 {isEmpty(preguntasDeClase)
                                   ? 'Crear Preguntas'
@@ -664,6 +672,7 @@ class TabsDeClase extends Component {
                           <RespuestasAPreguntas
                             isLoading={true}
                             idClase={idClase}
+                            idMateria={idMateria}
                           />
                         </CardBody>
                       </Colxx>

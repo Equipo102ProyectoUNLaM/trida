@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Prompt, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Videollamada from 'components/videollamada/videollamada';
 import {
@@ -21,7 +22,7 @@ const PaginaVideollamada = (props) => {
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
   const isHost = props.rol !== ROLES.Alumno;
-
+  const location = useLocation();
   const [options, setOptions] = useState({ microfono: true, camara: true });
   const [call, setCall] = useState(false);
   const [llamadaIniciada, setIniciada] = useState(false);
@@ -55,6 +56,14 @@ const PaginaVideollamada = (props) => {
 
   return call ? (
     <>
+      <Prompt
+        message={(location) => {
+          return location.pathname ===
+            `/app/clases-virtuales/mis-clases/detalle-clase/${props.idClase}`
+            ? true
+            : `Estás en una clase! Estás seguro de que querés salir?`;
+        }}
+      />
       <Videollamada
         roomName={room}
         userName={`${props.nombre} ${props.apellido}`}
@@ -83,7 +92,7 @@ const PaginaVideollamada = (props) => {
                 placeholder="Nombre"
                 value={`${props.nombre} ${props.apellido}`}
                 disabled
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormGroup>
             <FormGroup>

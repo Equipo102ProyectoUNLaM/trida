@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import { CustomInput } from 'reactstrap';
+import moment from 'moment';
 
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
@@ -277,17 +278,45 @@ export class FormikSwitch extends React.Component {
 }
 
 export class FormikDatePicker extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      minTime: this.getCurrentHour(),
+    };
+  }
+
+  getCurrentHour = () => {
+    const m = moment(new Date());
+    const roundUp =
+      m.minute() || m.second() || m.millisecond()
+        ? m.add(1, 'hour').startOf('hour')
+        : m.startOf('hour');
+    return roundUp.toDate();
+  };
+
   handleChange = (val) => {
     this.props.onChange(this.props.name, val);
+    const minTime = this.calculateMinTime(val);
+    this.setState({ minTime });
   };
   handleBlur = (val) => {
     this.props.onBlur(this.props.name, true);
   };
 
+  calculateMinTime = (date) => {
+    let isToday = moment(date).isSame(moment(), 'day');
+    if (isToday) {
+      return this.getCurrentHour();
+    }
+    return moment().startOf('day').toDate();
+  };
+
   render() {
-    const { name, value, className } = this.props;
+    const { name, value } = this.props;
+    const { minTime } = this.state;
     return (
       <DatePicker
+        autoComplete="off"
         id={name}
         name={name}
         locale="es"
@@ -296,10 +325,12 @@ export class FormikDatePicker extends React.Component {
         timeFormat="HH:mm"
         timeCaption="Hora"
         timeIntervals={60}
-        className={className}
         selected={value}
         onChange={this.handleChange}
         onBlur={this.handleBlur}
+        minDate={new Date()}
+        minTime={minTime}
+        maxTime={moment().endOf('day').toDate()}
       />
     );
   }

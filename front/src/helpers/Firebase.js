@@ -16,7 +16,7 @@ const functions = firebase.functions();
 const firestore = firebase.firestore();
 const storage = firebase.storage();
 const timeStamp = firebase.firestore.Timestamp;
-// const messaging = firebase.messaging();
+/* const messaging = firebase.messaging();
 
 // Add the public key generated from the console here.
 // messaging.usePublicVapidKey(
@@ -36,11 +36,11 @@ const timeStamp = firebase.firestore.Timestamp;
 //       const token = await messaging.getToken();
 //       console.log('user token: ', token);
 
-//       return token;
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+      return token;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}; */
 
 export { auth, database, functions, firestore, storage, timeStamp };

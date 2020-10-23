@@ -80,7 +80,7 @@ const PaginaVideollamada = (props) => {
                 placeholder="Nombre"
                 value={`${props.nombre} ${props.apellido}`}
                 disabled
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormGroup>
             <FormGroup>

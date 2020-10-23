@@ -270,7 +270,7 @@ class OpcionMultipleImagen extends React.Component {
                       <InputGroup className="mb-3 opcionMultipleInput margin-auto">
                         <CustomInput
                           type="file"
-                          label="Seleccione una imagen"
+                          label="Seleccioná una imagen"
                           id="exampleCustomFileBrowser1"
                           name="opcion"
                           onInputCapture={(e) =>

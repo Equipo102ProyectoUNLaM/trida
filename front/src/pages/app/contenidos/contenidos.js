@@ -550,7 +550,7 @@ class Contenidos extends Component {
             texto={
               'Los siguientes archivos ya se encuentran cargados: ' +
               repeatedFiles.map((txt) => txt + ' ') +
-              '¿Desea reemplazarlos?'
+              '¿Querés reemplazarlos?'
             }
             titulo="Archivos existentes"
             buttonPrimary="Aceptar"

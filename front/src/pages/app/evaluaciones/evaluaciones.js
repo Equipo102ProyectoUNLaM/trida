@@ -56,23 +56,22 @@ class Evaluaciones extends Component {
   }
 
   getEvaluaciones = async (materiaId) => {
+    let filtros = [
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+    ];
+
+    if (!this.state.rolDocente) {
+      filtros.push({
+        field: 'fecha_publicacion',
+        operator: '<=',
+        id: firebase.firestore.Timestamp.now(),
+      });
+    }
+
     const arrayDeObjetos = await getCollectionWithSubCollections(
       'evaluaciones',
-      [
-        this.state.rolDocente
-          ? {
-              field: 'fecha_creacion',
-              operator: '>',
-              id: '',
-            }
-          : {
-              field: 'fecha_publicacion',
-              operator: '<=',
-              id: firebase.firestore.Timestamp.now(),
-            },
-        { field: 'idMateria', operator: '==', id: materiaId },
-        { field: 'activo', operator: '==', id: true },
-      ],
+      filtros,
       false,
       'ejercicios'
     );
@@ -219,7 +218,7 @@ class Evaluaciones extends Component {
     this.getEvaluaciones(this.state.materiaId);
   };
 
-  toggleOldPracticesModal = async () => {
+  toggleOldEvaluationModal = async () => {
     await this.setState({
       oldTestActive: !this.state.oldTestActive,
       isLoading: true,
@@ -321,7 +320,7 @@ class Evaluaciones extends Component {
             }
             toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
             buttonText={rolDocente && !oldTestActive ? 'evaluation.add' : null}
-            secondaryToggleModal={this.toggleOldPracticesModal}
+            secondaryToggleModal={this.toggleOldEvaluationModal}
             secondaryButtonText={
               oldTestActive ? 'evaluation.active' : 'evaluation.old'
             }
@@ -397,7 +396,7 @@ class Evaluaciones extends Component {
           )}
           {modalDeleteOpen && (
             <ModalConfirmacion
-              texto="¿Está seguro de que desea borrar la evaluación?"
+              texto="¿Estás seguro de borrar la evaluación?"
               titulo="Borrar Evaluación"
               buttonPrimary="Aceptar"
               buttonSecondary="Cancelar"

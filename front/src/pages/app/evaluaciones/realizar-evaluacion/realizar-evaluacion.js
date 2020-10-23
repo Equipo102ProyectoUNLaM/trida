@@ -70,7 +70,7 @@ class RealizarEvaluacion extends Component {
     window.addEventListener('beforeunload', async (ev) => {
       ev.preventDefault();
       await editDocument(`usuarios`, this.props.user, { enEvaluacion: false });
-      return (ev.returnValue = 'Seguro desea abandonar?');
+      return (ev.returnValue = 'Seguro querés abandonar?');
     });
     window.addEventListener('unload', async (ev) => {
       ev.preventDefault();

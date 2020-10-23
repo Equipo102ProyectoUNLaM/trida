@@ -141,7 +141,7 @@ class FormEvaluacionOral extends React.Component {
               <FormikDatePicker
                 name="fecha_evaluacion"
                 value={values.fecha_evaluacion}
-                autocomplete="off"
+                autoComplete="off"
                 placeholder="Ingrese la fecha de la evaluación"
                 onChange={setFieldValue}
                 onBlur={setFieldTouched}
@@ -158,7 +158,7 @@ class FormEvaluacionOral extends React.Component {
               className="react-select"
               classNamePrefix="react-select"
               isMulti
-              placeholder="Seleccione los integrantes"
+              placeholder="Seleccioná los integrantes"
               name="select_usuarios"
               value={selectedOptions}
               onChange={this.handleChangeMulti}

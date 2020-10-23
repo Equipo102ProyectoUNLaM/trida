@@ -75,8 +75,8 @@ class FormPreguntas extends React.Component {
       'preguntas',
       obj,
       this.props.user,
-      'Preguntas creadas!',
-      'Preguntas creadas exitosamente',
+      'Preguntas',
+      'Preguntas',
       'Error al crear las preguntas'
     );
 
@@ -152,7 +152,7 @@ class FormPreguntas extends React.Component {
         </ModalFooter>
         {modalEditOpen && (
           <ModalConfirmacion
-            texto="¿Está seguro de que desea editar las preguntas?"
+            texto="¿Estás seguro de editar las preguntas?"
             titulo="Guardar Preguntas"
             buttonPrimary="Aceptar"
             buttonSecondary="Cancelar"
@@ -163,7 +163,7 @@ class FormPreguntas extends React.Component {
         )}
         {modalAddOpen && (
           <ModalConfirmacion
-            texto="¿Está seguro de que desea crear las preguntas?"
+            texto="¿Estás seguro de crear las preguntas?"
             titulo="Crear Preguntas"
             buttonPrimary="Aceptar"
             buttonSecondary="Cancelar"

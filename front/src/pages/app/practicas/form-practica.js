@@ -171,7 +171,7 @@ class FormPractica extends React.Component {
                 className="form-control"
                 name="nombre"
                 type="textarea"
-                autocomplete="off"
+                autoComplete="off"
               />
               {errors.nombre && touched.nombre && (
                 <div className="invalid-feedback d-block">{errors.nombre}</div>
@@ -181,7 +181,7 @@ class FormPractica extends React.Component {
             <FormGroup className="mb-3 error-l-75">
               <Label>Descripción</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 className="form-control"
                 name="descripcion"
                 type="textarea"
@@ -196,7 +196,7 @@ class FormPractica extends React.Component {
             <FormGroup className="mb-3 error-l-100">
               <Label>Fecha Lanzada</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 className="form-control"
                 name="fechaLanzada"
                 type="date"
@@ -212,7 +212,7 @@ class FormPractica extends React.Component {
             <FormGroup className="mb-3 error-l-125">
               <Label>Fecha Vencimiento</Label>
               <Field
-                autocomplete="off"
+                autoComplete="off"
                 className="form-control"
                 name="fechaVencimiento"
                 type="date"

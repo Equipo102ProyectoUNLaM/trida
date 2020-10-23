@@ -189,32 +189,6 @@ class CardTabs extends Component {
                             </Colxx>
                             <Colxx xxs="12" xs="4" lg="4">
                               <div className="dropdown-calendar flex">
-                                <p>Fecha y Hora de Finalización&nbsp;</p>
-                                {rolDocente && !this.props.isOldTest && (
-                                  <Calendario
-                                    handleClick={
-                                      this.handleClickChangeFinalDate
-                                    }
-                                    text="Modificar fecha de evaluación"
-                                    evalCalendar={true}
-                                    dateFormat={'DD/MM/YYYY - HH:mm'}
-                                    timeCaption="Hora"
-                                    timeIntervals={60}
-                                    timeFormat={'HH:mm'}
-                                  />
-                                )}
-                                {data.base.fecha_finalizacion && (
-                                  <p className="mb-4">
-                                    {getDateTimeStringFromDate(
-                                      data.base.fecha_finalizacion
-                                    )}
-                                  </p>
-                                )}
-                                {!data.base.fecha_finalizacion && (
-                                  <p className="mb-4">Sin fecha</p>
-                                )}
-                              </div>
-                              <div className="dropdown-calendar flex">
                                 <p>Fecha y Hora de Publicación&nbsp;</p>
                                 {rolDocente && !this.props.isOldTest && (
                                   <Calendario
@@ -237,6 +211,32 @@ class CardTabs extends Component {
                                   </p>
                                 )}
                                 {!data.base.fecha_publicacion && (
+                                  <p className="mb-4">Sin fecha</p>
+                                )}
+                              </div>
+                              <div className="dropdown-calendar flex">
+                                <p>Fecha y Hora de Finalización&nbsp;</p>
+                                {rolDocente && !this.props.isOldTest && (
+                                  <Calendario
+                                    handleClick={
+                                      this.handleClickChangeFinalDate
+                                    }
+                                    text="Modificar fecha de evaluación"
+                                    evalCalendar={true}
+                                    dateFormat={'DD/MM/YYYY - HH:mm'}
+                                    timeCaption="Hora"
+                                    timeIntervals={60}
+                                    timeFormat={'HH:mm'}
+                                  />
+                                )}
+                                {data.base.fecha_finalizacion && (
+                                  <p className="mb-4">
+                                    {getDateTimeStringFromDate(
+                                      data.base.fecha_finalizacion
+                                    )}
+                                  </p>
+                                )}
+                                {!data.base.fecha_finalizacion && (
                                   <p className="mb-4">Sin fecha</p>
                                 )}
                               </div>

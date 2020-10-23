@@ -66,7 +66,7 @@ const ModalAudio = ({
             className="form-control"
             name="nombre"
             onChange={(e) => setNombre(e.target.value)}
-            autocomplete="off"
+            autoComplete="off"
           />
         </FormGroup>
         <p className="tip-text">

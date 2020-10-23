@@ -3,7 +3,7 @@ import { Card, CardBody } from 'reactstrap';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
-const DetalleMensaje = ({ item, idUsuarioActual }) => {
+const DetalleMensaje = ({ item, idUsuarioActual, onDelete }) => {
   return (
     <Fragment>
       <Card
@@ -41,6 +41,12 @@ const DetalleMensaje = ({ item, idUsuarioActual }) => {
           <div className="chat-text-left">
             <p className="mb-0 text-semi-muted">{item.data.contenido}</p>
           </div>
+          {onDelete && (
+            <div
+              className="glyph-icon simple-icon-trash delete-action-icon borrar-mensaje"
+              onClick={() => onDelete(item.id)}
+            />
+          )}
         </CardBody>
       </Card>
       <div className="clearfix" />

@@ -379,14 +379,14 @@ class Mensajeria extends Component {
                     onChange={this.handleChange}
                     className="resend-message"
                     type="textarea"
-                    autocomplete="off"
+                    autoComplete="off"
                   />
                   <label>Destinatarios</label>
                   <Select
                     className="react-select"
                     classNamePrefix="react-select"
                     isMulti
-                    placeholder="Seleccione los destinatarios"
+                    placeholder="Seleccioná los destinatarios"
                     name="form-field-name"
                     value={selectedOptions}
                     onChange={this.handleChangeMulti}

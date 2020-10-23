@@ -12,7 +12,6 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import TagsInput from 'react-tagsinput';
-import TooltipItem from 'components/common/TooltipItem';
 import { functions } from 'helpers/Firebase';
 import { getCollection } from 'helpers/Firebase-db';
 import { getCourses } from 'helpers/Firebase-user';
@@ -22,7 +21,7 @@ import {
   enviarNotificacionError,
 } from 'helpers/Utils-ui';
 import { isEmpty } from 'helpers/Utils';
-import { toolTipMails } from 'constants/texts';
+import { toolTipMails, toolTipCurso } from 'constants/texts';
 import { addMail } from 'constants/emailTexts';
 import 'react-tagsinput/react-tagsinput.css';
 
@@ -246,6 +245,19 @@ class ModalAsignacionMateria extends React.Component {
         <ModalHeader toggle={toggle}>Asignar Materias</ModalHeader>
         <ModalBody>
           <Row>
+            <span className="form-group with-tooltip tip-text mb-3">
+              {toolTipCurso[0]}
+              <Row className="tip-text ml-0 mt-1">
+                {' '}
+                <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                <span>{toolTipCurso[1]}</span>
+              </Row>
+              <Row className="tip-text ml-0">
+                {' '}
+                <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                <span>{toolTipCurso[2]}</span>
+              </Row>
+            </span>
             <div className="form-group has-float-label with-tooltip">
               <Select
                 className="react-select"
@@ -297,19 +309,31 @@ class ModalAsignacionMateria extends React.Component {
           )}
           <Form>
             <Row>
-              <div className="form-group has-float-label with-tooltip">
+              <span className="form-group with-tooltip tip-text mt-3 mb-2">
+                {toolTipMails[0]}
+                <Row className="tip-text ml-0 mt-1">
+                  {' '}
+                  <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                  <span>{toolTipMails[1]}</span>
+                </Row>
+                <Row className="tip-text ml-0">
+                  {' '}
+                  <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                  <span>{toolTipMails[2]}</span>
+                </Row>
+              </span>
+              <div className="form-group has-float-label with-tooltip mt-2">
                 <TagsInput
                   value={this.state.tags}
                   onChange={this.handleTagChange}
                   inputProps={{
-                    placeholder: '',
+                    placeholder: 'trida.app@gmail.com',
                   }}
                   pasteSplit={this.pasteSplit}
                   addOnPaste
                 />
                 <IntlMessages id="user.mail-invitado" />
               </div>
-              <TooltipItem body={toolTipMails} id="mails" />
             </Row>
           </Form>
           <p className="tip-text">* campos requeridos</p>

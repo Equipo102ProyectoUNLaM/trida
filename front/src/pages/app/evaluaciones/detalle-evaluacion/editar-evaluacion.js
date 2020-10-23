@@ -74,7 +74,7 @@ export default class EditarEvaluacion extends Component {
   };
 
   onEvaluacionEditada = () => {
-    this.props.history.push('/app/evaluaciones');
+    this.props.history.push('/app/evaluaciones/escritas');
   };
 
   render() {

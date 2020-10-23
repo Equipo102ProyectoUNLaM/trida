@@ -1,16 +1,22 @@
 import React from 'react';
-var ReactDOMServer = require('react-dom/server');
+import { isMobile } from 'react-device-detect';
+import ReactDOMServer from 'react-dom/server';
 
 export const dropzoneComponentConfig = {
   postUrl: 'https://httpbin.org/post',
+};
+
+const dropzoneMessage = () => {
+  return isMobile
+    ? 'Presioná acá para agregar tus archivos. Luego seleccioná la carpeta en la que querés cargarlos.'
+    : 'Arrastrá tus archivos, o hacé click para agregar. Luego seleccioná la carpeta en la que querés cargarlos.';
 };
 
 export const dropzoneConfig = {
   thumbnailHeight: 160,
   maxFilesize: 2,
   uploadMultiple: true,
-  dictDefaultMessage:
-    'Arrastre sus archivos, o haga click para agregar. Luego seleccione la carpeta en la que desea cargarlos.',
+  dictDefaultMessage: dropzoneMessage(),
   previewTemplate: ReactDOMServer.renderToStaticMarkup(
     <div className="dz-preview dz-file-preview mb-3">
       <div className="d-flex flex-row ">

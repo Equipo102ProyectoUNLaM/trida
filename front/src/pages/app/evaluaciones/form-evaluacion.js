@@ -428,7 +428,7 @@ class FormEvaluacion extends React.Component {
             </ModalFooter>
             {modalEditOpen && (
               <ModalConfirmacion
-                texto="¿Está seguro de que desea editar la evaluación?"
+                texto="¿Estás seguro de editar la evaluación?"
                 titulo="Guardar Evaluación"
                 buttonPrimary="Aceptar"
                 buttonSecondary="Cancelar"
@@ -439,7 +439,7 @@ class FormEvaluacion extends React.Component {
             )}
             {modalAddOpen && (
               <ModalConfirmacion
-                texto="¿Está seguro de que desea crear la evaluación?"
+                texto="¿Estás seguro de crear la evaluación?"
                 titulo="Crear Evaluación"
                 buttonPrimary="Aceptar"
                 buttonSecondary="Cancelar"

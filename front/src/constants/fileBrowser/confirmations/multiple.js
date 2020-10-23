@@ -12,8 +12,8 @@ const MultipleConfirmDeletion = (props) => {
         <Card>
           <CardBody className="col-inline">
             <Alert color="danger" className="rounded center">
-              ¿Está seguro que desea eliminar todos los archivos seleccionados?
-              Esta acción no podrá deshacerse
+              ¿Estás seguro de eliminar todos los archivos seleccionados? Esta
+              acción no podrá deshacerse
             </Alert>
             <Button
               color="danger"

@@ -21,6 +21,22 @@ export const getUserData = async (userId) => {
   }
 };
 
+export const getUsuariosPorMateriaConRol = async (subjectId) => {
+  try {
+    let usuariosConData = [];
+    const { data } = await getDocument(`usuariosPorMateria/${subjectId}`);
+    for (const usuario of data.usuario_id) {
+      const { data } = await getDocument(`usuarios/${usuario}`);
+      usuariosConData.push({ id: usuario, rol: data.rol });
+    }
+    return usuariosConData;
+  } catch (err) {
+    console.log(err);
+  }
+
+  return [];
+};
+
 export const getInstituciones = async (userId) => {
   const array = [];
   try {
@@ -97,7 +113,10 @@ export const getCourses = async (institutionId, userId) => {
 
 export const getUsersOfSubject = async (idMateria, currentUser) => {
   const arrayDeObjetos = await getDocument(`usuariosPorMateria/${idMateria}`);
-  const usuarios = createUserList(arrayDeObjetos.data.usuario_id, currentUser);
+  const usuarios = await createUserList(
+    arrayDeObjetos.data.usuario_id,
+    currentUser
+  );
 
   return usuarios;
 };

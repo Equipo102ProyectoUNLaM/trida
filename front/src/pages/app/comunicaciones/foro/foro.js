@@ -7,6 +7,7 @@ import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormForo from './form-foro';
+import { getUsersOfSubject } from 'helpers/Firebase-user';
 import {
   getCollection,
   logicDeleteDocument,
@@ -37,8 +38,11 @@ class Foro extends Component {
       idForoEditado: '',
       nombreForoEditado: '',
       descForoEditado: '',
-      fechaForoEditado: '',
       mensajesForo: [],
+      privadoEditado: '',
+      integrantesEditado: [],
+      datosUsuarios: [],
+      forosPrivadosActive: false,
     };
   }
 
@@ -46,11 +50,42 @@ class Foro extends Component {
     const arrayDeObjetos = await getCollection('foros', [
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
+      { field: 'privado', operator: '==', id: false },
     ]);
     this.dataListRenderer(arrayDeObjetos);
   };
 
-  componentDidMount() {
+  getForosPrivados = async (materiaId) => {
+    const arrayDeObjetos = await getCollection('foros', [
+      {
+        field: 'integrantes',
+        operator: 'array-contains',
+        id: this.props.user,
+      },
+      { field: 'idMateria', operator: '==', id: materiaId },
+      { field: 'activo', operator: '==', id: true },
+      { field: 'privado', operator: '==', id: true },
+    ]);
+    this.dataListRenderer(arrayDeObjetos);
+  };
+
+  getTemas = () => {
+    if (this.state.forosPrivadosActive) {
+      this.getForosPrivados(this.state.idMateria);
+    } else {
+      this.getForos(this.state.idMateria);
+    }
+  };
+
+  async componentDidMount() {
+    const datos = await getUsersOfSubject(
+      this.state.idMateria,
+      this.props.user
+    );
+    this.setState({
+      datosUsuarios: datos,
+    });
+
     this.getForos(this.state.idMateria);
   }
 
@@ -63,7 +98,8 @@ class Foro extends Component {
   onForoGuardado = () => {
     if (this.state.modalEditOpen) this.toggleEditModal();
     else this.toggleModal();
-    this.getForos(this.state.idMateria);
+
+    this.getTemas();
   };
 
   dataListRenderer(arrayDeObjetos) {
@@ -99,12 +135,14 @@ class Foro extends Component {
       'mensajes'
     );
     const { data, subCollection } = foro;
-    const { nombre, descripcion } = data;
+    const { nombre, descripcion, privado, integrantes } = data;
     this.setState({
       idForoEditado: idForo,
       nombreForoEditado: nombre,
       descForoEditado: descripcion,
       mensajesForo: subCollection,
+      privadoEditado: privado,
+      integrantesEditado: integrantes,
     });
     this.toggleEditModal();
   };
@@ -115,7 +153,15 @@ class Foro extends Component {
       idForo: '',
     });
     this.toggleDeleteModal();
-    this.getForos(this.state.idMateria);
+    this.getTemas();
+  };
+
+  togglePrivateForumsModal = async () => {
+    await this.setState({
+      forosPrivadosActive: !this.state.forosPrivadosActive,
+      isLoading: true,
+    });
+    this.getTemas();
   };
 
   render() {
@@ -128,8 +174,11 @@ class Foro extends Component {
       idForoEditado,
       nombreForoEditado,
       descForoEditado,
-      fechaForoEditado,
       mensajes: mensajesForo,
+      forosPrivadosActive,
+      datosUsuarios,
+      integrantesEditado,
+      privadoEditado,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
@@ -139,9 +188,15 @@ class Foro extends Component {
       <Fragment>
         <div className="disable-text-selection">
           <HeaderDeModulo
-            heading="menu.mis-foros"
+            heading={
+              forosPrivadosActive ? 'menu.mis-foros-privados' : 'menu.mis-foros'
+            }
             toggleModal={rolDocente ? this.toggleModal : null}
             buttonText={rolDocente ? 'forums.add' : null}
+            secondaryToggleModal={this.togglePrivateForumsModal}
+            secondaryButtonText={
+              forosPrivadosActive ? 'forums.public' : 'forums.privates'
+            }
           />
           <ModalGrande
             modalOpen={modalOpen}
@@ -151,6 +206,7 @@ class Foro extends Component {
             <FormForo
               toggleModal={this.toggleModal}
               onForoGuardado={this.onForoGuardado}
+              datosUsuarios={datosUsuarios}
             />
           </ModalGrande>
           <Row>
@@ -166,12 +222,17 @@ class Foro extends Component {
                     navTo={`/app/comunicaciones/foro/detalle-foro/${foro.id}`}
                     onEdit={rolDocente ? this.onEdit : null}
                     onDelete={rolDocente ? this.onDelete : null}
+                    isClase={false}
                   />
                 );
               })}
             {isEmpty(items) && (
               <Row className="ml-3">
-                <span>No hay temas creados</span>
+                <span>
+                  {forosPrivadosActive
+                    ? 'No hay temas privados creados'
+                    : 'No hay temas públicos creados'}
+                </span>
               </Row>
             )}
           </Row>
@@ -186,9 +247,11 @@ class Foro extends Component {
                 onForoGuardado={this.onForoGuardado}
                 idForo={idForoEditado}
                 nombre={nombreForoEditado}
-                fecha={fechaForoEditado}
                 descripcion={descForoEditado}
                 mensajes={mensajesForo}
+                datosUsuarios={datosUsuarios}
+                integrantes={integrantesEditado}
+                privado={privadoEditado}
               />
             </ModalGrande>
           )}
@@ -211,10 +274,10 @@ class Foro extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { userData, user } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default injectIntl(connect(mapStateToProps)(Foro));

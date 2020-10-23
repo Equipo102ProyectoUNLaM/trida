@@ -83,6 +83,7 @@ module.exports = {
   'menu.my-contents': 'Mis Contenidos',
   'menu.my-corrections': 'Mis Correcciones',
   'menu.mis-clases': 'Mis Clases',
+  'menu.mis-clases-finalizadas': 'Mis Clases Finalizadas',
   'menu.detalle-clase': 'Detalle de Clase',
   'menu.board': 'Pizarrón',
   'menu.my-activities': 'Mis Prácticas Actuales',
@@ -101,10 +102,20 @@ module.exports = {
   'menu.mis-instituciones': 'Mis Instituciones',
   'menu.mis-cursos': 'Mis Cursos',
   'menu.mis-materias': 'Mis Materias',
-  'menu.mis-foros': 'Mis Temas',
+  'menu.mis-foros': 'Mis Temas Públicos',
+  'menu.mis-foros-privados': 'Mis Temas Privados',
   'menu.alumnos-materia': 'Usuarios de la Materia',
   'menu.volver': 'VOLVER',
   'menu.admin': 'Administración',
+  'menu.reportes': 'Reportes',
+  'menu.reportes-clases': 'Clases',
+  'menu.reportes-practicas': 'Practicas',
+  'menu.reportes-evaluaciones': 'Evaluaciones',
+  'menu.reportes-generales': 'Generales',
+  'menu.my-reportes-clases': 'Mis Reportes de Clases',
+  'menu.my-reportes-practicas': 'Mis Reportes de Practicas',
+  'menu.my-reportes-evaluaciones': 'Mis Reportes de Evaluaciones',
+  'menu.my-reportes-generales': 'Mis Reportes de Generales',
   'menu.ayuda': 'Ayuda',
 
   /* 04.Error  */
@@ -125,6 +136,8 @@ module.exports = {
   /* 06.01.My Classes */
   'classes.add': 'AGREGAR CLASE',
   'classes.edit': 'EDITAR CLASE',
+  'classes.active': 'VER CLASES ACTUALES',
+  'classes.old': 'VER CLASES FINALIZADAS',
   'class.name': 'Nombre',
   'class.level': 'Nivel educativo',
   'class.description': 'Descripción',
@@ -215,9 +228,16 @@ module.exports = {
   /* 15. Foros */
   'forums.add': 'AGREGAR TEMA',
   'forums.edit': 'EDITAR TEMA',
+  'forums.private': 'FOROS PRIVADOS',
+  'forums.public': 'VER FOROS PUBLICOS',
+  'forums.privates': 'VER FOROS PRIVADOS',
+  'forums.participants': 'Integrantes',
 
   /* 16. Ayuda */
   'ayuda.bienvenido': 'Te damos la bienvenida a la sección de ayuda.',
   'ayuda.bienvenido-subtitulo':
     ' En esta sección encontrarás toda la información sobre cómo usar la aplicación.',
+
+  /* 17. Formales */
+  'formales.nueva': 'CREAR NUEVA COMUNICACIÓN',
 };
