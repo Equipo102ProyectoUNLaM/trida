@@ -109,7 +109,7 @@ class OpcionMultiple extends React.Component {
                 <Input
                   name="respuesta"
                   className="margin-auto checkbox"
-                  type="checkbox"
+                  type={type}
                 />
                 <Label className="opcionMultipleInput margin-auto">
                   {op.opcion}
@@ -129,7 +129,7 @@ class OpcionMultiple extends React.Component {
                 <Input
                   name="verdadera"
                   className="margin-auto checkbox"
-                  type="checkbox"
+                  type={type}
                   onChange={(e) => this.handleResponseCheckBoxChange(e, index)}
                 />
                 <Label className="opcionMultipleInput margin-auto">

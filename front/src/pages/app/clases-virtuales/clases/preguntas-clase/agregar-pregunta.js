@@ -31,7 +31,7 @@ class AgregarPregunta extends React.Component {
       cant: 1,
       submitted: false,
       isLoading: true,
-      unicaResp: false,
+      unicaRespuesta: false,
     };
   }
 
@@ -111,11 +111,11 @@ class AgregarPregunta extends React.Component {
   handleAddPregunta = (e) => {
     let preg = this.state.preguntasRealizadas;
     let num = this.state.cant + 1;
-    preg.push({ nombre: '', tipo: '', numero: num });
+    preg.push({ nombre: '', tipo: '', numero: num, unicaRespuesta: false });
     this.setState({
       preguntasRealizadas: preg,
       cant: num,
-      unicaResp: false,
+      unicaRespuesta: false,
       submitted: false,
     });
   };
@@ -123,11 +123,11 @@ class AgregarPregunta extends React.Component {
   handleAddPreguntaUnicaResp = (e) => {
     let preg = this.state.preguntasRealizadas;
     let num = this.state.cant + 1;
-    preg.push({ nombre: '', tipo: '', numero: num });
+    preg.push({ nombre: '', tipo: '', numero: num, unicaRespuesta: true });
     this.setState({
       preguntasRealizadas: preg,
       cant: num,
-      unicaResp: true,
+      unicaRespuesta: true,
       submitted: false,
     });
   };
@@ -157,7 +157,12 @@ class AgregarPregunta extends React.Component {
   };
 
   render() {
-    const { preguntasRealizadas, submitted, isLoading, unicaResp } = this.state;
+    const {
+      preguntasRealizadas,
+      submitted,
+      isLoading,
+      unicaRespuesta,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -178,7 +183,7 @@ class AgregarPregunta extends React.Component {
                             <OpcionMultiple
                               ejercicioId={index}
                               value={pregunta}
-                              respuestaUnica={unicaResp}
+                              respuestaUnica={unicaRespuesta}
                               submitted={submitted}
                               preview={false}
                               onEjercicioChange={this.onPreguntaChange}
@@ -222,7 +227,7 @@ class AgregarPregunta extends React.Component {
           onClick={this.handleAddPreguntaUnicaResp}
           size="sm"
           color="primary"
-          className="button"
+          className="button btn-right"
         >
           {' '}
           Agregar Pregunta (solo una opción correcta){' '}
