@@ -115,8 +115,8 @@ class DataListView extends React.Component {
                 </Badge>
               )}
               {!sonPreguntas && !modalLanzarPreguntas && (
-                <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
-                  <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                  <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
                     <p className="list-item-heading mb-1 truncate practicas-list-label">
                       {title}
                     </p>
@@ -130,88 +130,88 @@ class DataListView extends React.Component {
                         {text2}
                       </p>
                     )}
+                  </NavLink>
+                  <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label mt-2">
+                    <Row className="correcciones-data-list-row">
+                      {estado && (
+                        <Badge
+                          key={id + 'badge'}
+                          color="primary"
+                          pill
+                          className="badge-data-list mt-1 mb-1"
+                        >
+                          {estado.toUpperCase()}
+                        </Badge>
+                      )}
+                      {file !== undefined && (
+                        <Button
+                          outline
+                          onClick={() => this.onDownloadFile(file)}
+                          size="sm"
+                          color="primary"
+                          className="button datalist-button mt-1 mb-1"
+                        >
+                          Descargar Práctica
+                        </Button>
+                      )}
+                      {onUploadFile && (
+                        <Button
+                          outline
+                          onClick={() => onUploadFile(id)}
+                          size="sm"
+                          color="primary"
+                          className="button datalist-button mt-1 mb-1"
+                        >
+                          Subir Práctica
+                        </Button>
+                      )}
+                      {onCorrection && estado === 'No Corregido' && (
+                        <Button
+                          style={{ width: '7rem' }}
+                          outline
+                          onClick={() => onCorrection(id, idArchivo, file)}
+                          size="sm"
+                          color="primary"
+                          className="button datalist-button mt-1 mb-1"
+                        >
+                          Corregir
+                        </Button>
+                      )}
+                      {onVerCorrection && estado === 'Corregido' && (
+                        <Button
+                          outline
+                          onClick={() => onVerCorrection(id, idArchivo)}
+                          size="sm"
+                          color="primary"
+                          className="button datalist-button mt-1 mb-1"
+                          disabled={estado === 'Corregido' ? false : true}
+                        >
+                          Ver Corrección
+                        </Button>
+                      )}
+                      {onEditItem && (
+                        <div
+                          className="glyph-icon simple-icon-pencil edit-action-icon"
+                          onClick={() => onEditItem(id)}
+                        />
+                      )}
+                      {onDelete && (
+                        <div
+                          className="glyph-icon simple-icon-trash delete-action-icon"
+                          onClick={this.handleClickDelete}
+                        />
+                      )}
+                      {calendario && (
+                        <Calendario
+                          handleClick={this.handleClick}
+                          text="Modificar fecha de entrega"
+                          evalCalendar={false}
+                        />
+                      )}
+                    </Row>
                   </div>
-                </NavLink>
+                </div>
               )}
-              <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label">
-                <Row className="correcciones-data-list-row">
-                  {estado && (
-                    <Badge
-                      key={id + 'badge'}
-                      color="primary"
-                      pill
-                      className="badge-data-list"
-                    >
-                      {estado.toUpperCase()}
-                    </Badge>
-                  )}
-                  {file !== undefined && (
-                    <Button
-                      outline
-                      onClick={() => this.onDownloadFile(file)}
-                      size="sm"
-                      color="primary"
-                      className="button datalist-button"
-                    >
-                      Descargar Práctica
-                    </Button>
-                  )}
-                  {onUploadFile && (
-                    <Button
-                      outline
-                      onClick={() => onUploadFile(id)}
-                      size="sm"
-                      color="primary"
-                      className="button datalist-button"
-                    >
-                      Subir Práctica
-                    </Button>
-                  )}
-                  {onCorrection && estado === 'No Corregido' && (
-                    <Button
-                      style={{ width: '7rem' }}
-                      outline
-                      onClick={() => onCorrection(id, idArchivo, file)}
-                      size="sm"
-                      color="primary"
-                      className="button datalist-button"
-                    >
-                      Corregir
-                    </Button>
-                  )}
-                  {onVerCorrection && estado === 'Corregido' && (
-                    <Button
-                      outline
-                      onClick={() => onVerCorrection(id, idArchivo)}
-                      size="sm"
-                      color="primary"
-                      className="button datalist-button"
-                      disabled={estado === 'Corregido' ? false : true}
-                    >
-                      Ver Corrección
-                    </Button>
-                  )}
-                  {onEditItem && (
-                    <div
-                      className="glyph-icon simple-icon-pencil edit-action-icon"
-                      onClick={() => onEditItem(id)}
-                    />
-                  )}
-                  {onDelete && (
-                    <div
-                      className="glyph-icon simple-icon-trash delete-action-icon"
-                      onClick={this.handleClickDelete}
-                    />
-                  )}
-                  {calendario && (
-                    <Calendario
-                      handleClick={this.handleClick}
-                      text="Modificar fecha de entrega"
-                      evalCalendar={false}
-                    />
-                  )}
-                </Row>
-              </div>
             </div>
             {entregada && this.props.rol === ROLES.Alumno && (
               <div className="flex mr-4">

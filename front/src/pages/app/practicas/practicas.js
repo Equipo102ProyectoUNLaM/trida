@@ -311,8 +311,8 @@ class Practica extends Component {
             />
           </ModalGrande>
           <Row>
-            <Colxx xxs="8" md="8">
-              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+            <Colxx xxs="12" xs="12" md="6" lg="8" className="w-xs-100">
+              <div className="search-sm float-md-left mr-1 mb-1 align-top">
                 <input
                   type="text"
                   name="keyword"
@@ -323,7 +323,13 @@ class Practica extends Component {
                 />
               </div>
             </Colxx>
-            <Colxx xxs="4" md="4" className="columna-filtro-badge">
+            <Colxx
+              xxs="12"
+              xs="12"
+              md="6"
+              lg="4"
+              className="columna-filtro-badge"
+            >
               <Badge pill className="mb-1 position-absolute badge badge-filtro">
                 <Calendario
                   handleClick={this.handleClickCalendario}
@@ -338,7 +344,7 @@ class Practica extends Component {
                     {' '}
                     - {filtroFecha}
                     <Button
-                      className="delete-filter"
+                      className="delete-filter "
                       onClick={this.handleFiltroDelete}
                       close
                     />
@@ -346,49 +352,47 @@ class Practica extends Component {
                 )}
               </Badge>
             </Colxx>
-            {!isEmpty(items) &&
-              items.map((practica) => {
-                return (
-                  <DataListView
-                    key={practica.id + 'dataList'}
-                    id={practica.id}
-                    title={practica.data.nombre}
-                    text1={
-                      'Fecha de publicación: ' +
-                      getFormattedDate(practica.data.fechaLanzada)
-                    }
-                    text2={
-                      'Fecha de entrega: ' +
-                      getFormattedDate(practica.data.fechaVencimiento)
-                    }
-                    file={practica.data.url}
-                    isSelect={this.state.selectedItems.includes(practica.id)}
-                    onEditItem={
-                      rolDocente && !oldPracticesActive
-                        ? this.toggleEditModal
-                        : null
-                    }
-                    onDelete={
-                      rolDocente && !oldPracticesActive ? this.onDelete : null
-                    }
-                    onUploadFile={
-                      rol === ROLES.Alumno && !oldPracticesActive
-                        ? this.toggleUploadFileModal
-                        : null
-                    }
-                    navTo="#"
-                    collect={collect}
-                    calendario={
-                      rolDocente && !oldPracticesActive ? true : false
-                    }
-                    entregada={practica.entregada ? true : false}
-                    noEntregada={
-                      !practica.entregada && oldPracticesActive ? true : false
-                    }
-                  />
-                );
-              })}{' '}
           </Row>
+          {!isEmpty(items) &&
+            items.map((practica) => {
+              return (
+                <DataListView
+                  key={practica.id + 'dataList'}
+                  id={practica.id}
+                  title={practica.data.nombre}
+                  text1={
+                    'Fecha de publicación: ' +
+                    getFormattedDate(practica.data.fechaLanzada)
+                  }
+                  text2={
+                    'Fecha de entrega: ' +
+                    getFormattedDate(practica.data.fechaVencimiento)
+                  }
+                  file={practica.data.url}
+                  isSelect={this.state.selectedItems.includes(practica.id)}
+                  onEditItem={
+                    rolDocente && !oldPracticesActive
+                      ? this.toggleEditModal
+                      : null
+                  }
+                  onDelete={
+                    rolDocente && !oldPracticesActive ? this.onDelete : null
+                  }
+                  onUploadFile={
+                    rol === ROLES.Alumno && !oldPracticesActive
+                      ? this.toggleUploadFileModal
+                      : null
+                  }
+                  navTo="#"
+                  collect={collect}
+                  calendario={rolDocente && !oldPracticesActive ? true : false}
+                  entregada={practica.entregada ? true : false}
+                  noEntregada={
+                    !practica.entregada && oldPracticesActive ? true : false
+                  }
+                />
+              );
+            })}{' '}
           {isEmpty(items) && (
             <Row className="ml-0">
               <span>No hay prácticas</span>

@@ -249,7 +249,7 @@ class CardTabs extends Component {
                                 onClick={this.handleClickEdit}
                                 size="sm"
                                 color="primary"
-                                className="button"
+                                className="button mt-2"
                               >
                                 Editar Evaluación
                               </Button>
@@ -260,7 +260,7 @@ class CardTabs extends Component {
                                 onClick={this.handleClickDelete}
                                 size="sm"
                                 color="primary"
-                                className="button"
+                                className="button mt-2"
                               >
                                 Borrar Evaluación
                               </Button>
@@ -271,7 +271,7 @@ class CardTabs extends Component {
                                 onClick={this.handleClickExport}
                                 size="sm"
                                 color="primary"
-                                className="button"
+                                className="button mt-2"
                               >
                                 Exportar Evaluación
                               </Button>
@@ -284,7 +284,7 @@ class CardTabs extends Component {
                                   onClick={this.handleClickMake}
                                   size="sm"
                                   color="primary"
-                                  className="button"
+                                  className="button mt-2"
                                 >
                                   Realizar Evaluación
                                 </Button>
@@ -330,7 +330,7 @@ class CardTabs extends Component {
                             <Button
                               outline
                               size="sm"
-                              color="primary"
+                              color="primary mt-2"
                               onClick={this.handleClickVistaPrevia}
                             >
                               Vista Previa de Evaluación

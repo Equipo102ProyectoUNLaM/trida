@@ -160,7 +160,7 @@ class FormMensaje extends Component {
                       />
                     </Colxx>
                     {rolDocente && (
-                      <Colxx xxs="12" md="6" className="receivers-general">
+                      <Colxx xxs="12" md="6" className="receivers-general mt-4">
                         <Field
                           autocomplete="off"
                           name="esGeneral"

@@ -129,7 +129,7 @@ class PreguntasAleatorias extends React.Component {
         )}
 
         {!preview && !resolve && (
-          <div>
+          <div className="mb-3">
             <div>
               <FormGroup className="error-l-325">
                 <Label>

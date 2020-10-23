@@ -989,6 +989,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.05rem;
   padding: 0.75rem 2.6rem 0.6rem 2.6rem;
+  white-space: normal;
 }
 
 .btn-sm,
@@ -3628,7 +3629,7 @@ nav .nomargin {
 
 .ReactTable .rt-tr-group {
   flex: 0 auto;
-  height: 2.3rem;
+  height: auto;
 }
 
 .ReactTable .list-item-heading {
@@ -3637,6 +3638,11 @@ nav .nomargin {
 
 .ReactTable .rt-tbody .rt-td {
   border-right: initial;
+}
+
+.ReactTable .rt-td p{
+  white-space: normal !important;
+  margin: 0.5rem
 }
 
 .ReactTable .rt-thead .rt-th.-sort-desc,
@@ -5513,10 +5519,11 @@ input:-webkit-autofill {
 
 .search-sm {
   position: relative;
+  width: 100%;
+  display: grid !important;
 
   input {
     height: 2rem !important;
-    width: 300%;
     height: 2.5rem !important;
     margin-bottom: 1rem;
     background: none;
@@ -9583,6 +9590,7 @@ tr.folder {
 .columna-filtro-badge {
   display: flex;
   justify-content: flex-end;
+  height: 3rem !important;
 }
 
 .delete-filter {
@@ -9606,7 +9614,7 @@ tr.folder {
 }
 
 .badge-data-list {
-  width: 25%;
+  // width: 25%;
   height: 50%;
   margin-right: 2%;
   padding-right: 1.25rem;
@@ -9619,7 +9627,7 @@ tr.folder {
 
 
 .badge-correccion {
-  width: 15%;
+  // width: 15%;
   height: 50%;
   margin-right: 2%;
   margin-left: 1%;
