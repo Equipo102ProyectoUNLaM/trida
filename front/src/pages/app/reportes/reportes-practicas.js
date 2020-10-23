@@ -62,10 +62,10 @@ class ReportesPracticas extends Component {
     });
 
     let dataPracticas = await Promise.all(dataPracticasPromise);
-    dataPracticas = groupBy(dataPracticas, 'nombreUsuario');
+    /* dataPracticas = groupBy(dataPracticas, 'nombreUsuario');
     dataPracticas = Object.entries(dataPracticas).map((elem) => {
       return { id: elem[0], data: elem[1] };
-    });
+    }); */
     this.setState({ dataPracticas });
   };
 
@@ -111,34 +111,24 @@ class ReportesPracticas extends Component {
             <TableHead>
               <TableRow>
                 <TableCell>Alumno</TableCell>
-                <TableCell align="right">Práctica</TableCell>
-                <TableCell align="right">Estado</TableCell>
-                <TableCell align="right">Nota</TableCell>
+                <TableCell>Práctica</TableCell>
+                <TableCell>Estado</TableCell>
+                <TableCell>Nota</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataPracticas.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell component="th" scope="row">
-                    {row.id}
-                  </TableCell>
-                  {row.data.map((data) => {
-                    return (
-                      <>
-                        <TableCell colSpan={2} align="right">
-                          {data.nombrePractica}
-                        </TableCell>
-                        <TableCell colSpan={2} align="right">
-                          {data.estado}
-                        </TableCell>
-                        <TableCell colSpan={2} align="right">
-                          {data.nota}
-                        </TableCell>
-                      </>
-                    );
-                  })}
-                </TableRow>
-              ))}
+              {dataPracticas.map((row) => {
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell component="th" scope="row">
+                      {row.nombreUsuario}
+                    </TableCell>
+                    <TableCell>{row.nombrePractica}</TableCell>
+                    <TableCell>{row.estado}</TableCell>
+                    <TableCell>{row.nota}</TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
