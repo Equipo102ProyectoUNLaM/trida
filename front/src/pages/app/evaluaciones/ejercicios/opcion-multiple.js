@@ -8,6 +8,7 @@ class OpcionMultiple extends React.Component {
     this.state = {
       consigna: '',
       respuestas: [],
+      type: '',
       opciones: [
         {
           opcion: '',
@@ -18,6 +19,15 @@ class OpcionMultiple extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.respuestaUnica) {
+      this.setState({
+        type: 'radio',
+      });
+    } else {
+      this.setState({
+        type: 'checkbox',
+      });
+    }
     if (this.props.value.opciones) {
       this.setState({
         consigna: this.props.value.consigna,
@@ -83,7 +93,7 @@ class OpcionMultiple extends React.Component {
   };
 
   render() {
-    let { opciones, consigna, respuestas } = this.state;
+    let { opciones, consigna, respuestas, type } = this.state;
 
     const { preview, resolve } = this.props;
 
@@ -168,7 +178,7 @@ class OpcionMultiple extends React.Component {
                     <Input
                       name="verdadera"
                       className="margin-auto checkbox"
-                      type="checkbox"
+                      type={type}
                       onChange={(e) => this.handleCheckBoxChange(e, index)}
                       checked={op.verdadera}
                     />

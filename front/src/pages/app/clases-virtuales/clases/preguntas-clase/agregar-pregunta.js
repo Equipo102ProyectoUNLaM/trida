@@ -1,5 +1,13 @@
 import React from 'react';
-import { Row, Button, FormGroup, Card, CardBody } from 'reactstrap';
+import {
+  Row,
+  Button,
+  FormGroup,
+  Card,
+  CardBody,
+  Label,
+  Input,
+} from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
@@ -23,6 +31,7 @@ class AgregarPregunta extends React.Component {
       cant: 1,
       submitted: false,
       isLoading: true,
+      unicaResp: false,
     };
   }
 
@@ -106,6 +115,19 @@ class AgregarPregunta extends React.Component {
     this.setState({
       preguntasRealizadas: preg,
       cant: num,
+      unicaResp: false,
+      submitted: false,
+    });
+  };
+
+  handleAddPreguntaUnicaResp = (e) => {
+    let preg = this.state.preguntasRealizadas;
+    let num = this.state.cant + 1;
+    preg.push({ nombre: '', tipo: '', numero: num });
+    this.setState({
+      preguntasRealizadas: preg,
+      cant: num,
+      unicaResp: true,
       submitted: false,
     });
   };
@@ -135,7 +157,7 @@ class AgregarPregunta extends React.Component {
   };
 
   render() {
-    const { preguntasRealizadas, submitted, isLoading } = this.state;
+    const { preguntasRealizadas, submitted, isLoading, unicaResp } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -156,6 +178,7 @@ class AgregarPregunta extends React.Component {
                             <OpcionMultiple
                               ejercicioId={index}
                               value={pregunta}
+                              respuestaUnica={unicaResp}
                               submitted={submitted}
                               preview={false}
                               onEjercicioChange={this.onPreguntaChange}
@@ -192,7 +215,17 @@ class AgregarPregunta extends React.Component {
           className="button"
         >
           {' '}
-          Agregar Pregunta{' '}
+          Agregar Pregunta (múltiples opciones correctas){' '}
+        </Button>
+        <Button
+          outline
+          onClick={this.handleAddPreguntaUnicaResp}
+          size="sm"
+          color="primary"
+          className="button"
+        >
+          {' '}
+          Agregar Pregunta (solo una opción correcta){' '}
         </Button>
       </FormGroup>
     );
