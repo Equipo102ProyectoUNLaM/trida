@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Container } from 'reactstrap';
+import { groupBy } from 'lodash';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
@@ -36,6 +37,7 @@ class ReportesPracticas extends Component {
         id: 'practica',
       },
       { field: 'idMateria', operator: '==', id: this.props.subject.id },
+      { field: 'estado', operator: '==', id: 'Corregido' },
     ]);
 
     const dataPracticasPromise = data.map(async (elem) => {
@@ -50,9 +52,13 @@ class ReportesPracticas extends Component {
       };
     });
 
-    const dataPracticas = await Promise.all(dataPracticasPromise);
-    this.setState({ dataPracticas });
+    let dataPracticas = await Promise.all(dataPracticasPromise);
+    dataPracticas = groupBy(dataPracticas, 'nombreUsuario');
+    dataPracticas = Object.entries(dataPracticas).map((elem) => {
+      return { id: elem[0], data: elem[1] };
+    });
     console.log(dataPracticas);
+    this.setState({ dataPracticas });
   };
 
   render() {
@@ -66,15 +72,28 @@ class ReportesPracticas extends Component {
           </Colxx>
         </Row>
         <Row>
+          <Row className="display-row" xs="1" sm="2" md="4">
+            <Col>Alumno</Col>
+            <Col>Práctica</Col>
+            <Col>Estado</Col>
+            <Col>Nota</Col>
+          </Row>
           {dataPracticas.map((elem) => {
             return (
-              <Row key={elem.id}>
-                <Col>{elem.nombrePractica} </Col>
-                <Col>{elem.nombreUsuario} </Col>
-                <Col>{elem.estado} </Col>
-                <Col>{elem.nota} </Col>
-                <br />
-              </Row>
+              <Container key={elem.id}>
+                <Row className="display-row">
+                  <Col>{elem.id}</Col>
+                  {elem.data.map((data) => {
+                    return (
+                      <Row className="display-row" key={data.id}>
+                        <Col>{data.nombrePractica}</Col>
+                        <Col>{data.estado}</Col>
+                        <Col>{data.nota}</Col>
+                      </Row>
+                    );
+                  })}
+                </Row>
+              </Container>
             );
           })}
         </Row>
