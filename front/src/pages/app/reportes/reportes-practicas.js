@@ -115,7 +115,10 @@ class ReportesPracticas extends Component {
                     {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
                   </IconButton>
                 </TableCell>
-                <TableCell className="width-100 font-weight-bold">
+                <TableCell
+                  className="width-100 font-weight-bold"
+                  onClick={() => this.toggleAccordion(index)}
+                >
                   {row.id}
                 </TableCell>
               </TableRow>
