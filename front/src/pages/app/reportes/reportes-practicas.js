@@ -6,6 +6,15 @@ import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
 
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
 class ReportesPracticas extends Component {
   constructor(props) {
     super(props);
@@ -57,7 +66,6 @@ class ReportesPracticas extends Component {
     dataPracticas = Object.entries(dataPracticas).map((elem) => {
       return { id: elem[0], data: elem[1] };
     });
-    console.log(dataPracticas);
     this.setState({ dataPracticas });
   };
 
@@ -71,7 +79,7 @@ class ReportesPracticas extends Component {
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        <Row>
+        {/*  <Row>
           <Row className="display-row" xs="1" sm="2" md="4">
             <Col>Alumno</Col>
             <Col>Práctica</Col>
@@ -96,7 +104,44 @@ class ReportesPracticas extends Component {
               </Container>
             );
           })}
-        </Row>
+        </Row> */}
+        <Separator />
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Alumno</TableCell>
+                <TableCell align="right">Práctica</TableCell>
+                <TableCell align="right">Estado</TableCell>
+                <TableCell align="right">Nota</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {dataPracticas.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell component="th" scope="row">
+                    {row.id}
+                  </TableCell>
+                  {row.data.map((data) => {
+                    return (
+                      <>
+                        <TableCell colSpan={2} align="right">
+                          {data.nombrePractica}
+                        </TableCell>
+                        <TableCell colSpan={2} align="right">
+                          {data.estado}
+                        </TableCell>
+                        <TableCell colSpan={2} align="right">
+                          {data.nota}
+                        </TableCell>
+                      </>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Fragment>
     );
   }
