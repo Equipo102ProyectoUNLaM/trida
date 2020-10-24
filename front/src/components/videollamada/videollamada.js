@@ -398,6 +398,7 @@ const Videollamada = ({
             listaAsistencia.push({
               id,
               nombre: displayName,
+              user: idUser,
               timeStampConexion: moment().format(),
             })
           );

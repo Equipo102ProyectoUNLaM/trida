@@ -25,8 +25,9 @@ class ReportesClases extends Component {
     super(props);
 
     this.state = {
-      dataPracticas: [],
+      dataClases: [],
       open: [],
+      isLoading: false,
     };
   }
 
@@ -57,6 +58,10 @@ class ReportesClases extends Component {
   };
 
   getCorreccionesDePracticas = async () => {
+    this.setState({
+      isLoading: true,
+    });
+
     const data = await getCollection('correcciones', [
       {
         field: 'tipo',
@@ -67,7 +72,7 @@ class ReportesClases extends Component {
       { field: 'estado', operator: '==', id: 'Corregido' },
     ]);
 
-    const dataPracticasPromise = data.map(async (elem) => {
+    const dataClasesPromise = data.map(async (elem) => {
       return {
         id: elem.id,
         idPractica: elem.data.idPractica,
@@ -80,31 +85,38 @@ class ReportesClases extends Component {
       };
     });
 
-    let dataPracticas = await Promise.all(dataPracticasPromise);
+    let dataClases = await Promise.all(dataClasesPromise);
     let openData = [];
-    dataPracticas = groupBy(dataPracticas, 'nombreUsuario');
-    dataPracticas = Object.entries(dataPracticas).map((elem) => {
+    dataClases = groupBy(dataClases, 'nombreUsuario');
+    dataClases = Object.entries(dataClases).map((elem) => {
       openData.push(false);
       return { id: elem[0], data: elem[1] };
     });
-    this.setState({ dataPracticas, open: openData });
+    this.setState({
+      dataClases,
+      open: openData,
+      isLoading: false,
+    });
   };
 
   render() {
-    const { dataPracticas, open } = this.state;
-    return isEmpty(dataPracticas) ? (
+    const { dataClases, open, isLoading } = this.state;
+    return isLoading ? (
       <div className="loading" />
     ) : (
       <Fragment>
         <Row>
           <Colxx xxs="12">
-            <Breadcrumb heading="menu.clases" match={this.props.match} />
+            <Breadcrumb
+              heading="menu.my-reportes-clases"
+              match={this.props.match}
+            />
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        <span className="title">Asistencia a Clases</span>
+        <h2 className="title">Asistencia a Clases</h2>
         <TableContainer component={Paper}>
-          {dataPracticas.map((row, index) => (
+          {dataClases.map((row, index) => (
             <Fragment key={index}>
               <TableRow className="mb-2">
                 <TableCell className="button-toggle">
