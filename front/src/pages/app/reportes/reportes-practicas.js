@@ -68,6 +68,42 @@ class ReportesPracticas extends Component {
       { field: 'estado', operator: '==', id: 'Corregido' },
     ]);
 
+    const todasLasPracticas = await getCollection('practicas', [
+      { field: 'idMateria', operator: '==', id: this.props.subject.id },
+      { field: 'fechaVencimiento', operator: '<', id: '2020-10-25' },
+    ]);
+
+    let noEntregadas = [];
+    let dataPracticas = [];
+    let usuariosEnCorrecciones = data.map(async (elem) => {
+      const nombre = await this.getNombreUsuario(elem.data.idUsuario);
+      return { idUsuario: elem.data.idUsuario, nombre };
+    });
+    usuariosEnCorrecciones = await Promise.all(usuariosEnCorrecciones);
+
+    todasLasPracticas.map(async (todas) => {
+      data.map(async (corr) => {
+        if (corr.data.idPractica === todas.id) {
+          return console.log('tengo una practica');
+        }
+
+        if (data.indexOf(corr) === data.length - 1) {
+          return usuariosEnCorrecciones.map(async (idUsuario) => {
+            noEntregadas.push({
+              id: idUsuario.idUsuario,
+              idPractica: todas.id,
+              nombrePractica: todas.data.nombre,
+              idUsuario: idUsuario.idUsuario,
+              nombreUsuario: idUsuario.nombre,
+              estado: 'No entregado',
+              nota: '-',
+              fecha: '-',
+            });
+          });
+        }
+      });
+    });
+
     const dataPracticasPromise = data.map(async (elem) => {
       return {
         id: elem.id,
@@ -81,7 +117,8 @@ class ReportesPracticas extends Component {
       };
     });
 
-    let dataPracticas = await Promise.all(dataPracticasPromise);
+    dataPracticas = await Promise.all(dataPracticasPromise);
+    dataPracticas = dataPracticas.concat(noEntregadas);
     let openData = [];
     dataPracticas = groupBy(dataPracticas, 'nombreUsuario');
     dataPracticas = Object.entries(dataPracticas).map((elem) => {
