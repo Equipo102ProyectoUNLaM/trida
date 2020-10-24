@@ -64,6 +64,7 @@ class ModalVistaPreviaPreguntas extends Component {
                       <OpcionMultiple
                         ejercicioId={index}
                         value={pregunta.data}
+                        respuestaUnica={pregunta.data.unicaRespuesta}
                         preview={true}
                       />
                     )}

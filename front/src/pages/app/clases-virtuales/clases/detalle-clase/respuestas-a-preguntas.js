@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { Card, CardBody, CardTitle, Progress, Badge } from 'reactstrap';
 import {
   getCollectionWithSubCollections,
@@ -9,9 +10,16 @@ import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/Decryption
 import { isEmpty } from 'helpers/Utils';
 import ROLES from 'constants/roles';
 
-const RespuestasAPreguntas = ({ isLoading, idClase, idMateria }) => {
+const RespuestasAPreguntas = ({
+  isLoading,
+  idClase,
+  rolDocente,
+  user,
+  idMateria,
+}) => {
   const [respuestasPorPregunta, setRespuestasPorPregunta] = useState([]);
   const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
+  const [respuestasDeAlumno, setRespuestasDeAlumno] = useState([]);
 
   useEffect(() => {
     getPreguntasConRespuestasDeAlumnos();
@@ -33,10 +41,24 @@ const RespuestasAPreguntas = ({ isLoading, idClase, idMateria }) => {
         sinRespuesta
       );
 
+      if (!rolDocente) getRespuestasDeAlumno(preguntasConRespuestas);
       crearCantRespuestasPorPregunta(preguntasConRespuestas);
-    } else {
-      setIsLoadingLocal(false);
     }
+  };
+
+  const getRespuestasDeAlumno = async (preguntas) => {
+    let respuestasDeAlumno = [];
+    for (const preg of preguntas) {
+      const [rtaAlumno] = preg.data.subcollections.filter(
+        (elem) => elem.id === user
+      );
+      if (rtaAlumno)
+        respuestasDeAlumno.push({
+          id: preg.id,
+          rtas: rtaAlumno.data.respuestas,
+        });
+    }
+    setRespuestasDeAlumno(respuestasDeAlumno);
   };
 
   const crearCantRespuestasPorPregunta = async (preguntasConRespuestas) => {
@@ -59,11 +81,13 @@ const RespuestasAPreguntas = ({ isLoading, idClase, idMateria }) => {
 
         preg.data.subcollections.forEach((sub) => {
           alumnosContestaron.push(sub.id);
-          sub.data.respuestas.forEach((res) => {
-            // incremento la opcion elegida por el alumno
-            resultado[res]++;
-            cantTotalRtas++;
-          });
+          if (rolDocente || sub.id === user) {
+            sub.data.respuestas.forEach((res) => {
+              // incremento la opcion elegida por el alumno
+              resultado[res]++;
+              cantTotalRtas++;
+            });
+          }
         });
         const alumnosSinRespuesta = await getAlumnosSinRespuesta(
           alumnosContestaron
@@ -145,14 +169,31 @@ const RespuestasAPreguntas = ({ isLoading, idClase, idMateria }) => {
                             Correcta
                           </Badge>
                         )}
-                        {opcion}/{rta.cantTotalRtas}
+                        {rolDocente && (
+                          <span>
+                            {opcion}/{rta.cantTotalRtas}
+                          </span>
+                        )}
                       </span>
                     </div>
-                    <Progress value={(opcion / rta.cantTotalRtas) * 100} />
+                    {rolDocente && (
+                      <Progress value={(opcion / rta.cantTotalRtas) * 100} />
+                    )}
+                    {!rolDocente && (
+                      <Progress
+                        value={
+                          respuestasDeAlumno.some(
+                            (rt) => rt.id === rta.id && rt.rtas.includes(index)
+                          )
+                            ? 100
+                            : 0
+                        }
+                      />
+                    )}
                   </div>
                 );
               })}
-              {!isEmpty(rta.alumnosSinRespuesta) && (
+              {rolDocente && !isEmpty(rta.alumnosSinRespuesta) && (
                 <div>
                   <span className="font-weight-bold">
                     Alumnos que no contestaron:{' '}
@@ -168,4 +209,9 @@ const RespuestasAPreguntas = ({ isLoading, idClase, idMateria }) => {
   );
 };
 
-export default RespuestasAPreguntas;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
+};
+
+export default connect(mapStateToProps)(RespuestasAPreguntas);
