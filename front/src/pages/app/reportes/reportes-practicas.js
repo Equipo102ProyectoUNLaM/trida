@@ -175,7 +175,11 @@ class ReportesPracticas extends Component {
                                 </TableCell>
                                 <TableCell>{historyRow.fecha}</TableCell>
                                 <TableCell>{historyRow.estado}</TableCell>
-                                <TableCell>{historyRow.nota}</TableCell>
+                                <TableCell>
+                                  {historyRow.nota === 0
+                                    ? '-'
+                                    : historyRow.nota}
+                                </TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
