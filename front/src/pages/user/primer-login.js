@@ -135,7 +135,7 @@ class PrimerLogin extends Component {
                       <Field
                         className="form-control"
                         name="nombre"
-                        autocomplete="off"
+                        autoComplete="off"
                       />
                       {errors.nombre && touched.nombre && (
                         <div className="invalid-feedback d-block">
@@ -150,7 +150,7 @@ class PrimerLogin extends Component {
                       <Field
                         className="form-control"
                         name="apellido"
-                        autocomplete="off"
+                        autoComplete="off"
                       />
                       {errors.apellido && touched.apellido && (
                         <div className="invalid-feedback d-block">
@@ -163,7 +163,7 @@ class PrimerLogin extends Component {
                         <IntlMessages id="user.telefono" />
                       </Label>
                       <Field
-                        autocomplete="off"
+                        autoComplete="off"
                         className="form-control"
                         name="telefono"
                         onChange={this.handleChange}

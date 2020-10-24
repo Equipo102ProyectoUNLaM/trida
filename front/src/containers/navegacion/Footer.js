@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { isMobile } from 'react-device-detect';
 import { Row, Badge } from 'reactstrap';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import ModalPlanes from 'containers/pages/ModalPlanes';
 import ModalContacto from 'containers/pages/ModalContacto';
 import ROLES from 'constants/roles';
+import PLANES from 'constants/planes';
 import { getDocument } from 'helpers/Firebase-db';
 import { connect } from 'react-redux';
 
@@ -19,6 +21,7 @@ class Footer extends React.Component {
       docentes: 0,
       alumnos: 0,
       plan: '',
+      esPublica: false,
     };
   }
 
@@ -30,27 +33,43 @@ class Footer extends React.Component {
     let docentes = 0;
     let alumnos = 0;
     const institucion = this.props.institution.id;
-    const docObj = await getDocument(`usuariosPorInstitucion/${institucion}`);
-    const { data } = docObj;
-    if (data) {
-      for (const usuario of data.usuarios) {
-        if (usuario.rol === ROLES.Docente || usuario.rol === ROLES.Directivo) {
-          docentes++;
-        } else {
-          alumnos++;
-        }
-      }
+    const { data } = await getDocument(
+      `instituciones/${this.props.institution.id}`
+    );
 
+    if (data.tipo !== 'Colegio Público') {
+      const docObj = await getDocument(
+        `usuariosPorInstitucion/${this.props.institution.id}`
+      );
+      const { data } = docObj;
+      if (data) {
+        for (const usuario of data.usuarios) {
+          if (
+            usuario.rol === ROLES.Docente ||
+            usuario.rol === ROLES.Directivo
+          ) {
+            docentes++;
+          } else {
+            alumnos++;
+          }
+        }
+
+        this.setState({
+          docentes,
+          alumnos,
+          esPublica: false,
+        });
+      }
+      const plan = this.calculatePlan();
       this.setState({
-        docentes,
-        alumnos,
+        plan,
+      });
+    } else {
+      this.setState({
+        esPublica: true,
+        plan: PLANES.Gratuito,
       });
     }
-
-    const plan = this.calculatePlan();
-    this.setState({
-      plan,
-    });
   };
 
   toggleModalPlanes = () => {
@@ -67,20 +86,32 @@ class Footer extends React.Component {
 
   calculatePlan = () => {
     if (this.state.docentes <= 1 && this.state.alumnos <= 5) {
-      return 'Plan Gratuito';
+      return PLANES.Gratuito;
     } else if (this.state.docentes <= 5 && this.state.alumnos <= 50) {
-      return 'Plan Pequeño';
+      return PLANES.Pequeño;
     } else if (this.state.docentes <= 70 && this.state.alumnos <= 700) {
-      return 'Plan Mediano';
+      return PLANES.Mediano;
     }
-    return 'Plan Grande';
+    return PLANES.Grande;
   };
 
   render() {
-    const { modalPlanesOpen, plan, modalContactoOpen } = this.state;
+    const { modalPlanesOpen, plan, modalContactoOpen, esPublica } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
-    return (
+    return isMobile ? (
+      <footer className="page-footer mt-3">
+        <div className="footer-content">
+          <div className="container-fluid">
+            <Row>
+              <Colxx xxs="12" sm="6">
+                <p className="mb-0 text-muted text-center">třída</p>
+              </Colxx>
+            </Row>
+          </div>
+        </div>
+      </footer>
+    ) : (
       <footer className="page-footer">
         <div className="footer-content">
           <div className="container-fluid">
@@ -92,7 +123,11 @@ class Footer extends React.Component {
                 <ul className="breadcrumb pt-0 pr-0 float-right">
                   {rolDocente && (
                     <li className="breadcrumb-item mb-0">
-                      <Badge pill className="badge">
+                      <Badge
+                        pill
+                        color="primary"
+                        className="font-weight-semibold"
+                      >
                         <NavLink
                           className="btn-plan"
                           to="#"
@@ -128,6 +163,8 @@ class Footer extends React.Component {
           <ModalPlanes
             isOpen={modalPlanesOpen}
             toggle={this.toggleModalPlanes}
+            esPublica={esPublica}
+            plan={plan}
           />
         )}
         {modalContactoOpen && (

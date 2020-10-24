@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { isMobile } from 'react-device-detect';
 import { injectIntl } from 'react-intl';
 import {
   UncontrolledDropdown,
@@ -29,6 +30,7 @@ import {
 import { MobileMenuIcon, MenuIcon } from 'components/svg';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 import TopnavNotifications from './Topnav.Notifications';
+import ModalContacto from 'containers/pages/ModalContacto';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
 const publicUrl = process.env.PUBLIC_URL;
@@ -40,6 +42,7 @@ class TopNav extends Component {
     this.state = {
       isInFullScreen: false,
       searchKeyword: '',
+      modalContactoOpen: false,
     };
   }
 
@@ -209,6 +212,12 @@ class TopNav extends Component {
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
+  toggleModalContacto = () => {
+    this.setState({
+      modalContactoOpen: !this.state.modalContactoOpen,
+    });
+  };
+
   render() {
     const {
       containerClassnames,
@@ -217,6 +226,7 @@ class TopNav extends Component {
       nombre,
       apellido,
     } = this.props;
+    const { modalContactoOpen } = this.state;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
@@ -308,12 +318,32 @@ class TopNav extends Component {
               <DropdownMenu className="mt-3" right>
                 <DropdownItem>Cuenta</DropdownItem>
                 <DropdownItem divider />
+                {isMobile && (
+                  <>
+                    <DropdownItem
+                      onClick={() => this.props.history.push('/app/ayuda')}
+                    >
+                      Ayuda
+                    </DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem onClick={this.toggleModalContacto}>
+                      Contacto
+                    </DropdownItem>
+                    <DropdownItem divider />
+                  </>
+                )}
                 <DropdownItem onClick={() => this.handleLogout()}>
                   Cerrar Sesión
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
+          {modalContactoOpen && (
+            <ModalContacto
+              isOpen={modalContactoOpen}
+              toggle={this.toggleModalContacto}
+            />
+          )}
         </div>
       </nav>
     );

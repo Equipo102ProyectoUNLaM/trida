@@ -141,7 +141,7 @@ class FormEvaluacionOral extends React.Component {
               <FormikDatePicker
                 name="fecha_evaluacion"
                 value={values.fecha_evaluacion}
-                autocomplete="off"
+                autoComplete="off"
                 placeholder="Ingrese la fecha de la evaluación"
                 onChange={setFieldValue}
                 onBlur={setFieldTouched}

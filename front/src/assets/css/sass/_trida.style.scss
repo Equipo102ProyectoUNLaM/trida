@@ -1231,6 +1231,10 @@ button {
   width: 30% !important;
 }
 
+.w-33 {
+  width: 33% !important;
+}
+
 .w-70 {
   width: 70% !important;
 }
@@ -4591,6 +4595,10 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: 400 !important;
   background: $separator-color;
   color: $button-text-color !important;
+}
+
+.react-datepicker__day--disabled  {
+  color: #ccc !important;
 }
 
 .dropzone {
@@ -10213,4 +10221,8 @@ div.rendered-file-browser{
 
 .img-opcion-multiple {
   background-color: #ffffff !important;
+}
+
+.btn-right {
+  float: right;
 }

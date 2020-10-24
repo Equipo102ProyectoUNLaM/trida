@@ -240,6 +240,7 @@ class AgregarEjercicio extends React.Component {
                               <OpcionMultiple
                                 ejercicioId={index}
                                 value={ejercicio}
+                                respuestaUnica={false}
                                 submitted={submitted}
                                 preview={false}
                                 onEjercicioChange={this.onEjercicioChange}

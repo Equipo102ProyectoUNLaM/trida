@@ -104,7 +104,7 @@ class FormInstitucion extends Component {
                       <Field
                         className="form-control"
                         name="nombre"
-                        autocomplete="off"
+                        autoComplete="off"
                       />
                       {errors.nombre && touched.nombre && (
                         <div className="invalid-feedback d-block">
@@ -134,7 +134,7 @@ class FormInstitucion extends Component {
                         className="form-control"
                         name="telefono"
                         onChange={this.handleChange}
-                        autocomplete="off"
+                        autoComplete="off"
                       />
                       {errors.telefono && touched.telefono && (
                         <div className="invalid-feedback d-block">
