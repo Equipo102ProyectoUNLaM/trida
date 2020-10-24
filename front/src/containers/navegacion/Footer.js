@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { isMobile } from 'react-device-detect';
 import { Row, Badge } from 'reactstrap';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import ModalPlanes from 'containers/pages/ModalPlanes';
@@ -98,7 +99,19 @@ class Footer extends React.Component {
     const { modalPlanesOpen, plan, modalContactoOpen, esPublica } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
-    return (
+    return isMobile ? (
+      <footer className="page-footer mt-3">
+        <div className="footer-content">
+          <div className="container-fluid">
+            <Row>
+              <Colxx xxs="12" sm="6">
+                <p className="mb-0 text-muted text-center">třída</p>
+              </Colxx>
+            </Row>
+          </div>
+        </div>
+      </footer>
+    ) : (
       <footer className="page-footer">
         <div className="footer-content">
           <div className="container-fluid">
