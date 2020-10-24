@@ -266,16 +266,16 @@ class RealizarEvaluacion extends Component {
       }
       /* ------------ */
 
-      pdf.save('evaluacion.pdf'); //lo dejo para debug, esto descarga el PDF
-      //const file = pdf.output('blob');
-      //this.setState({ evalFile: file });
+      //pdf.save('evaluacion.pdf'); //lo dejo para debug, esto descarga el PDF
+      const file = pdf.output('blob');
+      this.setState({ evalFile: file });
     });
   };
 
   entregarEvaluacion = async (navigate, abandonarEvaluacion) => {
     this.setState({ isLoading: true });
     await this.printDocument();
-    /*const uuid = createUUID();
+    const uuid = createUUID();
     const path = `materias/${this.props.subject.id}/correcciones/`;
     const url = await subirArchivoAStorage(path, this.state.evalFile, uuid);
     let respuestasConUrl;
@@ -303,7 +303,7 @@ class RealizarEvaluacion extends Component {
       'Tu evaluación fue entregada correctamente',
       'Tu evaluación no pudo ser entregada'
     );
-    await this.reiniciarEstadoEvaluacion();*/
+    await this.reiniciarEstadoEvaluacion();
     if (navigate) this.volverAEvaluaciones();
   };
 
