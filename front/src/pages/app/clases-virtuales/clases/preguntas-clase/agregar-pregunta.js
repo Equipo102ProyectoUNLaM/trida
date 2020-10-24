@@ -1,5 +1,13 @@
 import React from 'react';
-import { Row, Button, FormGroup, Card, CardBody } from 'reactstrap';
+import {
+  Row,
+  Button,
+  FormGroup,
+  Card,
+  CardBody,
+  Label,
+  Input,
+} from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
@@ -23,6 +31,7 @@ class AgregarPregunta extends React.Component {
       cant: 1,
       submitted: false,
       isLoading: true,
+      unicaRespuesta: false,
     };
   }
 
@@ -102,10 +111,23 @@ class AgregarPregunta extends React.Component {
   handleAddPregunta = (e) => {
     let preg = this.state.preguntasRealizadas;
     let num = this.state.cant + 1;
-    preg.push({ nombre: '', tipo: '', numero: num });
+    preg.push({ nombre: '', tipo: '', numero: num, unicaRespuesta: false });
     this.setState({
       preguntasRealizadas: preg,
       cant: num,
+      unicaRespuesta: false,
+      submitted: false,
+    });
+  };
+
+  handleAddPreguntaUnicaResp = (e) => {
+    let preg = this.state.preguntasRealizadas;
+    let num = this.state.cant + 1;
+    preg.push({ nombre: '', tipo: '', numero: num, unicaRespuesta: true });
+    this.setState({
+      preguntasRealizadas: preg,
+      cant: num,
+      unicaRespuesta: true,
       submitted: false,
     });
   };
@@ -135,7 +157,12 @@ class AgregarPregunta extends React.Component {
   };
 
   render() {
-    const { preguntasRealizadas, submitted, isLoading } = this.state;
+    const {
+      preguntasRealizadas,
+      submitted,
+      isLoading,
+      unicaRespuesta,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -156,6 +183,7 @@ class AgregarPregunta extends React.Component {
                             <OpcionMultiple
                               ejercicioId={index}
                               value={pregunta}
+                              respuestaUnica={unicaRespuesta}
                               submitted={submitted}
                               preview={false}
                               onEjercicioChange={this.onPreguntaChange}
@@ -192,7 +220,17 @@ class AgregarPregunta extends React.Component {
           className="button"
         >
           {' '}
-          Agregar Pregunta{' '}
+          Agregar Pregunta (múltiples opciones correctas){' '}
+        </Button>
+        <Button
+          outline
+          onClick={this.handleAddPreguntaUnicaResp}
+          size="sm"
+          color="primary"
+          className="button btn-right"
+        >
+          {' '}
+          Agregar Pregunta (solo una opción correcta){' '}
         </Button>
       </FormGroup>
     );

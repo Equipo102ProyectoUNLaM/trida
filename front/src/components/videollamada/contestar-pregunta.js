@@ -130,6 +130,7 @@ class ContestarPregunta extends Component {
                       <OpcionMultiple
                         ejercicioId={index}
                         value={pregunta.data}
+                        respuestaUnica={pregunta.data.unicaRespuesta}
                         submitted={submitted}
                         resolve={true}
                         onEjercicioChange={this.onEjercicioChange}
