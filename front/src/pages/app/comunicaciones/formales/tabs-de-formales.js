@@ -5,7 +5,7 @@ import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { desencriptarTexto } from 'handlers/DecryptionHandler';
 import { isEmpty } from 'helpers/Utils';
 
-class TabsDeMensajeria extends Component {
+class TabsDeFormales extends Component {
   constructor(props) {
     super(props);
 
@@ -252,4 +252,4 @@ class TabsDeMensajeria extends Component {
   }
 }
 
-export default withRouter(TabsDeMensajeria);
+export default withRouter(TabsDeFormales);
