@@ -10192,6 +10192,12 @@ div.rendered-file-browser{
   flex-direction: column;
 }
 
+.display-row {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
 .row-space-between-pl-1 {
   display: flex;
   justify-content: space-between;
