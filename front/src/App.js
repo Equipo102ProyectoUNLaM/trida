@@ -15,6 +15,7 @@ import NotificationContainer from './components/common/react-notifications/Notif
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import { AuthRoute } from 'components/rutas/auth-route';
+import { isMobile } from 'react-device-detect';
 
 //const ViewMain = React.lazy(() =>
 //  import(/* webpackChunkName: "views" */ './pages')
@@ -99,7 +100,7 @@ class App extends Component {
         >
           <React.Fragment>
             <NotificationContainer />
-            {isMultiColorActive && <ColorSwitcher />}
+            {isMultiColorActive && !isMobile && <ColorSwitcher />}
             <Suspense fallback={<div className="loading" />}>
               <Router>
                 <Switch>

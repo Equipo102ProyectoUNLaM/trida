@@ -1611,17 +1611,17 @@ nav .nomargin {
   color: $theme-color-1;
 }
 
-@include respond-below(sm) {
-  .nav-item{
-    width: auto !important;
-  }
-}
+// @include respond-below(sm) {
+//   .nav-item{
+//     width: auto !important;
+//   }
+// }
 
-@include respond-below(xxs) {
-  .nav-item{
-    width: auto !important;
-  }
-}
+// @include respond-below(xxs) {
+//   .nav-item{
+//     width: auto !important;
+//   }
+// }
 
 /* 08.Carousel */
 .glide__slides {

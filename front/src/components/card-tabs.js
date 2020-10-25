@@ -326,7 +326,7 @@ class CardTabs extends Component {
                               ))}
                             </ol>
                           )}
-                          <Row className="button-group">
+                          <Row className="button-group w-100">
                             <Button
                               outline
                               size="sm"

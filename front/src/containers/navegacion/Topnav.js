@@ -274,7 +274,7 @@ class TopNav extends Component {
           <span className="logo-mobile d-block d-xs-none" />
         </a>
         <div className="navbar-right">
-          {isDarkSwitchActive && <TopnavDarkSwitch />}
+          {isDarkSwitchActive && !isMobile && <TopnavDarkSwitch />}
 
           <div className="header-icons d-inline-block align-middle">
             {/* <TopnavEasyAccess /> */}
@@ -329,6 +329,10 @@ class TopNav extends Component {
                     <DropdownItem onClick={this.toggleModalContacto}>
                       Contacto
                     </DropdownItem>
+                    <DropdownItem divider />
+                    <div className="dropdown-item">
+                      <TopnavDarkSwitch />
+                    </div>
                     <DropdownItem divider />
                   </>
                 )}
