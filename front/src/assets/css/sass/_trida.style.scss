@@ -10218,6 +10218,10 @@ div.rendered-file-browser{
   font-family: "Nunito", sans-serif !important;
 }
 
+.MuiTableCell-body {
+  color: inherit !important;
+}
+
 .button-toggle {
   width: 1rem !important;
 }
@@ -10233,4 +10237,16 @@ div.rendered-file-browser{
 .width-100{
   width: 100%;
   cursor: pointer;
+}
+
+.Aprobado{
+  color: rgb(39, 153, 39) !important;
+}
+
+.Desaprobado{
+  color: rgb(248, 73, 73) !important;
+}
+
+.Reentrega{
+  color: orange !important;
 }
