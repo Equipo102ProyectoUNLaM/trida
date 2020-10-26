@@ -10192,6 +10192,12 @@ div.rendered-file-browser{
   flex-direction: column;
 }
 
+.display-row {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
 .row-space-between-pl-1 {
   display: flex;
   justify-content: space-between;
@@ -10225,4 +10231,42 @@ div.rendered-file-browser{
 
 .btn-right {
   float: right;
+}
+
+//Reportes
+.MuiTableCell-root{
+  font-family: "Nunito", sans-serif !important;
+}
+
+.MuiTableCell-body {
+  color: inherit !important;
+}
+
+.button-toggle {
+  width: 1rem !important;
+}
+
+.data-entregas {
+  margin-bottom: 2rem !important;
+}
+
+.padding-left-inner {
+  padding: 0 2rem !important;
+}
+
+.width-100{
+  width: 100%;
+  cursor: pointer;
+}
+
+.Aprobado{
+  color: rgb(39, 153, 39) !important;
+}
+
+.Desaprobado{
+  color: rgb(248, 73, 73) !important;
+}
+
+.Reentrega{
+  color: orange !important;
 }

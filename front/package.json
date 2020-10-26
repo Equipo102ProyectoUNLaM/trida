@@ -27,6 +27,7 @@
     "jquery": "^3.5.1",
     "jquey": "0.0.1-security",
     "jspdf": "^2.1.1",
+    "lodash": "^4.17.20",
     "moment": "^2.22.2",
     "mousetrap": "^1.6.3",
     "next": "9.3.2",
