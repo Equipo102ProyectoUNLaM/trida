@@ -206,6 +206,7 @@ class RealizarEvaluacion extends Component {
     switch (ejercicio.tipo) {
       case TIPO_EJERCICIO.respuesta_libre:
       case TIPO_EJERCICIO.adjuntar_desarrollo:
+        //e.respuesta es un array de respuestas (antes era img.file, ahora es un array [img: {file, desarrollo}])
         ejercicio.respuesta = e.respuesta;
         break;
       case TIPO_EJERCICIO.opcion_multiple:
@@ -232,6 +233,8 @@ class RealizarEvaluacion extends Component {
 
   finalizarEvaluacion = () => {
     if (this.validateRespuestas() === true) {
+      var x = document.getElementById('upload-file-fragment');
+      x.style.display = 'none';
       const encabezado = document.getElementById('encabezadoAImprimir');
       this.setState({
         encabezadoAImprimir: encabezado,
@@ -317,24 +320,24 @@ class RealizarEvaluacion extends Component {
   };
 
   subirImagenesAStorage = async () => {
+    let rtasConUrl = [];
     try {
-      let rtaConUrl = this.state.respuestas;
-      for (const respuesta of rtaConUrl) {
+      let todasLasRespuestas = this.state.respuestas;
+      for (const respuesta of todasLasRespuestas) {
         const ejercicio = this.state.ejercicios.find(
           (x) => x.data.numero === respuesta.numero
         );
         if (ejercicio.data.tipo === TIPO_EJERCICIO.adjuntar_desarrollo) {
-          const uuid = createUUID();
-          const path = `materias/${this.props.subject.id}/ejerciciosEvaluaciones/${this.state.evaluacionId}`;
-          const url = await subirArchivoAStorage(
-            path,
-            respuesta.respuesta,
-            uuid
-          );
-          respuesta.respuesta = url;
+          for (const rtaConUrl of respuesta.respuesta) {
+            const uuid = createUUID();
+            const path = `materias/${this.props.subject.id}/ejerciciosEvaluaciones/${this.state.evaluacionId}`;
+            const url = await subirArchivoAStorage(path, rtaConUrl.file, uuid);
+            rtaConUrl.file = url;
+            rtasConUrl.push(rtaConUrl.file);
+          }
         }
       }
-      return rtaConUrl;
+      return rtasConUrl;
     } catch (err) {
       console.log('Error', err);
     }
