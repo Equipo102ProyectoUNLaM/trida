@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Prompt, useLocation } from 'react-router-dom';
+import { Prompt } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Videollamada from 'components/videollamada/videollamada';
 import {
@@ -22,8 +22,11 @@ const PaginaVideollamada = (props) => {
   );
   // este campo sirve para evaluar las opciones habilitadas dependiendo de si es docente o alumno
   const isHost = props.rol !== ROLES.Alumno;
-  const location = useLocation();
-  const [options, setOptions] = useState({ microfono: true, camara: true });
+  const [options, setOptions] = useState({
+    microfono: true,
+    camara: true,
+    chat: true,
+  });
   const [call, setCall] = useState(false);
   const [llamadaIniciada, setIniciada] = useState(false);
 
@@ -84,7 +87,7 @@ const PaginaVideollamada = (props) => {
         <Container>
           <Form onSubmit={onSubmit}>
             <FormGroup className="mb-3">
-              <Label>Nombre</Label>
+              <Label className="font-weight-semibold">Nombre</Label>
               <Input
                 id="name"
                 name="name"
@@ -96,7 +99,9 @@ const PaginaVideollamada = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label>Opciones de Videollamada</Label>
+              <Label className="font-weight-semibold mt-3">
+                Opciones de Videollamada
+              </Label>
               <div>
                 <CustomInput
                   id="microfono"
@@ -112,6 +117,14 @@ const PaginaVideollamada = (props) => {
                   name="camara"
                   label="Ingresar con cámara apagada"
                   checked={options.camara}
+                  onChange={handleChange}
+                />
+                <CustomInput
+                  id="chat"
+                  type="checkbox"
+                  name="chat"
+                  label="Deshabilitar chat"
+                  checked={options.chat}
                   onChange={handleChange}
                 />
               </div>
