@@ -25,7 +25,7 @@ const PaginaVideollamada = (props) => {
   const [options, setOptions] = useState({
     microfono: true,
     camara: true,
-    chat: true,
+    chat: false,
   });
   const [call, setCall] = useState(false);
   const [llamadaIniciada, setIniciada] = useState(false);
