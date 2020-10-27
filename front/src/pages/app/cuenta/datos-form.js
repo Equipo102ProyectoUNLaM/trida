@@ -45,6 +45,10 @@ class DatosForm extends Component {
     this.getDatosDeUsuario();
   }
 
+  componentDidMount() {
+    this.getDatosDeUsuario();
+  }
+
   getDatosDeUsuario = async () => {
     const data = await getUserData(this.props.user);
 
