@@ -19,4 +19,8 @@ export const passwordSchema = Yup.object().shape({
 export const datosSchema = Yup.object().shape({
   nombre: Yup.string().required('Este campo es requerido'),
   apellido: Yup.string().required('Este campo es requerido'),
+  telefono: Yup.number().required('Este campo es requerido'),
+  mail: Yup.string()
+    .email('El mail es inválido')
+    .required('Este campo es requerido'),
 });
