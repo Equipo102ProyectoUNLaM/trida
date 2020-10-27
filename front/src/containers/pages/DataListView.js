@@ -77,6 +77,7 @@ class DataListView extends React.Component {
       seLanzo,
       entregada,
       noEntregada,
+      tipo,
     } = this.props;
     return (
       <Colxx xxs="12" className="mb-3" id={id}>
@@ -153,7 +154,9 @@ class DataListView extends React.Component {
                       color="primary"
                       className="button datalist-button"
                     >
-                      Descargar Práctica
+                      {tipo === 'practica'
+                        ? 'Descargar Práctica'
+                        : 'Descargar Evaluación'}
                     </Button>
                   )}
                   {onUploadFile && (

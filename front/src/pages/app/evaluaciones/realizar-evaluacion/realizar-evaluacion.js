@@ -26,6 +26,8 @@ import { createUUID } from 'helpers/Utils';
 import { subirArchivoAStorage } from 'helpers/Firebase-storage';
 import Countdown from 'components/common/Countdown';
 import ModalChico from 'containers/pages/ModalChico';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 import {
   getDateWithFormat,
@@ -54,6 +56,9 @@ class RealizarEvaluacion extends Component {
       modalCapturaOpen: false,
       sinTiempo: false,
       isLoading: true,
+      encabezadoAImprimir: null,
+      ejerciciosAImprimir: [],
+      evalFile: '',
     };
   }
 
@@ -118,7 +123,7 @@ class RealizarEvaluacion extends Component {
   getEvaluacion = async () => {
     if (!this.props.location.evalId) {
       this.setState({ isLoading: false });
-      this.props.history.push(`/app/evaluaciones`);
+      this.props.history.push(`/app/evaluaciones/escritas`);
       return;
     }
     const evaluacion = await getDocumentWithSubCollection(
@@ -227,12 +232,52 @@ class RealizarEvaluacion extends Component {
 
   finalizarEvaluacion = () => {
     if (this.validateRespuestas() === true) {
+      const encabezado = document.getElementById('encabezadoAImprimir');
+      this.setState({
+        encabezadoAImprimir: encabezado,
+      });
       this.toggleModal();
     }
   };
 
+  printDocument = async () => {
+    await html2canvas(this.state.encabezadoAImprimir, {
+      scale: 0.9,
+      scrollY: -window.scrollY,
+      useCORS: true,
+    }).then(async (canvas) => {
+      const pdf = new jsPDF();
+      const imgData = canvas.toDataURL('image/png');
+
+      /*Calculo de paginado */
+      var imgWidth = 210;
+      var pageHeight = 295;
+      var imgHeight = (canvas.height * imgWidth) / canvas.width;
+      var heightLeft = imgHeight;
+      var position = 0;
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      /* ------------ */
+
+      //pdf.save('evaluacion.pdf'); //lo dejo para debug, esto descarga el PDF
+      const file = pdf.output('blob');
+      this.setState({ evalFile: file });
+    });
+  };
+
   entregarEvaluacion = async (navigate, abandonarEvaluacion) => {
     this.setState({ isLoading: true });
+    await this.printDocument();
+    const uuid = createUUID();
+    const path = `materias/${this.props.subject.id}/correcciones/`;
+    const url = await subirArchivoAStorage(path, this.state.evalFile, uuid);
     let respuestasConUrl;
     if (abandonarEvaluacion === true) respuestasConUrl = [];
     else respuestasConUrl = await this.subirImagenesAStorage();
@@ -242,9 +287,12 @@ class RealizarEvaluacion extends Component {
       idUsuario: this.props.user,
       idMateria: this.props.subject.id,
       idEntrega: this.state.evaluacionId,
+      idArchivo: uuid,
       tipo: TIPO_ENTREGA.evaluacion,
       version: 0,
       respuestas: respuestasConUrl,
+      tipo: 'evaluacion',
+      nombre: this.state.nombreEval,
     };
 
     await addDocument(
@@ -265,7 +313,7 @@ class RealizarEvaluacion extends Component {
 
   volverAEvaluaciones = (e) => {
     if (e) e.preventDefault();
-    this.props.history.push(`/app/evaluaciones`);
+    this.props.history.push(`/app/evaluaciones/escritas`);
   };
 
   subirImagenesAStorage = async () => {
@@ -311,7 +359,7 @@ class RealizarEvaluacion extends Component {
         case TIPO_EJERCICIO.preguntas_aleatorias:
           if (
             rta.respuesta.find((x) => !x.respuesta) ||
-            rta.respuesta.length !==
+            rta.respuesta.length.toString() !==
               this.state.ejercicios.find(
                 (x) => x.data.numero.toString() === rta.numero.toString()
               ).data.cantidad
@@ -362,128 +410,130 @@ class RealizarEvaluacion extends Component {
       <div className="loading" />
     ) : (
       <Fragment>
-        <Card>
+        <Card className="no-box-shadow">
           <CardBody>
-            <div className="background-evaluaciones">
-              <Row className="mb-4">
-                <Colxx xxs="12">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <Row>
-                          <Colxx xxs="8" xs="8" lg="8" className="col-inline">
-                            <h3 className="mb-4 text-primary margin-auto margin-left-0">
-                              {nombreEval}
-                            </h3>
-                          </Colxx>
-                          <Colxx xxs="4" xs="4" lg="4">
-                            <Row>
-                              <h5>
-                                Alumno/a : {nombre} {apellido}
-                              </h5>
-                            </Row>
-                            <Row>
-                              <h5>
-                                Fecha : {getDateWithFormat()}&nbsp; Hora:{' '}
-                                {getCurrentTime()} hs
-                              </h5>
-                            </Row>
-                          </Colxx>
-                        </Row>
-                      </CardTitle>
-                      <div className="mb-4">
-                        <h5>{descripcion}</h5>
-                      </div>
-                      <div>
-                        <h5 className="text-red">
-                          Fecha y hora de finalizacion:{' '}
-                          {getDateTimeStringFromDate(fecha_finalizacion)} hs
-                        </h5>
-                      </div>
-                    </CardBody>
-                  </Card>
-                </Colxx>
-              </Row>
-
-              {ejercicios.map((ejercicio, index) => (
-                <Row className="mb-4" key={index + 'ejer'}>
+            <div id="encabezadoAImprimir" className="eval-print">
+              <div className="background-evaluaciones">
+                <Row className="mb-4">
                   <Colxx xxs="12">
                     <Card>
                       <CardBody>
                         <CardTitle>
-                          <h5 className="mb-4">
-                            Ejercicio N°{ejercicio.data.numero}
-                          </h5>
+                          <Row>
+                            <Colxx xxs="8" xs="8" lg="8" className="col-inline">
+                              <h3 className="mb-4 text-primary margin-auto margin-left-0">
+                                {nombreEval}
+                              </h3>
+                            </Colxx>
+                            <Colxx xxs="4" xs="4" lg="4">
+                              <Row>
+                                <h5>
+                                  Alumno/a : {nombre} {apellido}
+                                </h5>
+                              </Row>
+                              <Row>
+                                <h5>
+                                  Fecha : {getDateWithFormat()}&nbsp; Hora:{' '}
+                                  {getCurrentTime()} hs
+                                </h5>
+                              </Row>
+                            </Colxx>
+                          </Row>
                         </CardTitle>
-                        {ejercicio.data.tipo ===
-                          TIPO_EJERCICIO.respuesta_libre && (
-                          <RespuestaLibre
-                            ejercicioId={index}
-                            value={ejercicio.data}
-                            submitted={submitted}
-                            resolve={true}
-                            onEjercicioChange={this.onEjercicioChange}
-                          />
-                        )}
-
-                        {ejercicio.data.tipo ===
-                          TIPO_EJERCICIO.opcion_multiple && (
-                          <OpcionMultiple
-                            ejercicioId={index}
-                            value={ejercicio.data}
-                            submitted={submitted}
-                            resolve={true}
-                            onEjercicioChange={this.onEjercicioChange}
-                          />
-                        )}
-
-                        {ejercicio.data.tipo ===
-                          TIPO_EJERCICIO.opcion_multiple_imagen && (
-                          <OpcionMultipleImagen
-                            ejercicioId={index}
-                            value={ejercicio.data}
-                            submitted={submitted}
-                            resolve={true}
-                            onEjercicioChange={this.onEjercicioChange}
-                          />
-                        )}
-
-                        {ejercicio.data.tipo === TIPO_EJERCICIO.oral && (
-                          <Oral
-                            ejercicioId={index}
-                            value={ejercicio.data}
-                            submitted={submitted}
-                            resolve={true}
-                            onEjercicioChange={this.onEjercicioChange}
-                          />
-                        )}
-
-                        {ejercicio.data.tipo ===
-                          TIPO_EJERCICIO.preguntas_aleatorias && (
-                          <PreguntasAleatorias
-                            ejercicioId={index}
-                            value={ejercicio.data}
-                            submitted={submitted}
-                            resolve={true}
-                            onEjercicioChange={this.onEjercicioChange}
-                          />
-                        )}
-
-                        {ejercicio.data.tipo ===
-                          TIPO_EJERCICIO.adjuntar_desarrollo && (
-                          <AdjuntarDesarrollo
-                            ejercicioId={index}
-                            value={ejercicio.data}
-                            submitted={submitted}
-                            resolve={true}
-                            onEjercicioChange={this.onEjercicioChange}
-                          />
-                        )}
+                        <div className="mb-4">
+                          <h5>{descripcion}</h5>
+                        </div>
+                        <div>
+                          <h5 className="text-red">
+                            Fecha y hora de finalizacion:{' '}
+                            {getDateTimeStringFromDate(fecha_finalizacion)} hs
+                          </h5>
+                        </div>
                       </CardBody>
                     </Card>
                   </Colxx>
                 </Row>
-              ))}
+
+                {ejercicios.map((ejercicio, index) => (
+                  <Row className="mb-4" key={index + 'ejer'}>
+                    <Colxx xxs="12">
+                      <Card>
+                        <CardBody>
+                          <CardTitle>
+                            <h5 className="mb-4">
+                              Ejercicio N°{ejercicio.data.numero}
+                            </h5>
+                          </CardTitle>
+                          {ejercicio.data.tipo ===
+                            TIPO_EJERCICIO.respuesta_libre && (
+                            <RespuestaLibre
+                              ejercicioId={index}
+                              value={ejercicio.data}
+                              submitted={submitted}
+                              resolve={true}
+                              onEjercicioChange={this.onEjercicioChange}
+                            />
+                          )}
+
+                          {ejercicio.data.tipo ===
+                            TIPO_EJERCICIO.opcion_multiple && (
+                            <OpcionMultiple
+                              ejercicioId={index}
+                              value={ejercicio.data}
+                              submitted={submitted}
+                              resolve={true}
+                              onEjercicioChange={this.onEjercicioChange}
+                            />
+                          )}
+
+                          {ejercicio.data.tipo ===
+                            TIPO_EJERCICIO.opcion_multiple_imagen && (
+                            <OpcionMultipleImagen
+                              ejercicioId={index}
+                              value={ejercicio.data}
+                              submitted={submitted}
+                              resolve={true}
+                              onEjercicioChange={this.onEjercicioChange}
+                            />
+                          )}
+
+                          {ejercicio.data.tipo === TIPO_EJERCICIO.oral && (
+                            <Oral
+                              ejercicioId={index}
+                              value={ejercicio.data}
+                              submitted={submitted}
+                              resolve={true}
+                              onEjercicioChange={this.onEjercicioChange}
+                            />
+                          )}
+
+                          {ejercicio.data.tipo ===
+                            TIPO_EJERCICIO.preguntas_aleatorias && (
+                            <PreguntasAleatorias
+                              ejercicioId={index}
+                              value={ejercicio.data}
+                              submitted={submitted}
+                              resolve={true}
+                              onEjercicioChange={this.onEjercicioChange}
+                            />
+                          )}
+
+                          {ejercicio.data.tipo ===
+                            TIPO_EJERCICIO.adjuntar_desarrollo && (
+                            <AdjuntarDesarrollo
+                              ejercicioId={index}
+                              value={ejercicio.data}
+                              submitted={submitted}
+                              resolve={true}
+                              onEjercicioChange={this.onEjercicioChange}
+                            />
+                          )}
+                        </CardBody>
+                      </Card>
+                    </Colxx>
+                  </Row>
+                ))}
+              </div>
             </div>
             <ModalFooter>
               <Button color="primary" onClick={this.finalizarEvaluacion}>
