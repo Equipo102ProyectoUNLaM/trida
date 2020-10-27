@@ -161,7 +161,7 @@ class ReportesClases extends Component {
         : [];
     return {
       id: usuario.id,
-      preguntas: preguntasAlumno.length(),
+      preguntas: preguntasAlumno.length,
       user: usuario.nombre + ' ' + usuario.apellido,
       clase: claseId,
     };
