@@ -91,15 +91,15 @@ class Calendario extends React.Component {
             locale="es"
           />
           <ModalFooter>
-            <Button color="primary" className="button" onClick={this.onConfirm}>
-              Confirmar
-            </Button>
             <Button
               color="primary"
               className="button"
               onClick={this.handleClick}
             >
               Cancelar
+            </Button>
+            <Button color="primary" className="button" onClick={this.onConfirm}>
+              Confirmar
             </Button>
           </ModalFooter>
         </DropdownMenu>

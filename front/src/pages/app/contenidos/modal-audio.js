@@ -100,11 +100,11 @@ const ModalAudio = ({
         </Row>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" className="button" onClick={guardarAudio}>
-          Guardar
-        </Button>
         <Button color="primary" className="button" onClick={toggleModal}>
           Cancelar
+        </Button>
+        <Button color="primary" className="button" onClick={guardarAudio}>
+          Guardar
         </Button>
       </ModalFooter>
     </Modal>

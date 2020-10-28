@@ -407,21 +407,21 @@ class FormEvaluacion extends React.Component {
             <ModalFooter>
               {(!evaluacion.evaluacionId || this.props.evaluacionImportada) && (
                 <>
-                  <Button color="primary" type="submit">
-                    Crear Evaluación
-                  </Button>
                   <Button color="secondary" onClick={onCancel}>
                     Cancelar
+                  </Button>
+                  <Button color="primary" type="submit">
+                    Crear Evaluación
                   </Button>
                 </>
               )}
               {evaluacion.evaluacionId && !this.props.evaluacionImportada && (
                 <>
-                  <Button color="primary" type="submit">
-                    Guardar Evaluación
-                  </Button>
                   <Button color="secondary" onClick={onCancel}>
                     Cancelar
+                  </Button>
+                  <Button color="primary" type="submit">
+                    Guardar Evaluación
                   </Button>
                 </>
               )}

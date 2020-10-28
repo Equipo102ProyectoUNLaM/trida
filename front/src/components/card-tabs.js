@@ -11,6 +11,7 @@ import {
   Badge,
   TabPane,
   Button,
+  ButtonGroup,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { editDocument } from 'helpers/Firebase-db';
@@ -22,6 +23,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
 import { timeStamp } from 'helpers/Firebase';
+import { isMobile } from 'react-device-detect';
 
 class CardTabs extends Component {
   constructor(props) {
@@ -178,18 +180,27 @@ class CardTabs extends Component {
                           <Row>
                             <Colxx xxs="12" xs="8" lg="8">
                               <CardTitle className="mb-4">
-                                {data.base.nombre}
+                                <h2>{data.base.nombre}</h2>
                               </CardTitle>
                               {data.base.descripcion && (
-                                <p className="mb-4">{data.base.descripcion}</p>
+                                <p className="mb-4 text-muted">
+                                  {data.base.descripcion}
+                                </p>
                               )}
                               {!data.base.descripcion && (
-                                <p className="mb-4">Sin descripción</p>
+                                <p className="mb-4 text-muted">
+                                  Sin descripción
+                                </p>
                               )}
                             </Colxx>
                             <Colxx xxs="12" xs="4" lg="4">
                               <div className="dropdown-calendar flex">
-                                <p>Fecha y Hora de Publicación&nbsp;</p>
+                                <p>
+                                  {isMobile
+                                    ? 'Publicación'
+                                    : 'Fecha y Hora de Publicación'}{' '}
+                                  &nbsp;
+                                </p>
                                 {rolDocente && !this.props.isOldTest && (
                                   <Calendario
                                     handleClick={
@@ -215,7 +226,12 @@ class CardTabs extends Component {
                                 )}
                               </div>
                               <div className="dropdown-calendar flex">
-                                <p>Fecha y Hora de Finalización&nbsp;</p>
+                                <p>
+                                  {isMobile
+                                    ? 'Finalización'
+                                    : 'Fecha y Hora de Finalización'}{' '}
+                                  &nbsp;
+                                </p>
                                 {rolDocente && !this.props.isOldTest && (
                                   <Calendario
                                     handleClick={

@@ -358,6 +358,10 @@ hr {
   overflow: hidden;
 }
 
+.break-spaces{
+  white-space: break-spaces;
+}
+
 .no-transition {
   transition: none !important;
 }
@@ -412,6 +416,7 @@ p {
   font-size: 0.85rem;
   line-height: 1.3rem;
   font-family: "Nunito", sans-serif;
+  white-space: break-spaces;
 }
 
 .text-large {
@@ -1299,6 +1304,11 @@ button {
   margin-left: 1rem !important;
 }
 
+.prl-07{
+padding-left: 0.7rem;
+padding-right: 0.7rem;
+}
+
 .float-none-xs {
   @include respond-below(xs) {
     float: initial !important;
@@ -1610,18 +1620,6 @@ nav .nomargin {
   border: initial;
   color: $theme-color-1;
 }
-
-// @include respond-below(sm) {
-//   .nav-item{
-//     width: auto !important;
-//   }
-// }
-
-// @include respond-below(xxs) {
-//   .nav-item{
-//     width: auto !important;
-//   }
-// }
 
 /* 08.Carousel */
 .glide__slides {

@@ -440,7 +440,11 @@ const Videollamada = ({
                     className="glyph-icon iconsminds-share"
                   />
                 </Button>
-                <Button color="primary" onClick={abrirPizarron}>
+                <Button
+                  color="primary"
+                  className="border-left"
+                  onClick={abrirPizarron}
+                >
                   <div
                     style={{ fontSize: '1rem' }}
                     className="glyph-icon iconsminds-blackboard"
@@ -450,11 +454,16 @@ const Videollamada = ({
             )}
             {rol === ROLES.Alumno && (
               <Fragment>
-                <Button color="primary" onClick={toggleRealizarPregunta}>
+                <Button
+                  color="primary"
+                  className="prl-07"
+                  onClick={toggleRealizarPregunta}
+                >
                   <IntlMessages id="clase.realizar-pregunta" />
                 </Button>
                 <Button
                   color="primary"
+                  className="border-left prl-07"
                   onClick={toggleModalPreguntasRealizadas}
                 >
                   <IntlMessages id="clase.ver-preguntas-realizadas" />
@@ -465,7 +474,11 @@ const Videollamada = ({
               </Fragment>
             )}
             {rol !== ROLES.Alumno && (
-              <ButtonDropdown isOpen={dropdownSplitOpen} toggle={toggleSplit}>
+              <ButtonDropdown
+                className="border-left"
+                isOpen={dropdownSplitOpen}
+                toggle={toggleSplit}
+              >
                 <DropdownToggle caret color="primary">
                   Preguntas
                   {hayPreguntas && (
@@ -564,6 +577,7 @@ const Videollamada = ({
               onChange={(e) => setPreguntaDeAlumno(e.target.value)}
               className="form-control mt-3"
               name="nombre"
+              autoComplete="off"
             />
           </FormGroup>
           <ModalFooter>
@@ -586,7 +600,7 @@ const Videollamada = ({
             Seleccioná durante cuanto tiempo lanzar la pregunta
           </Label>
           <Row className="mb-3 mr-3">
-            <Colxx xxs="4" md="4">
+            <Colxx xxs="6" xs="6" md="4">
               <Select
                 className="timer-pregunta-clase"
                 classNamePrefix="select"
@@ -600,7 +614,7 @@ const Videollamada = ({
                 isSearchable={true}
               />
             </Colxx>
-            <Colxx xxs="4" md="4">
+            <Colxx xxs="6" xs="6" md="4">
               <Select
                 options={SEGUNDOS_OPTIONS}
                 classNamePrefix="select"

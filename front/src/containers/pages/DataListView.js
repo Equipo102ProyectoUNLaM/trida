@@ -99,7 +99,7 @@ class DataListView extends React.Component {
               )}
               {modalLanzarPreguntas && (
                 <p
-                  className="list-item-heading card-body modalLanzarPreguntas"
+                  className="list-item-heading card-body modalLanzarPreguntas mt-3"
                   onClick={() => onSelectPregunta(id)}
                 >
                   {title}
@@ -117,18 +117,12 @@ class DataListView extends React.Component {
               {!sonPreguntas && !modalLanzarPreguntas && (
                 <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                   <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
-                    <p className="list-item-heading mb-1 truncate practicas-list-label">
-                      {title}
-                    </p>
+                    <p className="list-item-heading mb-1 ">{title}</p>
                     {text1 && (
-                      <p className="mb-1 mr-2 text-small w-sm-100 practicas-list-label">
-                        {text1}
-                      </p>
+                      <p className="mb-1 mr-2 text-small w-sm-100 ">{text1}</p>
                     )}
                     {text2 && (
-                      <p className="mb-1 text-small w-sm-100 practicas-list-label">
-                        {text2}
-                      </p>
+                      <p className="mb-1 text-small w-sm-100 ">{text2}</p>
                     )}
                   </NavLink>
                   <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label mt-2">

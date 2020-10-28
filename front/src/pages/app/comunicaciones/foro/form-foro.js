@@ -188,15 +188,15 @@ class FormForo extends Component {
               </Colxx>
             </Row>
             <ModalFooter>
+              <Button color="secondary" onClick={toggleModal}>
+                Cancelar
+              </Button>
               <Button
                 color="primary"
                 type="submit"
                 disabled={this.disableCrearButton()}
               >
                 {idForo ? 'Editar' : 'Agregar'}
-              </Button>
-              <Button color="secondary" onClick={toggleModal}>
-                Cancelar
               </Button>
             </ModalFooter>
           </Form>

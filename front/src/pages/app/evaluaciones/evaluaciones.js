@@ -27,6 +27,8 @@ import {
   getDateTimeStringFromDate,
   getTimestampDifference,
 } from 'helpers/Utils';
+import { isMobile } from 'react-device-detect';
+import HeaderDeModuloMobile from 'components/common/HeaderDeModuloMobile';
 import * as _moment from 'moment';
 const moment = _moment;
 
@@ -314,17 +316,41 @@ class Evaluaciones extends Component {
     ) : (
       <Fragment>
         <div className="disable-text-selection">
-          <HeaderDeModulo
-            heading={
-              oldTestActive ? 'menu.my-old-evaluations' : 'menu.my-evaluations'
-            }
-            toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
-            buttonText={rolDocente && !oldTestActive ? 'evaluation.add' : null}
-            secondaryToggleModal={this.toggleOldEvaluationModal}
-            secondaryButtonText={
-              oldTestActive ? 'evaluation.active' : 'evaluation.old'
-            }
-          />
+          {isMobile ? (
+            <HeaderDeModuloMobile
+              heading={
+                oldTestActive
+                  ? 'menu.my-old-evaluations'
+                  : 'menu.my-evaluations'
+              }
+              toggleIcon={rolDocente && !oldTestActive ? this.onAdd : null}
+              iconText={
+                rolDocente && !oldTestActive
+                  ? 'glyph-icon iconsminds-add'
+                  : null
+              }
+              secondaryToggle={this.toggleOldEvaluationModal}
+              secondaryButtonText={
+                oldTestActive ? 'evaluation.active' : 'evaluation.old'
+              }
+            />
+          ) : (
+            <HeaderDeModulo
+              heading={
+                oldTestActive
+                  ? 'menu.my-old-evaluations'
+                  : 'menu.my-evaluations'
+              }
+              toggleModal={rolDocente && !oldTestActive ? this.onAdd : null}
+              buttonText={
+                rolDocente && !oldTestActive ? 'evaluation.add' : null
+              }
+              secondaryToggleModal={this.toggleOldEvaluationModal}
+              secondaryButtonText={
+                oldTestActive ? 'evaluation.active' : 'evaluation.old'
+              }
+            />
+          )}
           <Row>
             <Colxx xxs="12" xs="12" md="6" lg="8" className="w-xs-100">
               <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">

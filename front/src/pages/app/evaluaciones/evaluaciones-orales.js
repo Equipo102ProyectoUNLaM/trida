@@ -13,6 +13,8 @@ import { isEmpty, getTimestampDifference } from 'helpers/Utils';
 import FormEvaluacionOral from './form-evaluacion-oral';
 import firebase from 'firebase/app';
 import * as _moment from 'moment';
+import { isMobile } from 'react-device-detect';
+import HeaderDeModuloMobile from 'components/common/HeaderDeModuloMobile';
 const moment = _moment;
 
 function collect(props) {
@@ -213,21 +215,45 @@ class EvaluacionesOrales extends Component {
     ) : (
       <Fragment>
         <div className="disable-text-selection">
-          <HeaderDeModulo
-            heading={
-              oldTestActive
-                ? 'menu.my-old-oral-evaluations'
-                : 'menu.my-oral-evaluations'
-            }
-            toggleModal={rolDocente && !oldTestActive ? this.toggleModal : null}
-            buttonText={
-              rolDocente && !oldTestActive ? 'evaluation.add-oral' : null
-            }
-            secondaryToggleModal={this.toggleOldPracticesModal}
-            secondaryButtonText={
-              oldTestActive ? 'evaluation.active-oral' : 'evaluation.old-oral'
-            }
-          />
+          {isMobile ? (
+            <HeaderDeModuloMobile
+              heading={
+                oldTestActive
+                  ? 'menu.my-old-evaluations'
+                  : 'menu.my-evaluations'
+              }
+              toggleIcon={
+                rolDocente && !oldTestActive ? this.toggleModal : null
+              }
+              iconText={
+                rolDocente && !oldTestActive
+                  ? 'glyph-icon iconsminds-add'
+                  : null
+              }
+              secondaryToggle={this.toggleOldPracticesModal}
+              secondaryButtonText={
+                oldTestActive ? 'evaluation.active' : 'evaluation.old'
+              }
+            />
+          ) : (
+            <HeaderDeModulo
+              heading={
+                oldTestActive
+                  ? 'menu.my-old-oral-evaluations'
+                  : 'menu.my-oral-evaluations'
+              }
+              toggleModal={
+                rolDocente && !oldTestActive ? this.toggleModal : null
+              }
+              buttonText={
+                rolDocente && !oldTestActive ? 'evaluation.add-oral' : null
+              }
+              secondaryToggleModal={this.toggleOldPracticesModal}
+              secondaryButtonText={
+                oldTestActive ? 'evaluation.active-oral' : 'evaluation.old-oral'
+              }
+            />
+          )}
           <ModalGrande
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}

@@ -223,15 +223,15 @@ class FormMensaje extends Component {
             </FormGroup>
 
             <ModalFooter>
+              <Button color="secondary" onClick={toggleModal}>
+                Cancelar
+              </Button>
               <Button
                 color="primary"
                 type="submit"
                 disabled={this.disableEnviarButton()}
               >
                 Enviar
-              </Button>
-              <Button color="secondary" onClick={toggleModal}>
-                Cancelar
               </Button>
             </ModalFooter>
           </Form>

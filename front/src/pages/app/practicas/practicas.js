@@ -14,7 +14,9 @@ import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { getFormattedDate, isEmpty } from 'helpers/Utils';
 import { storage } from 'helpers/Firebase';
+import { isMobile } from 'react-device-detect';
 import * as _moment from 'moment';
+import HeaderDeModuloMobile from 'components/common/HeaderDeModuloMobile';
 const moment = _moment;
 
 function collect(props) {
@@ -279,23 +281,49 @@ class Practica extends Component {
     ) : (
       <Fragment>
         <div className="disable-text-selection">
-          <HeaderDeModulo
-            heading={
-              oldPracticesActive
-                ? 'menu.my-old-activities'
-                : 'menu.my-activities'
-            }
-            toggleModal={
-              rolDocente && !oldPracticesActive ? this.toggleCreateModal : null
-            }
-            buttonText={
-              rolDocente && !oldPracticesActive ? 'activity.add' : null
-            }
-            secondaryToggleModal={this.toggleOldPracticesModal}
-            secondaryButtonText={
-              oldPracticesActive ? 'activity.active' : 'activity.old'
-            }
-          />
+          {isMobile ? (
+            <HeaderDeModuloMobile
+              heading={
+                oldPracticesActive
+                  ? 'menu.my-old-activities'
+                  : 'menu.my-activities'
+              }
+              toggleIcon={
+                rolDocente && !oldPracticesActive
+                  ? this.toggleCreateModal
+                  : null
+              }
+              iconText={
+                rolDocente && !oldPracticesActive
+                  ? 'glyph-icon iconsminds-add'
+                  : null
+              }
+              secondaryToggle={this.toggleOldPracticesModal}
+              secondaryButtonText={
+                oldPracticesActive ? 'activity.active' : 'activity.old'
+              }
+            />
+          ) : (
+            <HeaderDeModulo
+              heading={
+                oldPracticesActive
+                  ? 'menu.my-old-activities'
+                  : 'menu.my-activities'
+              }
+              toggleModal={
+                rolDocente && !oldPracticesActive
+                  ? this.toggleCreateModal
+                  : null
+              }
+              buttonText={
+                rolDocente && !oldPracticesActive ? 'activity.add' : null
+              }
+              secondaryToggleModal={this.toggleOldPracticesModal}
+              secondaryButtonText={
+                oldPracticesActive ? 'activity.active' : 'activity.old'
+              }
+            />
+          )}
           <ModalGrande
             modalOpen={modalCreateOpen}
             toggleModal={this.toggleCreateModal}
