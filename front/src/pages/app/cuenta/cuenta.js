@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import IntlMessages from 'helpers/IntlMessages';
@@ -29,12 +28,4 @@ class Cuenta extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
-  const { userData } = authUser;
-  const { rol, nombre, apellido, foto } = userData;
-  return {
-    foto,
-  };
-};
-
-export default injectIntl(connect(mapStateToProps)(Cuenta));
+export default injectIntl(Cuenta);

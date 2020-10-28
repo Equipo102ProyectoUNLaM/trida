@@ -69,19 +69,6 @@ class DatosForm extends Component {
     });
   };
 
-  /*   updateEmail = () => {
-    var user = firebase.auth().currentUser;
-
-    user.updateEmail("user@example.com").then(function() {
-    }).catch(function(error) {
-    });
-  } 
-  
-  var user = firebase.auth().currentUser;
-  user.updatePassword(newPassword)
-  
-  */
-
   handleChange = (event) => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -151,10 +138,9 @@ class DatosForm extends Component {
     const initialValues = { nombre, apellido, mail, telefono };
 
     return isLoading ? (
-      <div className="loading" />
+      <div className="cover-spin" />
     ) : (
       <>
-        {isLoading && <div className="loading-overlay" />}
         <Row className="h-100">
           <Colxx>
             <Formik
@@ -231,7 +217,7 @@ class DatosForm extends Component {
                     <img
                       src={foto}
                       alt="foto-default-usuario"
-                      className="social-header card-img wh-200 mb-2 padding-1"
+                      className="social-header card-img wh-200 mb-2 padding-1 border-radius-50"
                     />
                     <InputGroup className="input-group-foto">
                       <InputGroupAddon addonType="prepend">
