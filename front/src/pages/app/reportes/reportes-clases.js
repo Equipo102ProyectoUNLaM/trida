@@ -9,7 +9,7 @@ import {
   getDocument,
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
-import { isEmpty } from 'helpers/Utils';
+import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 import ROLES from 'constants/roles';
 import firebase from 'firebase/app';
 import Table from '@material-ui/core/Table';
@@ -43,30 +43,24 @@ class ReportesClases extends Component {
     this.getDataClases();
   }
 
-  toggleOpen = () => {
-    this.setState({ open: !this.state.open });
-  };
-
   toggleAccordion = (tab) => {
-    const prevState = this.state.open;
+    const prevState = this.state.openAsistencia;
     const state = prevState.map((x, index) => (tab === index ? !x : x));
     this.setState({
-      open: state,
+      openAsistencia: state,
     });
   };
 
-  getNombreUsuario = async (id) => {
-    const { data } = await getDocument(`usuarios/${id}`);
-    return data.nombre + ' ' + data.apellido;
-  };
-
-  getNombrePractica = async (id) => {
-    const { data } = await getDocument(`practicas/${id}`);
-    return data.nombre;
+  toggleAccordionPreguntas = (tab) => {
+    const prevState = this.state.openPreguntas;
+    const state = prevState.map((x, index) => (tab === index ? !x : x));
+    this.setState({
+      openPreguntas: state,
+    });
   };
 
   getDataClases = async () => {
-    const clases = await getCollection('clases', [
+    const clasesCollection = await getCollection('clases', [
       {
         field: 'fecha_clase',
         operator: '<',
@@ -79,48 +73,61 @@ class ReportesClases extends Component {
       `usuariosPorMateria/${this.props.subject.id}`
     );
 
+    const clasesPromise = clasesCollection.map(async (clase) => {
+      return {
+        id: clase.id,
+        asistencia: clase.data.asistencia,
+        idMateria: clase.data.idMateria,
+        nombre: clase.data.nombre,
+        fecha: clase.data.fecha_clase,
+      };
+    });
+
+    let clases = await Promise.all(clasesPromise);
     let asistenciaClase = [];
     let preguntasAnonimasAlumnos = [];
-
-    clases.forEach(async (clase) => {
+    for (let clase of clases) {
       const preguntasAnonimas = await getDocumentWithSubCollection(
-        `preguntasDeAlumno/${clase}`,
+        `preguntasDeAlumno/${clase.id}`,
         'preguntas'
       );
 
       for (const usuario of data.usuario_id) {
         const alumno = await getDocument(`usuarios/${usuario}`);
         if (alumno.data.rol === ROLES.Alumno) {
-          asistenciaClase.push(
-            this.getAsistencia(clase.asistencia, alumno.data, clase.id)
-          );
+          asistenciaClase.push(await this.getAsistencia(clase, alumno.data));
           preguntasAnonimasAlumnos.push(
-            this.getPreguntasAnonimas(
+            await this.getPreguntasAnonimas(
               preguntasAnonimas.subCollection,
-              alumno.data,
-              clase.id
+              clase,
+              alumno.data
             )
           );
         }
       }
-    });
+    }
 
     let openData = [];
-    asistenciaClase = groupBy(asistenciaClase, 'id');
+    asistenciaClase = groupBy(asistenciaClase, 'user');
     asistenciaClase = Object.entries(asistenciaClase).map((elem) => {
       openData.push(false);
       return { id: elem[0], data: elem[1] };
     });
-    this.setState({ asistenciaClase, openAsistencia: openData });
+    this.setState({
+      asistenciaClase,
+      openAsistencia: openData,
+      isLoading: false,
+    });
 
     openData = [];
-    preguntasAnonimasAlumnos = groupBy(preguntasAnonimasAlumnos, 'id');
+    preguntasAnonimasAlumnos = groupBy(preguntasAnonimasAlumnos, 'user');
     preguntasAnonimasAlumnos = Object.entries(preguntasAnonimasAlumnos).map(
       (elem) => {
         openData.push(false);
         return { id: elem[0], data: elem[1] };
       }
     );
+    console.log(preguntasAnonimasAlumnos);
     this.setState({
       preguntasAnonimasAlumnos,
       openPreguntas: openData,
@@ -128,47 +135,58 @@ class ReportesClases extends Component {
     });
   };
 
-  getAsistencia(asistencia, usuario, claseId) {
-    if (asistencia) {
-      const asistenciaUsuario = asistencia.filter(
+  getAsistencia(clase, usuario) {
+    if (clase.asistencia) {
+      const asistenciaUsuario = clase.asistencia.filter(
         (asistencia) => asistencia.user === usuario.id
       );
-      if (asistenciaUsuario) {
+      if (asistenciaUsuario.length) {
         let tiempoAsistencia = 0;
         for (const asist of asistenciaUsuario) {
           tiempoAsistencia += asist.tiempoNeto;
         }
         return {
-          id: usuario.id,
+          id: clase.id,
           tiempo: tiempoAsistencia,
           user: usuario.nombre + ' ' + usuario.apellido,
-          clase: claseId,
+          nombreClase: clase.nombre,
+          fecha: clase.fecha,
         };
       }
     }
     return {
-      id: usuario.id,
+      id: clase.id,
       tiempo: 0,
       user: usuario.nombre + ' ' + usuario.apellido,
-      clase: claseId,
+      nombreClase: clase.nombre,
+      fecha: clase.fecha,
     };
   }
 
-  getPreguntasAnonimas(preguntasAnonimas, usuario, claseId) {
+  getPreguntasAnonimas(preguntasAnonimas, clase, usuario) {
     const preguntasAlumno =
       preguntasAnonimas.length > 0
-        ? preguntasAnonimas.filter((pregunta) => pregunta.creador === usuario)
+        ? preguntasAnonimas.filter(
+            (pregunta) => pregunta.data.creador === usuario.id
+          )
         : [];
     return {
-      id: usuario.id,
+      id: clase.id,
       preguntas: preguntasAlumno.length,
       user: usuario.nombre + ' ' + usuario.apellido,
-      clase: claseId,
+      nombreClase: clase.nombre,
+      fecha: clase.fecha,
     };
   }
 
   render() {
-    const { asistenciaClase, openAsistencia, isLoading } = this.state;
+    const {
+      asistenciaClase,
+      preguntasAnonimasAlumnos,
+      openAsistencia,
+      openPreguntas,
+      isLoading,
+    } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -179,11 +197,13 @@ class ReportesClases extends Component {
             <Separator className="mb-5" />
           </Colxx>
         </Row>
+        <Row>
+          <h2 className="titulo-asistencia">Asistencia a Clases</h2>
+        </Row>
         {isEmpty(asistenciaClase) && (
           <span>No hay datos sobre asistencia a clases</span>
         )}
         {!isEmpty(asistenciaClase) && (
-          // <Row><h2 className="title">Asistencia a Clases</h2></Row>
           <TableContainer component={Paper}>
             {asistenciaClase.map((row, index) => (
               <Fragment key={index}>
@@ -207,12 +227,6 @@ class ReportesClases extends Component {
                   >
                     {row.id}
                   </TableCell>
-                  <TableCell
-                    className="width-100"
-                    onClick={() => this.toggleAccordion(index)}
-                  >
-                    Cantidad de Entregas: {row.data.length}
-                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell
@@ -230,16 +244,13 @@ class ReportesClases extends Component {
                           <TableHead>
                             <TableRow>
                               <TableCell className="font-weight-bold">
-                                Práctica
+                                Clases
                               </TableCell>
                               <TableCell className="font-weight-bold">
-                                Fecha de Entrega
+                                Fecha de Clase
                               </TableCell>
                               <TableCell className="font-weight-bold">
-                                Estado
-                              </TableCell>
-                              <TableCell className="font-weight-bold">
-                                Nota
+                                Tiempo
                               </TableCell>
                             </TableRow>
                           </TableHead>
@@ -247,17 +258,113 @@ class ReportesClases extends Component {
                             {row.data.map((historyRow) => (
                               <TableRow
                                 key={historyRow.id}
-                                className={historyRow.estado}
+                                className={
+                                  historyRow.tiempo === 0
+                                    ? 'Ausente'
+                                    : 'Presente'
+                                }
                               >
                                 <TableCell component="th" scope="row">
-                                  {historyRow.nombrePractica}
+                                  {historyRow.nombreClase}
                                 </TableCell>
-                                <TableCell>{historyRow.fecha}</TableCell>
-                                <TableCell>{historyRow.estado}</TableCell>
                                 <TableCell>
-                                  {historyRow.nota === 0
-                                    ? '-'
-                                    : historyRow.nota}
+                                  {getDateTimeStringFromDate(historyRow.fecha)}
+                                </TableCell>
+                                <TableCell>
+                                  {historyRow.tiempo === 0
+                                    ? 'Ausente'
+                                    : historyRow.tiempo + ' minutos'}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                    </Collapse>
+                  </TableCell>
+                </TableRow>
+              </Fragment>
+            ))}
+          </TableContainer>
+        )}
+
+        <Row>
+          <h2 className="titulo-asistencia">Preguntas realizadas en Clases</h2>
+        </Row>
+        {isEmpty(asistenciaClase) && (
+          <span>No hay datos sobre preguntas realizadas en clase</span>
+        )}
+        {!isEmpty(preguntasAnonimasAlumnos) && (
+          <TableContainer component={Paper}>
+            {preguntasAnonimasAlumnos.map((row, index) => (
+              <Fragment key={index}>
+                <TableRow className="mb-2">
+                  <TableCell className="button-toggle">
+                    <IconButton
+                      aria-label="expand row"
+                      size="small"
+                      onClick={() => this.toggleAccordionPreguntas(index)}
+                    >
+                      {openAsistencia ? (
+                        <KeyboardArrowDownIcon />
+                      ) : (
+                        <KeyboardArrowUpIcon />
+                      )}
+                    </IconButton>
+                  </TableCell>
+                  <TableCell
+                    className="width-100 font-weight-bold"
+                    onClick={() => this.toggleAccordionPreguntas(index)}
+                  >
+                    {row.id}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell
+                    style={{ paddingBottom: 0, paddingTop: 0 }}
+                    colSpan={5}
+                    className="padding-left-inner"
+                  >
+                    <Collapse in={openPreguntas[index]} timeout="auto">
+                      <Box margin={1}>
+                        <Table
+                          className="data-entregas"
+                          size="small"
+                          aria-label="entregas"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell className="font-weight-bold">
+                                Clases
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
+                                Fecha de Clase
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
+                                Preguntas realizadas
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {row.data.map((historyRow) => (
+                              <TableRow
+                                key={historyRow.id}
+                                className={
+                                  historyRow.preguntas === 0
+                                    ? 'Ausente'
+                                    : 'Presente'
+                                }
+                              >
+                                <TableCell component="th" scope="row">
+                                  {historyRow.nombreClase}
+                                </TableCell>
+                                <TableCell>
+                                  {getDateTimeStringFromDate(historyRow.fecha)}
+                                </TableCell>
+                                <TableCell>
+                                  {historyRow.preguntas === 0
+                                    ? 'Sin preguntas'
+                                    : historyRow.preguntas}
                                 </TableCell>
                               </TableRow>
                             ))}
