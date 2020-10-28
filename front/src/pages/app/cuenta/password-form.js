@@ -69,7 +69,7 @@ class PasswordForm extends Component {
                 <Form className="av-tooltip tooltip-label-bottom">
                   <FormGroup className="form-group has-float-label">
                     <Label>
-                      <IntlMessages id="user.password" />
+                      <IntlMessages id="cuenta.nueva-contraseña" />
                     </Label>
                     <Field
                       type="password"

@@ -247,4 +247,5 @@ module.exports = {
   'cuenta.password': 'Cambio de contraseña',
   'cuenta.guardar-datos': 'Guardar cambios',
   'cuenta.cambiar-contraseña': 'Cambiar contraseña',
+  'cuenta.nueva-contraseña': 'Nueva Contraseña',
 };
