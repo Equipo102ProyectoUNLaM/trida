@@ -80,6 +80,7 @@ class DataListView extends React.Component {
       noEntregada,
       tipo,
     } = this.props;
+    console.log(tipo);
     return (
       <Colxx xxs="12" className="mb-3" id={id}>
         <ContextMenuTrigger id="menu_id" data={id} collect={collect}>

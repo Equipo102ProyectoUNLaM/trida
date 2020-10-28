@@ -395,6 +395,7 @@ class Practica extends Component {
                       !practica.entregada && oldPracticesActive ? true : false
                     }
                     getPracticas={this.getPracticas}
+                    tipo="practica"
                   />
                 );
               })}{' '}
