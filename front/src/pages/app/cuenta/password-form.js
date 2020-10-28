@@ -4,13 +4,14 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import { injectIntl } from 'react-intl';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form, Field } from 'formik';
-import { auth } from 'helpers/Firebase';
+import { auth, functions } from 'helpers/Firebase';
 
 import { passwordSchema } from './validations';
 import {
   enviarNotificacionExitosa,
   enviarNotificacionError,
 } from 'helpers/Utils-ui';
+import { passwordChangeMail } from 'constants/emailTexts';
 
 class PasswordForm extends Component {
   constructor(props) {
@@ -19,29 +20,43 @@ class PasswordForm extends Component {
     this.state = {
       password: '',
       confirmPassword: '',
+      isLoading: false,
     };
   }
 
-  onSubmit = (values) => {
+  sendPasswordChangeEmail = async (email, options) => {
+    const sendMail = functions.httpsCallable('sendMail');
+    sendMail({ email, ...options }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
+  onSubmit = async (values) => {
+    this.setState({ isLoading: true });
     var user = auth.currentUser;
+
     try {
       user.updatePassword(values.password);
       enviarNotificacionExitosa(
         'Contraseña actualizada con éxito',
         'Contraseña actualizada!'
       );
+      await this.sendPasswordChangeEmail(user.email, passwordChangeMail);
     } catch (err) {
       enviarNotificacionError(
         'Hubo un error al actualizar la contraseña',
         'Ups!'
       );
     }
+    this.setState({ isLoading: false });
   };
 
   render() {
-    const { password, confirmPassword } = this.state;
+    const { isLoading, password, confirmPassword } = this.state;
     const initialValues = { password, confirmPassword };
-    return (
+    return isLoading ? (
+      <div className="loading" />
+    ) : (
       <>
         <Row className="h-100">
           <Colxx>

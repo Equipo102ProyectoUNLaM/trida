@@ -13,13 +13,13 @@ import {
 import { Colxx } from 'components/common/CustomBootstrap';
 import { injectIntl } from 'react-intl';
 import IntlMessages from 'helpers/IntlMessages';
-import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { Formik, Form, Field } from 'formik';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
-import { editDocument, getDocument } from 'helpers/Firebase-db';
+import { editDocument } from 'helpers/Firebase-db';
 import { updateDatosUsuario } from 'redux/actions';
 import { getUserData } from 'helpers/Firebase-user';
-import { storage, auth } from 'helpers/Firebase';
+import { storage, auth, functions } from 'helpers/Firebase';
+import { newEmailMail, oldEmailMail } from 'constants/emailTexts';
 
 import { datosSchema } from './validations';
 const publicUrl = process.env.PUBLIC_URL;
@@ -102,6 +102,13 @@ class DatosForm extends Component {
     );
   };
 
+  sendEmailChangeEmail = async (email, options) => {
+    const sendMail = functions.httpsCallable('sendMail');
+    sendMail({ email, ...options }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
   onSubmit = async (values) => {
     const { foto, originalMail } = this.state;
     const { nombre, apellido, mail, telefono } = values;
@@ -112,9 +119,11 @@ class DatosForm extends Component {
       apellido,
       telefono,
     };
+
     if (foto) {
       await this.subirFoto(foto);
     }
+
     await editDocument(
       'usuarios',
       this.props.user,
@@ -124,10 +133,13 @@ class DatosForm extends Component {
 
     if (mail !== originalMail) {
       user.updateEmail(mail);
+      await this.sendPasswordChangeEmail(mail, newEmailMail);
+      await this.sendPasswordChangeEmail(originalMail, oldEmailMail);
       await editDocument('usuarios', this.props.user, { mail });
     }
 
     const userData = await getUserData(this.props.user);
+    this.getDatosDeUsuario();
     this.props.updateDatosUsuario(userData);
   };
 
