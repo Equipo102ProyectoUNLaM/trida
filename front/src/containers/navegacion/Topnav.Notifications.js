@@ -62,6 +62,7 @@ const TopnavNotifications = ({ user }) => {
         fecha: docData.fecha,
         url: docData.url,
         id: docId,
+        programada: docData.id ? true : false,
       });
     }
     setNotificationsOnSnapshot(arrayNotifications);
@@ -84,7 +85,12 @@ const TopnavNotifications = ({ user }) => {
     );
     if (element.length !== 0) {
       notifications.forEach((element) => {
-        if (!element.leida && new Date(element.fecha.toDate()) <= now)
+        if (
+          (!element.leida && !element.programada) ||
+          (!element.leida &&
+            element.programada &&
+            new Date(element.fecha.toDate()) <= new Date())
+        )
           editDocument(`notificaciones/${user}/listado`, element.id, {
             leida: true,
           });
@@ -106,12 +112,20 @@ const TopnavNotifications = ({ user }) => {
         >
           <i className="simple-icon-bell" />
           {notifications.filter(
-            (x) => !x.leida && new Date(x.fecha.toDate()) <= now
+            (x) =>
+              (!x.leida && !x.programada) ||
+              (!x.leida &&
+                x.programada &&
+                new Date(x.fecha.toDate()) <= new Date())
           ).length !== 0 && (
             <span className="count">
               {
                 notifications.filter(
-                  (x) => !x.leida && new Date(x.fecha.toDate()) <= now
+                  (x) =>
+                    (!x.leida && !x.programada) ||
+                    (!x.leida &&
+                      x.programada &&
+                      new Date(x.fecha.toDate()) <= new Date())
                 ).length
               }
             </span>

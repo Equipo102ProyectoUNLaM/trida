@@ -16,10 +16,27 @@ class TabsDeMensajeria extends Component {
       accordionSent: [],
       data: [],
       dataSent: [],
+      // focused: window.location.hash.replace('#', '') === this.props.item.id,
     };
   }
 
   componentDidMount() {
+    const { focused } = this.state;
+    if (focused) {
+      const el = document.querySelector(`[id='${this.props.item.id}']`);
+      const headerOffset = 200;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+
+      setTimeout(() => {
+        this.setState({ focused: null });
+      }, 3000);
+    }
+
     let accordionData = [];
     let accordionDataSent = [];
 
@@ -70,7 +87,11 @@ class TabsDeMensajeria extends Component {
                       <>
                         {itemsSent.map((item, index) => {
                           return (
-                            <Card className="d-flex mb-3" key={index}>
+                            <Card
+                              className="d-flex mb-3"
+                              key={index}
+                              id={item.id}
+                            >
                               <div className="d-flex flex-grow-1 min-width-zero">
                                 <Button
                                   color="link"

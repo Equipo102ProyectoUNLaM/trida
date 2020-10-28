@@ -490,7 +490,7 @@ exports.contentCreated = functions.storage
       const notification = {
         contenido: `Se ha creado la evaluación ${evaluacionNombre}`,
         fecha: evaluacion.fecha_publicacion,
-        url: `/app/evaluaciones#${evaluacionId}`,
+        url: `/app/evaluaciones/escritas#${evaluacionId}`,
         leida: false,
         id: evaluacionId
       };
@@ -625,3 +625,41 @@ exports.contentCreated = functions.storage
       console.log('error', error);
     }
   });
+
+  exports.formalMessageRecived = functions.firestore
+  .document('formales/{formalesId}')
+  .onCreate((doc) => {
+    try {
+      const message = doc.data();
+      const messageId = doc.id;
+      const notification = {
+        contenido: `Tenés un nuevo comunicado formal de ${message.emisor.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/comunicaciones/formales#${messageId}`,
+        leida: false
+      }
+
+      return createNotification(notification, message.receptor);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
+
+  exports.oralEvaluationCreated = functions.firestore
+  .document('evaluacionesOrales/{evaluacionOralId}')
+  .onCreate((doc) => {
+    try {
+      const evaluation = doc.data();
+      const evaluationId = doc.id;
+      const notification = {
+        contenido: `Se ha creado la evaluación oral ${evaluation.nombre}`,
+        fecha: admin.firestore.FieldValue.serverTimestamp(),
+        url: `/app/evaluaciones/orales#${evaluationId}`,
+        leida: false
+      }
+
+      return createNotification(notification, evaluation.integrantes);
+    } catch (error) {
+      console.log('error', error);
+    }
+  })
