@@ -191,7 +191,7 @@ module.exports = {
   'evaluation.add': 'AGREGAR / IMPORTAR EVALUACIÓN',
   'evaluation.import': 'IMPORTAR EVALUACIÓN',
   'evaluacion.adjuntar-desarrollo-extensiones':
-    'Las extensiones admitidas son .pdf, .png, .jpg, .jpeg',
+    'Las extensiones admitidas son .png, .jpg, .jpeg',
   'evaluacion.sinTiempo': '¡Te quedaste sin tiempo!',
   'evaluacion.sinCapturas': '¡Ups!',
   'evaluation.old': 'VER EVALUACIONES FINALIZADAS',
