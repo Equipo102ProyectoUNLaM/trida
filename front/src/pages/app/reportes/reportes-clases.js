@@ -6,11 +6,10 @@ import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import {
   getCollection,
-  getDocument,
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
+import { getAlumnosPorMateriaConNombre } from 'helpers/Firebase-user';
 import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
-import ROLES from 'constants/roles';
 import firebase from 'firebase/app';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -59,9 +58,8 @@ class ReportesClases extends Component {
       { field: 'idMateria', operator: '==', id: this.props.subject.id },
       { field: 'activo', operator: '==', id: true },
     ]);
-    const { data } = await getDocument(
-      `usuariosPorMateria/${this.props.subject.id}`
-    );
+
+    const usuarios = await getAlumnosPorMateriaConNombre(this.props.subject.id);
 
     const clasesPromise = clasesCollection.map(async (clase) => {
       return {
@@ -75,24 +73,22 @@ class ReportesClases extends Component {
 
     let clases = await Promise.all(clasesPromise);
     let asistenciaYPreguntasClase = [];
+
     for (let clase of clases) {
       const preguntasAnonimas = await getDocumentWithSubCollection(
         `preguntasDeAlumno/${clase.id}`,
         'preguntas'
       );
 
-      for (const usuario of data.usuario_id) {
-        const alumno = await getDocument(`usuarios/${usuario}`);
-        if (alumno.data.rol === ROLES.Alumno) {
-          asistenciaYPreguntasClase.push(
-            await this.getAsistenciaYPreguntas(
-              clase,
-              alumno.data,
-              preguntasAnonimas.subCollection
-            )
-          );
-        }
-      }
+      usuarios.forEach((alumno) => {
+        asistenciaYPreguntasClase.push(
+          this.getAsistenciaYPreguntas(
+            clase,
+            alumno,
+            preguntasAnonimas.subCollection
+          )
+        );
+      });
     }
 
     let openData = [];
@@ -131,7 +127,7 @@ class ReportesClases extends Component {
           id: clase.id,
           tiempo: tiempoAsistencia,
           preguntas: preguntasAlumno.length,
-          user: usuario.nombre + ' ' + usuario.apellido,
+          user: usuario.nombre,
           nombreClase: clase.nombre,
           fecha: clase.fecha,
         };
@@ -141,7 +137,7 @@ class ReportesClases extends Component {
       id: clase.id,
       tiempo: 0,
       preguntas: preguntasAlumno.length,
-      user: usuario.nombre + ' ' + usuario.apellido,
+      user: usuario.nombre,
       nombreClase: clase.nombre,
       fecha: clase.fecha,
     };

@@ -1,6 +1,7 @@
 import { firestore, storage } from 'helpers/Firebase';
 import { getDocument } from 'helpers/Firebase-db';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
+import ROLES from 'constants/roles';
 
 export const getUserData = async (userId) => {
   let foto = '';
@@ -28,6 +29,27 @@ export const getUsuariosPorMateriaConRol = async (subjectId) => {
     for (const usuario of data.usuario_id) {
       const { data } = await getDocument(`usuarios/${usuario}`);
       usuariosConData.push({ id: usuario, rol: data.rol });
+    }
+    return usuariosConData;
+  } catch (err) {
+    console.log(err);
+  }
+
+  return [];
+};
+
+export const getAlumnosPorMateriaConNombre = async (subjectId) => {
+  try {
+    let usuariosConData = [];
+    const { data } = await getDocument(`usuariosPorMateria/${subjectId}`);
+    for (const usuario of data.usuario_id) {
+      const { data } = await getDocument(`usuarios/${usuario}`);
+      if (data.rol === ROLES.Alumno) {
+        usuariosConData.push({
+          id: usuario,
+          nombre: data.nombre + ' ' + data.apellido,
+        });
+      }
     }
     return usuariosConData;
   } catch (err) {
