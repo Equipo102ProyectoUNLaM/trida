@@ -139,51 +139,89 @@ class DataListView extends React.Component {
                           {estado.toUpperCase()}
                         </Badge>
                       )}
-                      {file !== undefined && (
-                        <Button
-                          outline
-                          onClick={() => this.onDownloadFile(file)}
-                          size="sm"
-                          color="primary"
-                          className="button datalist-button mt-1 mb-1"
-                        >
-                          Descargar Práctica
-                        </Button>
-                      )}
-                      {onUploadFile && (
-                        <Button
-                          outline
-                          onClick={() => onUploadFile(id)}
-                          size="sm"
-                          color="primary"
-                          className="button datalist-button mt-1 mb-1"
-                        >
-                          Subir Práctica
-                        </Button>
-                      )}
-                      {onCorrection && estado === 'No Corregido' && (
-                        <Button
-                          style={{ width: '7rem' }}
-                          outline
-                          onClick={() => onCorrection(id, idArchivo, file)}
-                          size="sm"
-                          color="primary"
-                          className="button datalist-button mt-1 mb-1"
-                        >
-                          Corregir
-                        </Button>
-                      )}
-                      {onVerCorrection && estado === 'Corregido' && (
-                        <Button
-                          outline
-                          onClick={() => onVerCorrection(id, idArchivo)}
-                          size="sm"
-                          color="primary"
-                          className="button datalist-button mt-1 mb-1"
-                          disabled={estado === 'Corregido' ? false : true}
-                        >
-                          Ver Corrección
-                        </Button>
+
+                      {isMobile ? (
+                        <Fragment>
+                          <AccionesMobile
+                            leftIcon={
+                              file !== undefined
+                                ? 'glyph-icon simple-icon-cloud-download'
+                                : null
+                            }
+                            leftIconToggle={() => this.onDownloadFile(file)}
+                            middleIcon={
+                              onUploadFile
+                                ? 'glyph-icon simple-icon-cloud-upload'
+                                : null
+                            }
+                            middleIconToggle={() => onUploadFile(id)}
+                            rightIcon={
+                              onCorrection && estado === 'No Corregido'
+                                ? 'glyph-icon simple-icon-note'
+                                : null
+                            }
+                            rightIconToggle={() =>
+                              onCorrection(id, idArchivo, file)
+                            }
+                            lastIcon={
+                              onVerCorrection && estado === 'Corregido'
+                                ? 'glyph-icon simple-icon-eyeglass'
+                                : null
+                            }
+                            lastIconToggle={() =>
+                              onVerCorrection(id, idArchivo)
+                            }
+                          />
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          {file !== undefined && (
+                            <Button
+                              outline
+                              onClick={() => this.onDownloadFile(file)}
+                              size="sm"
+                              color="primary"
+                              className="button datalist-button mt-1 mb-1"
+                            >
+                              Descargar Práctica
+                            </Button>
+                          )}
+                          {onUploadFile && (
+                            <Button
+                              outline
+                              onClick={() => onUploadFile(id)}
+                              size="sm"
+                              color="primary"
+                              className="button datalist-button mt-1 mb-1"
+                            >
+                              Subir Práctica
+                            </Button>
+                          )}
+                          {onCorrection && estado === 'No Corregido' && (
+                            <Button
+                              style={{ width: '7rem' }}
+                              outline
+                              onClick={() => onCorrection(id, idArchivo, file)}
+                              size="sm"
+                              color="primary"
+                              className="button datalist-button mt-1 mb-1"
+                            >
+                              Corregir
+                            </Button>
+                          )}
+                          {onVerCorrection && estado === 'Corregido' && (
+                            <Button
+                              outline
+                              onClick={() => onVerCorrection(id, idArchivo)}
+                              size="sm"
+                              color="primary"
+                              className="button datalist-button mt-1 mb-1"
+                              disabled={estado === 'Corregido' ? false : true}
+                            >
+                              Ver Corrección
+                            </Button>
+                          )}
+                        </Fragment>
                       )}
 
                       {isMobile ? (

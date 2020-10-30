@@ -22,6 +22,8 @@ class AccionesMobile extends Component {
       rightIcon,
       rightIconCalendar,
       rightIconToggle,
+      lastIcon,
+      lastIconToggle,
     } = this.props;
     return (
       <Row className="m-auto" style={{ textAlign: 'center' }}>
@@ -65,6 +67,20 @@ class AccionesMobile extends Component {
                 }
               >
                 {rightIconCalendar}
+              </Button>
+            )}
+            {lastIcon && (
+              <Button
+                color="primary"
+                style={{ height: '3rem' }}
+                className={
+                  middleIcon || leftIcon || rightIcon || rightIconCalendar
+                    ? 'border-left'
+                    : ''
+                }
+                onClick={() => lastIconToggle()}
+              >
+                <div style={{ fontSize: '1rem' }} className={lastIcon} />
               </Button>
             )}
           </ButtonGroup>
