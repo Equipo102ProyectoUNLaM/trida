@@ -195,11 +195,11 @@ class MiReporte extends Component {
               />
               <div className="icon-columna">
                 <i
-                  className="iconsminds-yes cursor-pointer primary"
+                  className="iconsminds-yes cursor-pointer secondary"
                   onClick={this.onAgregarColumna}
                 />
                 <i
-                  className="iconsminds-close cursor-pointer secondary"
+                  className="iconsminds-close cursor-pointer primary"
                   onClick={this.toggleAgregarColumna}
                 />
               </div>
