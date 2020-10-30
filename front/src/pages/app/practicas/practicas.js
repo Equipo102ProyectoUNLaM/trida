@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Row, Button, Badge } from 'reactstrap';
+import firebase from 'firebase/app';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { injectIntl } from 'react-intl';
@@ -12,7 +13,7 @@ import FormSubirPractica from './form-subir-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
-import { getFormattedDate, isEmpty } from 'helpers/Utils';
+import { getDateTimeStringFromDate, isEmpty } from 'helpers/Utils';
 import { storage } from 'helpers/Firebase';
 import * as _moment from 'moment';
 const moment = _moment;
@@ -43,7 +44,9 @@ class Practica extends Component {
     };
   }
 
-  getPracticas = async (materiaId) => {
+  getPracticas = async () => {
+    const materiaId = this.props.subject.id;
+
     let filtros = [
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
@@ -53,16 +56,16 @@ class Practica extends Component {
       filtros.push({
         field: 'fechaLanzada',
         operator: '<=',
-        id: new Date().toISOString().slice(0, 10),
+        id: firebase.firestore.Timestamp.now(),
       });
     }
 
     const arrayDeObjetos = await getCollection('practicas', filtros, false);
-
     let practicasActuales = arrayDeObjetos.filter((elem) => {
-      return moment(elem.data.fechaVencimiento).isAfter(moment(new Date()));
+      return moment(elem.data.fechaVencimiento.toDate()).isAfter(
+        moment(new Date())
+      );
     });
-
     this.dataListRenderer(practicasActuales);
   };
 
@@ -71,7 +74,7 @@ class Practica extends Component {
       {
         field: 'fechaVencimiento',
         operator: '<',
-        id: new Date().toISOString().slice(0, 10),
+        id: firebase.firestore.Timestamp.now(),
       },
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
@@ -197,8 +200,9 @@ class Practica extends Component {
   };
 
   normalizarFecha = (fecha) => {
-    const fechaNormal = fecha.split('-');
-    return fechaNormal[2] + fechaNormal[1] + fechaNormal[0];
+    let fechaNormal = getDateTimeStringFromDate(fecha).split(' ')[0];
+    fechaNormal = fechaNormal.replace(/\//g, '');
+    return fechaNormal;
   };
 
   normalizarNombre = (nombre) => {
@@ -354,11 +358,17 @@ class Practica extends Component {
                     title={practica.data.nombre}
                     text1={
                       'Fecha de publicación: ' +
-                      getFormattedDate(practica.data.fechaLanzada)
+                      getDateTimeStringFromDate(
+                        practica.data.fechaLanzada,
+                        'DD/MM/YYYY'
+                      )
                     }
                     text2={
                       'Fecha de entrega: ' +
-                      getFormattedDate(practica.data.fechaVencimiento)
+                      getDateTimeStringFromDate(
+                        practica.data.fechaVencimiento,
+                        'DD/MM/YYYY'
+                      )
                     }
                     file={practica.data.url}
                     isSelect={this.state.selectedItems.includes(practica.id)}
@@ -384,6 +394,8 @@ class Practica extends Component {
                     noEntregada={
                       !practica.entregada && oldPracticesActive ? true : false
                     }
+                    getPracticas={this.getPracticas}
+                    tipo="practica"
                   />
                 );
               })}{' '}

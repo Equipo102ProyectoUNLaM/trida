@@ -165,6 +165,7 @@ class FormClase extends React.Component {
             <FormGroup className="mb-3 error-l-100">
               <Label>Fecha y Hora de la clase</Label>
               <FormikDatePicker
+                showTimeSelect
                 name="fecha_clase"
                 value={values.fecha_clase}
                 placeholder="Ingrese la fecha de la clase"

@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState } from 'react';
+import React, { useEffect, Fragment, useState, useMemo } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
 import {
   Button,
@@ -54,12 +54,33 @@ const Videollamada = ({
   preguntas,
   idUser,
 }) => {
-  const { microfono, camara } = options;
+  const { microfono, camara, chat } = options;
   const parentNode = 'jitsi-container';
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
   );
   const [listaAsistencia, setListaAsistencia] = useState([]);
+
+  const obtenerConfiguracion = (config) => {
+    const newConfig = { ...config };
+
+    if (!chat) {
+      newConfig.TOOLBAR_BUTTONS = [...newConfig.TOOLBAR_BUTTONS, 'chat'];
+    }
+
+    return newConfig;
+  };
+
+  const opcionesDocente = useMemo(
+    () => obtenerConfiguracion(INTERFACE_CONFIG.DOCENTE),
+    [chat]
+  );
+
+  const opcionesAlumno = useMemo(
+    () => obtenerConfiguracion(INTERFACE_CONFIG.ALUMNO),
+    [chat]
+  );
+
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
@@ -352,7 +373,9 @@ const Videollamada = ({
 
   useEffect(() => {
     setElementHeight();
+
     window.addEventListener('resize', setElementHeight);
+
     return () => {
       window.removeEventListener('resize', setElementHeight);
     };
@@ -362,7 +385,7 @@ const Videollamada = ({
     roomName,
     parentNode,
     interfaceConfigOverwrite:
-      rol !== ROLES.Alumno ? INTERFACE_CONFIG.DOCENTE : INTERFACE_CONFIG.ALUMNO,
+      rol !== ROLES.Alumno ? opcionesDocente : opcionesAlumno,
     configOverwrite: {
       disableDeepLinking: true,
       startWithAudioMuted: microfono,
