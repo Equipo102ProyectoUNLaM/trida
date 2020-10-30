@@ -495,8 +495,8 @@ export const getEventos = async (subject, user) => {
       tipo: 'practica',
       url: 'practicas',
       title: 'Práctica: ' + data.nombre,
-      start: new Date(`${data.fechaLanzada} 08:00:00`),
-      end: new Date(`${data.fechaVencimiento} 18:00:00`),
+      start: new Date(data.fechaLanzada.toDate()),
+      end: new Date(data.fechaVencimiento.toDate()),
     });
   });
 

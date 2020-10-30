@@ -17,6 +17,8 @@ const Content = React.lazy(() => import('./contenidos'));
 
 const Corrections = React.lazy(() => import('./correcciones'));
 
+const Cuenta = React.lazy(() => import('./cuenta'));
+
 const Evaluations = React.lazy(() => import('./evaluaciones'));
 
 const Activities = React.lazy(() => import('./practicas'));
@@ -61,6 +63,10 @@ class App extends Component {
               <Route
                 path={`${match.url}/correcciones`}
                 render={(props) => <Corrections {...props} />}
+              />
+              <Route
+                path={`${match.url}/cuenta`}
+                render={(props) => <Cuenta {...props} />}
               />
 
               <Route
