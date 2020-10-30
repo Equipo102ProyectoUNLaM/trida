@@ -316,7 +316,11 @@ class TopNav extends Component {
                 )}
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
-                <DropdownItem>Cuenta</DropdownItem>
+                <DropdownItem
+                  onClick={() => this.props.history.push('/app/cuenta')}
+                >
+                  Cuenta
+                </DropdownItem>
                 <DropdownItem divider />
                 {isMobile && (
                   <>

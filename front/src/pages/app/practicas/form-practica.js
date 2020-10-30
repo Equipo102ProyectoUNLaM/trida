@@ -5,6 +5,7 @@ import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 import { formPracticaSchema } from './validations';
 import { storage } from 'helpers/Firebase';
+import { FormikDatePicker } from 'containers/form-validations/FormikFields';
 import FileUploader from 'react-firebase-file-uploader';
 
 class FormPractica extends React.Component {
@@ -45,8 +46,8 @@ class FormPractica extends React.Component {
       this.setState({
         nombre,
         descripcion,
-        fechaLanzada,
-        fechaVencimiento,
+        fechaLanzada: fechaLanzada.toDate(),
+        fechaVencimiento: fechaVencimiento.toDate(),
         file: idArchivo,
         estado,
       });
@@ -163,7 +164,7 @@ class FormPractica extends React.Component {
         onSubmit={this.onPracticaSubmit}
         validationSchema={formPracticaSchema}
       >
-        {({ errors, touched }) => (
+        {({ values, setFieldValue, setFieldTouched, errors, touched }) => (
           <Form className="av-tooltip tooltip-label-right">
             <FormGroup className="mb-3 error-l-150">
               <Label>Nombre de la practica</Label>
@@ -195,12 +196,13 @@ class FormPractica extends React.Component {
 
             <FormGroup className="mb-3 error-l-100">
               <Label>Fecha Lanzada</Label>
-              <Field
-                autoComplete="off"
-                className="form-control"
+              <FormikDatePicker
+                practicaPicker
                 name="fechaLanzada"
-                type="date"
-                placeholder="DD/MM/AAAA"
+                value={values.fechaLanzada}
+                placeholder="Ingrese la fecha de lanzamiento"
+                onChange={setFieldValue}
+                onBlur={setFieldTouched}
               />
               {errors.fechaLanzada && touched.fechaLanzada && (
                 <div className="invalid-feedback d-block">
@@ -211,12 +213,13 @@ class FormPractica extends React.Component {
 
             <FormGroup className="mb-3 error-l-125">
               <Label>Fecha Vencimiento</Label>
-              <Field
-                autoComplete="off"
-                className="form-control"
+              <FormikDatePicker
+                practicaPicker
                 name="fechaVencimiento"
-                type="date"
-                placeholder="DD/MM/AAAA"
+                value={values.fechaVencimiento}
+                placeholder="Ingrese la fecha de vencimiento"
+                onChange={setFieldValue}
+                onBlur={setFieldTouched}
               />
               {errors.fechaVencimiento && touched.fechaVencimiento && (
                 <div className="invalid-feedback d-block">

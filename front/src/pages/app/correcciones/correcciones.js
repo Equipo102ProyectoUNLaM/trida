@@ -240,6 +240,7 @@ class Correcciones extends Component {
                     }
                     estado={correccion.data.estado}
                     file={correccion.data.url}
+                    tipo={correccion.data.tipo}
                     onCorrection={rolDocente ? this.onCorrection : null}
                     onVerCorrection={this.onVerCorrection}
                     isSelect={this.state.selectedItems.includes(correccion.id)}

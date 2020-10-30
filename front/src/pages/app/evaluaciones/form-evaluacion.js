@@ -321,6 +321,7 @@ class FormEvaluacion extends React.Component {
                 <FormGroup className="mb-3 error-l-150">
                   <Label>Fecha y Hora de Publicación</Label>
                   <FormikDatePicker
+                    showTimeSelect
                     name="fecha_publicacion"
                     value={values.fecha_publicacion}
                     placeholder="Ingrese la fecha de publicación de la evaluación"
@@ -338,6 +339,7 @@ class FormEvaluacion extends React.Component {
                 <FormGroup className="mb-3 error-l-150">
                   <Label>Fecha y Hora de Finalización</Label>
                   <FormikDatePicker
+                    showTimeSelect
                     name="fecha_finalizacion"
                     value={values.fecha_finalizacion}
                     placeholder="Ingrese la fecha de finalización de la evaluación"

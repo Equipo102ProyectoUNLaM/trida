@@ -39,9 +39,10 @@ class DataListView extends React.Component {
 
   handleClick = async (date) => {
     if (date) {
-      const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
+      const obj = { fechaVencimiento: new Date(date) };
       if (date) {
         await editDocument('practicas', this.props.id, obj, 'Práctica editada');
+        this.props.getPracticas();
       }
     }
   };
@@ -79,7 +80,9 @@ class DataListView extends React.Component {
       seLanzo,
       entregada,
       noEntregada,
+      tipo,
     } = this.props;
+
     return (
       <Colxx xxs="12" className="mb-3" id={id}>
         <ContextMenuTrigger id="menu_id" data={id} collect={collect}>
@@ -134,7 +137,7 @@ class DataListView extends React.Component {
                           key={id + 'badge'}
                           color="primary"
                           pill
-                          className="badge-data-list mt-1 mb-1"
+                          className="badge-data-list"
                         >
                           {estado.toUpperCase()}
                         </Badge>
@@ -181,9 +184,11 @@ class DataListView extends React.Component {
                               onClick={() => this.onDownloadFile(file)}
                               size="sm"
                               color="primary"
-                              className="button datalist-button mt-1 mb-1"
+                              className="button datalist-button"
                             >
-                              Descargar Práctica
+                              {tipo === 'practica'
+                                ? 'Descargar Práctica'
+                                : 'Descargar Evaluación'}
                             </Button>
                           )}
                           {onUploadFile && (
@@ -192,7 +197,7 @@ class DataListView extends React.Component {
                               onClick={() => onUploadFile(id)}
                               size="sm"
                               color="primary"
-                              className="button datalist-button mt-1 mb-1"
+                              className="button datalist-button"
                             >
                               Subir Práctica
                             </Button>
@@ -204,7 +209,7 @@ class DataListView extends React.Component {
                               onClick={() => onCorrection(id, idArchivo, file)}
                               size="sm"
                               color="primary"
-                              className="button datalist-button mt-1 mb-1"
+                              className="button datalist-button"
                             >
                               Corregir
                             </Button>
@@ -215,7 +220,7 @@ class DataListView extends React.Component {
                               onClick={() => onVerCorrection(id, idArchivo)}
                               size="sm"
                               color="primary"
-                              className="button datalist-button mt-1 mb-1"
+                              className="button datalist-button"
                               disabled={estado === 'Corregido' ? false : true}
                             >
                               Ver Corrección

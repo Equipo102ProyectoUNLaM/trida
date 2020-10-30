@@ -139,6 +139,7 @@ class FormEvaluacionOral extends React.Component {
             <FormGroup className="mb-3 error-l-125">
               <Label>Fecha Evaluación</Label>
               <FormikDatePicker
+                showTimeSelect
                 name="fecha_evaluacion"
                 value={values.fecha_evaluacion}
                 autoComplete="off"

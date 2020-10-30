@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Row, Button, Badge } from 'reactstrap';
+import firebase from 'firebase/app';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { injectIntl } from 'react-intl';
@@ -12,7 +13,7 @@ import FormSubirPractica from './form-subir-practica';
 import DataListView from 'containers/pages/DataListView';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
-import { getFormattedDate, isEmpty } from 'helpers/Utils';
+import { getDateTimeStringFromDate, isEmpty } from 'helpers/Utils';
 import { storage } from 'helpers/Firebase';
 import { isMobile } from 'react-device-detect';
 import * as _moment from 'moment';
@@ -45,7 +46,9 @@ class Practica extends Component {
     };
   }
 
-  getPracticas = async (materiaId) => {
+  getPracticas = async () => {
+    const materiaId = this.props.subject.id;
+
     let filtros = [
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
@@ -55,16 +58,16 @@ class Practica extends Component {
       filtros.push({
         field: 'fechaLanzada',
         operator: '<=',
-        id: new Date().toISOString().slice(0, 10),
+        id: firebase.firestore.Timestamp.now(),
       });
     }
 
     const arrayDeObjetos = await getCollection('practicas', filtros, false);
-
     let practicasActuales = arrayDeObjetos.filter((elem) => {
-      return moment(elem.data.fechaVencimiento).isAfter(moment(new Date()));
+      return moment(elem.data.fechaVencimiento.toDate()).isAfter(
+        moment(new Date())
+      );
     });
-
     this.dataListRenderer(practicasActuales);
   };
 
@@ -73,7 +76,7 @@ class Practica extends Component {
       {
         field: 'fechaVencimiento',
         operator: '<',
-        id: new Date().toISOString().slice(0, 10),
+        id: firebase.firestore.Timestamp.now(),
       },
       { field: 'idMateria', operator: '==', id: materiaId },
       { field: 'activo', operator: '==', id: true },
@@ -199,8 +202,9 @@ class Practica extends Component {
   };
 
   normalizarFecha = (fecha) => {
-    const fechaNormal = fecha.split('-');
-    return fechaNormal[2] + fechaNormal[1] + fechaNormal[0];
+    let fechaNormal = getDateTimeStringFromDate(fecha).split(' ')[0];
+    fechaNormal = fechaNormal.replace(/\//g, '');
+    return fechaNormal;
   };
 
   normalizarNombre = (nombre) => {
@@ -380,6 +384,56 @@ class Practica extends Component {
                 )}
               </Badge>
             </Colxx>
+            {!isEmpty(items) &&
+              items.map((practica) => {
+                return (
+                  <DataListView
+                    key={practica.id + 'dataList'}
+                    id={practica.id}
+                    title={practica.data.nombre}
+                    text1={
+                      'Fecha de publicación: ' +
+                      getDateTimeStringFromDate(
+                        practica.data.fechaLanzada,
+                        'DD/MM/YYYY'
+                      )
+                    }
+                    text2={
+                      'Fecha de entrega: ' +
+                      getDateTimeStringFromDate(
+                        practica.data.fechaVencimiento,
+                        'DD/MM/YYYY'
+                      )
+                    }
+                    file={practica.data.url}
+                    isSelect={this.state.selectedItems.includes(practica.id)}
+                    onEditItem={
+                      rolDocente && !oldPracticesActive
+                        ? this.toggleEditModal
+                        : null
+                    }
+                    onDelete={
+                      rolDocente && !oldPracticesActive ? this.onDelete : null
+                    }
+                    onUploadFile={
+                      rol === ROLES.Alumno && !oldPracticesActive
+                        ? this.toggleUploadFileModal
+                        : null
+                    }
+                    navTo="#"
+                    collect={collect}
+                    calendario={
+                      rolDocente && !oldPracticesActive ? true : false
+                    }
+                    entregada={practica.entregada ? true : false}
+                    noEntregada={
+                      !practica.entregada && oldPracticesActive ? true : false
+                    }
+                    getPracticas={this.getPracticas}
+                    tipo="practica"
+                  />
+                );
+              })}{' '}
           </Row>
           {!isEmpty(items) &&
             items.map((practica) => {

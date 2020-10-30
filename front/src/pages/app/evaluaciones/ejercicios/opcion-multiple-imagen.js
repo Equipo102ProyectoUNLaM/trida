@@ -133,7 +133,7 @@ class OpcionMultipleImagen extends React.Component {
                     <img
                       src={op.opcion}
                       alt="img"
-                      className="image-preview"
+                      className="image-preview "
                     ></img>
                     <Colxx xxs="1" className="icon-container">
                       <div
@@ -176,7 +176,11 @@ class OpcionMultipleImagen extends React.Component {
                   />
                 </Colxx>
                 <Colxx xxs="10" className="flex">
-                  <img className="image-preview" alt="img" src={op.opcion} />
+                  <img
+                    className="image-preview img-opcion-multiple"
+                    alt="img"
+                    src={op.opcion}
+                  />
                   <Colxx xxs="1" className="icon-container">
                     <div
                       className="margin-auto"
@@ -244,7 +248,7 @@ class OpcionMultipleImagen extends React.Component {
                     {op.opcion && (
                       <Fragment>
                         <img
-                          className="image-preview"
+                          className="image-preview "
                           alt="img"
                           src={op.opcion}
                         />
