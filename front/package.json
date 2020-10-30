@@ -53,6 +53,7 @@
     "react-dom": "^16.13.1",
     "react-dropzone-component": "^3.2.0",
     "react-firebase-file-uploader": "^2.4.3",
+    "react-flexbox-grid": "^2.1.2",
     "react-google-maps": "^9.4.5",
     "react-hook-form": "^6.0.1",
     "react-id-swiper": "^4.0.0",
