@@ -8428,6 +8428,11 @@ i.large-icon {
     text-align: center;
   }
 
+  .icon-white-calendar{
+    font-size: 1rem !important;
+    color: white !important;
+  }
+
   .ReactTable .rt-resizer {
     right: initial;
     left: -18px;
@@ -9579,6 +9584,11 @@ tr.folder {
 
 .practicas-list-label {
   width: 50%;
+  @include respond-below (md)
+  {
+    width: 100%;
+    padding: 0 !important;
+  }
 }
 
 .row-filtro-fechas {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Card, Row, Button, Badge } from 'reactstrap';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
@@ -9,6 +9,8 @@ import { injectIntl } from 'react-intl';
 import { editDocument } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
+import AccionesMobile from 'components/common/AccionesMobile';
 
 class DataListView extends React.Component {
   constructor(props) {
@@ -183,24 +185,54 @@ class DataListView extends React.Component {
                           Ver Corrección
                         </Button>
                       )}
-                      {onEditItem && (
-                        <div
-                          className="glyph-icon simple-icon-pencil edit-action-icon"
-                          onClick={() => onEditItem(id)}
-                        />
-                      )}
-                      {onDelete && (
-                        <div
-                          className="glyph-icon simple-icon-trash delete-action-icon"
-                          onClick={this.handleClickDelete}
-                        />
-                      )}
-                      {calendario && (
-                        <Calendario
-                          handleClick={this.handleClick}
-                          text="Modificar fecha de entrega"
-                          evalCalendar={false}
-                        />
+
+                      {isMobile ? (
+                        <Fragment>
+                          <AccionesMobile
+                            leftIcon={
+                              onEditItem
+                                ? 'glyph-icon simple-icon-pencil'
+                                : null
+                            }
+                            leftIconToggle={() => onEditItem(id)}
+                            middleIcon={
+                              onDelete ? 'glyph-icon simple-icon-trash' : null
+                            }
+                            middleIconToggle={this.handleClickDelete}
+                            rightIconCalendar={
+                              calendario ? (
+                                <Calendario
+                                  handleClick={this.handleClick}
+                                  text="Modificar fecha de entrega"
+                                  evalCalendar={false}
+                                  iconClass="icon-white-calendar"
+                                />
+                              ) : null
+                            }
+                          />
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          {onEditItem && (
+                            <div
+                              className="glyph-icon simple-icon-pencil edit-action-icon"
+                              onClick={() => onEditItem(id)}
+                            />
+                          )}
+                          {onDelete && (
+                            <div
+                              className="glyph-icon simple-icon-trash delete-action-icon"
+                              onClick={this.handleClickDelete}
+                            />
+                          )}
+                          {calendario && (
+                            <Calendario
+                              handleClick={this.handleClick}
+                              text="Modificar fecha de entrega"
+                              evalCalendar={false}
+                            />
+                          )}
+                        </Fragment>
                       )}
                     </Row>
                   </div>

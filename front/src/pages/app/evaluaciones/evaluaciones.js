@@ -379,7 +379,7 @@ class Evaluaciones extends Component {
                   filterCalendar={true}
                   id="fechasFilter"
                 />
-                Filtro por Fechas
+                <span className="ml-2">Filtro por Fechas</span>
                 {filtroFecha && (
                   <>
                     {' '}

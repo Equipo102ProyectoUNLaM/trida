@@ -52,6 +52,7 @@ class Calendario extends React.Component {
       timeFormat,
       timeCaption,
       timeIntervals,
+      iconClass,
     } = this.props;
     const classText = evalCalendar ? '-eval' : '';
     const filterText = filterCalendar ? '-filter' : '';
@@ -60,6 +61,7 @@ class Calendario extends React.Component {
         <div
           className={
             'glyph-icon simple-icon-calendar set-date-action-icon' +
+            iconClass +
             classText +
             filterText +
             ' relative'

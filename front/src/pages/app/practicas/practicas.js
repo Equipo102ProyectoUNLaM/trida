@@ -365,13 +365,14 @@ class Practica extends Component {
                   filterCalendar={true}
                   id="fechasFilter"
                 />
-                Filtro por Fechas
+                <span className="ml-2">Filtro por Fechas</span>
+
                 {filtroFecha && (
                   <>
                     {' '}
                     - {filtroFecha}
                     <Button
-                      className="delete-filter "
+                      className="delete-filter"
                       onClick={this.handleFiltroDelete}
                       close
                     />
