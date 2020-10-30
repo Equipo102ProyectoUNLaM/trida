@@ -7,10 +7,6 @@ import { Colxx } from './CustomBootstrap';
 class AccionesMobile extends Component {
   constructor(props) {
     super();
-    this.state = {
-      dropdownSplitOpen: false,
-      displayOptionsIsOpen: false,
-    };
   }
 
   render() {
@@ -25,11 +21,15 @@ class AccionesMobile extends Component {
       lastIcon,
       lastIconToggle,
     } = this.props;
-    return (
+    return leftIcon ||
+      middleIcon ||
+      rightIcon ||
+      rightIconCalendar ||
+      lastIcon ? (
       <Row className="m-auto" style={{ textAlign: 'center' }}>
         <Colxx xxs="12">
           <ButtonGroup className="m-auto">
-            {leftIcon && (
+            {leftIcon && leftIconToggle && (
               <Button
                 color="primary"
                 style={{ height: '3rem' }}
@@ -38,7 +38,7 @@ class AccionesMobile extends Component {
                 <div style={{ fontSize: '1rem' }} className={leftIcon} />
               </Button>
             )}
-            {middleIcon && (
+            {middleIcon && middleIconToggle && (
               <Button
                 color="primary"
                 style={{ height: '3rem' }}
@@ -48,7 +48,7 @@ class AccionesMobile extends Component {
                 <div style={{ fontSize: '1rem' }} className={middleIcon} />
               </Button>
             )}
-            {rightIcon && (
+            {rightIcon && rightIconToggle && (
               <Button
                 color="primary"
                 style={{ height: '3rem' }}
@@ -69,7 +69,7 @@ class AccionesMobile extends Component {
                 {rightIconCalendar}
               </Button>
             )}
-            {lastIcon && (
+            {lastIcon && lastIconToggle && (
               <Button
                 color="primary"
                 style={{ height: '3rem' }}
@@ -86,6 +86,8 @@ class AccionesMobile extends Component {
           </ButtonGroup>
         </Colxx>
       </Row>
+    ) : (
+      ''
     );
   }
 }

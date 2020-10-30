@@ -435,46 +435,6 @@ class Practica extends Component {
                 );
               })}{' '}
           </Row>
-          {!isEmpty(items) &&
-            items.map((practica) => {
-              return (
-                <DataListView
-                  key={practica.id + 'dataList'}
-                  id={practica.id}
-                  title={practica.data.nombre}
-                  text1={
-                    'Fecha de publicación: ' +
-                    getFormattedDate(practica.data.fechaLanzada)
-                  }
-                  text2={
-                    'Fecha de entrega: ' +
-                    getFormattedDate(practica.data.fechaVencimiento)
-                  }
-                  file={practica.data.url}
-                  isSelect={this.state.selectedItems.includes(practica.id)}
-                  onEditItem={
-                    rolDocente && !oldPracticesActive
-                      ? this.toggleEditModal
-                      : null
-                  }
-                  onDelete={
-                    rolDocente && !oldPracticesActive ? this.onDelete : null
-                  }
-                  onUploadFile={
-                    rol === ROLES.Alumno && !oldPracticesActive
-                      ? this.toggleUploadFileModal
-                      : null
-                  }
-                  navTo="#"
-                  collect={collect}
-                  calendario={rolDocente && !oldPracticesActive ? true : false}
-                  entregada={practica.entregada ? true : false}
-                  noEntregada={
-                    !practica.entregada && oldPracticesActive ? true : false
-                  }
-                />
-              );
-            })}{' '}
           {isEmpty(items) && (
             <Row className="ml-0">
               <span>No hay prácticas</span>
