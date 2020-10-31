@@ -110,24 +110,22 @@ class ModalAsociarContenidos extends React.Component {
         )}
         <Separator className="mb-5" />
         <Row className="button-group">
+          <Button
+            onClick={toggleModalContenidos}
+            className="button"
+            color="primary"
+          >
+            Cancelar
+          </Button>
           {!isEmpty(files) && (
             <Button
               onClick={this.editContenidos}
               className="button"
               color="primary"
-              size="lg"
             >
               Asociar Contenidos
             </Button>
           )}
-          <Button
-            onClick={toggleModalContenidos}
-            className="button"
-            color="primary"
-            size="lg"
-          >
-            Cancelar
-          </Button>
         </Row>
       </>
     );

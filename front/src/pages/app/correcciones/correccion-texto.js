@@ -221,15 +221,15 @@ const CorreccionTexto = ({ subject, rol }) => {
       <div className="webviewer" ref={viewer}></div>
       {!verCorr && rol !== ROLES.Alumno && (
         <Row className="button-group">
-          <Button color="primary" className="button" id="guardar">
-            Enviar Corrección
-          </Button>
           <Button
             className="button"
             id="cancelar"
             onClick={() => history.push('/app/correcciones')}
           >
             Cancelar
+          </Button>
+          <Button color="primary" className="button" id="guardar">
+            Enviar Corrección
           </Button>
         </Row>
       )}
@@ -282,19 +282,19 @@ const CorreccionTexto = ({ subject, rol }) => {
           </ModalBody>
           <ModalFooter>
             <Button
+              color="secondary"
+              size="sm"
+              onClick={handleCancelarConfirmacion}
+            >
+              Cancelar
+            </Button>
+            <Button
               color="primary"
               size="sm"
               onClick={confirmarCorreccion}
               disabled={estadoCorreccion ? false : true}
             >
               Confirmar
-            </Button>
-            <Button
-              color="secondary"
-              size="sm"
-              onClick={handleCancelarConfirmacion}
-            >
-              Cancelar
             </Button>
           </ModalFooter>
         </Modal>

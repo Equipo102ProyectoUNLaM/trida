@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   Row,
   Card,
@@ -11,6 +11,7 @@ import {
   Badge,
   TabPane,
   Button,
+  ButtonGroup,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { editDocument } from 'helpers/Firebase-db';
@@ -22,6 +23,8 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
 import { timeStamp } from 'helpers/Firebase';
+import { isMobile } from 'react-device-detect';
+import AccionesMobile from 'components/common/AccionesMobile';
 
 class CardTabs extends Component {
   constructor(props) {
@@ -178,18 +181,27 @@ class CardTabs extends Component {
                           <Row>
                             <Colxx xxs="12" xs="8" lg="8">
                               <CardTitle className="mb-4">
-                                {data.base.nombre}
+                                <h2>{data.base.nombre}</h2>
                               </CardTitle>
                               {data.base.descripcion && (
-                                <p className="mb-4">{data.base.descripcion}</p>
+                                <p className="mb-4 text-muted">
+                                  {data.base.descripcion}
+                                </p>
                               )}
                               {!data.base.descripcion && (
-                                <p className="mb-4">Sin descripción</p>
+                                <p className="mb-4 text-muted">
+                                  Sin descripción
+                                </p>
                               )}
                             </Colxx>
                             <Colxx xxs="12" xs="4" lg="4">
                               <div className="dropdown-calendar flex">
-                                <p>Fecha y Hora de Publicación&nbsp;</p>
+                                <p>
+                                  {isMobile
+                                    ? 'Publicación'
+                                    : 'Fecha y Hora de Publicación'}{' '}
+                                  &nbsp;
+                                </p>
                                 {rolDocente && !this.props.isOldTest && (
                                   <Calendario
                                     handleClick={
@@ -215,7 +227,12 @@ class CardTabs extends Component {
                                 )}
                               </div>
                               <div className="dropdown-calendar flex">
-                                <p>Fecha y Hora de Finalización&nbsp;</p>
+                                <p>
+                                  {isMobile
+                                    ? 'Finalización'
+                                    : 'Fecha y Hora de Finalización'}{' '}
+                                  &nbsp;
+                                </p>
                                 {rolDocente && !this.props.isOldTest && (
                                   <Calendario
                                     handleClick={
@@ -242,53 +259,94 @@ class CardTabs extends Component {
                               </div>
                             </Colxx>
                           </Row>
-                          <Row className="button-group">
-                            {rolDocente && !this.props.isOldTest && (
-                              <Button
-                                outline
-                                onClick={this.handleClickEdit}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Editar Evaluación
-                              </Button>
+                          <Row className="button-group mb-4">
+                            {isMobile ? (
+                              <Fragment>
+                                {!rolDocente &&
+                                !entregada &&
+                                !this.props.isOldTest ? (
+                                  <Button
+                                    outline
+                                    onClick={this.handleClickMake}
+                                    size="sm"
+                                    color="primary"
+                                    className="button mt-2"
+                                  >
+                                    Realizar Evaluación
+                                  </Button>
+                                ) : (
+                                  <AccionesMobile
+                                    leftIcon={
+                                      rolDocente && !this.props.isOldTest
+                                        ? 'glyph-icon simple-icon-pencil'
+                                        : null
+                                    }
+                                    leftIconToggle={this.handleClickEdit}
+                                    middleIcon={
+                                      rolDocente && !this.props.isOldTest
+                                        ? 'glyph-icon simple-icon-trash'
+                                        : null
+                                    }
+                                    middleIconToggle={this.handleClickDelete}
+                                    rightIcon={
+                                      rolDocente
+                                        ? 'glyph-icon simple-icon-share-alt'
+                                        : null
+                                    }
+                                    rightIconToggle={this.handleClickExport}
+                                  />
+                                )}
+                              </Fragment>
+                            ) : (
+                              <Fragment>
+                                {rolDocente && !this.props.isOldTest && (
+                                  <Button
+                                    outline
+                                    onClick={this.handleClickEdit}
+                                    size="sm"
+                                    color="primary"
+                                    className="button mt-2"
+                                  >
+                                    Editar Evaluación
+                                  </Button>
+                                )}
+                                {rolDocente && !this.props.isOldTest && (
+                                  <Button
+                                    outline
+                                    onClick={this.handleClickDelete}
+                                    size="sm"
+                                    color="primary"
+                                    className="button mt-2"
+                                  >
+                                    Borrar Evaluación
+                                  </Button>
+                                )}
+                                {rolDocente && (
+                                  <Button
+                                    outline
+                                    onClick={this.handleClickExport}
+                                    size="sm"
+                                    color="primary"
+                                    className="button mt-2"
+                                  >
+                                    Exportar Evaluación
+                                  </Button>
+                                )}
+                                {!rolDocente &&
+                                  !entregada &&
+                                  !this.props.isOldTest && (
+                                    <Button
+                                      outline
+                                      onClick={this.handleClickMake}
+                                      size="sm"
+                                      color="primary"
+                                      className="button mt-2"
+                                    >
+                                      Realizar Evaluación
+                                    </Button>
+                                  )}
+                              </Fragment>
                             )}
-                            {rolDocente && !this.props.isOldTest && (
-                              <Button
-                                outline
-                                onClick={this.handleClickDelete}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Borrar Evaluación
-                              </Button>
-                            )}
-                            {rolDocente && (
-                              <Button
-                                outline
-                                onClick={this.handleClickExport}
-                                size="sm"
-                                color="primary"
-                                className="button"
-                              >
-                                Exportar Evaluación
-                              </Button>
-                            )}
-                            {!rolDocente &&
-                              !entregada &&
-                              !this.props.isOldTest && (
-                                <Button
-                                  outline
-                                  onClick={this.handleClickMake}
-                                  size="sm"
-                                  color="primary"
-                                  className="button"
-                                >
-                                  Realizar Evaluación
-                                </Button>
-                              )}
                             {!rolDocente && entregada && (
                               <div>
                                 <Badge color="primary" pill className="mb-1">
@@ -326,11 +384,11 @@ class CardTabs extends Component {
                               ))}
                             </ol>
                           )}
-                          <Row className="button-group">
+                          <Row className="button-group w-100">
                             <Button
                               outline
                               size="sm"
-                              color="primary"
+                              color="primary mt-2"
                               onClick={this.handleClickVistaPrevia}
                             >
                               Vista Previa de Evaluación

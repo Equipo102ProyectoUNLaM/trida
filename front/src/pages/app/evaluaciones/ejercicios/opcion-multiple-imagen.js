@@ -210,7 +210,7 @@ class OpcionMultipleImagen extends React.Component {
         )}
 
         {!preview && !resolve && (
-          <div>
+          <div className="mb-3">
             <div className="rta-libre-container">
               <FormGroup className="error-l-75">
                 <Label>Pregunta</Label>

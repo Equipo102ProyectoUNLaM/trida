@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Row, Card, CardBody, CardTitle, CardImg, CardText } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
+import { isMobile } from 'react-device-detect';
+import AccionesMobile from 'components/common/AccionesMobile';
 
 const ListaConImagen = ({
   item,
@@ -62,17 +64,28 @@ const ListaConImagen = ({
             </NavLink>
 
             <Row className="button-group">
-              {onEdit && (
-                <div
-                  className="glyph-icon simple-icon-pencil edit-action-icon"
-                  onClick={() => onEdit(item.id)}
+              {isMobile ? (
+                <AccionesMobile
+                  leftIcon={onEdit ? 'glyph-icon simple-icon-pencil' : null}
+                  leftIconToggle={() => onEdit(item.id)}
+                  middleIcon={onDelete ? 'glyph-icon simple-icon-trash' : null}
+                  middleIconToggle={() => onDelete(item.id)}
                 />
-              )}
-              {onDelete && (
-                <div
-                  className="glyph-icon simple-icon-trash delete-action-icon"
-                  onClick={() => onDelete(item.id)}
-                />
+              ) : (
+                <Fragment>
+                  {onEdit && (
+                    <div
+                      className="glyph-icon simple-icon-pencil edit-action-icon"
+                      onClick={() => onEdit(item.id)}
+                    />
+                  )}
+                  {onDelete && (
+                    <div
+                      className="glyph-icon simple-icon-trash delete-action-icon"
+                      onClick={() => onDelete(item.id)}
+                    />
+                  )}
+                </Fragment>
               )}
             </Row>
           </CardBody>

@@ -73,7 +73,7 @@ const ModalAudio = ({
           Para escuchar tu grabación, presioná ▶ al detenerla
         </p>
         <Row className="no-margin-left">
-          <audio src={audioURL} controls />
+          <audio className="mb-4" src={audioURL} controls />
           <Button
             color="primary"
             className="button-margin"
@@ -100,11 +100,11 @@ const ModalAudio = ({
         </Row>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" className="button" onClick={guardarAudio}>
-          Guardar
-        </Button>
         <Button color="primary" className="button" onClick={toggleModal}>
           Cancelar
+        </Button>
+        <Button color="primary" className="button" onClick={guardarAudio}>
+          Guardar
         </Button>
       </ModalFooter>
     </Modal>
