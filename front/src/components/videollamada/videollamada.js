@@ -8,6 +8,11 @@ import {
   Label,
   Input,
   Modal,
+  DropdownToggle,
+  ButtonGroup,
+  DropdownItem,
+  DropdownMenu,
+  ButtonDropdown,
   ModalHeader,
   ModalBody,
   Alert,
@@ -38,6 +43,7 @@ import ContestarPregunta from './contestar-pregunta';
 import classnames from 'classnames';
 import Select from 'react-select';
 import { MINUTOS_OPTIONS, SEGUNDOS_OPTIONS } from 'constants/tiempoPreguntas';
+import { isMobile } from 'react-device-detect';
 
 var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanzada, uso esta var global
 
@@ -83,6 +89,7 @@ const Videollamada = ({
 
   const pizarronURI = '/pizarron';
   const [modalPreguntasOpen, setModalPreguntasOpen] = useState(false);
+  const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [modalPreviewOpen, setModalPreviewOpen] = useState(false);
   const [preguntaALanzar, setPreguntaALanzar] = useState(); // id de la pregunta a lanzar
   const [preguntasOnSnapshot, setPreguntasOnSnapshot] = useState([]);
@@ -119,6 +126,10 @@ const Videollamada = ({
 
   const toggleModalPreguntas = () => {
     setModalPreguntasOpen(!modalPreguntasOpen);
+  };
+
+  const toggleSplit = () => {
+    setDropdownSplitOpen(!dropdownSplitOpen);
   };
 
   const onSelectPregunta = (idPregunta) => {
@@ -282,6 +293,7 @@ const Videollamada = ({
     );
     const asistencia = arrayFiltrado.map((elem) => ({
       ...elem,
+      user: idUser,
       nombre: elem.nombre ? elem.nombre : 'Nombre',
       tiempoNeto: getTimestampDifference(
         elem.timeStampDesconexion,
@@ -421,6 +433,7 @@ const Videollamada = ({
             listaAsistencia.push({
               id,
               nombre: displayName,
+              user: idUser,
               timeStampConexion: moment().format(),
             })
           );
@@ -441,56 +454,130 @@ const Videollamada = ({
   }, [jitsi, userName, password, subject]);
   return (
     <Fragment>
-      <Row className="button-group mb-3 mr-3">
-        <Button
-          className="button relative"
-          color="primary"
-          size="lg"
-          onClick={toggleModalPreguntasRealizadas}
-        >
-          {hayPreguntas && <span className="notificacion-pregunta">.</span>}
-
-          <IntlMessages id="clase.ver-preguntas-realizadas" />
-        </Button>
-        {rol !== ROLES.Alumno && (
-          <>
-            <Button
-              className="button"
-              color="primary"
-              size="lg"
-              onClick={toggleModalPreguntas}
-            >
-              <IntlMessages id="clase.lanzar-pregunta" />
-            </Button>
-            <Button
-              className="button"
-              color="primary"
-              size="lg"
-              onClick={toggleShareScreen}
-            >
-              {shareButtonText}
-            </Button>{' '}
-            <Button
-              className="button"
-              color="primary"
-              size="lg"
-              onClick={abrirPizarron}
-            >
-              <IntlMessages id="pizarron.abrir-pizarron" />
-            </Button>
-          </>
-        )}
-        {rol === ROLES.Alumno && (
+      {isMobile && (
+        <Row className="button-group mb-4">
+          <ButtonGroup className="m-auto">
+            {rol !== ROLES.Alumno && (
+              <Fragment>
+                <Button color="primary" onClick={toggleShareScreen}>
+                  <div
+                    style={{ fontSize: '1rem' }}
+                    className="glyph-icon iconsminds-share"
+                  />
+                </Button>
+                <Button
+                  color="primary"
+                  className="border-left"
+                  onClick={abrirPizarron}
+                >
+                  <div
+                    style={{ fontSize: '1rem' }}
+                    className="glyph-icon iconsminds-blackboard"
+                  />
+                </Button>
+              </Fragment>
+            )}
+            {rol === ROLES.Alumno && (
+              <Fragment>
+                <Button
+                  color="primary"
+                  className="prl-07"
+                  onClick={toggleRealizarPregunta}
+                >
+                  <IntlMessages id="clase.realizar-pregunta" />
+                </Button>
+                <Button
+                  color="primary"
+                  className="border-left prl-07"
+                  onClick={toggleModalPreguntasRealizadas}
+                >
+                  <IntlMessages id="clase.ver-preguntas-realizadas" />
+                  {hayPreguntas && (
+                    <span className="notificacion-pregunta">.</span>
+                  )}
+                </Button>
+              </Fragment>
+            )}
+            {rol !== ROLES.Alumno && (
+              <ButtonDropdown
+                className="border-left"
+                isOpen={dropdownSplitOpen}
+                toggle={toggleSplit}
+              >
+                <DropdownToggle caret color="primary">
+                  Preguntas
+                  {hayPreguntas && (
+                    <span className="notificacion-pregunta">.</span>
+                  )}
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={toggleModalPreguntasRealizadas}>
+                    <IntlMessages id="clase.ver-preguntas-realizadas" />
+                    {hayPreguntas && (
+                      <span className="notificacion-pregunta">.</span>
+                    )}
+                  </DropdownItem>
+                  <DropdownItem onClick={toggleModalPreguntas}>
+                    <IntlMessages id="clase.lanzar-pregunta" />
+                  </DropdownItem>
+                </DropdownMenu>
+              </ButtonDropdown>
+            )}
+          </ButtonGroup>
+        </Row>
+      )}
+      {!isMobile && (
+        <Row className="button-group mb-3 mr-3">
           <Button
-            className="button"
+            className="button relative mt-1"
             color="primary"
             size="lg"
-            onClick={toggleRealizarPregunta}
+            onClick={toggleModalPreguntasRealizadas}
           >
-            <IntlMessages id="clase.realizar-pregunta" />
+            {hayPreguntas && <span className="notificacion-pregunta">.</span>}
+
+            <IntlMessages id="clase.ver-preguntas-realizadas" />
           </Button>
-        )}
-      </Row>
+          {rol !== ROLES.Alumno && (
+            <>
+              <Button
+                className="button mt-1"
+                color="primary"
+                size="lg"
+                onClick={toggleModalPreguntas}
+              >
+                <IntlMessages id="clase.lanzar-pregunta" />
+              </Button>
+              <Button
+                className="button mt-1"
+                color="primary"
+                size="lg"
+                onClick={toggleShareScreen}
+              >
+                {shareButtonText}
+              </Button>{' '}
+              <Button
+                className="button mt-1"
+                color="primary"
+                size="lg"
+                onClick={abrirPizarron}
+              >
+                <IntlMessages id="pizarron.abrir-pizarron" />
+              </Button>
+            </>
+          )}
+          {rol === ROLES.Alumno && (
+            <Button
+              className="button mt-1"
+              color="primary"
+              size="lg"
+              onClick={toggleRealizarPregunta}
+            >
+              <IntlMessages id="clase.realizar-pregunta" />
+            </Button>
+          )}
+        </Row>
+      )}
       {realizarPregunta && (
         <ModalGrande
           modalOpen={realizarPregunta}
@@ -515,6 +602,7 @@ const Videollamada = ({
               onChange={(e) => setPreguntaDeAlumno(e.target.value)}
               className="form-control mt-3"
               name="nombre"
+              autoComplete="off"
             />
           </FormGroup>
           <ModalFooter>
@@ -537,7 +625,7 @@ const Videollamada = ({
             Seleccioná durante cuanto tiempo lanzar la pregunta
           </Label>
           <Row className="mb-3 mr-3">
-            <Colxx xxs="4" md="4">
+            <Colxx xxs="6" xs="6" md="4">
               <Select
                 className="timer-pregunta-clase"
                 classNamePrefix="select"
@@ -551,7 +639,7 @@ const Videollamada = ({
                 isSearchable={true}
               />
             </Colxx>
-            <Colxx xxs="4" md="4">
+            <Colxx xxs="6" xs="6" md="4">
               <Select
                 options={SEGUNDOS_OPTIONS}
                 classNamePrefix="select"

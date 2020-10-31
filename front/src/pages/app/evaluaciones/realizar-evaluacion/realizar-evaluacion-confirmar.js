@@ -67,12 +67,12 @@ class ModalRealizarEvaluacion extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={onConfirm}>
-              COMENZAR EVALUACION
-            </Button>{' '}
             <Button color="secondary" onClick={toggle}>
               CANCELAR
             </Button>
+            <Button color="primary" onClick={onConfirm}>
+              COMENZAR EVALUACION
+            </Button>{' '}
           </ModalFooter>
         </Modal>
       </Fragment>

@@ -25,7 +25,7 @@ const HomePage = () => (
         btnClass="main-nav__btn"
         extraClassName="site-header-one__fixed-top"
       />
-      <MobileMenu />
+      <MobileMenu btnClass="main-nav__btn" />
       <Banner />
       <Services />
       <CTAOne />

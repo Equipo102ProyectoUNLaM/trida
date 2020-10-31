@@ -179,7 +179,7 @@ class Correcciones extends Component {
             buttonText={null}
           />
           <Row>
-            <Colxx xxs="8" md="8">
+            <Colxx xxs="12" xs="12" md="6" lg="8" className="w-xs-100">
               <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
                 <input
                   type="text"
@@ -195,7 +195,13 @@ class Correcciones extends Component {
                 />
               </div>
             </Colxx>
-            <Colxx xxs="4" md="4" className="columna-filtro-badge">
+            <Colxx
+              xxs="12"
+              xs="12"
+              md="6"
+              lg="4"
+              className="columna-filtro-badge"
+            >
               <ButtonGroup className="filtros-button-group">
                 <Button
                   color="secondary"

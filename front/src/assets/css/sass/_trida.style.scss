@@ -66,7 +66,7 @@ $main-menu-item-height: 110px;
 $main-menu-width: 120px;
 $main-menu-width-lg: 110px;
 $main-menu-width-md: 110px;
-$main-menu-width-xs: 90px;
+$main-menu-width-xs: 110px;
 
 $sub-menu-width: 230px;
 $sub-menu-width-lg: 230px;
@@ -358,6 +358,10 @@ hr {
   overflow: hidden;
 }
 
+.break-spaces{
+  white-space: break-spaces;
+}
+
 .no-transition {
   transition: none !important;
 }
@@ -412,6 +416,7 @@ p {
   font-size: 0.85rem;
   line-height: 1.3rem;
   font-family: "Nunito", sans-serif;
+  white-space: break-spaces;
 }
 
 .text-large {
@@ -989,6 +994,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.05rem;
   padding: 0.75rem 2.6rem 0.6rem 2.6rem;
+  white-space: normal;
 }
 
 .btn-sm,
@@ -1296,6 +1302,11 @@ button {
 
 .ml-1 {
   margin-left: 1rem !important;
+}
+
+.prl-07{
+padding-left: 0.7rem;
+padding-right: 0.7rem;
 }
 
 .float-none-xs {
@@ -1829,11 +1840,11 @@ nav .nomargin {
     }
 
     @include respond-below(sm) {
-      width: 80px;
+      width: 7rem;
     }
 
     @include respond-below(xxs) {
-      width: 20px;
+      width: 7rem;
     }
   }
 
@@ -2054,6 +2065,12 @@ nav .nomargin {
   .main,
   .sub {
     fill: $secondary-color;
+  }
+}
+
+.breadcrumb-course{
+  @include respond-below(md) {
+    display: none !important;
   }
 }
 
@@ -3614,7 +3631,7 @@ nav .nomargin {
 
 .ReactTable .rt-tr-group {
   flex: 0 auto;
-  height: 2.3rem;
+  height: auto;
 }
 
 .ReactTable .list-item-heading {
@@ -3623,6 +3640,11 @@ nav .nomargin {
 
 .ReactTable .rt-tbody .rt-td {
   border-right: initial;
+}
+
+.ReactTable .rt-td p{
+  white-space: normal !important;
+  margin: 0.5rem
 }
 
 .ReactTable .rt-thead .rt-th.-sort-desc,
@@ -5503,10 +5525,11 @@ input:-webkit-autofill {
 
 .search-sm {
   position: relative;
+  width: 100%;
+  display: grid !important;
 
   input {
     height: 2rem !important;
-    width: 300%;
     height: 2.5rem !important;
     margin-bottom: 1rem;
     background: none;
@@ -8405,6 +8428,11 @@ i.large-icon {
     text-align: center;
   }
 
+  .icon-white-calendar{
+    font-size: 1rem !important;
+    color: white !important;
+  }
+
   .ReactTable .rt-resizer {
     right: initial;
     left: -18px;
@@ -9276,7 +9304,7 @@ to {transform:rotate(360deg);}
 
 // 47 Contenidos
 
-tr.folder{
+tr.folder {
   th { color: transparent; }
   th:after {
     content: "Archivo";
@@ -9453,9 +9481,6 @@ tr.folder{
 }
 
 //49 Correcciones
-div.rendered-file-browser{
-  padding-right: 3rem;
-}
 
 .hide-button {
   display: none;
@@ -9559,6 +9584,11 @@ div.rendered-file-browser{
 
 .practicas-list-label {
   width: 50%;
+  @include respond-below (md)
+  {
+    width: 100%;
+    padding: 0 !important;
+  }
 }
 
 .row-filtro-fechas {
@@ -9576,6 +9606,7 @@ div.rendered-file-browser{
 .columna-filtro-badge {
   display: flex;
   justify-content: flex-end;
+  height: 3rem !important;
 }
 
 .delete-filter {
@@ -9599,7 +9630,7 @@ div.rendered-file-browser{
 }
 
 .badge-data-list {
-  width: 25%;
+  // width: 25%;
   height: 50%;
   margin-right: 2%;
   padding-right: 1.25rem;
@@ -9612,7 +9643,7 @@ div.rendered-file-browser{
 
 
 .badge-correccion {
-  width: 15%;
+  // width: 15%;
   height: 50%;
   margin-right: 2%;
   margin-left: 1%;
@@ -9672,7 +9703,9 @@ div.rendered-file-browser{
     align-items: center;
     margin-bottom: 10px;
     font-size: 12px !important;
-    flex-wrap: unset;
+    flex-wrap: wrap;
+    margin: 0.5rem;
+    place-content: space-between;
 }
 
 .public-DraftEditorPlaceholder-inner {
@@ -10262,16 +10295,24 @@ div.rendered-file-browser{
   cursor: pointer;
 }
 
-.Aprobado{
+.Aprobado, .Presente{
   color: rgb(39, 153, 39) !important;
 }
 
-.Desaprobado{
+.Desaprobado, .Ausente{
   color: rgb(248, 73, 73) !important;
 }
 
 .Reentrega{
   color: orange !important;
+}
+
+.NoCorregido {
+  color: orange !important;
+}
+
+.titulo-asistencia {
+  margin: 1rem 0 1rem 1rem;
 }
 
 // Cuenta

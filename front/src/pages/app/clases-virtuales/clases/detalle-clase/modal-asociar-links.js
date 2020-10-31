@@ -158,21 +158,11 @@ class ModalAsociarLinks extends React.Component {
           })}
         <Separator className="mb-5" />
         <Row className="button-group">
-          <Button
-            onClick={this.editLinks}
-            className="button"
-            color="primary"
-            size="lg"
-          >
-            Guardar
-          </Button>
-          <Button
-            onClick={toggleModalLinks}
-            className="button"
-            color="primary"
-            size="lg"
-          >
+          <Button onClick={toggleModalLinks} className="button" color="primary">
             Cancelar
+          </Button>
+          <Button onClick={this.editLinks} className="button" color="primary">
+            Guardar
           </Button>
         </Row>
       </>

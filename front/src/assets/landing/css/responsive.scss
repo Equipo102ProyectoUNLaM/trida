@@ -1,4 +1,12 @@
 .landing-page {
+
+  @media (max-width: 1285px){
+    .menu-btn{
+      padding-left: 0.8rem;
+      padding-right: 0.8rem;
+    }
+  }
+
   @media (max-width: 1199px) {
     .site-header-one .container-fluid {
       padding-top: 20px;
@@ -11,6 +19,10 @@
     }
   
     .site-header-one .main-nav__main-navigation {
+      display: none;
+    }
+
+    .main-nav__right{
       display: none;
     }
   

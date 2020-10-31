@@ -73,11 +73,11 @@ const ModalVideo = ({
         />
       </ModalBody>
       <ModalFooter className="modal-video-footer">
-        <Button color="primary" className="button" onClick={guardarVideo}>
-          Guardar
-        </Button>
         <Button color="primary" className="button" onClick={toggleModal}>
           Cancelar
+        </Button>
+        <Button color="primary" className="button" onClick={guardarVideo}>
+          Guardar
         </Button>
       </ModalFooter>
     </Modal>
