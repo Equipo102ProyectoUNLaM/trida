@@ -116,7 +116,7 @@ module.exports = {
   'menu.practicas': 'Mis Reportes de Practicas',
   'menu.my-reportes-evaluaciones': 'Mis Reportes de Evaluaciones',
   'menu.my-reportes-generales': 'Mis Reportes de Generales',
-  'menu.mi-reporte': 'Mi Reporte',
+  'menu.mi-reporte': 'Mi Planilla',
   'menu.ayuda': 'Ayuda',
   'menu.mi-cuenta': 'Mi Cuenta',
 

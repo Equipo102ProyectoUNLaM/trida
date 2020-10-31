@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import { Input, Button, Card } from 'reactstrap';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
+import moment from 'moment';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
-import { createRandomString } from 'helpers/Utils';
+import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 export const Columna = ({ data, colData, borrarColumna }) => {
   return (
@@ -23,6 +25,7 @@ export const Columna = ({ data, colData, borrarColumna }) => {
               name="tema"
               placeholder="Ingrese un valor"
             />
+            <Separator />
           </>
         ))}
         <i
@@ -63,16 +66,26 @@ class MiReporte extends Component {
   };
 
   toggleAgregarColumna = () => {
-    this.setState({
-      inputAgregarColumna: !this.state.inputAgregarColumna,
-      nombreColumna: '',
-    });
+    if (this.state.columnas.length < 6) {
+      this.setState({
+        inputAgregarColumna: !this.state.inputAgregarColumna,
+        nombreColumna: '',
+      });
+    } else {
+      enviarNotificacionError('No se pueden agregar mas de 6 columnas', 'Ups!');
+    }
   };
 
   handleChange = (event) => {
     this.setState({
       nombreColumna: event.target.value,
     });
+  };
+
+  handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      this.onAgregarColumna();
+    }
   };
 
   onAgregarColumna = () => {
@@ -99,21 +112,31 @@ class MiReporte extends Component {
     });
   };
 
-  toggleIconoBorrar = (style) => {
-    const { columnas } = this.state;
+  toggleIconoBorrar = (visibility, display, overflow) => {
+    const { columnas, alumnosData } = this.state;
+
+    const y = document.getElementById('datos-materia');
+    if (y) y.style.display = display;
 
     columnas.forEach((col) => {
       const x = document.getElementById('borrar-columna' + col.id);
 
       if (x) {
-        x.style.visibility = style;
+        x.style.visibility = visibility;
+      }
+    });
+
+    alumnosData.forEach((alu) => {
+      const x = document.getElementById('nombre-alumno' + alu.id);
+      if (x) {
+        x.style.overflow = overflow;
       }
     });
   };
 
   exportarPdf = async () => {
     this.setState({ isLoading: true });
-    this.toggleIconoBorrar('hidden');
+    this.toggleIconoBorrar('hidden', 'block', 'visible');
 
     const encabezado = document.getElementById('encabezadoAImprimir');
 
@@ -141,8 +164,12 @@ class MiReporte extends Component {
         heightLeft -= pageHeight;
       }
 
-      pdf.save('reporte.pdf');
-      this.toggleIconoBorrar('visible');
+      pdf.save(
+        `MiPlanilla-${this.props.subject.name}-${
+          this.props.course.name
+        }-${moment().format('DD-MM-YYYY')}`
+      );
+      this.toggleIconoBorrar('visible', 'none', 'scroll');
       this.setState({ isLoading: false });
     });
   };
@@ -192,6 +219,7 @@ class MiReporte extends Component {
                 name="nombreCol"
                 className="input-columna"
                 placeholder="Ingrese nombre de columna"
+                onKeyPress={this.handleKeyPress}
               />
               <div className="icon-columna">
                 <i
@@ -206,36 +234,56 @@ class MiReporte extends Component {
             </>
           )}
         </Row>
-        <Grid id="encabezadoAImprimir" className="flex container">
-          <Card className="no-width ml-0 pr-4">
-            <Col className="mb-2 pl-3">
-              <div className="flex justify-center">
-                <span className="header">Alumnos</span>
-              </div>
-              {alumnosData.map((alumno) => (
-                <Row className="col-alumno" key={alumno.id}>
-                  {alumno.nombre}
-                </Row>
-              ))}
-            </Col>
-          </Card>
-          {columnas.map((columna) => (
-            <Columna
-              key={columna.id}
-              data={alumnosData}
-              colData={columna}
-              borrarColumna={this.borrarColumna}
-            />
-          ))}
-        </Grid>
+        <div id="encabezadoAImprimir">
+          <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
+            <h2>Mi Planilla</h2>
+            <span>Fecha: {getFechaHoraActual()}</span>
+            <br />
+            <span>
+              Materia: {this.props.subject.name} - {this.props.course.name} -{' '}
+              {this.props.institution.name}
+            </span>
+            <br />
+            <br />
+          </div>
+          <Grid className="flex container">
+            <Card className="no-width ml-0 pr-4">
+              <Col className="mb-2 pl-3">
+                <div className="flex justify-center">
+                  <span className="header">Alumnos</span>
+                </div>
+                {alumnosData.map((alumno) => (
+                  <>
+                    <Row
+                      id={'nombre-alumno' + alumno.id}
+                      className="col-alumno truncate"
+                      key={alumno.id}
+                    >
+                      {alumno.nombre}
+                    </Row>
+                    <Separator className="mt-1" />
+                  </>
+                ))}
+              </Col>
+            </Card>
+            {columnas.map((columna) => (
+              <Columna
+                key={columna.id}
+                data={alumnosData}
+                colData={columna}
+                borrarColumna={this.borrarColumna}
+              />
+            ))}
+          </Grid>
+        </div>
       </div>
     );
   }
 }
 
 const mapStateToProps = ({ seleccionCurso }) => {
-  const { subject } = seleccionCurso;
-  return { subject };
+  const { subject, course, institution } = seleccionCurso;
+  return { subject, course, institution };
 };
 
 export default connect(mapStateToProps)(MiReporte);
