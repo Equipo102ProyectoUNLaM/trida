@@ -23,7 +23,6 @@ export const Columna = ({ data, colData, borrarColumna }) => {
               key={colData.id}
               autoComplete="off"
               name="tema"
-              placeholder="Ingrese un valor"
             />
             <Separator />
           </>
@@ -66,13 +65,16 @@ class MiReporte extends Component {
   };
 
   toggleAgregarColumna = () => {
-    if (this.state.columnas.length < 6) {
+    if (this.state.columnas.length < 10) {
       this.setState({
         inputAgregarColumna: !this.state.inputAgregarColumna,
         nombreColumna: '',
       });
     } else {
-      enviarNotificacionError('No se pueden agregar mas de 6 columnas', 'Ups!');
+      enviarNotificacionError(
+        'No se pueden agregar mas de 10 columnas',
+        'Ups!'
+      );
     }
   };
 
@@ -135,6 +137,9 @@ class MiReporte extends Component {
   };
 
   exportarPdf = async () => {
+    const { columnas } = this.state;
+    const landscape = columnas.length > 6;
+
     this.setState({ isLoading: true });
     this.toggleIconoBorrar('hidden', 'block', 'visible');
 
@@ -145,12 +150,14 @@ class MiReporte extends Component {
       scrollY: -window.scrollY,
       useCORS: true,
     }).then(async (canvas) => {
-      const pdf = new jsPDF();
+      let pdf = '';
+      landscape ? (pdf = new jsPDF('l')) : (pdf = new jsPDF());
+
       const imgData = canvas.toDataURL('image/png');
 
       /*Calculo de paginado */
-      var imgWidth = 210;
-      var pageHeight = 295;
+      var imgWidth = landscape ? 295 : 210;
+      var pageHeight = landscape ? 210 : 295;
       var imgHeight = (canvas.height * imgWidth) / canvas.width;
       var heightLeft = imgHeight;
       var position = 0;
