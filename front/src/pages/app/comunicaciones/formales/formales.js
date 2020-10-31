@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import TabsDeMensajeria from './tabs-de-formales';
+import TabsDeFormales from './tabs-de-formales';
 import { getCollection } from 'helpers/Firebase-db';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
@@ -271,7 +271,7 @@ class Formales extends Component {
               onMensajeEnviado={this.onMensajeEnviado}
             />
           </ModalGrande>
-          <TabsDeMensajeria
+          <TabsDeFormales
             clickOnRow={this.clickOnRow}
             itemsSent={itemsSent}
             itemsReceive={itemsReceive}

@@ -10262,16 +10262,20 @@ div.rendered-file-browser{
   cursor: pointer;
 }
 
-.Aprobado{
+.Aprobado, .Presente{
   color: rgb(39, 153, 39) !important;
 }
 
-.Desaprobado{
+.Desaprobado, .Ausente{
   color: rgb(248, 73, 73) !important;
 }
 
 .Reentrega{
   color: orange !important;
+}
+
+.titulo-asistencia {
+  margin: 1rem 0 1rem 1rem;
 }
 
 // Cuenta
