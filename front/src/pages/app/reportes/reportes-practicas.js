@@ -5,6 +5,7 @@ import { groupBy } from 'lodash';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
+import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import { isEmpty } from 'helpers/Utils';
 
 import Table from '@material-ui/core/Table';
@@ -58,35 +59,62 @@ class ReportesPracticas extends Component {
   };
 
   getCorreccionesDePracticas = async () => {
-    const data = await getCollection('correcciones', [
+    let practicasPorAlumno = [];
+
+    const alumnos = await getUsuariosAlumnosPorMateria(this.props.subject.id);
+
+    const practicasVencidas = await getCollection('practicas', [
+      { field: 'idMateria', operator: '==', id: this.props.subject.id },
+      { field: 'fechaVencimiento', operator: '<', id: new Date() },
+    ]);
+
+    const correcciones = await getCollection('correcciones', [
       {
         field: 'tipo',
         operator: '==',
         id: 'practica',
       },
       { field: 'idMateria', operator: '==', id: this.props.subject.id },
-      { field: 'estado', operator: '==', id: 'Corregido' },
     ]);
 
-    const dataPracticasPromise = data.map(async (elem) => {
-      return {
-        id: elem.id,
-        idPractica: elem.data.idPractica,
-        nombrePractica: await this.getNombrePractica(elem.data.idPractica),
-        idUsuario: elem.data.idUsuario,
-        nombreUsuario: await this.getNombreUsuario(elem.data.idUsuario),
-        estado: elem.data.estadoCorreccion,
-        nota: elem.data.notaCorreccion,
-        fecha: elem.data.fecha_creacion,
-      };
+    alumnos.forEach((alumno) => {
+      practicasVencidas.forEach((practica) => {
+        practicasPorAlumno.push({
+          id: alumno.id,
+          idPractica: practica.id,
+          nombrePractica: practica.data.nombre,
+          nombreUsuario: alumno.nombre,
+          estado: 'No entregado',
+          nota: '-',
+          fecha: '-',
+        });
+      });
     });
 
-    let dataPracticas = await Promise.all(dataPracticasPromise);
+    practicasPorAlumno.forEach((practica) => {
+      correcciones.forEach((correccion) => {
+        if (
+          practica.idPractica === correccion.data.idPractica &&
+          practica.id === correccion.data.idUsuario
+        ) {
+          practica.estado = correccion.data.estadoCorreccion
+            ? correccion.data.estadoCorreccion
+            : correccion.data.estado;
+          practica.fecha = correccion.data.fecha_creacion;
+          practica.nota =
+            correccion.data.notaCorreccion && correccion.data.notaCorreccion > 0
+              ? correccion.data.notaCorreccion
+              : '-';
+        }
+      });
+    });
+
     let openData = [];
-    dataPracticas = groupBy(dataPracticas, 'nombreUsuario');
-    dataPracticas = Object.entries(dataPracticas).map((elem) => {
+    practicasPorAlumno = groupBy(practicasPorAlumno, 'id');
+    let dataPracticas = Object.entries(practicasPorAlumno).map((elem) => {
+      const [primero] = elem[1];
       openData.push(false);
-      return { id: elem[0], data: elem[1] };
+      return { id: primero.nombreUsuario, data: elem[1] };
     });
     this.setState({ dataPracticas, open: openData, isLoading: false });
   };
@@ -132,7 +160,7 @@ class ReportesPracticas extends Component {
                     className="width-100"
                     onClick={() => this.toggleAccordion(index)}
                   >
-                    Cantidad de Entregas: {row.data.length}
+                    Cantidad de Registros: {row.data.length}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -168,7 +196,7 @@ class ReportesPracticas extends Component {
                             {row.data.map((historyRow) => (
                               <TableRow
                                 key={historyRow.id}
-                                className={historyRow.estado}
+                                className={historyRow.estado.replace(/\s/g, '')}
                               >
                                 <TableCell component="th" scope="row">
                                   {historyRow.nombrePractica}

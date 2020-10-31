@@ -8,7 +8,7 @@ import {
   getCollection,
   getDocumentWithSubCollection,
 } from 'helpers/Firebase-db';
-import { getAlumnosPorMateriaConNombre } from 'helpers/Firebase-user';
+import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 import firebase from 'firebase/app';
 import Table from '@material-ui/core/Table';
@@ -59,7 +59,7 @@ class ReportesClases extends Component {
       { field: 'activo', operator: '==', id: true },
     ]);
 
-    const usuarios = await getAlumnosPorMateriaConNombre(this.props.subject.id);
+    const usuarios = await getUsuariosAlumnosPorMateria(this.props.subject.id);
 
     const clasesPromise = clasesCollection.map(async (clase) => {
       return {
