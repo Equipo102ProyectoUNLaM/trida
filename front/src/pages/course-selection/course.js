@@ -82,8 +82,14 @@ class Course extends Component {
                   <Row>
                     {items.map((course, index) => {
                       return (
-                        <Row key={index} className="mb-4 col-4">
-                          <Colxx>
+                        <Row
+                          key={index}
+                          className="mb-4 ml-0 mr-0"
+                          xxs="12"
+                          xs="12"
+                          lg="12"
+                        >
+                          <Colxx xxs="12" xs="12" lg="12">
                             <Button
                               color="primary"
                               onClick={() => this.toggle(index)}

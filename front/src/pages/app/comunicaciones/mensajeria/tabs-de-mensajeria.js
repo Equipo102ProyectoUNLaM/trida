@@ -102,6 +102,7 @@ class TabsDeMensajeria extends Component {
                         defaultPageSize={10}
                         showPageJump={itemsReceive.length > 0}
                         showPageSizeOptions={true}
+                        minRows={0}
                         noDataText="No tienes mensajes recibidos"
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
@@ -131,6 +132,7 @@ class TabsDeMensajeria extends Component {
                         defaultPageSize={10}
                         showPageJump={itemsSent.length > 0}
                         showPageSizeOptions={true}
+                        minRows={0}
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
                         noDataText="No tienes mensajes enviados"

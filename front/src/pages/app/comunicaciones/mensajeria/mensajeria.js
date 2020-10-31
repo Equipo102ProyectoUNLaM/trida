@@ -396,15 +396,15 @@ class Mensajeria extends Component {
                 </Colxx>
               </Row>
               <ModalFooter>
+                <Button color="secondary" onClick={this.toggleReenviarModal}>
+                  Cancelar
+                </Button>
                 <Button
                   color="primary"
                   disabled={selectedOptions.length === 0}
                   onClick={this.handleSubmit}
                 >
                   Enviar
-                </Button>
-                <Button color="secondary" onClick={this.toggleReenviarModal}>
-                  Cancelar
                 </Button>
               </ModalFooter>
             </ModalChico>

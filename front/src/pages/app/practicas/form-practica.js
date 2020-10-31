@@ -256,11 +256,11 @@ class FormPractica extends React.Component {
               )}
             </FormGroup>
             <ModalFooter>
-              <Button color="primary" type="submit">
-                {textConfirm}
-              </Button>
               <Button color="secondary" onClick={toggleModal}>
                 Cancelar
+              </Button>
+              <Button color="primary" type="submit">
+                {textConfirm}
               </Button>
             </ModalFooter>
           </Form>
