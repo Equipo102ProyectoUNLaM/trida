@@ -37,9 +37,10 @@ class DataListView extends React.Component {
 
   handleClick = async (date) => {
     if (date) {
-      const obj = { fechaVencimiento: date.format('YYYY-MM-DD') };
+      const obj = { fechaVencimiento: new Date(date) };
       if (date) {
         await editDocument('practicas', this.props.id, obj, 'Práctica editada');
+        this.props.getPracticas();
       }
     }
   };
@@ -79,6 +80,7 @@ class DataListView extends React.Component {
       noEntregada,
       tipo,
     } = this.props;
+
     return (
       <Colxx xxs="12" className="mb-3" id={id}>
         <ContextMenuTrigger id="menu_id" data={id} collect={collect}>

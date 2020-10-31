@@ -118,6 +118,7 @@ module.exports = {
   'menu.my-reportes-evaluaciones': 'Mis Reportes de Evaluaciones',
   'menu.my-reportes-generales': 'Mis Reportes de Generales',
   'menu.ayuda': 'Ayuda',
+  'menu.mi-cuenta': 'Mi Cuenta',
 
   /* 04.Error  */
   'pages.error-title': 'Ups, parece que ha ocurrido un error!',
@@ -241,4 +242,11 @@ module.exports = {
 
   /* 17. Formales */
   'formales.nueva': 'CREAR NUEVA COMUNICACIÓN',
+
+  /* 18. Cuenta */
+  'cuenta.mis-datos': 'Mis Datos',
+  'cuenta.password': 'Cambio de contraseña',
+  'cuenta.guardar-datos': 'Guardar cambios',
+  'cuenta.cambiar-contraseña': 'Cambiar contraseña',
+  'cuenta.nueva-contraseña': 'Nueva Contraseña',
 };

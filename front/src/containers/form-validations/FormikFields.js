@@ -312,7 +312,7 @@ export class FormikDatePicker extends React.Component {
   };
 
   render() {
-    const { name, value } = this.props;
+    const { name, value, showTimeSelect, practicaPicker } = this.props;
     const { minTime } = this.state;
     return (
       <DatePicker
@@ -320,8 +320,8 @@ export class FormikDatePicker extends React.Component {
         id={name}
         name={name}
         locale="es"
-        dateFormat="dd/MM/yyyy - HH:mm"
-        showTimeSelect
+        dateFormat={practicaPicker ? 'dd/MM/yyyy' : 'dd/MM/yyyy - HH:mm'}
+        showTimeSelect={showTimeSelect}
         timeFormat="HH:mm"
         timeCaption="Hora"
         timeIntervals={60}
