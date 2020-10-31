@@ -9926,6 +9926,23 @@ tr.folder {
   padding-left: 0.05rem;
 }
 
+.mensaje-noleido {
+  background-color: red;
+  border-color: white;
+  border: solid 1px;
+  color: white;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 110%;
+  margin:auto;
+  padding-bottom: 0.3rem;
+  padding-left: 0.05rem;
+}
+
 .modal-ver-preguntas {
   .modal-content {
     height: auto !important;

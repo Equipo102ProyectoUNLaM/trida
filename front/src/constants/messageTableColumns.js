@@ -3,6 +3,16 @@ import React from 'react';
 export const dataReceiveTableColumns = [
   {
     id: 1,
+    Header: '',
+    accessor: 'leido',
+    // eslint-disable-next-line react/display-name
+    Cell: (props) => (
+      <span className={props.value ? '' : 'mensaje-noleido'}>
+        {props.value ? '' : '.'}
+      </span>
+    ),
+  },
+  {
     Header: 'Fecha',
     accessor: 'fecha_creacion',
     // eslint-disable-next-line react/display-name

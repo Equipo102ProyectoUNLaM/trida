@@ -141,6 +141,7 @@ class Mensajeria extends Component {
       fecha_creacion: elem.data.fecha_creacion,
       remitente: elem.data.emisor.nombre,
       idRemitente: elem.data.emisor.id,
+      leido: elem.data.leido,
     }));
 
     const data = this.state.itemsReceive;
