@@ -196,7 +196,7 @@ class FormSubirPractica extends React.Component {
               <label className="practicas-adjuntar-button">
                 Adjuntar Archivo
                 <FileUploader
-                  accept={['image/*', 'application/pdf']}
+                  accept="image/png,image/jpeg,image/jpg,application/pdf"
                   hidden
                   name="archivo"
                   randomizeFilename

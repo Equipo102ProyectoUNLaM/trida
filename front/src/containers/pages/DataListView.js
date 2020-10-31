@@ -161,7 +161,7 @@ class DataListView extends React.Component {
                         : 'Descargar Evaluación'}
                     </Button>
                   )}
-                  {onUploadFile && (
+                  {onUploadFile && file === undefined && (
                     <Button
                       outline
                       onClick={() => onUploadFile(id)}
