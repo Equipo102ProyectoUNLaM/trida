@@ -10381,6 +10381,10 @@ tr.folder {
   justify-content: center;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .flex-end {
   justify-content: flex-end;
 }
@@ -10405,13 +10409,29 @@ tr.folder {
   font-weight: bold;
 }
 
+.header-max {
+  font-size: 0.9rem !important;
+  font-weight: bold;
+  max-width: 7rem;
+}
+
+.min-width {
+  min-width: 12rem;
+}
+
 .no-width{
   border: initial;
   background: $foreground-color;
-  width: 20% !important;
+  display: flex;
+  flex-direction: row;
   margin-left: 1rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  min-width: fit-content;
+}
+
+.input-20{
+  height: 20%;
 }
 
 .icon-columna {
@@ -10434,12 +10454,26 @@ tr.folder {
   box-sizing: border-box;
   margin-left: auto;
   margin-right: auto;
-  padding-right: 8px;
-  padding-left: 8px;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
   width: 100% !important;
   flex-wrap: nowrap;
 }
 
 .hidden {
   display: none;
+}
+
+.row-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  align-items: center;
+  margin-right: 0 !important;
+}
+
+.borrar-columna {
+  color: red;
+  font-size: 1rem;
 }

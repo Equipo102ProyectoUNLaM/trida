@@ -13,27 +13,29 @@ import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 export const Columna = ({ data, colData, borrarColumna }) => {
   return (
-    <Card className="no-width pr-1">
-      <Col className="mr-2 ml-1 flex justify-center">
-        <span className="mb-2 header">{colData.nombre}</span>
-        {data.map((data) => (
-          <>
-            <Input
-              className="mb-2"
-              key={colData.id}
-              autoComplete="off"
-              name="tema"
-            />
-            <Separator />
-          </>
-        ))}
+    <Col className="mr-2 ml-1 flex justify-center">
+      <div className="flex align-center justify-between w-100">
+        <div></div>
+        <span className="mb-2 mt-2 header-max truncate">
+          {colData.nombre}{' '}
+        </span>{' '}
         <i
-          className="iconsminds-close borrar-columna"
+          className="simple-icon-trash borrar-columna cursor-pointer"
           onClick={() => borrarColumna(colData.id)}
           id={'borrar-columna' + colData.id}
         />
-      </Col>
-    </Card>
+      </div>
+      {data.map((data) => (
+        <>
+          <Input
+            className="mb-2 input-20 align-center"
+            key={colData.id}
+            autoComplete="off"
+            name="tema"
+          />
+        </>
+      ))}
+    </Col>
   );
 };
 
@@ -199,7 +201,7 @@ class MiReporte extends Component {
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        <Row className="flex mb-2 align-center flex-end">
+        <Row className="row-acciones">
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -255,8 +257,8 @@ class MiReporte extends Component {
           </div>
           <Grid className="flex container">
             <Card className="no-width ml-0 pr-4">
-              <Col className="mb-2 pl-3">
-                <div className="flex justify-center">
+              <Col className="mb-2 pl-3 min-width truncate">
+                <div className="flex align-center justify-between w-100">
                   <span className="header">Alumnos</span>
                 </div>
                 {alumnosData.map((alumno) => (
@@ -272,15 +274,15 @@ class MiReporte extends Component {
                   </>
                 ))}
               </Col>
+              {columnas.map((columna) => (
+                <Columna
+                  key={columna.id}
+                  data={alumnosData}
+                  colData={columna}
+                  borrarColumna={this.borrarColumna}
+                />
+              ))}
             </Card>
-            {columnas.map((columna) => (
-              <Columna
-                key={columna.id}
-                data={alumnosData}
-                colData={columna}
-                borrarColumna={this.borrarColumna}
-              />
-            ))}
           </Grid>
         </div>
       </div>
