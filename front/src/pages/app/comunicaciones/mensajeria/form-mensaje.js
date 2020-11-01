@@ -79,6 +79,7 @@ class FormMensaje extends Component {
       formal: false,
       general: this.state.esGeneral,
       idMateria: this.state.idMateria,
+      leido: [],
       responde_a: this.props.idMensajeAResponder
         ? this.props.idMensajeAResponder
         : '',

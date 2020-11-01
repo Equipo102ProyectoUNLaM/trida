@@ -2,17 +2,26 @@ import React from 'react';
 
 export const dataReceiveTableColumns = [
   {
-    id: 1,
     Header: '',
     accessor: 'leido',
     // eslint-disable-next-line react/display-name
     Cell: (props) => (
-      <span className={props.value ? '' : 'mensaje-noleido'}>
-        {props.value ? '' : '.'}
-      </span>
+      <div
+        style={{ fontSize: '1rem' }}
+        className={
+          props.value
+            ? 'glyph-icon simple-icon-envelope-open text-muted'
+            : 'mensaje-noleido glyph-icon simple-icon-envelope'
+        }
+      ></div>
     ),
+    width: 25,
+    minWidth: 25,
+    maxWidth: 25,
+    style: { margin: 'auto' },
   },
   {
+    id: 1,
     Header: 'Fecha',
     accessor: 'fecha_creacion',
     // eslint-disable-next-line react/display-name

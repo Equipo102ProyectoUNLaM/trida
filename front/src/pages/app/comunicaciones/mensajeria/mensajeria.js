@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { getUsersOfSubject } from 'helpers/Firebase-user';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { Row, ModalFooter, Button, Input } from 'reactstrap';
-import { addDocument } from 'helpers/Firebase-db';
+import { addDocument, addElementToArray } from 'helpers/Firebase-db';
 import { desencriptarTexto } from 'handlers/DecryptionHandler';
 import { encriptarTexto } from 'handlers/EncryptionHandler';
 
@@ -141,7 +141,11 @@ class Mensajeria extends Component {
       fecha_creacion: elem.data.fecha_creacion,
       remitente: elem.data.emisor.nombre,
       idRemitente: elem.data.emisor.id,
-      leido: elem.data.leido,
+      leido: elem.data.leido
+        ? elem.data.leido.find((x) => x === this.state.usuarioId)
+          ? true
+          : false
+        : false,
     }));
 
     const data = this.state.itemsReceive;
@@ -188,6 +192,7 @@ class Mensajeria extends Component {
   };
 
   clickOnRow = (rowInfo) => {
+    this.marcarComoLeido(rowInfo);
     let botonMensaje = 'Responder';
     let usuarios = null;
     let enviado = false;
@@ -213,6 +218,18 @@ class Mensajeria extends Component {
       idMensajeAResponder: rowInfo.original.id,
     });
     this.toggleDetailModal();
+  };
+
+  marcarComoLeido = (row) => {
+    if (!row.original.leido) {
+      row.original.leido = true;
+      addElementToArray(
+        'mensajes',
+        row.original.id,
+        'leido',
+        this.state.usuarioId
+      );
+    }
   };
 
   onMensajeEnviado = () => {
