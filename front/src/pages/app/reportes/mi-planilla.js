@@ -4,7 +4,7 @@ import { Input, Button, Card } from 'reactstrap';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
-import Breadcrumb from 'containers/navegacion/Breadcrumb';
+import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
@@ -183,6 +183,10 @@ class MiReporte extends Component {
     });
   };
 
+  guardarPlanilla = () => {
+    console.log('guardar');
+  };
+
   render() {
     const {
       alumnosData,
@@ -195,13 +199,58 @@ class MiReporte extends Component {
       <div className="cover-spin" />
     ) : (
       <div>
-        <Row>
-          <Colxx xxs="12">
-            <Breadcrumb heading="menu.mi-reporte" match={this.props.match} />
-            <Separator className="mb-5" />
-          </Colxx>
-        </Row>
-        <Row className="row-acciones">
+        <HeaderDeModulo
+          heading="menu.mi-reporte"
+          toggleModal={() =>
+            this.props.history.push('/app/reportes/mis-planillas-guardadas')
+          }
+          buttonText="menu.reportes-guardados"
+        />
+        <div id="encabezadoAImprimir">
+          <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
+            <h2>Mi Planilla</h2>
+            <span>Fecha: {getFechaHoraActual()}</span>
+            <br />
+            <span>
+              Materia: {this.props.subject.name} - {this.props.course.name} -{' '}
+              {this.props.institution.name}
+            </span>
+            <br />
+            <br />
+          </div>
+          <Grid className="flex container">
+            <Card className="no-width ml-0 pr-4">
+              <Col className="mb-2 pl-3 min-width truncate">
+                <div className="flex align-center justify-between w-100">
+                  <span className="header">Alumnos</span>
+                </div>
+                {alumnosData.map((alumno) => {
+                  return (
+                    <>
+                      <Row
+                        id={'nombre-alumno' + alumno.id}
+                        className="col-alumno truncate"
+                        key={alumno.id}
+                      >
+                        {alumno.nombre}
+                      </Row>
+                      <Separator className="mt-1" />
+                    </>
+                  );
+                })}
+              </Col>
+              {columnas.map((columna) => (
+                <Columna
+                  key={columna.id}
+                  data={alumnosData}
+                  colData={columna}
+                  borrarColumna={this.borrarColumna}
+                />
+              ))}
+            </Card>
+          </Grid>
+        </div>
+        <Row className="row-acciones button-group mt-2">
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -217,6 +266,13 @@ class MiReporte extends Component {
                 className="button"
               >
                 EXPORTAR PDF
+              </Button>
+              <Button
+                onClick={this.guardarPlanilla}
+                color="primary"
+                className="button"
+              >
+                GUARDAR
               </Button>
             </div>
           )}
@@ -243,48 +299,6 @@ class MiReporte extends Component {
             </>
           )}
         </Row>
-        <div id="encabezadoAImprimir">
-          <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
-            <h2>Mi Planilla</h2>
-            <span>Fecha: {getFechaHoraActual()}</span>
-            <br />
-            <span>
-              Materia: {this.props.subject.name} - {this.props.course.name} -{' '}
-              {this.props.institution.name}
-            </span>
-            <br />
-            <br />
-          </div>
-          <Grid className="flex container">
-            <Card className="no-width ml-0 pr-4">
-              <Col className="mb-2 pl-3 min-width truncate">
-                <div className="flex align-center justify-between w-100">
-                  <span className="header">Alumnos</span>
-                </div>
-                {alumnosData.map((alumno) => (
-                  <>
-                    <Row
-                      id={'nombre-alumno' + alumno.id}
-                      className="col-alumno truncate"
-                      key={alumno.id}
-                    >
-                      {alumno.nombre}
-                    </Row>
-                    <Separator className="mt-1" />
-                  </>
-                ))}
-              </Col>
-              {columnas.map((columna) => (
-                <Columna
-                  key={columna.id}
-                  data={alumnosData}
-                  colData={columna}
-                  borrarColumna={this.borrarColumna}
-                />
-              ))}
-            </Card>
-          </Grid>
-        </div>
       </div>
     );
   }
