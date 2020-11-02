@@ -64,7 +64,6 @@ class DataListView extends React.Component {
   };
 
   render() {
-    const { tooltipOpen } = this.state;
     const {
       id,
       idArchivo,

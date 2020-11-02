@@ -10510,3 +10510,10 @@ tr.folder {
   align-items: center;
   justify-content: flex-end;
 }
+
+.col-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 0.5rem;
+}

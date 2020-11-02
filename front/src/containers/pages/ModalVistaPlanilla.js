@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
+import { isEmpty } from 'helpers/Utils';
 
 class ModalVistaPlanilla extends Component {
   constructor(props) {
@@ -19,8 +20,8 @@ class ModalVistaPlanilla extends Component {
   }
 
   componentDidMount() {
-    this.getDatosPlanilla();
     this.getAlumnos();
+    this.getDatosPlanilla();
   }
 
   getAlumnos = async () => {
@@ -33,24 +34,26 @@ class ModalVistaPlanilla extends Component {
   };
 
   getDatosPlanilla = async () => {
+    this.setState({
+      isLoading: true,
+    });
     const planilla = await getDocument(
       `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}`
     );
     const columnas = await getCollection(
       `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`
     );
-    this.setState({ nombrePlanilla: planilla.data.nombre, columnas });
+    this.setState({
+      nombrePlanilla: planilla.data.nombre,
+      columnas,
+      isLoading: false,
+    });
   };
 
   render() {
-    const {
-      isLoading,
-      isOpen,
-      toggleModal,
-      nombrePlanilla,
-      alumnos,
-    } = this.props;
-    return isLoading ? (
+    const { isLoading, isOpen, toggleModal } = this.props;
+    const { nombrePlanilla, alumnos, columnas } = this.state;
+    return isLoading || isEmpty(alumnos) ? (
       <div className="loading" />
     ) : (
       <Modal isOpen={isOpen} size="lg" toggle={toggleModal}>
@@ -58,15 +61,43 @@ class ModalVistaPlanilla extends Component {
           Vista Previa: {nombrePlanilla}
         </ModalHeader>
         <ModalBody>
-          <Grid>
-            <Col>
-              Alumnos
+          <Grid className="flex container">
+            <Col className="mb-2 pl-3 min-width truncate">
+              <span className="header">Alumnos</span>
               {alumnos.map((alumno) => {
-                return <Row key={alumno.id}>{alumno.nombre}</Row>;
+                return (
+                  <Row className="col-alumno truncate" key={alumno.id}>
+                    {alumno.nombre}
+                  </Row>
+                );
               })}
             </Col>
+            {columnas.map((columna) => {
+              return (
+                <Col className="col-preview" key={columna.id}>
+                  <span className="header-max truncate">
+                    {columna.data.nombre}
+                  </span>
+                  {columna.data.valores.map((valor) => {
+                    return (
+                      <Row
+                        className="mb-3 input-20 align-center truncate"
+                        key={valor.userId}
+                      >
+                        {valor.valor}
+                      </Row>
+                    );
+                  })}
+                </Col>
+              );
+            })}
           </Grid>
         </ModalBody>
+        <ModalFooter>
+          <Button color="primary" className="button" onClick={toggleModal}>
+            Cerrar
+          </Button>
+        </ModalFooter>
       </Modal>
     );
   }
