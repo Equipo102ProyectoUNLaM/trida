@@ -10397,7 +10397,7 @@ tr.folder {
 }
 
 .col-alumno {
-  margin: 1rem 2rem 1rem 0;
+  margin: 0rem 2rem 1rem 1rem;
   padding-left: 0.5rem;
   width: 100%;
   display: block;
@@ -10428,6 +10428,7 @@ tr.folder {
   padding-top: 1rem;
   padding-bottom: 1rem;
   min-width: fit-content;
+  width: 0 !important;
 }
 
 .input-20{
@@ -10476,4 +10477,13 @@ tr.folder {
 .borrar-columna {
   color: red;
   font-size: 1rem;
+}
+
+.height-fixed {
+  height: 3.25rem !important;
+}
+
+.margin-top-bottom {
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
 }

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
-import { Input, Button, Card } from 'reactstrap';
+import { Input, Button, Card, Tooltip } from 'reactstrap';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { jsPDF } from 'jspdf';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 export const Columna = ({ data, colData, borrarColumna }) => {
+  const [tooltipOpen, setTooltip] = useState(false);
   return (
     <Col className="mr-2 ml-1 flex justify-center">
       <div className="flex align-center justify-between w-100">
@@ -19,16 +20,26 @@ export const Columna = ({ data, colData, borrarColumna }) => {
         <span className="mb-2 mt-2 header-max truncate">
           {colData.nombre}{' '}
         </span>{' '}
-        <i
-          className="simple-icon-trash borrar-columna cursor-pointer"
-          onClick={() => borrarColumna(colData.id)}
-          id={'borrar-columna' + colData.id}
-        />
+        <div>
+          <i
+            className="simple-icon-trash borrar-columna cursor-pointer"
+            onClick={() => borrarColumna(colData.id)}
+            id={'borrar-columna' + colData.id}
+          />
+          <Tooltip
+            placement="right"
+            isOpen={tooltipOpen}
+            target={'borrar-columna' + colData.id}
+            toggle={() => setTooltip(!tooltipOpen)}
+          >
+            Borrar Columna
+          </Tooltip>
+        </div>
       </div>
       {data.map((data) => (
         <>
           <Input
-            className="mb-2 input-20 align-center"
+            className="mb-1 input-20 align-center"
             key={colData.id}
             autoComplete="off"
             name="tema"
@@ -44,7 +55,7 @@ class MiReporte extends Component {
     super(props);
 
     this.state = {
-      alumnosData: ['test1', 'test2', 'test3'],
+      alumnosData: [],
       columnas: [],
       inputAgregarColumna: false,
       nombreColumna: '',
@@ -206,61 +217,19 @@ class MiReporte extends Component {
           }
           buttonText="menu.reportes-guardados"
         />
-        <div id="encabezadoAImprimir">
-          <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
-            <h2>Mi Planilla</h2>
-            <span>Fecha: {getFechaHoraActual()}</span>
-            <br />
-            <span>
-              Materia: {this.props.subject.name} - {this.props.course.name} -{' '}
-              {this.props.institution.name}
-            </span>
-            <br />
-            <br />
-          </div>
-          <Grid className="flex container">
-            <Card className="no-width ml-0 pr-4">
-              <Col className="mb-2 pl-3 min-width truncate">
-                <div className="flex align-center justify-between w-100">
-                  <span className="header">Alumnos</span>
-                </div>
-                {alumnosData.map((alumno) => {
-                  return (
-                    <>
-                      <Row
-                        id={'nombre-alumno' + alumno.id}
-                        className="col-alumno truncate"
-                        key={alumno.id}
-                      >
-                        {alumno.nombre}
-                      </Row>
-                      <Separator className="mt-1" />
-                    </>
-                  );
-                })}
-              </Col>
-              {columnas.map((columna) => (
-                <Columna
-                  key={columna.id}
-                  data={alumnosData}
-                  colData={columna}
-                  borrarColumna={this.borrarColumna}
-                />
-              ))}
-            </Card>
-          </Grid>
-        </div>
         <Row className="row-acciones button-group mt-2">
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
-                color="primary"
+                outline
+                color="secondary"
                 onClick={this.toggleAgregarColumna}
                 className="button"
               >
                 AGREGAR COLUMNA
               </Button>
               <Button
+                outline
                 onClick={this.exportarPdf}
                 color="primary"
                 className="button"
@@ -268,6 +237,7 @@ class MiReporte extends Component {
                 EXPORTAR PDF
               </Button>
               <Button
+                outline
                 onClick={this.guardarPlanilla}
                 color="primary"
                 className="button"
@@ -299,6 +269,50 @@ class MiReporte extends Component {
             </>
           )}
         </Row>
+        <div id="encabezadoAImprimir">
+          <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
+            <h2>Mi Planilla</h2>
+            <span>Fecha: {getFechaHoraActual()}</span>
+            <br />
+            <span>
+              Materia: {this.props.subject.name} - {this.props.course.name} -{' '}
+              {this.props.institution.name}
+            </span>
+            <br />
+            <br />
+          </div>
+          <Grid className="flex container">
+            <Card className="no-width ml-0 pr-4">
+              <Col className="mb-2 pl-3 min-width truncate">
+                <div className="flex align-center justify-between w-100 height-fixed">
+                  <span className="header">Alumnos</span>
+                </div>
+                {alumnosData.map((alumno) => {
+                  return (
+                    <>
+                      <Row
+                        id={'nombre-alumno' + alumno.id}
+                        className="col-alumno truncate"
+                        key={alumno.id}
+                      >
+                        {alumno.nombre}
+                      </Row>
+                      <Separator className="margin-top-bottom" />
+                    </>
+                  );
+                })}
+              </Col>
+              {columnas.map((columna) => (
+                <Columna
+                  key={columna.id}
+                  data={alumnosData}
+                  colData={columna}
+                  borrarColumna={this.borrarColumna}
+                />
+              ))}
+            </Card>
+          </Grid>
+        </div>
       </div>
     );
   }
