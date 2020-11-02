@@ -51,11 +51,20 @@ class DataListView extends React.Component {
     this.props.onDelete(this.props.id);
   };
 
+  handleClickOpen = () => {
+    this.props.onOpen(this.props.id);
+  };
+
+  handleClickPreview = () => {
+    this.props.onPreview(this.props.id);
+  };
+
   onDownloadFile = (file) => {
     window.open(file, '_blank');
   };
 
   render() {
+    const { tooltipOpen } = this.state;
     const {
       id,
       idArchivo,
@@ -69,6 +78,8 @@ class DataListView extends React.Component {
       navTo,
       calendario,
       onDelete,
+      onOpen,
+      onPreview,
       onUploadFile,
       onCorrection,
       onVerCorrection,
@@ -81,6 +92,7 @@ class DataListView extends React.Component {
       entregada,
       noEntregada,
       tipo,
+      planilla,
     } = this.props;
 
     return (
@@ -131,7 +143,13 @@ class DataListView extends React.Component {
                     )}
                   </NavLink>
                   <div className="custom-control custom-checkbox pl-1 align-self-center pr-4 practicas-list-label mt-2">
-                    <Row className="correcciones-data-list-row">
+                    <Row
+                      className={
+                        !planilla
+                          ? 'correcciones-data-list-row'
+                          : 'flex-end align-center'
+                      }
+                    >
                       {estado && (
                         <Badge
                           key={id + 'badge'}
@@ -260,6 +278,20 @@ class DataListView extends React.Component {
                             <div
                               className="glyph-icon simple-icon-pencil edit-action-icon"
                               onClick={() => onEditItem(id)}
+                            />
+                          )}
+                          {onOpen && (
+                            <div
+                              className="glyph-icon iconsminds-folder-open open-action-icon"
+                              onClick={this.handleClickOpen}
+                              id="open-icon"
+                            />
+                          )}
+                          {onPreview && (
+                            <div
+                              className="glyph-icon iconsminds-magnifi-glass preview-action-icon"
+                              onClick={this.handleClickPreview}
+                              id="preview-icon"
                             />
                           )}
                           {onDelete && (

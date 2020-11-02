@@ -5,38 +5,63 @@ import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import DataListView from 'containers/pages/DataListView';
+import ModalVistaPlanilla from 'containers/pages/ModalVistaPlanilla';
+
 import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
+import { getCollection } from 'helpers/Firebase-db';
 
 class MisReportesGuardados extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      alumnosData: ['test1', 'test2', 'test3'],
+      planillas: [],
       columnas: [],
       inputAgregarColumna: false,
       nombreColumna: '',
       isLoading: true,
+      modalPreviewOpen: false,
+      idPlanilla: '',
     };
   }
 
   componentDidMount() {
-    this.getAlumnos();
+    this.getPlanillas();
   }
 
-  getAlumnos = async () => {
+  getPlanillas = async () => {
+    const planillas = await getCollection(
+      `planillasDocente/${this.props.user}/planillas`
+    );
+    console.log(planillas);
     this.setState({
+      planillas,
       isLoading: false,
     });
   };
 
-  render() {
-    const { isLoading } = this.state;
+  togglePreview = (idPlanilla) => {
+    this.setState({
+      modalPreviewOpen: !this.state.modalPreviewOpen,
+      idPlanilla,
+    });
+  };
 
+  handleDelete = () => {
+    console.log('delete');
+  };
+
+  handleOpen = () => {
+    console.log('open');
+  };
+
+  render() {
+    const { isLoading, planillas, modalPreviewOpen, idPlanilla } = this.state;
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
@@ -48,14 +73,38 @@ class MisReportesGuardados extends Component {
           }
           buttonText="menu.volver"
         />
+        <Row>
+          {planillas.map((planilla) => {
+            return (
+              <DataListView
+                key={planilla.id}
+                id={planilla.id}
+                title={planilla.data.nombre}
+                text1={`Fecha de Creación: ` + planilla.data.fecha_creacion}
+                onDelete={this.handleDelete}
+                onOpen={this.handleOpen}
+                onPreview={this.togglePreview}
+                planilla
+                navTo="#"
+              />
+            );
+          })}
+        </Row>
+        {modalPreviewOpen && (
+          <ModalVistaPlanilla
+            isOpen={modalPreviewOpen}
+            toggleModal={this.togglePreview}
+            idPlanilla={idPlanilla}
+          />
+        )}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ seleccionCurso }) => {
-  const { subject, course, institution } = seleccionCurso;
-  return { subject, course, institution };
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
 };
 
 export default connect(mapStateToProps)(MisReportesGuardados);

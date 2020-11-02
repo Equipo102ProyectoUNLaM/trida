@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
 import { Input, Button, Card, Tooltip } from 'reactstrap';
-import { Colxx, Separator } from 'components/common/CustomBootstrap';
+import { Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
@@ -9,10 +9,22 @@ import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { enviarNotificacionError } from 'helpers/Utils-ui';
+import { isEmpty } from 'helpers/Utils';
+import {
+  enviarNotificacionError,
+  enviarNotificacionExitosa,
+} from 'helpers/Utils-ui';
+import { addDocumentWithId, addDocument } from 'helpers/Firebase-db';
 
-export const Columna = ({ data, colData, borrarColumna }) => {
+export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
   const [tooltipOpen, setTooltip] = useState(false);
+
+  const handleChange = (colId, userId, event) => {
+    const { value } = event.target;
+    const obj = { userId, valor: value };
+    agregarAColumna(colId, obj);
+  };
+
   return (
     <Col className="mr-2 ml-1 flex justify-center">
       <div className="flex align-center justify-between w-100">
@@ -43,6 +55,7 @@ export const Columna = ({ data, colData, borrarColumna }) => {
             key={colData.id}
             autoComplete="off"
             name="tema"
+            onChange={(event) => handleChange(colData.id, data.id, event)}
           />
         </>
       ))}
@@ -60,6 +73,8 @@ class MiReporte extends Component {
       inputAgregarColumna: false,
       nombreColumna: '',
       isLoading: true,
+      idPlanilla: '',
+      nombrePlanilla: '',
     };
   }
 
@@ -97,6 +112,12 @@ class MiReporte extends Component {
     });
   };
 
+  handleNombrePlanillaChange = (event) => {
+    this.setState({
+      nombrePlanilla: event.target.value,
+    });
+  };
+
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.onAgregarColumna();
@@ -110,12 +131,26 @@ class MiReporte extends Component {
       columnas.push({
         id: createRandomString(),
         nombre: this.state.nombreColumna,
+        valores: [],
       });
       this.setState({
         columnas,
       });
     }
     this.toggleAgregarColumna();
+  };
+
+  agregarAColumna = (col, obj) => {
+    let columnas = [...this.state.columnas];
+    const [columna] = columnas.filter((columna) => columna.id === col);
+    const colUsuario = columna.valores.filter(
+      (colUsuario) => colUsuario.userId === obj.userId
+    );
+    if (isEmpty(colUsuario)) {
+      columna.valores.push(obj);
+    } else {
+      colUsuario.valor = obj.valor;
+    }
   };
 
   borrarColumna = (id) => {
@@ -194,8 +229,33 @@ class MiReporte extends Component {
     });
   };
 
-  guardarPlanilla = () => {
-    console.log('guardar');
+  guardarPlanilla = async () => {
+    const { columnas, idPlanilla, nombrePlanilla } = this.state;
+
+    if (!idPlanilla) {
+      let docRef = await addDocument(
+        `planillasDocente/${this.props.user}/planillas`,
+        { nombre: nombrePlanilla },
+        this.props.user
+      );
+
+      this.setState({ idPlanilla: docRef.id }, () =>
+        console.log(this.state.idPlanilla)
+      );
+    }
+
+    for (const columna of columnas) {
+      await addDocumentWithId(
+        `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`,
+        columna.id,
+        { nombre: columna.nombre, valores: columna.valores }
+      );
+    }
+
+    enviarNotificacionExitosa(
+      'Planilla guardada exitosamente',
+      'Planilla Guardada!'
+    );
   };
 
   render() {
@@ -217,7 +277,14 @@ class MiReporte extends Component {
           }
           buttonText="menu.reportes-guardados"
         />
-        <Row className="row-acciones button-group mt-2">
+        <Row className="row-acciones button-group mt-2 justify-between">
+          <Input
+            onChange={this.handleNombrePlanillaChange}
+            autoComplete="off"
+            name="nombrePlanilla"
+            className="input-columna"
+            placeholder="Ingrese nombre de planilla"
+          />
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -247,7 +314,7 @@ class MiReporte extends Component {
             </div>
           )}
           {inputAgregarColumna && (
-            <>
+            <div className="div-acciones">
               <Input
                 onChange={this.handleChange}
                 autoComplete="off"
@@ -266,7 +333,7 @@ class MiReporte extends Component {
                   onClick={this.toggleAgregarColumna}
                 />
               </div>
-            </>
+            </div>
           )}
         </Row>
         <div id="encabezadoAImprimir">
@@ -308,6 +375,7 @@ class MiReporte extends Component {
                   data={alumnosData}
                   colData={columna}
                   borrarColumna={this.borrarColumna}
+                  agregarAColumna={this.agregarAColumna}
                 />
               ))}
             </Card>
@@ -318,9 +386,10 @@ class MiReporte extends Component {
   }
 }
 
-const mapStateToProps = ({ seleccionCurso }) => {
+const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject, course, institution } = seleccionCurso;
-  return { subject, course, institution };
+  const { user } = authUser;
+  return { subject, course, institution, user };
 };
 
 export default connect(mapStateToProps)(MiReporte);

@@ -6404,6 +6404,22 @@ input:-webkit-autofill {
   margin-right: 0.5rem;
 }
 
+.open-action-icon{
+  font-size: 1.2rem;
+  padding: 5px;
+  cursor: pointer;
+  color: $primary-color;
+  margin-right: 0.5rem;
+}
+
+.preview-action-icon{
+  font-size: 1.2rem;
+  padding: 5px;
+  cursor: pointer;
+  color: $primary-color;
+  margin-right: 0.5rem;
+}
+
 .set-date-action-icon{
   font-size: 1.2rem;
   padding: 5px;
@@ -10382,7 +10398,7 @@ tr.folder {
 }
 
 .justify-between {
-  justify-content: space-between;
+  justify-content: space-between !important;
 }
 
 .flex-end {
@@ -10390,7 +10406,7 @@ tr.folder {
 }
 
 .input-columna {
-  width: 30%;
+  width: 35%;
   margin: 0 1rem;
   height: 90%;
   border-radius: 1.1rem;
@@ -10486,4 +10502,11 @@ tr.folder {
 .margin-top-bottom {
   margin-bottom: 0.5rem;
   margin-top: 1rem;
+}
+
+.div-acciones {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
