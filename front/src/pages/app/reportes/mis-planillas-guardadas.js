@@ -62,9 +62,10 @@ class MisReportesGuardados extends Component {
     this.getPlanillas();
   };
 
-  handleOpen = () => {
+  handleOpen = (idPlanilla) => {
     this.props.history.push({
-      pathname: '/app/reportes/mi-planilla',
+      pathname: `/app/reportes/mi-planilla-guardada/${idPlanilla}`,
+      idPlanilla,
     });
   };
 

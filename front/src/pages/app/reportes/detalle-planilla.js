@@ -15,6 +15,7 @@ import {
   enviarNotificacionExitosa,
 } from 'helpers/Utils-ui';
 import { addDocumentWithId, addDocument } from 'helpers/Firebase-db';
+import { getDocument, getCollection } from 'helpers/Firebase-db';
 
 export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
   const [tooltipOpen, setTooltip] = useState(false);
@@ -63,7 +64,7 @@ export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
   );
 };
 
-class MiReporte extends Component {
+class DetallePlanilla extends Component {
   constructor(props) {
     super(props);
 
@@ -73,18 +74,14 @@ class MiReporte extends Component {
       inputAgregarColumna: false,
       nombreColumna: '',
       isLoading: true,
-      idPlanilla: this.props.idPlanilla ? this.props.idPlanilla : '',
+      idPlanilla: this.props.history.location.pathname.split('/')[4],
       nombrePlanilla: '',
     };
   }
 
   componentDidMount() {
-    console.log(this.state.idPlanilla, this.props.idPlanilla);
     this.getAlumnos();
-  }
-
-  componentDidUpdate() {
-    console.log(this.props.idPlanilla);
+    this.getDatosPlanilla();
   }
 
   getAlumnos = async () => {
@@ -93,6 +90,23 @@ class MiReporte extends Component {
     );
     this.setState({
       alumnosData,
+      isLoading: false,
+    });
+  };
+
+  getDatosPlanilla = async () => {
+    this.setState({
+      isLoading: true,
+    });
+    const planilla = await getDocument(
+      `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}`
+    );
+    const columnas = await getCollection(
+      `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`
+    );
+    this.setState({
+      nombrePlanilla: planilla.data.nombre,
+      columnas,
       isLoading: false,
     });
   };
@@ -284,13 +298,7 @@ class MiReporte extends Component {
           buttonText="menu.reportes-guardados"
         />
         <Row className="row-acciones button-group mt-2 justify-between">
-          <Input
-            onChange={this.handleNombrePlanillaChange}
-            autoComplete="off"
-            name="nombrePlanilla"
-            className="input-columna"
-            placeholder="Nombre de planilla (requerido para guardar)"
-          />
+          <span>Planilla: {nombrePlanilla}</span>
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -399,4 +407,4 @@ const mapStateToProps = ({ seleccionCurso, authUser }) => {
   return { subject, course, institution, user };
 };
 
-export default connect(mapStateToProps)(MiReporte);
+export default connect(mapStateToProps)(DetallePlanilla);

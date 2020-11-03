@@ -25,6 +25,10 @@ const MisPlanillasGuardadas = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './mis-planillas-guardadas')
 );
 
+const DetallePlanilla = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './detalle-planilla')
+);
+
 const Reportes = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
@@ -52,6 +56,11 @@ const Reportes = ({ match }) => (
       <Route
         path={`${match.url}/mis-planillas-guardadas`}
         render={(props) => <MisPlanillasGuardadas {...props} />}
+        exact
+      />
+      <Route
+        path={`${match.url}/mi-planilla-guardada/:planillaId`}
+        render={(props) => <DetallePlanilla {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
