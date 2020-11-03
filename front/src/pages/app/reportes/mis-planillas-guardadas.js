@@ -13,7 +13,7 @@ import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
-import { getCollection } from 'helpers/Firebase-db';
+import { getCollection, deleteDocument } from 'helpers/Firebase-db';
 
 class MisReportesGuardados extends Component {
   constructor(props) {
@@ -31,6 +31,7 @@ class MisReportesGuardados extends Component {
   }
 
   componentDidMount() {
+    this.setState({ isLoading: true });
     this.getPlanillas();
   }
 
@@ -52,12 +53,19 @@ class MisReportesGuardados extends Component {
     });
   };
 
-  handleDelete = () => {
-    console.log('delete');
+  handleDelete = async (idPlanilla) => {
+    await deleteDocument(
+      `planillasDocente/${this.props.user}/planillas`,
+      idPlanilla,
+      'Planilla'
+    );
+    this.getPlanillas();
   };
 
   handleOpen = () => {
-    console.log('open');
+    this.props.history.push({
+      pathname: '/app/reportes/mi-planilla',
+    });
   };
 
   render() {

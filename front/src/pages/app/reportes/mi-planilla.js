@@ -264,6 +264,7 @@ class MiReporte extends Component {
       columnas,
       inputAgregarColumna,
       isLoading,
+      nombrePlanilla,
     } = this.state;
 
     return isLoading ? (
@@ -283,7 +284,7 @@ class MiReporte extends Component {
             autoComplete="off"
             name="nombrePlanilla"
             className="input-columna"
-            placeholder="Ingrese nombre de planilla"
+            placeholder="Ingrese nombre de planilla (requerido)"
           />
           {!inputAgregarColumna && (
             <div className="button-group">
@@ -308,6 +309,7 @@ class MiReporte extends Component {
                 onClick={this.guardarPlanilla}
                 color="primary"
                 className="button"
+                disabled={!nombrePlanilla}
               >
                 GUARDAR
               </Button>
