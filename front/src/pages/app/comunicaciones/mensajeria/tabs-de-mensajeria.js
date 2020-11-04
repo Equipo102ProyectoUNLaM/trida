@@ -112,6 +112,11 @@ class TabsDeMensajeria extends Component {
                               onClick: (e, handleOriginal) => {
                                 clickOnRow(rowInfo);
                               },
+                              style: {
+                                background: rowInfo.row._original.leido
+                                  ? 'white'
+                                  : '#E7FAFF',
+                              },
                             };
                           }
                         }}

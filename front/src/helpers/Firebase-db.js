@@ -1,4 +1,5 @@
 import { firestore } from './Firebase';
+import * as firebase from 'firebase';
 import {
   enviarNotificacionError,
   enviarNotificacionExitosa,
@@ -563,5 +564,14 @@ export const documentExistsOnSnapshot = (collection, document) => {
     } else {
       return false;
     }
+  });
+};
+
+export const addElementToArray = (collection, document, field, element) => {
+  // Atomically add a new region to the "regions" array field.
+  const docRef = firestore.collection(collection).doc(document);
+
+  return docRef.update({
+    [field]: firebase.firestore.FieldValue.arrayUnion(element),
   });
 };
