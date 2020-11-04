@@ -10311,6 +10311,10 @@ color: var(--theme-color-1)
   color: orange !important;
 }
 
+.NoCorregido {
+  color: orange !important;
+}
+
 .titulo-asistencia {
   margin: 1rem 0 1rem 1rem;
 }
@@ -10370,4 +10374,76 @@ color: var(--theme-color-1)
 
 .border-radius-50 {
   border-radius: 50% !important;
+}
+
+// Grilla
+.align-center{
+  align-items: center;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+.input-columna {
+  width: 30%;
+  margin: 0 1rem;
+  height: 90%;
+  border-radius: 1.1rem;
+}
+
+.col-alumno {
+  margin: 1rem 2rem 1rem 0;
+  padding-left: 0.5rem;
+  width: 100%;
+  display: block;
+  overflow: scroll;
+}
+
+.header {
+  font-size: 1rem !important;
+  font-weight: bold;
+}
+
+.no-width{
+  border: initial;
+  background: $foreground-color;
+  width: 20% !important;
+  margin-left: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.icon-columna {
+  font-size: 1rem !important;
+
+  .primary{
+    color: #e2863b
+  }
+
+  .secondary{
+    color: #145388
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.container {
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 8px;
+  padding-left: 8px;
+  width: 100% !important;
+  flex-wrap: nowrap;
+}
+
+.hidden {
+  display: none;
 }

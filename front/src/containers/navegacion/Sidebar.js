@@ -295,6 +295,11 @@ class Sidebar extends Component {
               label: 'menu.reportes-generales',
               to: '/app/reportes/generales',
             },
+            {
+              icon: 'iconsminds-pen',
+              label: 'menu.mi-reporte',
+              to: '/app/reportes/mi-reporte',
+            },
           ],
         });
       }

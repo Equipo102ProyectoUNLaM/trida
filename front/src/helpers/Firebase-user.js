@@ -38,20 +38,19 @@ export const getUsuariosPorMateriaConRol = async (subjectId) => {
   return [];
 };
 
-export const getAlumnosPorMateriaConNombre = async (subjectId) => {
+export const getUsuariosAlumnosPorMateria = async (subjectId) => {
   try {
     let usuariosConData = [];
     const { data } = await getDocument(`usuariosPorMateria/${subjectId}`);
     for (const usuario of data.usuario_id) {
       const { data } = await getDocument(`usuarios/${usuario}`);
-      if (data.rol === ROLES.Alumno) {
-        usuariosConData.push({
-          id: usuario,
-          nombre: data.nombre + ' ' + data.apellido,
-        });
-      }
+      usuariosConData.push({
+        id: usuario,
+        nombre: data.nombre + ' ' + data.apellido,
+        rol: data.rol,
+      });
     }
-    return usuariosConData;
+    return usuariosConData.filter((user) => user.rol === 2);
   } catch (err) {
     console.log(err);
   }
