@@ -85,7 +85,10 @@ class ContestarPregunta extends Component {
     await addDocumentWithId(
       `clases/${this.state.idClase}/preguntas/${this.state.preguntas[0].id}/respuestas`,
       this.props.user,
+      this.props.user,
       obj,
+      null,
+      null,
       null
     );
   }

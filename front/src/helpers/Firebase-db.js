@@ -188,7 +188,7 @@ export const addDocument = async (
     }
     return docRef;
   } catch (error) {
-    if (mensajePrincipal) {
+    if (mensajeError) {
       enviarNotificacionError(mensajeError, 'Ups!');
     }
   }
@@ -348,12 +348,20 @@ export const addToMateriasCollection = async (
   }
 };
 
-export const addDocumentWithId = async (collection, id, object, message) => {
+export const addDocumentWithId = async (
+  collection,
+  id,
+  user,
+  object,
+  mensajePrincipal,
+  mensajeSecundario,
+  mensajeError
+) => {
   object = {
     ...object,
     fecha_creacion: getFechaHoraActual(),
     activo: true,
-    creador: id,
+    creador: user,
   };
 
   firestore
@@ -361,21 +369,14 @@ export const addDocumentWithId = async (collection, id, object, message) => {
     .doc(id)
     .set(object)
     .then(function () {
-      if (message) {
-        enviarNotificacionExitosa(
-          `${message} agregada exitosamente`,
-          `${message} agregada!`
-        );
+      if (mensajePrincipal) {
+        enviarNotificacionExitosa(mensajeSecundario, mensajePrincipal);
       }
     })
     .catch(function (error) {
-      if (message) {
-        enviarNotificacionError(`Error al agregar ${message}`, 'Ups!');
+      if (mensajeError) {
+        enviarNotificacionError(mensajeError, 'Ups!');
       }
-      enviarNotificacionExitosa(`${message}`, `${message}!`);
-    })
-    .catch(function (error) {
-      enviarNotificacionError(`${message}`, 'Ups!');
     });
 };
 

@@ -1,13 +1,29 @@
-import { editDocument, addDocument } from 'helpers/Firebase-db';
+import {
+  editDocument,
+  addDocumentWithId,
+  generateId,
+} from 'helpers/Firebase-db';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ModalFooter, Button, FormGroup, Label, Row } from 'reactstrap';
+import {
+  ModalFooter,
+  Button,
+  FormGroup,
+  Label,
+  Row,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+} from 'reactstrap';
 import Select from 'react-select';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Formik, Form, Field } from 'formik';
 import { mensajesSchema } from './validations';
 import { createUserList } from 'helpers/Firebase-user';
+import { subirArchivoAStorage } from 'helpers/Firebase-storage';
+const publicUrl = process.env.PUBLIC_URL;
+const imagenForo = `${publicUrl}/assets/img/imagen-foro.jpeg`;
 
 class FormForo extends Component {
   constructor(props) {
@@ -16,10 +32,13 @@ class FormForo extends Component {
     this.state = {
       nombre: this.props.nombre ? this.props.nombre : '',
       descripcion: this.props.descripcion ? this.props.descripcion : '',
+      imagen: this.props.imagen ? this.props.imagen : '',
       selectedOptions: [],
       idMateria: this.props.subject.id,
       isLoading: false,
       idUser: this.props.user,
+      fotoForoText: 'Seleccioná una foto del foro',
+      foto: '',
       esPrivado: this.props.privado ? this.props.privado : false,
       usuariosDelSelect: this.props.datosUsuarios
         ? this.props.datosUsuarios
@@ -63,6 +82,16 @@ class FormForo extends Component {
       integrantes = this.state.selectedOptions.map(({ value }) => value);
       integrantes.push(this.props.user);
     }
+    let foroId = '';
+    let url = this.state.imagen;
+    if (this.state.foto) {
+      if (this.props.idForo) {
+        foroId = this.props.idForo;
+      } else {
+        foroId = await generateId(`foros/`);
+      }
+      url = await this.subirFoto(this.state.foto, foroId);
+    }
 
     const obj = {
       nombre: values.nombre,
@@ -70,6 +99,7 @@ class FormForo extends Component {
       idMateria: this.state.idMateria,
       privado: this.state.esPrivado,
       integrantes: !this.state.esPrivado ? [] : integrantes,
+      imagen: url,
     };
 
     if (this.props.idForo) {
@@ -82,10 +112,11 @@ class FormForo extends Component {
         'Error al guardar el tema'
       );
     } else {
-      await addDocument(
+      await addDocumentWithId(
         'foros',
-        obj,
+        foroId,
         this.props.user,
+        obj,
         'Tema agregado',
         'Tema agregado exitosamente',
         'Error al agregar el tema'
@@ -106,6 +137,17 @@ class FormForo extends Component {
     }
   };
 
+  setSelectedFile = (event) => {
+    this.setState({
+      foto: event.target.files[0],
+      fotoPerfilText: event.target.files[0].name,
+    });
+  };
+
+  subirFoto = async (file, idForo) => {
+    return await subirArchivoAStorage('foros', file, idForo);
+  };
+
   render() {
     const {
       isLoading,
@@ -114,8 +156,9 @@ class FormForo extends Component {
       descripcion,
       esPrivado,
       usuariosDelSelect,
+      imagen,
     } = this.state;
-    const { toggleModal, rol, idForo } = this.props;
+    const { toggleModal, idForo } = this.props;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -187,6 +230,35 @@ class FormForo extends Component {
                 </Row>
               </Colxx>
             </Row>
+            <FormGroup className="form-group">
+              <Label>Foto del foro</Label>
+              <div style={{ flexDirection: 'row', display: 'flex' }}>
+                <img
+                  src={imagen !== '' ? imagen : imagenForo}
+                  alt="foto-default-foro"
+                  className="edit-forums mb-2 padding-1 border-radius-50"
+                />
+                <InputGroup className="foto-foro">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Subir foto</InputGroupText>
+                  </InputGroupAddon>
+                  <div className="input-file">
+                    <label
+                      className="w-100 h-10 label-foto"
+                      htmlFor="upload-photo"
+                    >
+                      {this.state.fotoPerfilText}
+                    </label>
+                    <input
+                      onChange={this.setSelectedFile}
+                      type="file"
+                      name="foto"
+                      id="upload-photo"
+                    />
+                  </div>
+                </InputGroup>
+              </div>
+            </FormGroup>
             <ModalFooter>
               <Button color="secondary" onClick={toggleModal}>
                 Cancelar
