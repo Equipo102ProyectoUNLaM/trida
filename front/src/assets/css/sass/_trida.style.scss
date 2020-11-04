@@ -10393,6 +10393,10 @@ tr.folder {
   align-items: center;
 }
 
+.align-baseline{
+  align-items: baseline !important;
+}
+
 .justify-center{
   justify-content: center;
 }
@@ -10407,6 +10411,13 @@ tr.folder {
 
 .input-columna {
   width: 35%;
+  margin: 0 1rem;
+  height: 90%;
+  border-radius: 1.1rem;
+}
+
+.input-nombre-columna {
+  width: 100%;
   margin: 0 1rem;
   height: 90%;
   border-radius: 1.1rem;
@@ -10429,6 +10440,12 @@ tr.folder {
   font-size: 0.9rem !important;
   font-weight: bold;
   max-width: 3rem;
+}
+
+.header-max-7 {
+  font-size: 0.9rem !important;
+  font-weight: bold;
+  max-width: 7rem;
 }
 
 .min-width {
@@ -10496,7 +10513,7 @@ tr.folder {
 }
 
 .height-fixed {
-  height: 3.25rem !important;
+  height: 4.015rem !important;
 }
 
 .margin-top-bottom {
@@ -10516,4 +10533,8 @@ tr.folder {
   flex-direction: column;
   align-items: center;
   margin-right: 0.5rem;
+}
+
+.no-wrap {
+  flex-wrap: nowrap !important;
 }

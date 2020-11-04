@@ -16,7 +16,13 @@ import {
 } from 'helpers/Utils-ui';
 import { addDocumentWithId, addDocument } from 'helpers/Firebase-db';
 
-export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
+export const Columna = ({
+  data,
+  colData,
+  borrarColumna,
+  agregarAColumna,
+  cambiarNombreColumna,
+}) => {
   const [tooltipOpen, setTooltip] = useState(false);
 
   const handleChange = (colId, userId, event) => {
@@ -25,16 +31,25 @@ export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
     agregarAColumna(colId, obj);
   };
 
+  const handleNombreChange = (colId, event) => {
+    const { value } = event.target;
+    cambiarNombreColumna(colId, value);
+  };
+
   return (
     <Col className="mr-2 ml-1 flex justify-center">
-      <div className="flex align-center justify-between w-100">
+      <div className="flex align-center justify-between w-100 no-wrap">
         <div></div>
-        <span className="mb-2 mt-2 header-max truncate">
-          {colData.nombre}{' '}
-        </span>{' '}
+        <Input
+          defaultValue={colData.nombre}
+          className="mb-1 input-20 align-center header"
+          autoComplete="off"
+          name="tema"
+          onChange={(event) => handleNombreChange(colData.id, event)}
+        />
         <div>
           <i
-            className="simple-icon-trash borrar-columna cursor-pointer"
+            className="simple-icon-trash borrar-columna cursor-pointer ml-1"
             onClick={() => borrarColumna(colData.id)}
             id={'borrar-columna' + colData.id}
           />
@@ -79,12 +94,7 @@ class MiReporte extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state.idPlanilla, this.props.idPlanilla);
     this.getAlumnos();
-  }
-
-  componentDidUpdate() {
-    console.log(this.props.idPlanilla);
   }
 
   getAlumnos = async () => {
@@ -167,6 +177,12 @@ class MiReporte extends Component {
     });
   };
 
+  cambiarNombreColumna = (colId, nombre) => {
+    let columnas = [...this.state.columnas];
+    const [columna] = columnas.filter((columna) => columna.id === colId);
+    columna.data.nombre = nombre;
+  };
+
   toggleIconoBorrar = (visibility, display, overflow) => {
     const { columnas, alumnosData } = this.state;
 
@@ -244,9 +260,7 @@ class MiReporte extends Component {
         this.props.user
       );
 
-      this.setState({ idPlanilla: docRef.id }, () =>
-        console.log(this.state.idPlanilla)
-      );
+      this.setState({ idPlanilla: docRef.id }, () => console.log());
     }
 
     for (const columna of columnas) {
@@ -283,14 +297,17 @@ class MiReporte extends Component {
           }
           buttonText="menu.reportes-guardados"
         />
-        <Row className="row-acciones button-group mt-2 justify-between">
-          <Input
-            onChange={this.handleNombrePlanillaChange}
-            autoComplete="off"
-            name="nombrePlanilla"
-            className="input-columna"
-            placeholder="Nombre de planilla (requerido para guardar)"
-          />
+        <Row className="row-acciones button-group mt-2 justify-between align-baseline">
+          <div className="form-group has-float-label">
+            <Input
+              onChange={this.handleNombrePlanillaChange}
+              autoComplete="off"
+              name="nombrePlanilla"
+              className="input-nombre-columna"
+              placeholder="Nombre de planilla (requerido para guardar)"
+            />
+            <span>Nombre de Planilla *</span>
+          </div>
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -383,6 +400,7 @@ class MiReporte extends Component {
                   colData={columna}
                   borrarColumna={this.borrarColumna}
                   agregarAColumna={this.agregarAColumna}
+                  cambiarNombreColumna={this.cambiarNombreColumna}
                 />
               ))}
             </Card>

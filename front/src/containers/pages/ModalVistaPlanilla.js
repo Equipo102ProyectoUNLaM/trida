@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Card,
+} from 'reactstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
@@ -61,37 +68,39 @@ class ModalVistaPlanilla extends Component {
           Vista Previa: {nombrePlanilla}
         </ModalHeader>
         <ModalBody>
-          <Grid className="flex container">
-            <Col className="mb-2 pl-3 min-width truncate">
-              <span className="header">Alumnos</span>
-              {alumnos.map((alumno) => {
+          <Card className="pt-2">
+            <Grid className="flex container">
+              <Col className="mb-2 pl-3 min-width truncate">
+                <span className="header">Alumnos</span>
+                {alumnos.map((alumno) => {
+                  return (
+                    <Row className="col-alumno truncate" key={alumno.id}>
+                      {alumno.nombre}
+                    </Row>
+                  );
+                })}
+              </Col>
+              {columnas.map((columna) => {
                 return (
-                  <Row className="col-alumno truncate" key={alumno.id}>
-                    {alumno.nombre}
-                  </Row>
+                  <Col className="col-preview" key={columna.id}>
+                    <span className="header-max truncate">
+                      {columna.data.nombre}
+                    </span>
+                    {columna.data.valores.map((valor) => {
+                      return (
+                        <Row
+                          className="mb-3 input-20 align-center truncate"
+                          key={valor.userId}
+                        >
+                          {valor.valor}
+                        </Row>
+                      );
+                    })}
+                  </Col>
                 );
               })}
-            </Col>
-            {columnas.map((columna) => {
-              return (
-                <Col className="col-preview" key={columna.id}>
-                  <span className="header-max truncate">
-                    {columna.data.nombre}
-                  </span>
-                  {columna.data.valores.map((valor) => {
-                    return (
-                      <Row
-                        className="mb-3 input-20 align-center truncate"
-                        key={valor.userId}
-                      >
-                        {valor.valor}
-                      </Row>
-                    );
-                  })}
-                </Col>
-              );
-            })}
-          </Grid>
+            </Grid>
+          </Card>
         </ModalBody>
         <ModalFooter>
           <Button color="primary" className="button" onClick={toggleModal}>

@@ -5,6 +5,7 @@ import { Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
@@ -14,10 +15,21 @@ import {
   enviarNotificacionError,
   enviarNotificacionExitosa,
 } from 'helpers/Utils-ui';
-import { addDocumentWithId, addDocument } from 'helpers/Firebase-db';
+import {
+  addDocumentWithId,
+  editDocument,
+  deleteDocument,
+  addDocument,
+} from 'helpers/Firebase-db';
 import { getDocument, getCollection } from 'helpers/Firebase-db';
 
-export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
+export const Columna = ({
+  data,
+  colData,
+  borrarColumna,
+  agregarAColumna,
+  cambiarNombreColumna,
+}) => {
   const [tooltipOpen, setTooltip] = useState(false);
 
   const handleChange = (colId, userId, event) => {
@@ -26,16 +38,25 @@ export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
     agregarAColumna(colId, obj);
   };
 
+  const handleNombreChange = (colId, event) => {
+    const { value } = event.target;
+    cambiarNombreColumna(colId, value);
+  };
+
   return (
     <Col className="mr-2 ml-1 flex justify-center">
-      <div className="flex align-center justify-between w-100">
+      <div className="flex align-center justify-between w-100 no-wrap">
         <div></div>
-        <span className="mb-2 mt-2 header-max truncate">
-          {colData.nombre}{' '}
-        </span>{' '}
+        <Input
+          defaultValue={colData.data.nombre}
+          className="mb-1 input-20 align-center header"
+          autoComplete="off"
+          name="tema"
+          onChange={(event) => handleNombreChange(colData.id, event)}
+        />
         <div>
           <i
-            className="simple-icon-trash borrar-columna cursor-pointer"
+            className="simple-icon-trash borrar-columna cursor-pointer ml-1"
             onClick={() => borrarColumna(colData.id)}
             id={'borrar-columna' + colData.id}
           />
@@ -49,17 +70,32 @@ export const Columna = ({ data, colData, borrarColumna, agregarAColumna }) => {
           </Tooltip>
         </div>
       </div>
-      {data.map((data) => (
-        <>
-          <Input
-            className="mb-1 input-20 align-center"
-            key={colData.id}
-            autoComplete="off"
-            name="tema"
-            onChange={(event) => handleChange(colData.id, data.id, event)}
-          />
-        </>
-      ))}
+      {!isEmpty(colData.data.valores) &&
+        colData.data.valores.map((data) => (
+          <>
+            <Input
+              defaultValue={data.valor}
+              className="mb-1 input-20 align-center"
+              key={data.userId}
+              autoComplete="off"
+              name="tema"
+              onChange={(event) => handleChange(colData.id, data.userId, event)}
+            />
+          </>
+        ))}
+      {isEmpty(colData.data.valores) &&
+        data.map((data) => (
+          <>
+            <Input
+              defaultValue=""
+              className="mb-1 input-20 align-center"
+              key={data.id}
+              autoComplete="off"
+              name="tema"
+              onChange={(event) => handleChange(colData.id, data.id, event)}
+            />
+          </>
+        ))}
     </Col>
   );
 };
@@ -76,6 +112,7 @@ class DetallePlanilla extends Component {
       isLoading: true,
       idPlanilla: this.props.history.location.pathname.split('/')[4],
       nombrePlanilla: '',
+      confirmarGuardar: false,
     };
   }
 
@@ -149,8 +186,7 @@ class DetallePlanilla extends Component {
     if (this.state.nombreColumna) {
       columnas.push({
         id: createRandomString(),
-        nombre: this.state.nombreColumna,
-        valores: [],
+        data: { nombre: this.state.nombreColumna, valores: [] },
       });
       this.setState({
         columnas,
@@ -162,11 +198,13 @@ class DetallePlanilla extends Component {
   agregarAColumna = (col, obj) => {
     let columnas = [...this.state.columnas];
     const [columna] = columnas.filter((columna) => columna.id === col);
-    const colUsuario = columna.valores.filter(
+
+    const [colUsuario] = columna.data.valores.filter(
       (colUsuario) => colUsuario.userId === obj.userId
     );
+
     if (isEmpty(colUsuario)) {
-      columna.valores.push(obj);
+      columna.data.valores.push(obj);
     } else {
       colUsuario.valor = obj.valor;
     }
@@ -179,6 +217,12 @@ class DetallePlanilla extends Component {
     this.setState({
       columnas,
     });
+  };
+
+  cambiarNombreColumna = (colId, nombre) => {
+    let columnas = [...this.state.columnas];
+    const [columna] = columnas.filter((columna) => columna.id === colId);
+    columna.data.nombre = nombre;
   };
 
   toggleIconoBorrar = (visibility, display, overflow) => {
@@ -201,6 +245,10 @@ class DetallePlanilla extends Component {
         x.style.overflow = overflow;
       }
     });
+  };
+
+  toggleConfirmarGuardar = () => {
+    this.setState({ confirmarGuardar: !this.state.confirmarGuardar });
   };
 
   exportarPdf = async () => {
@@ -248,26 +296,40 @@ class DetallePlanilla extends Component {
     });
   };
 
-  guardarPlanilla = async () => {
+  guardarPlanilla = async (overwrite) => {
     const { columnas, idPlanilla, nombrePlanilla } = this.state;
 
-    if (!idPlanilla) {
+    if (overwrite) {
+      await editDocument(
+        `planillasDocente/${this.props.user}/planillas`,
+        idPlanilla,
+        { nombre: nombrePlanilla }
+      );
+
+      const columnasInCollection = await getCollection(
+        `planillasDocente/${this.props.user}/planillas/${idPlanilla}/columnas`
+      );
+      for (const colum of columnasInCollection) {
+        await deleteDocument(
+          `planillasDocente/${this.props.user}/planillas/${idPlanilla}/columnas`,
+          colum.id
+        );
+      }
+    } else {
       let docRef = await addDocument(
         `planillasDocente/${this.props.user}/planillas`,
         { nombre: nombrePlanilla },
         this.props.user
       );
 
-      this.setState({ idPlanilla: docRef.id }, () =>
-        console.log(this.state.idPlanilla)
-      );
+      this.setState({ idPlanilla: docRef.id }, () => console.log());
     }
 
     for (const columna of columnas) {
       await addDocumentWithId(
         `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`,
         columna.id,
-        { nombre: columna.nombre, valores: columna.valores }
+        { nombre: columna.data.nombre, valores: columna.data.valores }
       );
     }
 
@@ -275,6 +337,13 @@ class DetallePlanilla extends Component {
       'Planilla guardada exitosamente',
       'Planilla Guardada!'
     );
+
+    this.toggleConfirmarGuardar();
+    if (!overwrite) {
+      this.props.history.push(
+        `/app/reportes/mi-planilla-guardada/${this.state.idPlanilla}`
+      );
+    }
   };
 
   render() {
@@ -284,9 +353,10 @@ class DetallePlanilla extends Component {
       inputAgregarColumna,
       isLoading,
       nombrePlanilla,
+      confirmarGuardar,
     } = this.state;
 
-    return isLoading ? (
+    return isLoading || isEmpty(alumnosData) ? (
       <div className="cover-spin" />
     ) : (
       <div>
@@ -297,8 +367,18 @@ class DetallePlanilla extends Component {
           }
           buttonText="menu.reportes-guardados"
         />
-        <Row className="row-acciones button-group mt-2 justify-between">
-          <span>Planilla: {nombrePlanilla}</span>
+        <Row className="row-acciones button-group mt-2 justify-between align-baseline">
+          <div className="form-group has-float-label">
+            <Input
+              defaultValue={nombrePlanilla}
+              onChange={this.handleNombrePlanillaChange}
+              autoComplete="off"
+              name="nombrePlanilla"
+              className="input-nombre-columna"
+              placeholder="Nombre de planilla (requerido para guardar)"
+            />
+            <span>Nombre de Planilla *</span>
+          </div>
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -319,7 +399,7 @@ class DetallePlanilla extends Component {
               </Button>
               <Button
                 outline
-                onClick={this.guardarPlanilla}
+                onClick={this.toggleConfirmarGuardar}
                 color="primary"
                 className="button"
                 disabled={!nombrePlanilla}
@@ -391,11 +471,25 @@ class DetallePlanilla extends Component {
                   colData={columna}
                   borrarColumna={this.borrarColumna}
                   agregarAColumna={this.agregarAColumna}
+                  cambiarNombreColumna={this.cambiarNombreColumna}
                 />
               ))}
             </Card>
           </Grid>
         </div>
+        {confirmarGuardar && (
+          <ModalConfirmacion
+            isOpen={confirmarGuardar}
+            toggle={this.toggleConfirmarGuardar}
+            titulo="Guardar"
+            texto="¿Querés sobreescribir tu planilla o guardar una nueva?"
+            buttonSecondary="Cancelar"
+            buttonPrimary="Guardar Nuevo"
+            buttonOverwrite="Sobreescribir"
+            onConfirm={() => this.guardarPlanilla(false)}
+            onOverwrite={() => this.guardarPlanilla(true)}
+          />
+        )}
       </div>
     );
   }
