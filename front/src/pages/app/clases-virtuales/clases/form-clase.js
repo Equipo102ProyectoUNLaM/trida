@@ -106,7 +106,7 @@ class FormClase extends React.Component {
       if (this.props.id) {
         claseId = this.props.idForo;
       } else {
-        claseId = await generateId(`clases/`);
+        claseId = await generateId(`materias/${this.props.subject.id}/clases`);
       }
       url = await this.subirFoto(this.state.foto, claseId);
     }
@@ -154,7 +154,11 @@ class FormClase extends React.Component {
   };
 
   subirFoto = async (file, idClase) => {
-    return await subirArchivoAStorage('clases', file, idClase);
+    return await subirArchivoAStorage(
+      `materias/${this.props.subject.id}/clases`,
+      file,
+      idClase
+    );
   };
 
   render() {

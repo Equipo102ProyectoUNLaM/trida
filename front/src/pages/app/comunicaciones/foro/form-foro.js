@@ -88,7 +88,7 @@ class FormForo extends Component {
       if (this.props.idForo) {
         foroId = this.props.idForo;
       } else {
-        foroId = await generateId(`foros/`);
+        foroId = await generateId(`materias/${this.props.subject.id}/foros`);
       }
       url = await this.subirFoto(this.state.foto, foroId);
     }
@@ -145,7 +145,11 @@ class FormForo extends Component {
   };
 
   subirFoto = async (file, idForo) => {
-    return await subirArchivoAStorage('foros', file, idForo);
+    return await subirArchivoAStorage(
+      `materias/${this.props.subject.id}/foros`,
+      file,
+      idForo
+    );
   };
 
   render() {
