@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Button, Card } from 'reactstrap';
-import { Colxx, Separator } from 'components/common/CustomBootstrap';
-import { Col, Row, Grid } from 'react-flexbox-grid';
-import moment from 'moment';
+import { Row } from 'react-flexbox-grid';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import DataListView from 'containers/pages/DataListView';
 import ModalVistaPlanilla from 'containers/pages/ModalVistaPlanilla';
+import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 
-import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
-import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { getCollection, deleteDocument } from 'helpers/Firebase-db';
 
 class MisReportesGuardados extends Component {
@@ -27,6 +20,8 @@ class MisReportesGuardados extends Component {
       isLoading: true,
       modalPreviewOpen: false,
       idPlanilla: '',
+      modalConfirmacion: false,
+      idPlanillaBorrar: '',
     };
   }
 
@@ -39,7 +34,6 @@ class MisReportesGuardados extends Component {
     const planillas = await getCollection(
       `planillasDocente/${this.props.user}/planillas`
     );
-    console.log(planillas);
     this.setState({
       planillas,
       isLoading: false,
@@ -53,13 +47,21 @@ class MisReportesGuardados extends Component {
     });
   };
 
-  handleDelete = async (idPlanilla) => {
+  toggleModalConfirmacion = (idPlanilla) => {
+    this.setState({
+      modalConfirmacion: !this.state.modalConfirmacion,
+      idPlanillaBorrar: idPlanilla,
+    });
+  };
+
+  handleDelete = async () => {
     await deleteDocument(
       `planillasDocente/${this.props.user}/planillas`,
-      idPlanilla,
+      this.state.idPlanillaBorrar,
       'Planilla'
     );
     this.getPlanillas();
+    this.toggleModalConfirmacion();
   };
 
   handleOpen = (idPlanilla) => {
@@ -70,7 +72,13 @@ class MisReportesGuardados extends Component {
   };
 
   render() {
-    const { isLoading, planillas, modalPreviewOpen, idPlanilla } = this.state;
+    const {
+      isLoading,
+      planillas,
+      modalPreviewOpen,
+      idPlanilla,
+      modalConfirmacion,
+    } = this.state;
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
@@ -90,7 +98,7 @@ class MisReportesGuardados extends Component {
                 id={planilla.id}
                 title={planilla.data.nombre}
                 text1={`Fecha de Creación: ` + planilla.data.fecha_creacion}
-                onDelete={this.handleDelete}
+                onDelete={this.toggleModalConfirmacion}
                 onOpen={this.handleOpen}
                 onPreview={this.togglePreview}
                 planilla
@@ -104,6 +112,17 @@ class MisReportesGuardados extends Component {
             isOpen={modalPreviewOpen}
             toggleModal={this.togglePreview}
             idPlanilla={idPlanilla}
+          />
+        )}
+        {modalConfirmacion && (
+          <ModalConfirmacion
+            isOpen={modalConfirmacion}
+            toggle={this.toggleModalConfirmacion}
+            titulo="Guardar"
+            texto="¿Estás seguro de borrar la planilla?"
+            buttonSecondary="Cancelar"
+            buttonPrimary="Confirmar"
+            onConfirm={this.handleDelete}
           />
         )}
       </div>
