@@ -144,6 +144,11 @@ const RespuestasAPreguntas = ({
     return usuariosNoContestaronNombres;
   };
 
+  const refreshRespuestas = async () => {
+    setIsLoadingLocal(true);
+    getPreguntasConRespuestasDeAlumnos();
+  };
+
   return isLoadingLocal ? (
     <div className="loading" />
   ) : (
@@ -151,6 +156,12 @@ const RespuestasAPreguntas = ({
       {isEmpty(respuestasPorPregunta) && (
         <span>No hay respuestas cargadas</span>
       )}
+      <i
+        className="iconsminds-refresh cursor-pointer refresh-respuestas av-tooltip tooltip-label-bottom"
+        onClick={() => refreshRespuestas()}
+        title="Refrescar Preguntas"
+      />
+
       {respuestasPorPregunta.map((rta, idx) => {
         return (
           <Card key={idx} className="h-100 card-respuestas">
