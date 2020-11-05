@@ -22,8 +22,10 @@ import { Formik, Form, Field } from 'formik';
 import { mensajesSchema } from './validations';
 import { createUserList } from 'helpers/Firebase-user';
 import { subirArchivoAStorage } from 'helpers/Firebase-storage';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenForo = `${publicUrl}/assets/img/imagen-foro.jpeg`;
+const imageFiles = ['image/png', 'image/jpeg', 'image/jpg'];
 
 class FormForo extends Component {
   constructor(props) {
@@ -138,10 +140,17 @@ class FormForo extends Component {
   };
 
   setSelectedFile = (event) => {
-    this.setState({
-      foto: event.target.files[0],
-      fotoPerfilText: event.target.files[0].name,
-    });
+    if (imageFiles.includes(event.target.files[0].type)) {
+      this.setState({
+        foto: event.target.files[0],
+        fotoPerfilText: event.target.files[0].name,
+      });
+    } else {
+      enviarNotificacionError(
+        'Extensión de archivo no válida',
+        'Archivo no admitido'
+      );
+    }
   };
 
   subirFoto = async (file, idForo) => {
