@@ -15,8 +15,6 @@ import {
 } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { isEmpty } from 'helpers/Utils';
-const publicUrl = process.env.PUBLIC_URL;
-const imagenForo = `${publicUrl}/assets/img/imagen-foro.jpeg`;
 
 function collect(props) {
   return { data: props.data };
@@ -135,7 +133,7 @@ class Foro extends Component {
       'mensajes'
     );
     const { data, subCollection } = foro;
-    const { nombre, descripcion, privado, integrantes } = data;
+    const { nombre, descripcion, privado, integrantes, imagen } = data;
     this.setState({
       idForoEditado: idForo,
       nombreForoEditado: nombre,
@@ -143,6 +141,7 @@ class Foro extends Component {
       mensajesForo: subCollection,
       privadoEditado: privado,
       integrantesEditado: integrantes,
+      imagenEditada: imagen,
     });
     this.toggleEditModal();
   };
@@ -179,6 +178,7 @@ class Foro extends Component {
       datosUsuarios,
       integrantesEditado,
       privadoEditado,
+      imagenEditada,
     } = this.state;
     const { rol } = this.props;
     const rolDocente = rol !== ROLES.Alumno;
@@ -216,7 +216,6 @@ class Foro extends Component {
                   <ListaConImagen
                     key={foro.id}
                     item={foro}
-                    imagen={imagenForo}
                     isSelect={this.state.selectedItems.includes(foro.id)}
                     collect={collect}
                     navTo={`/app/comunicaciones/foro/detalle-foro/${foro.id}`}
@@ -252,6 +251,7 @@ class Foro extends Component {
                 datosUsuarios={datosUsuarios}
                 integrantes={integrantesEditado}
                 privado={privadoEditado}
+                imagen={imagenEditada}
               />
             </ModalGrande>
           )}

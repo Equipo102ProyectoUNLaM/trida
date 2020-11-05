@@ -2571,7 +2571,7 @@ nav .nomargin {
   }
 }
 
-/* 12.Chat App*/
+/* 12.Forums*/
 .chat-app {
 
   .back-forums {
@@ -2719,6 +2719,17 @@ nav .nomargin {
       padding-left: 2rem;
     }
   }
+}
+
+.edit-forums {
+  width: 7rem;
+  height: 7rem;
+  object-fit: cover;
+}
+
+.foto-foro {
+  height: fit-content;
+  align-self: center;
 }
 
 /* 13.Survey App*/
@@ -2997,6 +3008,7 @@ nav .nomargin {
 .card-img-fluid {
   border-radius: calc(0.25rem - 1px);
   object-fit: cover;
+  height: 13rem;
 }
 
 .card-img-bottom {
@@ -10333,7 +10345,7 @@ color: var(--theme-color-1)
   border: 1px solid #d7d7d7;
   background: white;
   display: flex;
-  
+
 }
 
 .padding-1 {
