@@ -17,7 +17,6 @@ import { capitalizeString } from 'helpers/Utils';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
 import {
   getDocument,
-  addDocument,
   editDocument,
   addDocumentWithId,
   generateId,
@@ -25,8 +24,10 @@ import {
 import { Formik, Form, Field } from 'formik';
 import { formClaseSchema } from './validations';
 import { subirArchivoAStorage } from 'helpers/Firebase-storage';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
+const imageFiles = ['image/png', 'image/jpeg', 'image/jpg'];
 
 class FormClase extends React.Component {
   constructor(props) {
@@ -45,6 +46,7 @@ class FormClase extends React.Component {
       fotoForoText: 'Seleccioná una foto de la clase',
       foto: '',
       imagen: '',
+      fotoAMostrar: null,
     };
   }
 
@@ -147,10 +149,24 @@ class FormClase extends React.Component {
   };
 
   setSelectedFile = (event) => {
-    this.setState({
-      foto: event.target.files[0],
-      fotoPerfilText: event.target.files[0].name,
-    });
+    let file = event.target.files[0];
+    if (imageFiles.includes(file.type)) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({
+          foto: file,
+          fotoAMostrar: reader.result,
+          fotoPerfilText: file.name,
+        });
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      enviarNotificacionError(
+        'Extensión de archivo no válida',
+        'Archivo no admitido'
+      );
+    }
   };
 
   subirFoto = async (file, idClase) => {
@@ -159,6 +175,14 @@ class FormClase extends React.Component {
       file,
       idClase
     );
+  };
+
+  removeRespuesta = () => {
+    this.setState({
+      imagen: '',
+      fotoAMostrar: null,
+      fotoPerfilText: '',
+    });
   };
 
   render() {
@@ -170,6 +194,7 @@ class FormClase extends React.Component {
       fecha_clase,
       switchVideollamada,
       imagen,
+      fotoAMostrar,
     } = this.state;
     const initialValues = {
       nombre: nombre,
@@ -248,9 +273,19 @@ class FormClase extends React.Component {
               <Label>Foto de la clase</Label>
               <div style={{ flexDirection: 'row', display: 'flex' }}>
                 <img
-                  src={imagen !== '' ? imagen : imagenClase}
-                  alt="foto-default-clase"
+                  src={
+                    fotoAMostrar
+                      ? fotoAMostrar
+                      : imagen !== ''
+                      ? imagen
+                      : imagenClase
+                  }
+                  alt="foto-default-foro"
                   className="edit-forums mb-2 padding-1 border-radius-50"
+                />
+                <div
+                  className="glyph-icon simple-icon-close remove-icon mr-1"
+                  onClick={() => this.removeRespuesta()}
                 />
                 <InputGroup className="foto-foro">
                   <InputGroupAddon addonType="prepend">
