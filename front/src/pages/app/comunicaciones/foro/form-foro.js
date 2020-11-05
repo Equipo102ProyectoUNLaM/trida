@@ -169,6 +169,14 @@ class FormForo extends Component {
     );
   };
 
+  removeRespuesta = () => {
+    this.setState({
+      imagen: '',
+      fotoAMostrar: null,
+      fotoPerfilText: '',
+    });
+  };
+
   render() {
     const {
       isLoading,
@@ -178,7 +186,6 @@ class FormForo extends Component {
       esPrivado,
       usuariosDelSelect,
       imagen,
-      foto,
       fotoAMostrar,
     } = this.state;
     const { toggleModal, idForo } = this.props;
@@ -266,6 +273,10 @@ class FormForo extends Component {
                   }
                   alt="foto-default-foro"
                   className="edit-forums mb-2 padding-1 border-radius-50"
+                />
+                <div
+                  className="glyph-icon simple-icon-close remove-icon mr-1"
+                  onClick={() => this.removeRespuesta()}
                 />
                 <InputGroup className="foto-foro">
                   <InputGroupAddon addonType="prepend">
