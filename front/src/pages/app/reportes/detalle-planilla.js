@@ -45,11 +45,11 @@ export const Columna = ({
 
   return (
     <Col className="mr-2 ml-1 flex justify-center">
-      <div className="flex align-center justify-between w-100 no-wrap">
+      <div className="flex align-baseline justify-between w-100 no-wrap">
         <div></div>
         <Input
           defaultValue={colData.data.nombre}
-          className="mb-1 input-20 align-center header"
+          className="mb-4 input-20-2 align-center header-small padding-0"
           autoComplete="off"
           name="tema"
           onChange={(event) => handleNombreChange(colData.id, event)}
@@ -75,7 +75,7 @@ export const Columna = ({
           <>
             <Input
               defaultValue={data.valor}
-              className="mb-1 input-20 align-center"
+              className="mb-1 input-20 align-center padding-0"
               key={data.userId}
               autoComplete="off"
               name="tema"
@@ -356,10 +356,9 @@ class DetallePlanilla extends Component {
       confirmarGuardar,
     } = this.state;
 
-    return isLoading || isEmpty(alumnosData) ? (
-      <div className="cover-spin" />
-    ) : (
+    return (
       <div>
+        {(isLoading || isEmpty(alumnosData)) && <div className="cover-spin" />}
         <HeaderDeModulo
           heading="menu.mi-reporte"
           toggleModal={() =>
@@ -446,7 +445,7 @@ class DetallePlanilla extends Component {
           <Grid className="flex container">
             <Card className="no-width ml-0 pr-4">
               <Col className="mb-2 pl-3 min-width truncate">
-                <div className="flex align-center justify-between w-100 height-fixed">
+                <div className="flex justify-between w-100 height-fixed margin-top-05">
                   <span className="header">Alumnos</span>
                 </div>
                 {alumnosData.map((alumno) => {

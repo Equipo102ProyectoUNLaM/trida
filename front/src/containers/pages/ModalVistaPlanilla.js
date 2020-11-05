@@ -83,7 +83,7 @@ class ModalVistaPlanilla extends Component {
               {columnas.map((columna) => {
                 return (
                   <Col className="col-preview" key={columna.id}>
-                    <span className="header-max truncate">
+                    <span className="header-max-7 truncate">
                       {columna.data.nombre}
                     </span>
                     {columna.data.valores.map((valor) => {

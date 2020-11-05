@@ -281,7 +281,7 @@ class DataListView extends React.Component {
                           )}
                           {onOpen && (
                             <div
-                              className="glyph-icon iconsminds-folder-open open-action-icon"
+                              className="glyph-icon iconsminds-pen-2 open-action-icon"
                               onClick={this.handleClickOpen}
                               id="open-icon"
                             />

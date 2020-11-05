@@ -10428,11 +10428,15 @@ tr.folder {
   padding-left: 0.5rem;
   width: 100%;
   display: block;
-  overflow: scroll;
 }
 
 .header {
   font-size: 1rem !important;
+  font-weight: bold;
+}
+
+.header-small {
+  font-size: 0.8rem !important;
   font-weight: bold;
 }
 
@@ -10466,6 +10470,10 @@ tr.folder {
 
 .input-20{
   height: 20%;
+}
+
+.input-20-2{
+  height: 70%;
 }
 
 .icon-columna {
@@ -10513,7 +10521,7 @@ tr.folder {
 }
 
 .height-fixed {
-  height: 4.015rem !important;
+  height: 3rem !important;
 }
 
 .margin-top-bottom {
@@ -10537,4 +10545,12 @@ tr.folder {
 
 .no-wrap {
   flex-wrap: nowrap !important;
+}
+
+.padding-0 {
+  padding: 0 0.75rem;
+}
+
+.margin-top-05 {
+  margin-top: 0.5rem;
 }
