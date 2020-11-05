@@ -41,6 +41,7 @@ class FormForo extends Component {
       idUser: this.props.user,
       fotoForoText: 'Seleccioná una foto del foro',
       foto: '',
+      fotoAMostrar: null,
       esPrivado: this.props.privado ? this.props.privado : false,
       usuariosDelSelect: this.props.datosUsuarios
         ? this.props.datosUsuarios
@@ -140,11 +141,18 @@ class FormForo extends Component {
   };
 
   setSelectedFile = (event) => {
-    if (imageFiles.includes(event.target.files[0].type)) {
-      this.setState({
-        foto: event.target.files[0],
-        fotoPerfilText: event.target.files[0].name,
-      });
+    let file = event.target.files[0];
+    if (imageFiles.includes(file.type)) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({
+          foto: file,
+          fotoAMostrar: reader.result,
+          fotoPerfilText: file.name,
+        });
+      };
+
+      reader.readAsDataURL(file);
     } else {
       enviarNotificacionError(
         'Extensión de archivo no válida',
@@ -170,6 +178,8 @@ class FormForo extends Component {
       esPrivado,
       usuariosDelSelect,
       imagen,
+      foto,
+      fotoAMostrar,
     } = this.state;
     const { toggleModal, idForo } = this.props;
     return isLoading ? (
@@ -247,7 +257,13 @@ class FormForo extends Component {
               <Label>Foto del foro</Label>
               <div style={{ flexDirection: 'row', display: 'flex' }}>
                 <img
-                  src={imagen !== '' ? imagen : imagenForo}
+                  src={
+                    fotoAMostrar
+                      ? fotoAMostrar
+                      : imagen !== ''
+                      ? imagen
+                      : imagenForo
+                  }
                   alt="foto-default-foro"
                   className="edit-forums mb-2 padding-1 border-radius-50"
                 />
