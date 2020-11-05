@@ -43,6 +43,8 @@ const RespuestasAPreguntas = ({
 
       if (!rolDocente) getRespuestasDeAlumno(preguntasConRespuestas);
       crearCantRespuestasPorPregunta(preguntasConRespuestas);
+    } else {
+      setIsLoadingLocal(false);
     }
   };
 
