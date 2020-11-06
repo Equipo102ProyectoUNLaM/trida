@@ -106,6 +106,14 @@ class FormPractica extends React.Component {
   /* ************ */
 
   onPracticaSubmit = async (values) => {
+    if (!this.state.file) {
+      enviarNotificacionError(
+        'Debes adjuntar una práctica para poder continuar',
+        'Archivo faltante'
+      );
+      return;
+    }
+
     const { nombre, descripcion, fechaLanzada, fechaVencimiento } = values;
     this.setState({ isLoading: true });
     const uuid = createUUID();
@@ -248,12 +256,6 @@ class FormPractica extends React.Component {
                   onInputCapture={(e) => this.handleFileChange(e)}
                 />
               </InputGroup>
-
-              {this.props.submitted && !this.state.file ? (
-                <div className="invalid-feedback d-block">
-                  Adjuntar un archivo en una extensión válida
-                </div>
-              ) : null}
             </FormGroup>
             <ModalFooter>
               <Button color="secondary" onClick={toggleModal}>
