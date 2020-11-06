@@ -1,15 +1,33 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import {
+  ModalFooter,
+  Button,
+  FormGroup,
+  Label,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+} from 'reactstrap';
 import Switch from 'rc-switch';
 import { createUUID, createRandomString } from 'helpers/Utils';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
 import { capitalizeString } from 'helpers/Utils';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
-import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
+import {
+  getDocument,
+  editDocument,
+  addDocumentWithId,
+  generateId,
+} from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 import { formClaseSchema } from './validations';
+import { subirArchivoAStorage } from 'helpers/Firebase-storage';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
+const publicUrl = process.env.PUBLIC_URL;
+const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
+const imageFiles = ['image/png', 'image/jpeg', 'image/jpg'];
 
 class FormClase extends React.Component {
   constructor(props) {
@@ -25,6 +43,10 @@ class FormClase extends React.Component {
       idSala: '',
       password: '',
       contenidos: [],
+      fotoForoText: 'Seleccioná una foto de la clase',
+      foto: '',
+      imagen: '',
+      fotoAMostrar: null,
     };
   }
 
@@ -42,6 +64,7 @@ class FormClase extends React.Component {
         idSala,
         password,
         contenidos,
+        imagen,
       } = data;
       this.setState({
         nombre,
@@ -51,6 +74,7 @@ class FormClase extends React.Component {
         password,
         contenidos,
         switchVideollamada: idSala !== '' ? true : false,
+        imagen,
       });
     }
     this.setState({
@@ -77,6 +101,18 @@ class FormClase extends React.Component {
       const uuid = createUUID();
       idSala = CryptoJS.AES.encrypt(uuid, secretKey).toString();
     }
+
+    let claseId = '';
+    let url = this.state.imagen;
+    if (this.state.foto) {
+      if (this.props.id) {
+        claseId = this.props.idForo;
+      } else {
+        claseId = await generateId(`materias/${this.props.subject.id}/clases`);
+      }
+      url = await this.subirFoto(this.state.foto, claseId);
+    }
+
     const obj = {
       nombre: capitalizeString(nombre),
       fecha_clase,
@@ -85,6 +121,7 @@ class FormClase extends React.Component {
       password: createRandomString(),
       idMateria: this.props.subject.id,
       contenidos: this.state.contenidos,
+      imagen: url,
     };
 
     if (this.props.id) {
@@ -97,10 +134,11 @@ class FormClase extends React.Component {
         'Error al guardar la clase'
       );
     } else {
-      await addDocument(
+      await addDocumentWithId(
         'clases',
-        obj,
+        claseId,
         this.props.user,
+        obj,
         'Clase agregada',
         'Clase agregada exitosamente',
         'Error al agregar la clase'
@@ -108,6 +146,43 @@ class FormClase extends React.Component {
     }
 
     this.props.onClaseGuardada();
+  };
+
+  setSelectedFile = (event) => {
+    let file = event.target.files[0];
+    if (imageFiles.includes(file.type)) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({
+          foto: file,
+          fotoAMostrar: reader.result,
+          fotoPerfilText: file.name,
+        });
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      enviarNotificacionError(
+        'Extensión de archivo no válida',
+        'Archivo no admitido'
+      );
+    }
+  };
+
+  subirFoto = async (file, idClase) => {
+    return await subirArchivoAStorage(
+      `materias/${this.props.subject.id}/clases`,
+      file,
+      idClase
+    );
+  };
+
+  removeRespuesta = () => {
+    this.setState({
+      imagen: '',
+      fotoAMostrar: null,
+      fotoPerfilText: '',
+    });
   };
 
   render() {
@@ -118,6 +193,8 @@ class FormClase extends React.Component {
       descripcion,
       fecha_clase,
       switchVideollamada,
+      imagen,
+      fotoAMostrar,
     } = this.state;
     const initialValues = {
       nombre: nombre,
@@ -192,7 +269,45 @@ class FormClase extends React.Component {
                 unCheckedChildren="No"
               />
             </FormGroup>
-
+            <FormGroup className="form-group">
+              <Label>Foto de la clase</Label>
+              <div style={{ flexDirection: 'row', display: 'flex' }}>
+                <img
+                  src={
+                    fotoAMostrar
+                      ? fotoAMostrar
+                      : imagen !== ''
+                      ? imagen
+                      : imagenClase
+                  }
+                  alt="foto-default-foro"
+                  className="edit-forums mb-2 padding-1 border-radius-50"
+                />
+                <div
+                  className="glyph-icon simple-icon-close remove-icon mr-1"
+                  onClick={() => this.removeRespuesta()}
+                />
+                <InputGroup className="foto-foro">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Subir foto</InputGroupText>
+                  </InputGroupAddon>
+                  <div className="input-file">
+                    <label
+                      className="w-100 h-10 label-foto"
+                      htmlFor="upload-photo"
+                    >
+                      {this.state.fotoPerfilText}
+                    </label>
+                    <input
+                      onChange={this.setSelectedFile}
+                      type="file"
+                      name="foto"
+                      id="upload-photo"
+                    />
+                  </div>
+                </InputGroup>
+              </div>
+            </FormGroup>
             <ModalFooter>
               <Button color="secondary" onClick={toggleModal}>
                 Cancelar

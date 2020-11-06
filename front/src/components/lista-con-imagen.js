@@ -6,10 +6,12 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
 import { isMobile } from 'react-device-detect';
 import AccionesMobile from 'components/common/AccionesMobile';
+const publicUrl = process.env.PUBLIC_URL;
+const imagenForo = `${publicUrl}/assets/img/imagen-foro.jpeg`;
+const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
 
 const ListaConImagen = ({
   item,
-  imagen,
   collect,
   navTo,
   onEdit,
@@ -34,7 +36,9 @@ const ListaConImagen = ({
                 top
                 className="card-img-fluid"
                 alt={data.nombre}
-                src={imagen}
+                src={
+                  data.imagen ? data.imagen : isClase ? imagenClase : imagenForo
+                }
               />
             </div>
           </NavLink>
