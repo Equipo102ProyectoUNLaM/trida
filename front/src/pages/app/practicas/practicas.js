@@ -15,7 +15,9 @@ import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { getDateTimeStringFromDate, isEmpty } from 'helpers/Utils';
 import { storage } from 'helpers/Firebase';
+import { isMobile } from 'react-device-detect';
 import * as _moment from 'moment';
+import HeaderDeModuloMobile from 'components/common/HeaderDeModuloMobile';
 const moment = _moment;
 
 function collect(props) {
@@ -283,23 +285,49 @@ class Practica extends Component {
     ) : (
       <Fragment>
         <div className="disable-text-selection">
-          <HeaderDeModulo
-            heading={
-              oldPracticesActive
-                ? 'menu.my-old-activities'
-                : 'menu.my-activities'
-            }
-            toggleModal={
-              rolDocente && !oldPracticesActive ? this.toggleCreateModal : null
-            }
-            buttonText={
-              rolDocente && !oldPracticesActive ? 'activity.add' : null
-            }
-            secondaryToggleModal={this.toggleOldPracticesModal}
-            secondaryButtonText={
-              oldPracticesActive ? 'activity.active' : 'activity.old'
-            }
-          />
+          {isMobile ? (
+            <HeaderDeModuloMobile
+              heading={
+                oldPracticesActive
+                  ? 'menu.my-old-activities'
+                  : 'menu.my-activities'
+              }
+              toggleIcon={
+                rolDocente && !oldPracticesActive
+                  ? this.toggleCreateModal
+                  : null
+              }
+              iconText={
+                rolDocente && !oldPracticesActive
+                  ? 'glyph-icon iconsminds-add'
+                  : null
+              }
+              secondaryToggle={this.toggleOldPracticesModal}
+              secondaryButtonText={
+                oldPracticesActive ? 'activity.active' : 'activity.old'
+              }
+            />
+          ) : (
+            <HeaderDeModulo
+              heading={
+                oldPracticesActive
+                  ? 'menu.my-old-activities'
+                  : 'menu.my-activities'
+              }
+              toggleModal={
+                rolDocente && !oldPracticesActive
+                  ? this.toggleCreateModal
+                  : null
+              }
+              buttonText={
+                rolDocente && !oldPracticesActive ? 'activity.add' : null
+              }
+              secondaryToggleModal={this.toggleOldPracticesModal}
+              secondaryButtonText={
+                oldPracticesActive ? 'activity.active' : 'activity.old'
+              }
+            />
+          )}
           <ModalGrande
             modalOpen={modalCreateOpen}
             toggleModal={this.toggleCreateModal}
@@ -314,8 +342,8 @@ class Practica extends Component {
             />
           </ModalGrande>
           <Row>
-            <Colxx xxs="8" md="8">
-              <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+            <Colxx xxs="12" xs="12" md="6" lg="8" className="w-xs-100">
+              <div className="search-sm float-md-left mr-1 mb-1 align-top">
                 <input
                   type="text"
                   name="keyword"
@@ -326,7 +354,13 @@ class Practica extends Component {
                 />
               </div>
             </Colxx>
-            <Colxx xxs="4" md="4" className="columna-filtro-badge">
+            <Colxx
+              xxs="12"
+              xs="12"
+              md="6"
+              lg="4"
+              className="columna-filtro-badge"
+            >
               <Badge pill className="mb-1 position-absolute badge badge-filtro">
                 <Calendario
                   handleClick={this.handleClickCalendario}
@@ -335,7 +369,8 @@ class Practica extends Component {
                   filterCalendar={true}
                   id="fechasFilter"
                 />
-                Filtro por Fechas
+                <span className="ml-2">Filtro por Fechas</span>
+
                 {filtroFecha && (
                   <>
                     {' '}

@@ -539,12 +539,11 @@ class RealizarEvaluacion extends Component {
               </div>
             </div>
             <ModalFooter>
-              <Button color="primary" onClick={this.finalizarEvaluacion}>
-                FINALIZAR EVALUACION
-              </Button>
-
               <Button color="secondary" onClick={this.toggleAbandonarModal}>
                 ABANDONAR
+              </Button>
+              <Button color="primary" onClick={this.finalizarEvaluacion}>
+                FINALIZAR EVALUACION
               </Button>
             </ModalFooter>
           </CardBody>

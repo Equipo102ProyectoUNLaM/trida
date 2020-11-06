@@ -79,6 +79,7 @@ class FormMensaje extends Component {
       formal: false,
       general: this.state.esGeneral,
       idMateria: this.state.idMateria,
+      leido: [],
       responde_a: this.props.idMensajeAResponder
         ? this.props.idMensajeAResponder
         : '',
@@ -160,7 +161,7 @@ class FormMensaje extends Component {
                       />
                     </Colxx>
                     {rolDocente && (
-                      <Colxx xxs="12" md="6" className="receivers-general">
+                      <Colxx xxs="12" md="6" className="receivers-general mt-4">
                         <Field
                           autoComplete="off"
                           name="esGeneral"
@@ -223,15 +224,15 @@ class FormMensaje extends Component {
             </FormGroup>
 
             <ModalFooter>
+              <Button color="secondary" onClick={toggleModal}>
+                Cancelar
+              </Button>
               <Button
                 color="primary"
                 type="submit"
                 disabled={this.disableEnviarButton()}
               >
                 Enviar
-              </Button>
-              <Button color="secondary" onClick={toggleModal}>
-                Cancelar
               </Button>
             </ModalFooter>
           </Form>

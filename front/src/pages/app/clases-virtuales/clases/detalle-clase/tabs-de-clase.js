@@ -36,6 +36,7 @@ import ModalVistaPreviaPreguntas from '../preguntas-clase/vista-previa-preguntas
 import ROLES from 'constants/roles';
 import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
 import RespuestasAPreguntas from './respuestas-a-preguntas';
+import { isMobile } from 'react-device-detect';
 
 class TabsDeClase extends Component {
   constructor(props) {
@@ -346,7 +347,14 @@ class TabsDeClase extends Component {
                           this.toggleSecondTab('1');
                         }}
                       >
-                        Aula Virtual
+                        {isMobile && (
+                          <h1 className="ml-2 mr-2">
+                            <div
+                              className={'glyph-icon iconsminds-video-tripod'}
+                            />
+                          </h1>
+                        )}
+                        {!isMobile && 'Aula Virtual'}
                       </NavLink>
                     </NavItem>
                     <NavItem
@@ -365,7 +373,14 @@ class TabsDeClase extends Component {
                           this.toggleSecondTab('2');
                         }}
                       >
-                        Contenidos
+                        {isMobile && (
+                          <h1 className="ml-2 mr-2">
+                            <div
+                              className={'glyph-icon iconsminds-folder-cloud'}
+                            />
+                          </h1>
+                        )}
+                        {!isMobile && 'Contenidos'}
                       </NavLink>
                     </NavItem>
                     {rolDocente && (
@@ -381,7 +396,16 @@ class TabsDeClase extends Component {
                             this.toggleSecondTab('3');
                           }}
                         >
-                          Preguntas
+                          {isMobile && (
+                            <h1 className="ml-2 mr-2">
+                              <div
+                                className={
+                                  'glyph-icon iconsminds-speach-bubble-asking'
+                                }
+                              />
+                            </h1>
+                          )}
+                          {!isMobile && 'Preguntas'}
                         </NavLink>
                       </NavItem>
                     )}
@@ -401,7 +425,16 @@ class TabsDeClase extends Component {
                           this.toggleSecondTab('4');
                         }}
                       >
-                        Respuestas
+                        {isMobile && (
+                          <h1 className="ml-2 mr-2">
+                            <div
+                              className={
+                                'glyph-icon iconsminds-speach-bubble-dialog'
+                              }
+                            />
+                          </h1>
+                        )}
+                        {!isMobile && 'Respuestas'}
                       </NavLink>
                     </NavItem>
                     {rolDocente && (
@@ -418,7 +451,14 @@ class TabsDeClase extends Component {
                             this.toggleSecondTab('5');
                           }}
                         >
-                          Asistencia
+                          {isMobile && (
+                            <h1 className="ml-2 mr-2">
+                              <div
+                                className={'glyph-icon iconsminds-male-female'}
+                              />
+                            </h1>
+                          )}
+                          {!isMobile && 'Asistencia'}
                         </NavLink>
                       </NavItem>
                     )}
@@ -617,6 +657,7 @@ class TabsDeClase extends Component {
                               {!isEmpty(preguntasDeClase) && (
                                 <Button
                                   outline
+                                  className="mt-1"
                                   size="lg"
                                   color="secondary"
                                   onClick={this.togglePreviewModal}
@@ -628,7 +669,7 @@ class TabsDeClase extends Component {
                                 onClick={this.toggleModalPreguntas}
                                 color="primary"
                                 size="lg"
-                                className="button"
+                                className="button mt-1"
                                 disabled={this.isEditarDisabled()}
                               >
                                 {isEmpty(preguntasDeClase)

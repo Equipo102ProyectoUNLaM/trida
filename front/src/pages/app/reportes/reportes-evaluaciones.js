@@ -5,7 +5,9 @@ import { groupBy } from 'lodash';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
-import { isEmpty } from 'helpers/Utils';
+import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
+import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
+import { desencriptarTexto } from 'handlers/DecryptionHandler';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -53,35 +55,69 @@ class ReportesEvaluaciones extends Component {
   };
 
   getCorreccionesDeEvaluaciones = async () => {
-    const data = await getCollection('correcciones', [
+    let evalPorAlumno = [];
+
+    const alumnos = await getUsuariosAlumnosPorMateria(this.props.subject.id);
+
+    const evaluacionesVencidas = await getCollection(
+      'evaluaciones',
+      [
+        { field: 'idMateria', operator: '==', id: this.props.subject.id },
+        { field: 'fecha_finalizacion', operator: '<', id: new Date() },
+      ],
+      [{ order: 'fecha_finalizacion', orderCond: 'desc' }]
+    );
+
+    const correcciones = await getCollection('correcciones', [
       {
         field: 'tipo',
         operator: '==',
         id: 'evaluacion',
       },
       { field: 'idMateria', operator: '==', id: this.props.subject.id },
-      { field: 'estado', operator: '==', id: 'Corregido' },
     ]);
 
-    const dataEvaluacionesPromise = data.map(async (elem) => {
-      return {
-        id: elem.id,
-        idEntrega: elem.data.idEntrega,
-        nombreEvaluacion: elem.data.nombre,
-        idUsuario: elem.data.idUsuario,
-        nombreUsuario: await this.getNombreUsuario(elem.data.idUsuario),
-        estado: elem.data.estadoCorreccion,
-        nota: elem.data.notaCorreccion,
-        fecha: elem.data.fecha_creacion,
-      };
+    alumnos.forEach((alumno) => {
+      evaluacionesVencidas.forEach((evaluacion) => {
+        evalPorAlumno.push({
+          id: alumno.id,
+          idEval: evaluacion.id,
+          nombreEvaluacion: desencriptarTexto(evaluacion.data.nombre),
+          nombreUsuario: alumno.nombre,
+          estado: 'No entregado',
+          nota: '-',
+          fechaFin: getDateTimeStringFromDate(
+            evaluacion.data.fecha_finalizacion
+          ),
+          fecha: '-',
+        });
+      });
     });
 
-    let dataEvaluaciones = await Promise.all(dataEvaluacionesPromise);
+    evalPorAlumno.forEach((evaluacion) => {
+      correcciones.forEach((correccion) => {
+        if (
+          evaluacion.idEval === correccion.data.idEntrega &&
+          evaluacion.id === correccion.data.idUsuario
+        ) {
+          evaluacion.estado = correccion.data.estadoCorreccion
+            ? correccion.data.estadoCorreccion
+            : correccion.data.estado;
+          evaluacion.fecha = correccion.data.fecha_creacion;
+          evaluacion.nota =
+            correccion.data.notaCorreccion && correccion.data.notaCorreccion > 0
+              ? correccion.data.notaCorreccion
+              : '-';
+        }
+      });
+    });
+
     let openData = [];
-    dataEvaluaciones = groupBy(dataEvaluaciones, 'nombreUsuario');
-    dataEvaluaciones = Object.entries(dataEvaluaciones).map((elem) => {
+    evalPorAlumno = groupBy(evalPorAlumno, 'nombreUsuario');
+    let dataEvaluaciones = Object.entries(evalPorAlumno).map((elem) => {
+      const [primero] = elem[1];
       openData.push(false);
-      return { id: elem[0], data: elem[1] };
+      return { id: primero.nombreUsuario, data: elem[1] };
     });
     this.setState({ dataEvaluaciones, open: openData, isLoading: false });
   };
@@ -94,7 +130,7 @@ class ReportesEvaluaciones extends Component {
       <Fragment>
         <Row>
           <Colxx xxs="12">
-            <Breadcrumb heading="menu.practicas" match={this.props.match} />
+            <Breadcrumb heading="menu.evaluaciones" match={this.props.match} />
             <Separator className="mb-5" />
           </Colxx>
         </Row>
@@ -129,7 +165,7 @@ class ReportesEvaluaciones extends Component {
                     className="width-100"
                     onClick={() => this.toggleAccordion(index)}
                   >
-                    Cantidad de Entregas: {row.data.length}
+                    Cantidad de Registros: {row.data.length}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -151,6 +187,9 @@ class ReportesEvaluaciones extends Component {
                                 Evaluación
                               </TableCell>
                               <TableCell className="font-weight-bold">
+                                Fecha de Finalización
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
                                 Fecha de Entrega
                               </TableCell>
                               <TableCell className="font-weight-bold">
@@ -164,12 +203,13 @@ class ReportesEvaluaciones extends Component {
                           <TableBody>
                             {row.data.map((historyRow) => (
                               <TableRow
-                                key={historyRow.id}
-                                className={historyRow.estado}
+                                key={historyRow.idEval}
+                                className={historyRow.estado.replace(/\s/g, '')}
                               >
                                 <TableCell component="th" scope="row">
                                   {historyRow.nombreEvaluacion}
                                 </TableCell>
+                                <TableCell>{historyRow.fechaFin}</TableCell>
                                 <TableCell>{historyRow.fecha}</TableCell>
                                 <TableCell>{historyRow.estado}</TableCell>
                                 <TableCell>

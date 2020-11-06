@@ -54,14 +54,14 @@ export default class ModalConfirmacion extends Component {
           )}
         </ModalBody>
         <ModalFooter className={modalFooterClassname}>
-          {buttonPrimary && (
-            <Button color="primary" size="sm" onClick={onConfirm}>
-              {buttonPrimary}
-            </Button>
-          )}
           {buttonSecondary && (
             <Button color="secondary" size="sm" onClick={toggle}>
               {buttonSecondary}
+            </Button>
+          )}
+          {buttonPrimary && (
+            <Button color="primary" size="sm" onClick={onConfirm}>
+              {buttonPrimary}
             </Button>
           )}
         </ModalFooter>

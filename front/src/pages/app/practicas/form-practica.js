@@ -1,12 +1,30 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import {
+  ModalFooter,
+  Button,
+  FormGroup,
+  Label,
+  InputGroup,
+  CustomInput,
+  Row,
+} from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 import { formPracticaSchema } from './validations';
 import { storage } from 'helpers/Firebase';
 import { FormikDatePicker } from 'containers/form-validations/FormikFields';
-import FileUploader from 'react-firebase-file-uploader';
+import { enviarNotificacionError } from 'helpers/Utils-ui';
+import { createUUID } from 'helpers/Utils';
+import { subirArchivoAStorage } from 'helpers/Firebase-storage';
+import IntlMessages from 'helpers/IntlMessages';
+
+const acceptedFiles = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'application/pdf',
+];
 
 class FormPractica extends React.Component {
   constructor(props) {
@@ -20,10 +38,6 @@ class FormPractica extends React.Component {
       idMateria: '',
       estado: '',
       isLoading: true,
-      isFileUploading: false,
-      isFileUploaded: false,
-      fileUploadProgress: 0,
-      fileURL: '',
       file: '',
     };
   }
@@ -63,51 +77,41 @@ class FormPractica extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleUploadStart = () => {
-    if (this.state.file !== '') {
-      this.handleDeleteFile();
+  handleFileChange = (event) => {
+    event.preventDefault();
+    const { files } = event.target;
+    if (!files || !files.length) return;
+    let reader = new FileReader();
+    let file = files[0];
+
+    if (!acceptedFiles.includes(file.type)) {
+      enviarNotificacionError(
+        'Extensión de archivo no válida',
+        'Archivo no admitido'
+      );
+      event.target.value = null;
+
+      return;
     }
-    this.setState({ isFileUploading: true, fileUploadProgress: 0 });
-  };
 
-  handleProgress = (progress) =>
-    this.setState({ fileUploadProgress: progress });
+    reader.onloadend = () => {
+      const archivo = reader.result;
 
-  handleUploadError = (error) => {
-    this.setState({ isFileUploading: false });
-    console.error(error);
-  };
+      //const url = await subirArchivoAStorage(path, file, uuid);
+      this.setState({ file: file });
+    };
 
-  handleUploadSuccess = (filename) => {
-    this.setState({
-      file: filename,
-      fileUploadProgress: 100,
-      isFileUploading: false,
-      isFileUploaded: true,
-    });
-    storage
-      .ref('materias/' + this.props.subject.id + '/practicas/')
-      .child(filename)
-      .getDownloadURL()
-      .then((url) => this.setState({ fileURL: url }));
+    reader.readAsDataURL(file);
   };
-
-  handleDeleteFile = async () => {
-    storage
-      .ref('materias/' + this.props.subject.id + '/practicas/')
-      .child(this.state.file)
-      .delete();
-    this.setState({
-      isFileUploading: false,
-      isFileUploaded: false,
-      fileUploadProgress: 0,
-      fileURL: '',
-      file: '',
-    });
-  };
+  /* ************ */
 
   onPracticaSubmit = async (values) => {
     const { nombre, descripcion, fechaLanzada, fechaVencimiento } = values;
+    this.setState({ isLoading: true });
+    const uuid = createUUID();
+    const path = 'materias/' + this.props.subject.id + '/practicas/';
+    const url = await subirArchivoAStorage(path, this.state.file, uuid);
+
     if (this.props.operationType === 'add') {
       const obj = {
         nombre: nombre,
@@ -115,7 +119,7 @@ class FormPractica extends React.Component {
         descripcion: descripcion,
         fechaVencimiento: fechaVencimiento,
         idMateria: this.props.subject.id,
-        idArchivo: this.state.file,
+        idArchivo: uuid,
         estado: 'pendiente',
       };
       await addDocument(
@@ -132,11 +136,12 @@ class FormPractica extends React.Component {
         fechaLanzada: fechaLanzada,
         descripcion: descripcion,
         fechaVencimiento: fechaVencimiento,
-        idArchivo: this.state.file,
+        idArchivo: uuid,
         estado: 'pendiente',
       };
       await editDocument('practicas', this.props.id, obj, 'Práctica editada');
     }
+    this.setState({ isLoading: false });
 
     this.props.onPracticaOperacion();
   };
@@ -228,39 +233,34 @@ class FormPractica extends React.Component {
               )}
             </FormGroup>
             <FormGroup>
-              <label className="practicas-adjuntar-button">
-                Adjuntar Archivo
-                <FileUploader
-                  hidden
-                  name="archivo"
-                  randomizeFilename
-                  storageRef={storage.ref(
-                    'materias/' + this.props.subject.id + '/practicas/'
-                  )}
-                  onUploadStart={this.handleUploadStart}
-                  onUploadError={this.handleUploadError}
-                  onUploadSuccess={this.handleUploadSuccess}
-                  onProgress={this.handleProgress}
+              <Label>Adjuntar Archivo</Label>
+              <Row className="tip-text ml-0">
+                {' '}
+                <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                <IntlMessages id="activity.adjuntar-practica-extensiones" />
+              </Row>
+              <InputGroup className="mb-3">
+                <CustomInput
+                  type="file"
+                  label="Adjuntá la práctica correspondiente"
+                  id="adjuntar-practica"
+                  name="practica"
+                  onInputCapture={(e) => this.handleFileChange(e)}
                 />
-              </label>
-              {this.state.file && (
-                <div>
-                  <div className="practica-file-element">
-                    <p>1 Archivo adjunto</p>
-                  </div>
-                  <div
-                    className="glyph-icon simple-icon-trash delete-action-icon practica-file-element"
-                    onClick={this.handleDeleteFile}
-                  />
+              </InputGroup>
+
+              {this.props.submitted && !this.state.file ? (
+                <div className="invalid-feedback d-block">
+                  Adjuntar un archivo en una extensión válida
                 </div>
-              )}
+              ) : null}
             </FormGroup>
             <ModalFooter>
-              <Button color="primary" type="submit">
-                {textConfirm}
-              </Button>
               <Button color="secondary" onClick={toggleModal}>
                 Cancelar
+              </Button>
+              <Button color="primary" type="submit">
+                {textConfirm}
               </Button>
             </ModalFooter>
           </Form>

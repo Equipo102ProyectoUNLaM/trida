@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
+import HeaderDeModuloMobile from 'components/common/HeaderDeModuloMobile';
 import ListaConImagen from 'components/lista-con-imagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
@@ -16,6 +17,8 @@ import ROLES from 'constants/roles';
 import firebase from 'firebase/app';
 import { isEmpty, getTimestampDifference } from 'helpers/Utils';
 import moment from 'moment';
+import { isMobile } from 'react-device-detect';
+import IntlMessages from 'helpers/IntlMessages';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
 
@@ -169,19 +172,43 @@ class Clase extends Component {
     ) : (
       <Fragment>
         <div className="disable-text-selection">
-          <HeaderDeModulo
-            heading={
-              oldClassActive ? 'menu.mis-clases-finalizadas' : 'menu.mis-clases'
-            }
-            toggleModal={
-              rolDocente && !oldClassActive ? this.toggleModal : null
-            }
-            buttonText={rolDocente && !oldClassActive ? 'classes.add' : null}
-            secondaryToggleModal={this.toggleOldClassModal}
-            secondaryButtonText={
-              oldClassActive ? 'classes.active' : 'classes.old'
-            }
-          />
+          {isMobile ? (
+            <HeaderDeModuloMobile
+              heading={
+                oldClassActive
+                  ? 'menu.mis-clases-finalizadas'
+                  : 'menu.mis-clases'
+              }
+              toggleIcon={
+                rolDocente && !oldClassActive ? this.toggleModal : null
+              }
+              iconText={
+                rolDocente && !oldClassActive
+                  ? 'glyph-icon iconsminds-add'
+                  : null
+              }
+              secondaryToggle={this.toggleOldClassModal}
+              secondaryButtonText={
+                oldClassActive ? 'classes.active' : 'classes.old'
+              }
+            />
+          ) : (
+            <HeaderDeModulo
+              heading={
+                oldClassActive
+                  ? 'menu.mis-clases-finalizadas'
+                  : 'menu.mis-clases'
+              }
+              toggleModal={
+                rolDocente && !oldClassActive ? this.toggleModal : null
+              }
+              buttonText={rolDocente && !oldClassActive ? 'classes.add' : null}
+              secondaryToggleModal={this.toggleOldClassModal}
+              secondaryButtonText={
+                oldClassActive ? 'classes.active' : 'classes.old'
+              }
+            />
+          )}
           <ModalGrande
             modalOpen={modalOpen}
             toggleModal={this.toggleModal}

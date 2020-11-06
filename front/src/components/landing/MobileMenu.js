@@ -1,8 +1,16 @@
 import React from 'react';
 import NavLinks from './NavLinks';
 import CloseBtn from 'assets/landing/images/shapes/close-1-1.png';
+import NavButtons from './NavButtons';
+import { logoutUser, cleanSeleccionCurso } from 'redux/actions';
+import { connect } from 'react-redux';
 
-const MobileMenu = () => {
+const MobileMenu = (props) => {
+  const handleLogout = () => {
+    props.logoutUser();
+    props.cleanSeleccionCurso();
+  };
+
   return (
     <div className="side-menu__block">
       <div className="side-menu__block-overlay custom-cursor__overlay">
@@ -18,6 +26,12 @@ const MobileMenu = () => {
 
         <nav className="mobile-nav__container">
           <NavLinks />
+          <NavButtons
+            btnClass={props.btnClass}
+            loginUser={props.loginUser}
+            handleLogout={handleLogout}
+            mobile={true}
+          />
         </nav>
         <div className="side-menu__sep"></div>
         <div className="side-menu__content">
@@ -38,4 +52,11 @@ const MobileMenu = () => {
   );
 };
 
-export default MobileMenu;
+const mapStateToProps = ({ authUser }) => {
+  const { user: loginUser } = authUser;
+  return { loginUser };
+};
+
+export default connect(mapStateToProps, { logoutUser, cleanSeleccionCurso })(
+  MobileMenu
+);

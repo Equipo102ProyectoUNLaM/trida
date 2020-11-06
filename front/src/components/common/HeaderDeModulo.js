@@ -35,7 +35,7 @@ class HeaderDeModulo extends Component {
     return (
       <Row>
         <Colxx xxs="12">
-          <div className="mb-2">
+          <div className="mb-2" style={{ display: 'flow-root' }}>
             {heading && (
               <h1>
                 <IntlMessages id={heading} />
@@ -49,7 +49,7 @@ class HeaderDeModulo extends Component {
                   <Button
                     color="primary"
                     size="lg"
-                    className="top-right-button ml-1"
+                    className="top-right-button ml-1 mr-1 mt-1"
                     onClick={() => secondaryToggleModal()}
                   >
                     <IntlMessages id={secondaryButtonText} />
@@ -64,7 +64,7 @@ class HeaderDeModulo extends Component {
                   <Button
                     color="primary"
                     size="lg"
-                    className="top-right-button"
+                    className="top-right-button ml-1 mr-1 mt-1"
                     onClick={() => toggleModal()}
                   >
                     <IntlMessages id={buttonText} />

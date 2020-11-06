@@ -118,7 +118,7 @@ class CardTabsOral extends Component {
     const { integrantes } = this.state;
     return (
       <Row lg="12" className="tab-card-evaluaciones">
-        <Colxx xxs="3">
+        <Colxx xxs="12" sm="12" md="6" lg="3">
           <Row lg="12">
             <Colxx xxs="12" xs="12" lg="12" id={item.id}>
               <Card className={`mb-4 ${this.state.focused ? 'focused' : ''}`}>
