@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody, CardTitle, Progress, Badge } from 'reactstrap';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Progress,
+  Badge,
+  Tooltip,
+} from 'reactstrap';
 import {
   getCollectionWithSubCollections,
   getDocument,
@@ -20,6 +27,7 @@ const RespuestasAPreguntas = ({
   const [respuestasPorPregunta, setRespuestasPorPregunta] = useState([]);
   const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
   const [respuestasDeAlumno, setRespuestasDeAlumno] = useState([]);
+  const [tooltipOpen, setTooltip] = useState(false);
 
   useEffect(() => {
     getPreguntasConRespuestasDeAlumnos();
@@ -145,6 +153,7 @@ const RespuestasAPreguntas = ({
   };
 
   const refreshRespuestas = async () => {
+    setTooltip(false);
     setIsLoadingLocal(true);
     getPreguntasConRespuestasDeAlumnos();
   };
@@ -157,10 +166,19 @@ const RespuestasAPreguntas = ({
         <span>No hay respuestas cargadas</span>
       )}
       <i
-        className="iconsminds-refresh cursor-pointer refresh-respuestas av-tooltip tooltip-label-bottom"
-        onClick={() => refreshRespuestas()}
-        title="Refrescar Preguntas"
-      />
+        className="iconsminds-refresh cursor-pointer refresh-respuestas"
+        onClick={refreshRespuestas}
+        id="refrescar-rtas"
+      >
+        <Tooltip
+          placement="right"
+          isOpen={tooltipOpen}
+          target="refrescar-rtas"
+          toggle={() => setTooltip(!tooltipOpen)}
+        >
+          Actualizar Respuestas
+        </Tooltip>
+      </i>
 
       {respuestasPorPregunta.map((rta, idx) => {
         return (
