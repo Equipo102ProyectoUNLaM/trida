@@ -90,6 +90,7 @@ class MiReporte extends Component {
       isLoading: true,
       idPlanilla: this.props.idPlanilla ? this.props.idPlanilla : '',
       nombrePlanilla: '',
+      nombreTooltipOpen: false,
     };
   }
 
@@ -253,28 +254,42 @@ class MiReporte extends Component {
   guardarPlanilla = async () => {
     const { columnas, idPlanilla, nombrePlanilla } = this.state;
 
-    if (!idPlanilla) {
-      let docRef = await addDocument(
-        `planillasDocente/${this.props.user}/planillas`,
-        { nombre: nombrePlanilla },
-        this.props.user
+    if (nombrePlanilla) {
+      this.setState({ isLoading: true });
+
+      if (!idPlanilla) {
+        let docRef = await addDocument(
+          `planillasDocente/${this.props.user}/planillas`,
+          { nombre: nombrePlanilla },
+          this.props.user
+        );
+
+        this.setState({ idPlanilla: docRef.id }, () => console.log());
+      }
+
+      for (const columna of columnas) {
+        await addDocumentWithId(
+          `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`,
+          columna.id,
+          { nombre: columna.nombre, valores: columna.valores }
+        );
+      }
+
+      this.setState({ isLoading: false });
+      enviarNotificacionExitosa(
+        'Planilla guardada exitosamente',
+        'Planilla Guardada!'
       );
-
-      this.setState({ idPlanilla: docRef.id }, () => console.log());
+    } else {
+      this.setTooltipNombrePlanilla();
     }
+  };
 
-    for (const columna of columnas) {
-      await addDocumentWithId(
-        `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`,
-        columna.id,
-        { nombre: columna.nombre, valores: columna.valores }
-      );
-    }
-
-    enviarNotificacionExitosa(
-      'Planilla guardada exitosamente',
-      'Planilla Guardada!'
-    );
+  setTooltipNombrePlanilla = () => {
+    this.setState({ nombreTooltipOpen: true });
+    setTimeout(() => {
+      this.setState({ nombreTooltipOpen: false });
+    }, 5000);
   };
 
   render() {
@@ -284,6 +299,7 @@ class MiReporte extends Component {
       inputAgregarColumna,
       isLoading,
       nombrePlanilla,
+      nombreTooltipOpen,
     } = this.state;
 
     return (
@@ -299,6 +315,7 @@ class MiReporte extends Component {
         <Row className="row-acciones button-group mt-2 justify-between align-baseline">
           <div className="form-group has-float-label">
             <Input
+              id="nombre-planilla"
               onChange={this.handleNombrePlanillaChange}
               autoComplete="off"
               name="nombrePlanilla"
@@ -307,6 +324,14 @@ class MiReporte extends Component {
             />
             <span>Nombre de Planilla *</span>
           </div>
+          <Tooltip
+            placement="right"
+            isOpen={nombreTooltipOpen}
+            autohide={true}
+            target="nombre-planilla"
+          >
+            El nombre es requerido
+          </Tooltip>
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -330,7 +355,6 @@ class MiReporte extends Component {
                 onClick={this.guardarPlanilla}
                 color="primary"
                 className="button"
-                disabled={!nombrePlanilla}
               >
                 GUARDAR
               </Button>

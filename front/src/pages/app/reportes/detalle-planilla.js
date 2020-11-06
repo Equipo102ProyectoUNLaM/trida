@@ -113,6 +113,7 @@ class DetallePlanilla extends Component {
       idPlanilla: this.props.history.location.pathname.split('/')[4],
       nombrePlanilla: '',
       confirmarGuardar: false,
+      nombreTooltipOpen: false,
     };
   }
 
@@ -248,7 +249,11 @@ class DetallePlanilla extends Component {
   };
 
   toggleConfirmarGuardar = () => {
-    this.setState({ confirmarGuardar: !this.state.confirmarGuardar });
+    if (this.state.nombrePlanilla) {
+      this.setState({ confirmarGuardar: !this.state.confirmarGuardar });
+    } else {
+      this.setTooltipNombrePlanilla();
+    }
   };
 
   exportarPdf = async () => {
@@ -297,6 +302,7 @@ class DetallePlanilla extends Component {
   };
 
   guardarPlanilla = async (overwrite) => {
+    this.setState({ isLoading: true });
     const { columnas, idPlanilla, nombrePlanilla } = this.state;
 
     if (overwrite) {
@@ -338,12 +344,21 @@ class DetallePlanilla extends Component {
       'Planilla Guardada!'
     );
 
+    this.setState({ isLoading: false });
+
     this.toggleConfirmarGuardar();
     if (!overwrite) {
       this.props.history.push(
         `/app/reportes/mi-planilla-guardada/${this.state.idPlanilla}`
       );
     }
+  };
+
+  setTooltipNombrePlanilla = () => {
+    this.setState({ nombreTooltipOpen: true });
+    setTimeout(() => {
+      this.setState({ nombreTooltipOpen: false });
+    }, 5000);
   };
 
   render() {
@@ -354,6 +369,7 @@ class DetallePlanilla extends Component {
       isLoading,
       nombrePlanilla,
       confirmarGuardar,
+      nombreTooltipOpen,
     } = this.state;
 
     return (
@@ -369,15 +385,23 @@ class DetallePlanilla extends Component {
         <Row className="row-acciones button-group mt-2 justify-between align-baseline">
           <div className="form-group has-float-label">
             <Input
+              id="nombre-planilla"
               defaultValue={nombrePlanilla}
               onChange={this.handleNombrePlanillaChange}
               autoComplete="off"
               name="nombrePlanilla"
               className="input-nombre-columna"
-              placeholder="Nombre de planilla (requerido para guardar)"
             />
             <span>Nombre de Planilla *</span>
           </div>
+          <Tooltip
+            placement="right"
+            isOpen={nombreTooltipOpen}
+            autohide={true}
+            target="nombre-planilla"
+          >
+            El nombre es requerido
+          </Tooltip>
           {!inputAgregarColumna && (
             <div className="button-group">
               <Button
@@ -401,7 +425,6 @@ class DetallePlanilla extends Component {
                 onClick={this.toggleConfirmarGuardar}
                 color="primary"
                 className="button"
-                disabled={!nombrePlanilla}
               >
                 GUARDAR
               </Button>
