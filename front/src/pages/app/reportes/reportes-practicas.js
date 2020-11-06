@@ -6,7 +6,7 @@ import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
-import { isEmpty } from 'helpers/Utils';
+import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -63,10 +63,14 @@ class ReportesPracticas extends Component {
 
     const alumnos = await getUsuariosAlumnosPorMateria(this.props.subject.id);
 
-    const practicasVencidas = await getCollection('practicas', [
-      { field: 'idMateria', operator: '==', id: this.props.subject.id },
-      { field: 'fechaVencimiento', operator: '<', id: new Date() },
-    ]);
+    const practicasVencidas = await getCollection(
+      'practicas',
+      [
+        { field: 'idMateria', operator: '==', id: this.props.subject.id },
+        { field: 'fechaVencimiento', operator: '<', id: new Date() },
+      ],
+      [{ order: 'fechaVencimiento', orderCond: 'desc' }]
+    );
 
     const correcciones = await getCollection('correcciones', [
       {
@@ -87,6 +91,7 @@ class ReportesPracticas extends Component {
           estado: 'No entregado',
           nota: '-',
           fecha: '-',
+          fechaVto: getDateTimeStringFromDate(practica.data.fechaVencimiento),
         });
       });
     });
@@ -182,6 +187,9 @@ class ReportesPracticas extends Component {
                                 Práctica
                               </TableCell>
                               <TableCell className="font-weight-bold">
+                                Fecha de Vencimiento
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
                                 Fecha de Entrega
                               </TableCell>
                               <TableCell className="font-weight-bold">
@@ -201,6 +209,7 @@ class ReportesPracticas extends Component {
                                 <TableCell component="th" scope="row">
                                   {historyRow.nombrePractica}
                                 </TableCell>
+                                <TableCell>{historyRow.fechaVto}</TableCell>
                                 <TableCell>{historyRow.fecha}</TableCell>
                                 <TableCell>{historyRow.estado}</TableCell>
                                 <TableCell>

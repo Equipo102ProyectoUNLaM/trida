@@ -111,7 +111,7 @@ module.exports = {
   'menu.reportes-clases': 'Clases',
   'menu.reportes-practicas': 'Practicas',
   'menu.reportes-evaluaciones': 'Evaluaciones',
-  'menu.reportes-generales': 'Generales',
+  'menu.generales': 'Mis Reportes Generales',
   'menu.my-reportes-clases': 'Mis Reportes de Clases',
   'menu.clases': 'Mis Reportes de Clases',
   'menu.practicas': 'Mis Reportes de Practicas',

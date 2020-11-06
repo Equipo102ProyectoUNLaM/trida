@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { Row } from 'reactstrap';
+import { Row, InputGroup, CustomInput } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 import ModalGrande from 'containers/pages/ModalGrande';
@@ -118,16 +118,13 @@ class AgregarEvaluacion extends Component {
             modalHeader="evaluation.import"
           >
             <FormGroup>
-              <label className="practicas-adjuntar-button">
-                <input type="file" onChange={this.handleFileChange} />
-              </label>
-              {this.state.file && (
-                <div>
-                  <div className="practica-file-element">
-                    <p>1 Archivo seleccionado</p>
-                  </div>
-                </div>
-              )}
+              <InputGroup className="mb-3">
+                <CustomInput
+                  type="file"
+                  label="Seleccioná un archivo con extensión .trida"
+                  onInputCapture={this.handleFileChange}
+                />
+              </InputGroup>
             </FormGroup>
           </ModalGrande>
         )}
