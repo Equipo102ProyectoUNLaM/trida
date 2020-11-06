@@ -99,6 +99,7 @@ $theme-color-blue: #145388;
 $theme-color-green: #576a3d;
 $theme-color-orange: #e2863b;
 $theme-color-red: #880a1f;
+$theme-color-light-blue: #2a93d5;
 
 $info-color: #3195a5;
 $success-color: #3e884f;
@@ -10224,6 +10225,14 @@ color: var(--theme-color-1)
 
 .btn-plan {
   color: white;
+}
+
+.refresh-respuestas {
+  float: right;
+  margin: -3.5rem 1rem 1rem 0rem;
+  font-size: x-large;
+  color: $theme-color-light-blue;
+  font-weight: bolder;
 }
 
 // Comunicaciones formales
