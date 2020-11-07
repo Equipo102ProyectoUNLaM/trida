@@ -416,7 +416,9 @@ class Practica extends Component {
                       rolDocente && !oldPracticesActive ? this.onDelete : null
                     }
                     onUploadFile={
-                      rol === ROLES.Alumno && !oldPracticesActive
+                      rol === ROLES.Alumno &&
+                      !practica.entregada &&
+                      !oldPracticesActive
                         ? this.toggleUploadFileModal
                         : null
                     }

@@ -33,6 +33,7 @@ class FormSubirPractica extends React.Component {
       idMateria: '',
       isLoading: true,
       file: '',
+      fileExtension: '',
     };
   }
 
@@ -65,7 +66,8 @@ class FormSubirPractica extends React.Component {
 
     reader.onloadend = () => {
       const archivo = reader.result;
-      this.setState({ file: file });
+      const fileExtension = file.name.split('.')[1];
+      this.setState({ file: file, fileExtension: fileExtension });
     };
 
     reader.readAsDataURL(file);
@@ -85,8 +87,9 @@ class FormSubirPractica extends React.Component {
     const { mensaje } = values;
 
     const uuid = createUUID();
+    const fileName = uuid + '.' + this.state.fileExtension;
     const path = 'materias/' + this.props.subject.id + '/correcciones/';
-    const url = await subirArchivoAStorage(path, this.state.file, uuid);
+    const url = await subirArchivoAStorage(path, this.state.file, fileName);
 
     const obj = {
       nombre: nombrePractica,
@@ -94,7 +97,7 @@ class FormSubirPractica extends React.Component {
       idPractica: this.props.id,
       idUsuario: this.props.user,
       idMateria: this.props.subject.id,
-      idArchivo: uuid,
+      idArchivo: fileName,
       tipo: 'practica',
       estado: 'No Corregido',
     };
