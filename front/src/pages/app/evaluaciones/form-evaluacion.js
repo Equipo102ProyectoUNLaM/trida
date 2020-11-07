@@ -22,6 +22,7 @@ import { timeStamp } from 'helpers/Firebase';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import { subirArchivoAStorage } from 'helpers/Firebase-storage';
 import { generateId } from 'helpers/Firebase-db';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
 
 class FormEvaluacion extends React.Component {
   constructor(props) {
@@ -303,7 +304,9 @@ class FormEvaluacion extends React.Component {
                     <Input
                       name="fecha_creacion"
                       readOnly
-                      value={evaluacion.fecha_creacion}
+                      value={getDateTimeStringFromDate(
+                        evaluacion.fecha_creacion
+                      )}
                     />
                   </FormGroup>
                 </Colxx>

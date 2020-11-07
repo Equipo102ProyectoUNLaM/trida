@@ -15,6 +15,7 @@ import { Row, ModalFooter, Button, Input } from 'reactstrap';
 import { addDocument, addElementToArray } from 'helpers/Firebase-db';
 import { desencriptarTexto } from 'handlers/DecryptionHandler';
 import { encriptarTexto } from 'handlers/EncryptionHandler';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
 
 class Mensajeria extends Component {
   constructor(props) {
@@ -123,7 +124,7 @@ class Mensajeria extends Component {
       id: elem.id,
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
-      fecha_creacion: elem.data.fecha_creacion,
+      fecha_creacion: getDateTimeStringFromDate(elem.data.fecha_creacion),
       destinatarios: elem.data.general ? [] : elem.data.receptor,
     }));
     arrayDeData = await this.getNameOfReceivers(arrayDeData);
@@ -138,7 +139,7 @@ class Mensajeria extends Component {
       id: elem.id,
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
-      fecha_creacion: elem.data.fecha_creacion,
+      fecha_creacion: getDateTimeStringFromDate(elem.data.fecha_creacion),
       remitente: elem.data.emisor.nombre,
       idRemitente: elem.data.emisor.id,
       leido: elem.data.leido
