@@ -6,6 +6,7 @@ import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import { getCorrecciones, getAsistencias } from 'helpers/DataReportes';
 import { DoughnutChart, LineChart } from 'components/charts';
 import { ThemeColors } from 'helpers/ThemeColors';
+import { isEmpty } from 'helpers/Utils';
 const colors = ThemeColors();
 
 class ReportesGenerales extends Component {
@@ -93,77 +94,92 @@ class ReportesGenerales extends Component {
     return (
       <Fragment>
         {isLoading && <div className="cover-spin" />}
-        <Row>
-          <Colxx xxs="12">
-            <Breadcrumb heading="menu.generales" match={this.props.match} />
-            <Separator className="mb-5" />
-          </Colxx>
-        </Row>
-        <Row>
-          <Fragment>
-            {resumen.map((item, index) => {
-              return (
-                <Card className="d-flex mb-3" key={index}>
-                  <div className="d-flex flex-grow-1 min-width-zero">
-                    <Button
-                      color="link"
-                      className="card-body  btn-empty btn-link list-item-heading text-left text-one"
-                      onClick={() => this.toggleAccordion(index)}
-                      aria-expanded={this.state.open[index]}
-                    >
-                      {item.nombreUsuario}
-                    </Button>
-                  </div>
-                  <Collapse isOpen={this.state.open[index]}>
-                    <Separator className="mb-4" />
-                    <div className="card-body accordion-content pt-0">
-                      <Row>
-                        <Col>
-                          <h3>Evaluaciones Totales: {item.cantEvalTotal}</h3>
-                          <div className="dashboard-donut-chart">
-                            <DoughnutChart
-                              shadow
-                              data={() =>
-                                this.getChartData(item.estadisticasEval)
-                              }
-                            />
-                          </div>
-                        </Col>
-                        <Col>
-                          <h3>Prácticas Totales: {item.cantPracticasTotal}</h3>
-                          <div className="dashboard-donut-chart">
-                            <DoughnutChart
-                              shadow
-                              data={() =>
-                                this.getChartData(item.estadisticasPracticas)
-                              }
-                            />
-                          </div>
-                        </Col>
-                      </Row>
-                      <Separator className="mb-4" />
-                      <Row>
-                        <Col>
-                          <h3 className="mb-1">
-                            Clases Totales: {item.cantClasesTotal}
-                          </h3>
-                          <div className="dashboard-line-chart">
-                            <LineChart
-                              shadow
-                              data={() =>
-                                this.getLineChartData(item.estadisticasClases)
-                              }
-                            />
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Collapse>
-                </Card>
-              );
-            })}
-          </Fragment>
-        </Row>
+        <>
+          <Row>
+            <Colxx xxs="12">
+              <Breadcrumb heading="menu.generales" match={this.props.match} />
+              <Separator className="mb-5" />
+            </Colxx>
+          </Row>
+          <Row>
+            {!isLoading && isEmpty(resumen) && (
+              <span>No hay datos sobre reportes generales</span>
+            )}
+            {!isLoading && !isEmpty(resumen) && (
+              <Fragment>
+                {resumen.map((item, index) => {
+                  return (
+                    <Card className="d-flex mb-3" key={index}>
+                      <div className="d-flex flex-grow-1 min-width-zero">
+                        <Button
+                          color="link"
+                          className="card-body  btn-empty btn-link list-item-heading text-left text-one"
+                          onClick={() => this.toggleAccordion(index)}
+                          aria-expanded={this.state.open[index]}
+                        >
+                          {item.nombreUsuario}
+                        </Button>
+                      </div>
+                      <Collapse isOpen={this.state.open[index]}>
+                        <Separator className="mb-4" />
+                        <div className="card-body accordion-content pt-0">
+                          <Row>
+                            <Col>
+                              <h3>
+                                Evaluaciones Totales: {item.cantEvalTotal}
+                              </h3>
+                              <div className="dashboard-donut-chart">
+                                <DoughnutChart
+                                  shadow
+                                  data={() =>
+                                    this.getChartData(item.estadisticasEval)
+                                  }
+                                />
+                              </div>
+                            </Col>
+                            <Col>
+                              <h3>
+                                Prácticas Totales: {item.cantPracticasTotal}
+                              </h3>
+                              <div className="dashboard-donut-chart">
+                                <DoughnutChart
+                                  shadow
+                                  data={() =>
+                                    this.getChartData(
+                                      item.estadisticasPracticas
+                                    )
+                                  }
+                                />
+                              </div>
+                            </Col>
+                          </Row>
+                          <Separator className="mb-4" />
+                          <Row>
+                            <Col>
+                              <h3 className="mb-1">
+                                Clases Totales: {item.cantClasesTotal}
+                              </h3>
+                              <div className="dashboard-line-chart">
+                                <LineChart
+                                  shadow
+                                  data={() =>
+                                    this.getLineChartData(
+                                      item.estadisticasClases
+                                    )
+                                  }
+                                />
+                              </div>
+                            </Col>
+                          </Row>
+                        </div>
+                      </Collapse>
+                    </Card>
+                  );
+                })}
+              </Fragment>
+            )}
+          </Row>
+        </>
       </Fragment>
     );
   }
