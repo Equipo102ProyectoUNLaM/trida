@@ -7,6 +7,11 @@ import { getCourses } from 'helpers/Firebase-user';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { connect } from 'react-redux';
 import { updateSubject, updateCourse } from 'redux/actions';
+import CursoCardListView from '../../containers/pages/CursoCardListView';
+
+function collect(props) {
+  return { data: props.data };
+}
 
 const HOME_URL = '/app/home';
 
@@ -15,6 +20,9 @@ class Course extends Component {
     super(props);
     this.state = {
       items: [],
+      institutionId: '',
+      course: null,
+      courseSelected: false,
       isLoading: true,
     };
   }
@@ -25,6 +33,7 @@ class Course extends Component {
 
   getCourses = async () => {
     const { institutionId } = this.props.match.params;
+    this.setState({ institutionId });
     const user_courses = await this.getUserCourses(
       institutionId,
       this.props.user
@@ -50,12 +59,8 @@ class Course extends Component {
     }
   }
 
-  toggle = (i) => {
-    var prevState = this.state.items;
-    prevState[i].collapsed = !prevState[i].collapsed;
-    this.setState({
-      items: prevState,
-    });
+  onCourseSelected = (course) => {
+    this.setState({ course, courseSelected: !this.state.courseSelected });
   };
 
   onCourseSelection(subject, course) {
@@ -80,45 +85,41 @@ class Course extends Component {
                   </h2>
                   <hr className="my-4" />
                   <Row>
-                    {items.map((course, index) => {
+                    {items.map((course) => {
                       return (
-                        <Row
-                          key={index}
-                          className="mb-4 ml-0 mr-0"
-                          xxs="12"
-                          xs="12"
-                          lg="12"
-                        >
-                          <Colxx xxs="12" xs="12" lg="12">
-                            <Button
-                              color="primary"
-                              onClick={() => this.toggle(index)}
-                              block
-                              className="mb-2"
-                            >
-                              {course.name}
-                            </Button>
-                            <Collapse isOpen={course.collapsed}>
-                              {course.subjects.map((subject, i) => {
-                                return (
-                                  <Row key={i + 'div'}>
-                                    <h4
-                                      className="subject"
-                                      onClick={() =>
-                                        this.onCourseSelection(subject, course)
-                                      }
-                                    >
-                                      {subject.name}{' '}
-                                    </h4>
-                                  </Row>
-                                );
-                              })}
-                            </Collapse>
-                          </Colxx>
-                        </Row>
+                        <CursoCardListView
+                          key={course.id}
+                          item={course}
+                          collect={collect}
+                          onClick={(e) => this.onCourseSelected(course)}
+                        />
                       );
                     })}{' '}
                   </Row>
+                  <Collapse isOpen={this.state.courseSelected}>
+                    <h2 className="display-5">
+                      <IntlMessages id="materia.selection" />
+                    </h2>
+                    <hr className="my-4" />
+                    <Row>
+                      {this.state.course &&
+                        this.state.course.subjects.map((subject) => {
+                          return (
+                            <CursoCardListView
+                              key={subject.id}
+                              item={subject}
+                              collect={collect}
+                              onClick={(e) =>
+                                this.onCourseSelection(
+                                  subject,
+                                  this.state.course
+                                )
+                              }
+                            />
+                          );
+                        })}{' '}
+                    </Row>
+                  </Collapse>
                 </Jumbotron>
               </CardBody>
             </Card>
