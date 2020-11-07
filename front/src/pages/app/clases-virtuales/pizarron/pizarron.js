@@ -5,7 +5,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { injectIntl } from 'react-intl';
 import { isMobile } from 'react-device-detect';
-
+import NoMobile from 'pages/no-mobile';
 import 'excalidraw/dist/excalidraw.min.css';
 import { HmacSHA1 } from 'crypto-js';
 const pizarronURI = '/pizarron';
@@ -62,20 +62,7 @@ class Pizarron extends React.Component {
 
     return (
       <>
-        {isMobile && (
-          <Row className="h-100">
-            <Colxx xxs="12" md="10" className="mx-auto my-auto">
-              <Card className="auth-card">
-                <div className="form-side margin-auto">
-                  <h1 className="font-weight-bold center">
-                    ¡Ups! Esta funcionalidad no está disponible en dispositivos
-                    móviles
-                  </h1>
-                </div>
-              </Card>
-            </Colxx>
-          </Row>
-        )}
+        {isMobile && <NoMobile />}
         {!isMobile && (
           <Fragment>
             {!fullscreen && (

@@ -116,8 +116,10 @@ module.exports = {
   'menu.clases': 'Mis Reportes de Clases',
   'menu.practicas': 'Mis Reportes de Practicas',
   'menu.my-reportes-evaluaciones': 'Mis Reportes de Evaluaciones',
-  'menu.reportes-generales': 'Reportes Generales',
+  'menu.reportes-generales': 'Generales',
   'menu.mi-reporte': 'Mi Planilla',
+  'menu.reportes-guardados': 'VER PLANILLAS GUARDADAS',
+  'menu.planillas-guardadas': 'Mis Planillas Guardadas',
   'menu.ayuda': 'Ayuda',
   'menu.mi-cuenta': 'Mi Cuenta',
 
@@ -170,12 +172,13 @@ module.exports = {
   'institucion.crear': 'Crear Institución',
 
   /* 08. Curso */
-  'course.selection': '¿Qué materia querés gestionar?',
+  'course.selection': '¿Qué curso querés gestionar?',
   'curso.complete-datos': 'Completá los datos del Curso',
   'curso.nombre': 'Nombre del curso',
   'curso.crear': 'Crear Curso',
 
   /* 09. Materia */
+  'materia.selection': '¿A qué materia querés ingresar?',
   'materia.complete-datos': 'Completá los datos de la Materia',
   'materia.nombre': 'Nombre de la materia',
   'materia.crear': 'Crear Materia',
@@ -188,6 +191,8 @@ module.exports = {
   'activity.old': 'VER PRÁCTICAS FINALIZADAS',
   'activity.active': 'VER PRÁCTICAS ACTUALES',
   'fecha.modificar': 'Modificar fecha de entrega',
+  'activity.adjuntar-practica-extensiones':
+    'Las extensiones admitidas son .png, .jpg, .jpeg y .pdf',
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR / IMPORTAR EVALUACIÓN',

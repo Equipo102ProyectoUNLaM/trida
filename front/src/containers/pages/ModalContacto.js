@@ -62,6 +62,7 @@ class ModalContacto extends React.Component {
           onChange={this.handleChange}
           className="resend-message mt-2"
           type="textarea"
+          spellCheck="true"
           autoComplete="off"
         />
         <ModalFooter>
