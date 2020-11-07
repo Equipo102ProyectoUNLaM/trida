@@ -185,6 +185,7 @@ class FormSubirPractica extends React.Component {
                 className="form-control"
                 name="mensaje"
                 type="textarea"
+                spellCheck="true"
                 autoComplete="off"
               />
               {errors.mensaje && touched.mensaje && (

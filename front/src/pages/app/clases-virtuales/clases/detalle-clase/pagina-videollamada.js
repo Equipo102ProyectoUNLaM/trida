@@ -92,6 +92,7 @@ const PaginaVideollamada = (props) => {
                 id="name"
                 name="name"
                 type="text"
+                spellCheck="true"
                 placeholder="Nombre"
                 value={`${props.nombre} ${props.apellido}`}
                 disabled

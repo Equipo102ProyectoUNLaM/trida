@@ -183,6 +183,7 @@ class Correcciones extends Component {
               <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
                 <input
                   type="text"
+                  spellCheck="true"
                   name="keyword"
                   id="search"
                   placeholder={
