@@ -14,7 +14,6 @@ import { functions } from 'helpers/Firebase';
 import TagsInput from 'react-tagsinput';
 import { toolTipMaterias } from 'constants/texts';
 import { isEmpty } from 'helpers/Utils';
-import { enviarNotificacionExitosa } from 'helpers/Utils-ui';
 import 'react-tagsinput/react-tagsinput.css';
 
 class FormMateria extends Component {

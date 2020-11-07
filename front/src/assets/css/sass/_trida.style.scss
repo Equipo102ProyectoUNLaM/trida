@@ -1849,19 +1849,6 @@ nav .nomargin {
     }
   }
 
-  .language-button {
-    background: $background-color;
-    border: initial;
-    font-size: 0.8rem;
-    color: $secondary-color;
-    padding: 0.6rem 1rem;
-
-    @include respond-below(xs) {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
-  }
-
   .search {
     position: relative;
     width: $sub-menu-width;
@@ -2733,103 +2720,6 @@ nav .nomargin {
   align-self: center;
 }
 
-/* 13.Survey App*/
-.survey-app {
-  .answers {
-    .badge {
-      color: $secondary-color;
-      font-size: 13px;
-      padding-left: 0.75em;
-      padding-right: 0.75em;
-    }
-
-    input {
-      padding-right: 70px;
-    }
-  }
-
-  .question {
-    &.edit-quesiton {
-      .edit-mode {
-        display: block;
-      }
-
-      .view-mode {
-        display: none;
-      }
-
-      .view-button {
-        display: inline-block;
-      }
-
-      .edit-button {
-        display: none;
-      }
-    }
-
-    &.view-quesiton {
-      .edit-mode {
-        display: none;
-      }
-
-      .view-mode {
-        display: block;
-      }
-
-      .view-button {
-        display: none;
-      }
-
-      .edit-button {
-        display: inline-block;
-      }
-    }
-  }
-
-  .survey-question-types {
-    .btn-group-icon {
-      font-size: 21px;
-      line-height: 28px;
-    }
-
-    .btn {
-      padding-bottom: 0.3rem;
-    }
-  }
-}
-
-.input-icons {
-  position: absolute;
-  right: 0;
-  top: 9px;
-}
-
-/* 14.Todo App*/
-.heading-icon {
-  font-size: 20px;
-  color: $theme-color-1;
-  margin-right: 5px;
-  line-height: inherit;
-  vertical-align: middle;
-}
-
-.todo-details {
-  margin-top: 20px;
-  margin-left: 40px;
-}
-
-.heading-number {
-  border: 1px solid $theme-color-1;
-  padding: 4px;
-  vertical-align: middle;
-  margin-right: 10px;
-  border-radius: 20px;
-  width: 34px;
-  height: 34px;
-  text-align: center;
-  color: $theme-color-1;
-}
-
 /* 15.Main*/
 .main-app {
   margin-left: $sub-menu-width + $main-menu-width + $main-margin;
@@ -3131,176 +3021,16 @@ nav .nomargin {
   }
 }
 
-.list-thumbnail-letters {
-  width: 85px;
-  height: 85px;
-  background: $theme-color-1;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  font-size: 1.25rem;
-  color: $button-text-color;
-
-  @include respond-below(md) {
-    width: 80px;
-    height: 80px;
-  }
-
-  @include respond-below(xs) {
-    width: 70px;
-    height: 70px;
-  }
-
-  &.small {
-    width: 60px;
-    height: 60px;
-    font-size: 1rem;
-
-    @include respond-below(md) {
-      width: 55px;
-      height: 55px;
-    }
-
-    @include respond-below(xs) {
-      width: 50px;
-      height: 50px;
-    }
-  }
-}
-
 /* 17.Dashboard*/
 
 .dashboard-line-chart {
   height: 283px;
 }
 
-.dashboard-quick-post {
-  min-height: 263px;
-}
-
-.dashboard-list-with-thumbs {
-  height: 500px;
-}
-
-.dashboard-logs {
-  height: 270px;
-}
-
-.dashboard-list-with-user {
-  height: 270px;
-}
-
 .dashboard-donut-chart {
   height: 270px;
 }
 
-.dashboard-small-chart {
-  height: 150px;
-
-  .chart {
-    height: 55px;
-  }
-
-  .lead {
-    font-size: 1.4rem;
-  }
-}
-
-.dashboard-small-chart-analytics {
-  height: 180px;
-
-  .chart {
-    height: 85px;
-  }
-
-  .lead {
-    font-size: 1.4rem;
-  }
-}
-
-.dashboard-filled-line-chart {
-  height: 340px;
-
-  .chart {
-    height: 200px;
-  }
-}
-
-.dashboard-sq-banner {
-  background-image: linear-gradient(to right top, $gradient-color-2, $gradient-color-3, $gradient-color-1);
-  background-size: cover;
-  height: 385px;
-  transition: 0.5s;
-  background-size: 350% auto;
-  cursor: pointer;
-
-  .card-body {
-    width: 270px;
-  }
-
-  .lead {
-    line-height: 2.3rem;
-  }
-
-  &:hover {
-    background-position: right top;
-  }
-}
-
-.dashboard-link-list {
-  height: 385px;
-}
-
-.dashboard-progress {
-  height: 385px;
-}
-
-.dashboard-top-rated {
-  height: 300px;
-
-  @include respond-below(md) {
-    height: unset;
-  }
-
-  .glide {
-    // margin-right: -0.5rem;
-    // margin-left: -0.5rem;
-
-    img {
-      height: 120px;
-      display: flex;
-      object-fit: cover;
-      width: 100%;
-    }
-    .react-rater {
-      display: inline-block !important;
-    }
-  }
-}
-
-.dashboard-search {
-  height: 650px;
-  background: url(/assets/img/plane.jpg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-color: $foreground-color;
-
-  .card-body {
-    padding: 120px 50px 30px 50px;
-
-    @include respond-below(xl) {
-      padding: 80px 30px 30px 30px;
-    }
-  }
-
-  .form-container {
-    height: 400px;
-    border-radius: $border-radius;
-    box-shadow: 0px -10px 15px 0px rgba(0, 0, 0, 0.04);
-    padding: 2rem;
-    background-color: $foreground-color;
-  }
-}
 
 .icon-cards-row {
   margin-left: -5px;
@@ -7840,29 +7570,6 @@ i.large-icon {
     }
   }
 
-  .comment-contaiener {
-    input {
-      border-top-left-radius: initial;
-      border-bottom-left-radius: initial;
-      border-top-right-radius: 50px !important;
-      border-bottom-right-radius: 50px !important;
-      padding-left: 0.75rem;
-      padding-right: 20px;
-    }
-  }
-
-  .glide__arrow.glide__arrow--left {
-    .simple-icon-arrow-left:before {
-      content: "\e605";
-    }
-  }
-
-  .glide__arrow.glide__arrow--right {
-    .simple-icon-arrow-right:before {
-      content: "\e606";
-    }
-  }
-
   .search-sm::after {
     left: 0;
     right: initial;
@@ -8715,11 +8422,6 @@ i.large-icon {
   .heading-icon {
     margin-right: initial;
     margin-left: 5px;
-  }
-
-  .survey-app .answers input {
-    padding-right: 0.75rem;
-    padding-left: 70px;
   }
 
   .input-icons {
@@ -9768,46 +9470,6 @@ tr.folder {
   margin-right: 7px !important;
 }
 
-.react-grid-item.react-draggable.cssTransforms {
-  padding-right: 15px;
-  touch-action: none;
-  width: 100% !important;
-  height: 210px;
-  position: absolute;
-  transform: translate(10px, 10px);
-  font-family: inherit !important;
-  color: #212121 !important;
-}
-
-.react-stickies-wrapper {
-  font-family: inherit !important;
-  color: #212121 !important;
-
-  .note-wrap {
-    font-family: inherit !important;
-    color: #212121 !important;
-
-    .title{
-      color: #212121 !important;
-    }
-  }
-
-  .note-body{
-    color: #212121 !important;
-  }
-}
-
-.react-stickies-wrapper.note-wrap {
-  font-family: inherit !important;
-  color: #212121 !important;
-}
-
-.public-DraftStyleDefault-block {
-  .public-DraftStyleDefault-ltr {
-    color: #212121 !important;
-  }
-}
-
 .rbc-show-more {
   visibility: hidden;
 }
@@ -9823,12 +9485,6 @@ tr.folder {
   font-size: 85%;
   height: auto;
   line-height: normal;
-}
-
-.react-stickies-wrapper {
-    width: 100%;
-    height: 35% !important;
-    position: relative;
 }
 
 .card-notas {
@@ -10050,7 +9706,7 @@ color: var(--theme-color-1)
 }
 
 .video-recorder__Wrapper-sc-7k20rv-0 {
-  height: 100% !important;
+  height: 85% !important;
 
  .gayceY {
    height: auto !important;

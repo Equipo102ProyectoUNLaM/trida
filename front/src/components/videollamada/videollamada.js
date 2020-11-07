@@ -282,7 +282,7 @@ const Videollamada = ({
 
   const lanzamientoPreguntaValido = () => {
     return (
-      preguntaALanzar && esTiempoValido() && preguntaLanzadaGlobal.length == 0
+      preguntaALanzar && esTiempoValido() && preguntaLanzadaGlobal.length === 0
     );
   };
 

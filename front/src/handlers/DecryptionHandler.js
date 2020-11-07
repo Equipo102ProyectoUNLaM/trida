@@ -97,8 +97,6 @@ export const desencriptarEvaluacionImportada = (evaluaciones) => {
       evaluacion.data.nombre,
       secretKey
     ).toString(CryptoJS.enc.Utf8);
-    evaluacion.data.fecha_finalizacion = evaluacion.data.fecha_finalizacion;
-    evaluacion.data.fecha_publicacion = evaluacion.data.fecha_publicacion;
     evaluacion.data.sin_capturas =
       CryptoJS.AES.decrypt(evaluacion.data.sin_capturas, secretKey).toString(
         CryptoJS.enc.Utf8
