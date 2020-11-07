@@ -55,6 +55,7 @@ const Contact = () => {
                 <div className="col-lg-6">
                   <input
                     type="text"
+                    spellCheck="true"
                     placeholder="Nombre"
                     name="name"
                     onChange={(e) => {
@@ -75,6 +76,7 @@ const Contact = () => {
                 <div className="col-lg-6">
                   <input
                     type="text"
+                    spellCheck="true"
                     placeholder="Asunto"
                     name="subject"
                     onChange={(e) => {
