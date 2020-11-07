@@ -10,9 +10,12 @@ const MediumCardListView = ({ item, isSelect, collect, navTo, onClick }) => {
       <ContextMenuTrigger id="menu_id" data={item.id} collect={collect}>
         <a style={{ cursor: 'pointer' }} onClick={onClick ? onClick : ''}>
           <Card
-            className={classnames({
-              active: isSelect,
-            })}
+            className={
+              (classnames({
+                active: isSelect,
+              }),
+              'card-shadow')
+            }
           >
             <div className="position-relative">
               {item.tags &&
