@@ -66,7 +66,8 @@ class FormSubirPractica extends React.Component {
 
     reader.onloadend = () => {
       const archivo = reader.result;
-      const fileExtension = file.name.split('.')[1];
+      const splittedName = file.name.split('.');
+      const fileExtension = splittedName[splittedName.length() - 1];
       this.setState({ file: file, fileExtension: fileExtension });
     };
 
