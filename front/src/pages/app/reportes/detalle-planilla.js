@@ -335,6 +335,7 @@ class DetallePlanilla extends Component {
       await addDocumentWithId(
         `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`,
         columna.id,
+        this.props.user,
         { nombre: columna.data.nombre, valores: columna.data.valores }
       );
     }

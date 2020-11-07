@@ -271,6 +271,7 @@ class MiReporte extends Component {
         await addDocumentWithId(
           `planillasDocente/${this.props.user}/planillas/${this.state.idPlanilla}/columnas`,
           columna.id,
+          this.props.user,
           { nombre: columna.nombre, valores: columna.valores }
         );
       }

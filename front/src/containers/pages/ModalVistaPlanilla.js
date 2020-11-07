@@ -60,7 +60,7 @@ class ModalVistaPlanilla extends Component {
   render() {
     const { isLoading, isOpen, toggleModal } = this.props;
     const { nombrePlanilla, alumnos, columnas } = this.state;
-    return isLoading || isEmpty(alumnos) ? (
+    return isLoading || isEmpty(alumnos) || isEmpty(columnas) ? (
       <div className="loading" />
     ) : (
       <Modal isOpen={isOpen} size="lg" toggle={toggleModal}>
