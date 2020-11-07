@@ -190,6 +190,8 @@ module.exports = {
   'activity.old': 'VER PRÁCTICAS FINALIZADAS',
   'activity.active': 'VER PRÁCTICAS ACTUALES',
   'fecha.modificar': 'Modificar fecha de entrega',
+  'activity.adjuntar-practica-extensiones':
+    'Las extensiones admitidas son .png, .jpg, .jpeg y .pdf',
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR / IMPORTAR EVALUACIÓN',

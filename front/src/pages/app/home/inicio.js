@@ -134,6 +134,7 @@ class Inicio extends Component {
                   className="notas"
                   onChange={this.onChangeNota}
                   type="textarea"
+                  spellCheck="true"
                   rows="3"
                   defaultValue={notas}
                 />
