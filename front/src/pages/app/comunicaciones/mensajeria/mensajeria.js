@@ -57,6 +57,7 @@ class Mensajeria extends Component {
   getMensajes = async () => {
     this.setState({
       itemsReceive: [],
+      isLoading: true,
     });
     const mensajesRecibidos = await getCollection(
       'mensajes',

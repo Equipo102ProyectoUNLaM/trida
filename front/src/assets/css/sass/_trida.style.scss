@@ -3620,7 +3620,8 @@ nav .nomargin {
 }
 
 .react-table-fixed-height {
-  height: 500px;
+  height: auto;
+  min-height: 500px;
   cursor: pointer;
 }
 
