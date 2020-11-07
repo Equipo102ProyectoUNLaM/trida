@@ -18,6 +18,7 @@ import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { createUUID } from 'helpers/Utils';
 import { subirArchivoAStorage } from 'helpers/Firebase-storage';
 import IntlMessages from 'helpers/IntlMessages';
+import Lightbox from 'react-image-lightbox';
 
 const acceptedFiles = [
   'image/png',
@@ -39,6 +40,8 @@ class FormPractica extends React.Component {
       estado: '',
       isLoading: true,
       file: '',
+      idArchivo: '',
+      fileToDelete: '',
     };
   }
 
@@ -62,7 +65,7 @@ class FormPractica extends React.Component {
         descripcion,
         fechaLanzada: fechaLanzada.toDate(),
         fechaVencimiento: fechaVencimiento.toDate(),
-        file: idArchivo,
+        idArchivo: idArchivo,
         estado,
       });
     }
@@ -96,29 +99,51 @@ class FormPractica extends React.Component {
 
     reader.onloadend = () => {
       const archivo = reader.result;
-
-      //const url = await subirArchivoAStorage(path, file, uuid);
       this.setState({ file: file });
     };
 
     reader.readAsDataURL(file);
   };
+
+  handleDeleteFile = async () => {
+    this.setState({
+      fileToDelete: this.state.idArchivo,
+      idArchivo: '',
+      file: '',
+    });
+  };
+
+  handleViewFile = async () => {
+    const url = await storage
+      .ref('materias/' + this.props.subject.id + '/practicas/')
+      .child(this.state.idArchivo)
+      .getDownloadURL();
+    window.open(url);
+  };
   /* ************ */
 
   onPracticaSubmit = async (values) => {
-    if (!this.state.file) {
-      enviarNotificacionError(
-        'Debes adjuntar una práctica para poder continuar',
-        'Archivo faltante'
-      );
-      return;
-    }
-
     const { nombre, descripcion, fechaLanzada, fechaVencimiento } = values;
     this.setState({ isLoading: true });
-    const uuid = createUUID();
-    const path = 'materias/' + this.props.subject.id + '/practicas/';
-    const url = await subirArchivoAStorage(path, this.state.file, uuid);
+
+    if (this.state.fileToDelete !== '') {
+      storage
+        .ref('materias/' + this.props.subject.id + '/practicas/')
+        .child(this.state.fileToDelete)
+        .delete();
+    }
+
+    let idArchivo = '';
+    if (this.state.file) {
+      const uuid = createUUID();
+      const path = 'materias/' + this.props.subject.id + '/practicas/';
+      const url = await subirArchivoAStorage(path, this.state.file, uuid);
+      idArchivo = uuid;
+    }
+
+    if (this.state.idArchivo) {
+      idArchivo = this.state.idArchivo;
+    }
 
     if (this.props.operationType === 'add') {
       const obj = {
@@ -127,7 +152,7 @@ class FormPractica extends React.Component {
         descripcion: descripcion,
         fechaVencimiento: fechaVencimiento,
         idMateria: this.props.subject.id,
-        idArchivo: uuid,
+        idArchivo: idArchivo,
         estado: 'pendiente',
       };
       await addDocument(
@@ -144,7 +169,7 @@ class FormPractica extends React.Component {
         fechaLanzada: fechaLanzada,
         descripcion: descripcion,
         fechaVencimiento: fechaVencimiento,
-        idArchivo: uuid,
+        idArchivo: idArchivo,
         estado: 'pendiente',
       };
       await editDocument('practicas', this.props.id, obj, 'Práctica editada');
@@ -242,20 +267,39 @@ class FormPractica extends React.Component {
             </FormGroup>
             <FormGroup>
               <Label>Adjuntar Archivo</Label>
-              <Row className="tip-text ml-0">
-                {' '}
-                <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
-                <IntlMessages id="activity.adjuntar-practica-extensiones" />
-              </Row>
-              <InputGroup className="mb-3">
-                <CustomInput
-                  type="file"
-                  label="Adjuntá la práctica correspondiente"
-                  id="adjuntar-practica"
-                  name="practica"
-                  onInputCapture={(e) => this.handleFileChange(e)}
-                />
-              </InputGroup>
+              {!this.state.idArchivo && (
+                <div>
+                  <Row className="tip-text ml-0">
+                    {' '}
+                    <i className="iconsminds-arrow-right-in-circle mr-1" />{' '}
+                    <IntlMessages id="activity.adjuntar-practica-extensiones" />
+                  </Row>
+                  <InputGroup className="mb-3">
+                    <CustomInput
+                      type="file"
+                      label="Adjuntá la práctica correspondiente"
+                      id="adjuntar-practica"
+                      name="practica"
+                      onInputCapture={(e) => this.handleFileChange(e)}
+                    />
+                  </InputGroup>
+                </div>
+              )}
+              {this.state.idArchivo && (
+                <div>
+                  <div className="practica-file-element">
+                    <p>1 Archivo Adjunto</p>
+                  </div>
+                  <div
+                    className="glyph-icon simple-icon-trash delete-action-icon practica-file-element"
+                    onClick={this.handleDeleteFile}
+                  />
+                  <div
+                    className="glyph-icon simple-icon-eye edit-action-icon practica-file-element"
+                    onClick={this.handleViewFile}
+                  />
+                </div>
+              )}
             </FormGroup>
             <ModalFooter>
               <Button color="secondary" onClick={toggleModal}>
