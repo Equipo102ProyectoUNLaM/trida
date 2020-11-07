@@ -10,6 +10,7 @@ import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
+import { isMobile } from 'react-device-detect';
 
 export const Columna = ({ data, colData, borrarColumna }) => {
   return (
@@ -192,98 +193,119 @@ class MiReporte extends Component {
     return isLoading ? (
       <div className="cover-spin" />
     ) : (
-      <div>
-        <Row>
-          <Colxx xxs="12">
-            <Breadcrumb heading="menu.mi-reporte" match={this.props.match} />
-            <Separator className="mb-5" />
-          </Colxx>
-        </Row>
-        <Row className="flex mb-2 align-center flex-end">
-          {!inputAgregarColumna && (
-            <div className="button-group">
-              <Button
-                color="primary"
-                onClick={this.toggleAgregarColumna}
-                className="button"
-              >
-                AGREGAR COLUMNA
-              </Button>
-              <Button
-                onClick={this.exportarPdf}
-                color="primary"
-                className="button"
-              >
-                EXPORTAR PDF
-              </Button>
-            </div>
-          )}
-          {inputAgregarColumna && (
-            <>
-              <Input
-                onChange={this.handleChange}
-                autoComplete="off"
-                name="nombreCol"
-                className="input-columna"
-                placeholder="Ingrese nombre de columna"
-                onKeyPress={this.handleKeyPress}
-              />
-              <div className="icon-columna">
-                <i
-                  className="iconsminds-yes cursor-pointer secondary"
-                  onClick={this.onAgregarColumna}
-                />
-                <i
-                  className="iconsminds-close cursor-pointer primary"
-                  onClick={this.toggleAgregarColumna}
-                />
-              </div>
-            </>
-          )}
-        </Row>
-        <div id="encabezadoAImprimir">
-          <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
-            <h2>Mi Planilla</h2>
-            <span>Fecha: {getFechaHoraActual()}</span>
-            <br />
-            <span>
-              Materia: {this.props.subject.name} - {this.props.course.name} -{' '}
-              {this.props.institution.name}
-            </span>
-            <br />
-            <br />
-          </div>
-          <Grid className="flex container">
-            <Card className="no-width ml-0 pr-4">
-              <Col className="mb-2 pl-3">
-                <div className="flex justify-center">
-                  <span className="header">Alumnos</span>
+      <>
+        {isMobile && (
+          <Row className="h-100">
+            <Colxx xxs="12" md="10" className="mx-auto my-auto">
+              <Card className="auth-card">
+                <div className="form-side margin-auto">
+                  <h1 className="font-weight-bold center">
+                    ¡Ups! Esta funcionalidad no está disponible en dispositivos
+                    móviles
+                  </h1>
                 </div>
-                {alumnosData.map((alumno) => (
-                  <>
-                    <Row
-                      id={'nombre-alumno' + alumno.id}
-                      className="col-alumno truncate"
-                      key={alumno.id}
-                    >
-                      {alumno.nombre}
-                    </Row>
-                    <Separator className="mt-1" />
-                  </>
+              </Card>
+            </Colxx>
+          </Row>
+        )}
+        {!isMobile && (
+          <div>
+            <Row>
+              <Colxx xxs="12">
+                <Breadcrumb
+                  heading="menu.mi-reporte"
+                  match={this.props.match}
+                />
+                <Separator className="mb-5" />
+              </Colxx>
+            </Row>
+            <Row className="flex mb-2 align-center flex-end">
+              {!inputAgregarColumna && (
+                <div className="button-group">
+                  <Button
+                    color="primary"
+                    onClick={this.toggleAgregarColumna}
+                    className="button"
+                  >
+                    AGREGAR COLUMNA
+                  </Button>
+                  <Button
+                    onClick={this.exportarPdf}
+                    color="primary"
+                    className="button"
+                  >
+                    EXPORTAR PDF
+                  </Button>
+                </div>
+              )}
+              {inputAgregarColumna && (
+                <>
+                  <Input
+                    onChange={this.handleChange}
+                    autoComplete="off"
+                    name="nombreCol"
+                    className="input-columna"
+                    placeholder="Ingrese nombre de columna"
+                    onKeyPress={this.handleKeyPress}
+                  />
+                  <div className="icon-columna">
+                    <i
+                      className="iconsminds-yes cursor-pointer secondary"
+                      onClick={this.onAgregarColumna}
+                    />
+                    <i
+                      className="iconsminds-close cursor-pointer primary"
+                      onClick={this.toggleAgregarColumna}
+                    />
+                  </div>
+                </>
+              )}
+            </Row>
+            <div id="encabezadoAImprimir">
+              <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
+                <h2>Mi Planilla</h2>
+                <span>Fecha: {getFechaHoraActual()}</span>
+                <br />
+                <span>
+                  Materia: {this.props.subject.name} - {this.props.course.name}{' '}
+                  - {this.props.institution.name}
+                </span>
+                <br />
+                <br />
+              </div>
+              <Grid className="flex container">
+                <Card className="no-width ml-0 pr-4">
+                  <Col className="mb-2 pl-3">
+                    <div className="flex justify-center">
+                      <span className="header">Alumnos</span>
+                    </div>
+                    {alumnosData.map((alumno) => (
+                      <>
+                        <Row
+                          id={'nombre-alumno' + alumno.id}
+                          className="col-alumno truncate"
+                          key={alumno.id}
+                        >
+                          {alumno.nombre}
+                        </Row>
+                        <Separator className="mt-1" />
+                      </>
+                    ))}
+                  </Col>
+                </Card>
+                {columnas.map((columna) => (
+                  <Columna
+                    key={columna.id}
+                    data={alumnosData}
+                    colData={columna}
+                    borrarColumna={this.borrarColumna}
+                  />
                 ))}
-              </Col>
-            </Card>
-            {columnas.map((columna) => (
-              <Columna
-                key={columna.id}
-                data={alumnosData}
-                colData={columna}
-                borrarColumna={this.borrarColumna}
-              />
-            ))}
-          </Grid>
-        </div>
-      </div>
+              </Grid>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 }

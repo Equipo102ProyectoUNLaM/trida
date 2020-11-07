@@ -84,7 +84,7 @@ class Course extends Component {
                       return (
                         <Row
                           key={index}
-                          className="mb-4 ml-0 mr-0"
+                          className="mb-4 ml-0 mr-0 course-row"
                           xxs="12"
                           xs="12"
                           lg="12"

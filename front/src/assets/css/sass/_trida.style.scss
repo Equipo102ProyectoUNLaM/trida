@@ -9232,6 +9232,15 @@ footer.page-footer {
 
 // 46 Course Selection
 
+.course-row {
+  width: 40%;
+
+  @include respond-below (xxs)
+  {
+    width: 100%;
+  }
+}
+
 .course-row-container{
   height: 100%;
 }
