@@ -211,7 +211,7 @@ class CardTabs extends Component {
                                     evalCalendar={true}
                                     dateFormat={'DD/MM/YYYY - HH:mm'}
                                     timeCaption="Hora"
-                                    timeIntervals={60}
+                                    timeIntervals={15}
                                     timeFormat={'HH:mm'}
                                   />
                                 )}
@@ -242,7 +242,7 @@ class CardTabs extends Component {
                                     evalCalendar={true}
                                     dateFormat={'DD/MM/YYYY - HH:mm'}
                                     timeCaption="Hora"
-                                    timeIntervals={60}
+                                    timeIntervals={15}
                                     timeFormat={'HH:mm'}
                                   />
                                 )}
