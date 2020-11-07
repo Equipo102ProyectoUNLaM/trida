@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalFooter, Button } from 'reactstrap';
+import { ModalFooter, Button, ModalBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import {
   addDocument,
@@ -121,13 +121,14 @@ class FormPreguntas extends React.Component {
       <div className="loading" />
     ) : (
       <>
-        <AgregarPregunta
-          ref={(ejer) => {
-            this.ejerciciosComponentRef = ejer;
-          }}
-          preguntas={preguntas}
-        />
-
+        <ModalBody>
+          <AgregarPregunta
+            ref={(ejer) => {
+              this.ejerciciosComponentRef = ejer;
+            }}
+            preguntas={preguntas}
+          />
+        </ModalBody>
         <ModalFooter>
           {isEmpty(preguntas) && (
             <>

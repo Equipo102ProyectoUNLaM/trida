@@ -190,7 +190,7 @@ class DetalleForo extends Component {
     } = this.state;
     return !loading ? (
       <Fragment>
-        <Row className="app-row">
+        <Row className="">
           <Colxx xxs="12" className="chat-app">
             <EncabezadoForo
               nombre={titulo}

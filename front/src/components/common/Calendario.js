@@ -59,6 +59,7 @@ class Calendario extends React.Component {
     return (
       <div>
         <div
+          style={{ margin: '0.2rem' }}
           className={
             'glyph-icon simple-icon-calendar set-date-action-icon' +
             iconClass +

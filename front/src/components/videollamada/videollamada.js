@@ -465,16 +465,6 @@ const Videollamada = ({
                     className="glyph-icon iconsminds-share"
                   />
                 </Button>
-                <Button
-                  color="primary"
-                  className="border-left"
-                  onClick={abrirPizarron}
-                >
-                  <div
-                    style={{ fontSize: '1rem' }}
-                    className="glyph-icon iconsminds-blackboard"
-                  />
-                </Button>
               </Fragment>
             )}
             {rol === ROLES.Alumno && (
