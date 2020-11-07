@@ -298,7 +298,7 @@ class Sidebar extends Component {
             {
               icon: 'iconsminds-pen',
               label: 'menu.mi-reporte',
-              to: '/app/reportes/mi-reporte',
+              to: '/app/reportes/mi-planilla',
             },
           ],
         });

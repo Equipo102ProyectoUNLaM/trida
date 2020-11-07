@@ -14,7 +14,7 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import { isEmpty } from 'helpers/Utils';
-import { addDocumentWithId } from 'helpers/Firebase-db';
+import { addDocumentWithId, addDocument } from 'helpers/Firebase-db';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import CountdownPreguntas from 'components/common/CountdownPreguntas';
@@ -65,23 +65,35 @@ class ContestarPregunta extends Component {
   };
 
   responderPregunta = async () => {
-    const obj = {
-      idAlumno: this.props.user,
+    let obj = await this.getObjetoAGuardar();
+    obj = {
+      ...obj,
       respuestas: this.state.respuestas,
     };
     await this.guardarRespuesta(obj);
   };
 
   noSabeRespuesta = async () => {
-    const obj = {
-      idAlumno: this.props.user,
+    let obj = await this.getObjetoAGuardar();
+    obj = {
+      ...obj,
       respuestas: [],
     };
     await this.guardarRespuesta(obj);
   };
 
+  getObjetoAGuardar = async () => {
+    return {
+      idAlumno: this.props.user,
+      idClase: this.state.idClase,
+      idMateria: this.props.subject,
+      idPregunta: this.state.preguntas[0].id,
+    };
+  };
+
   async guardarRespuesta(obj) {
     //Guardo en la subcoleccion respuestas. El idDoc es el idUser del alumno
+    // Ver de sacarlo esto en el futuro, asi se almacenan en una unica colecccion
     await addDocumentWithId(
       `clases/${this.state.idClase}/preguntas/${this.state.preguntas[0].id}/respuestas`,
       this.props.user,
@@ -90,6 +102,16 @@ class ContestarPregunta extends Component {
       null,
       null,
       null
+    );
+
+    // Se agrega en la colección usada para Reportes y tab de Respuestas
+    await addDocument(
+      'respuestasPreguntasClase',
+      obj,
+      this.props.user,
+      null,
+      null,
+      'Error al agregar en Respuestas a preguntas de Clase'
     );
   }
 

@@ -116,8 +116,10 @@ module.exports = {
   'menu.clases': 'Mis Reportes de Clases',
   'menu.practicas': 'Mis Reportes de Practicas',
   'menu.my-reportes-evaluaciones': 'Mis Reportes de Evaluaciones',
-  'menu.reportes-generales': 'Reportes Generales',
+  'menu.reportes-generales': 'Generales',
   'menu.mi-reporte': 'Mi Planilla',
+  'menu.reportes-guardados': 'VER PLANILLAS GUARDADAS',
+  'menu.planillas-guardadas': 'Mis Planillas Guardadas',
   'menu.ayuda': 'Ayuda',
   'menu.mi-cuenta': 'Mi Cuenta',
 
@@ -189,6 +191,8 @@ module.exports = {
   'activity.old': 'VER PRÁCTICAS FINALIZADAS',
   'activity.active': 'VER PRÁCTICAS ACTUALES',
   'fecha.modificar': 'Modificar fecha de entrega',
+  'activity.adjuntar-practica-extensiones':
+    'Las extensiones admitidas son .png, .jpg, .jpeg y .pdf',
 
   /* 11. Evaluaciones */
   'evaluation.add': 'AGREGAR / IMPORTAR EVALUACIÓN',

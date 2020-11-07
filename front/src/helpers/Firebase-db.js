@@ -364,7 +364,6 @@ export const addDocumentWithId = async (
     activo: true,
     creador: user,
   };
-
   firestore
     .collection(collection)
     .doc(id)

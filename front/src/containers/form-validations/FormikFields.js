@@ -324,7 +324,7 @@ export class FormikDatePicker extends React.Component {
         showTimeSelect={showTimeSelect}
         timeFormat="HH:mm"
         timeCaption="Hora"
-        timeIntervals={60}
+        timeIntervals={15}
         selected={value}
         onChange={this.handleChange}
         onBlur={this.handleBlur}
