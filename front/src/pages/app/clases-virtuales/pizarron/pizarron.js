@@ -7,7 +7,6 @@ import { injectIntl } from 'react-intl';
 import { isMobile } from 'react-device-detect';
 
 import 'excalidraw/dist/excalidraw.min.css';
-import { HmacSHA1 } from 'crypto-js';
 const pizarronURI = '/pizarron';
 
 class Pizarron extends React.Component {

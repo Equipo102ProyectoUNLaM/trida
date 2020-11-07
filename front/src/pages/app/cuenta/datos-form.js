@@ -8,7 +8,6 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Card,
 } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { injectIntl } from 'react-intl';
@@ -39,10 +38,6 @@ class DatosForm extends Component {
       fotoPerfilText: '',
       isLoading: true,
     };
-  }
-
-  componentDidMount() {
-    this.getDatosDeUsuario();
   }
 
   componentDidMount() {

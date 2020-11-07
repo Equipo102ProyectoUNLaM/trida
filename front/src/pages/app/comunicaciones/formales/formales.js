@@ -99,7 +99,7 @@ class Formales extends Component {
   getRolesReceptores = (roles) => {
     let dest = '';
     if (roles.length > 1) {
-      roles.map((rol) => {
+      roles.forEach((rol) => {
         dest = dest + rol + ', ';
       });
 

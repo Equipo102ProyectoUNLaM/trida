@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Row,
-  Button,
-  FormGroup,
-  Card,
-  CardBody,
-  Label,
-  Input,
-} from 'reactstrap';
+import { Row, Button, FormGroup, Card, CardBody } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
