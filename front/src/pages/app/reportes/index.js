@@ -17,8 +17,16 @@ const ReportesGenerales = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './reportes-generales')
 );
 
-const MiReporte = React.lazy(() =>
-  import(/* webpackChunkName: "second" */ './mi-reporte')
+const MiPlanilla = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './mi-planilla')
+);
+
+const MisPlanillasGuardadas = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './mis-planillas-guardadas')
+);
+
+const DetallePlanilla = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './detalle-planilla')
 );
 
 const Reportes = ({ match }) => (
@@ -42,8 +50,17 @@ const Reportes = ({ match }) => (
         render={(props) => <ReportesGenerales {...props} />}
       />
       <Route
-        path={`${match.url}/mi-reporte`}
-        render={(props) => <MiReporte {...props} />}
+        path={`${match.url}/mi-planilla`}
+        render={(props) => <MiPlanilla {...props} />}
+      />
+      <Route
+        path={`${match.url}/mis-planillas-guardadas`}
+        render={(props) => <MisPlanillasGuardadas {...props} />}
+        exact
+      />
+      <Route
+        path={`${match.url}/mi-planilla-guardada/:planillaId`}
+        render={(props) => <DetallePlanilla {...props} />}
       />
       <Redirect to="/error" />
     </Switch>

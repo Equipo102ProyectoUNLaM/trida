@@ -116,8 +116,10 @@ module.exports = {
   'menu.clases': 'Mis Reportes de Clases',
   'menu.practicas': 'Mis Reportes de Practicas',
   'menu.my-reportes-evaluaciones': 'Mis Reportes de Evaluaciones',
-  'menu.reportes-generales': 'Reportes Generales',
+  'menu.reportes-generales': 'Generales',
   'menu.mi-reporte': 'Mi Planilla',
+  'menu.reportes-guardados': 'VER PLANILLAS GUARDADAS',
+  'menu.planillas-guardadas': 'Mis Planillas Guardadas',
   'menu.ayuda': 'Ayuda',
   'menu.mi-cuenta': 'Mi Cuenta',
 

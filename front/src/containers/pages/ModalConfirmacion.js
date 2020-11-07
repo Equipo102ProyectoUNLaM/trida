@@ -15,9 +15,11 @@ export default class ModalConfirmacion extends Component {
       titulo,
       buttonPrimary,
       buttonSecondary,
+      buttonOverwrite,
       toggle,
       isOpen,
       onConfirm,
+      onOverwrite,
       fecha,
       usuarios,
       esEnviado,
@@ -62,6 +64,11 @@ export default class ModalConfirmacion extends Component {
           {buttonPrimary && (
             <Button color="primary" size="sm" onClick={onConfirm}>
               {buttonPrimary}
+            </Button>
+          )}
+          {buttonOverwrite && (
+            <Button color="primary" size="sm" onClick={onOverwrite}>
+              {buttonOverwrite}
             </Button>
           )}
         </ModalFooter>
