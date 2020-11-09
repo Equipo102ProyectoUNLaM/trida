@@ -32,7 +32,7 @@ const NotificationItem = ({ leida, contenido, fecha, url }) => {
   );
 };
 
-const TopnavNotifications = ({ user }) => {
+const TopnavNotifications = ({ user, subject }) => {
   const [notifications, setNotificationsOnSnapshot] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +45,7 @@ const TopnavNotifications = ({ user }) => {
       arrayNotifications.push({
         leida: docData.leida,
         contenido: docData.contenido,
+        materia: docData.materia,
         fecha: docData.fecha,
         url: docData.url,
         id: docId,
@@ -59,6 +60,9 @@ const TopnavNotifications = ({ user }) => {
     getCollectionOnSnapshotOrderedAndLimited(
       `notificaciones/${user}/listado`,
       onNewNotification,
+      'materia',
+      '==',
+      subject,
       'fecha',
       'desc',
       15
