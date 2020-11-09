@@ -1,7 +1,6 @@
 import React, { Component, Suspense } from 'react';
 import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { preguntarPermisos, messaging } from 'helpers/Firebase';
 
 import AppLayout from '../../layout/AppLayout';
 
@@ -28,13 +27,6 @@ const Admin = React.lazy(() => import('./admin'));
 const Ayuda = React.lazy(() => import('./ayuda'));
 
 class App extends Component {
-  componentDidMount() {
-    // preguntarPermisos();
-    // navigator.serviceWorker.addEventListener('message', (message) =>
-    //   console.log(message)
-    // );
-  }
-
   render() {
     const { match } = this.props;
 

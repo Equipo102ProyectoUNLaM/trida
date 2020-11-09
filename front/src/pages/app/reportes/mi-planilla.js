@@ -5,7 +5,7 @@ import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
+import { createRandomString, getFechaHoraActual } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -301,7 +301,6 @@ class MiReporte extends Component {
       columnas,
       inputAgregarColumna,
       isLoading,
-      nombrePlanilla,
       nombreTooltipOpen,
     } = this.state;
 

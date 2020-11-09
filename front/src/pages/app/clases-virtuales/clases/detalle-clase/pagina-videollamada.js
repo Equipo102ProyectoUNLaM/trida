@@ -160,7 +160,6 @@ const mapStateToProps = ({ authUser }) => {
     nombre,
     apellido,
     rol,
-    user,
   };
 };
 

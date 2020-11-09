@@ -54,7 +54,7 @@ const ModalVideo = ({
         {modalHeader && <IntlMessages id={modalHeader} />}
         {text && <span>{text}</span>}
       </ModalHeader>
-      <ModalBody className="modal-video-body">
+      <ModalBody>
         <FormGroup className="form-group has-float-label">
           <Label>
             <IntlMessages id="contenido.nombre-video" />
@@ -72,7 +72,7 @@ const ModalVideo = ({
           replayVideoAutoplayAndLoopOff
         />
       </ModalBody>
-      <ModalFooter className="modal-video-footer">
+      <ModalFooter>
         <Button color="primary" className="button" onClick={toggleModal}>
           Cancelar
         </Button>

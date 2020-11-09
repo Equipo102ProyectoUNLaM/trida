@@ -11,7 +11,6 @@ import {
   Badge,
   TabPane,
   Button,
-  ButtonGroup,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { editDocument } from 'helpers/Firebase-db';

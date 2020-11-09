@@ -8,12 +8,6 @@ import { editDocument } from 'helpers/Firebase-db';
 const NotificationItem = ({ leida, contenido, fecha, url }) => {
   const [now, setTime] = useState(new Date());
 
-  // const updateTime = () => {
-  //   setInterval(() => {
-  //     setTime(new Date());
-  //   }, 1000);
-  // };
-
   return (
     <Fragment>
       {/* {updateTime()} */}
@@ -41,14 +35,6 @@ const NotificationItem = ({ leida, contenido, fecha, url }) => {
 const TopnavNotifications = ({ user }) => {
   const [notifications, setNotificationsOnSnapshot] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const [now, setTime] = useState(new Date());
-
-  // const updateTime = () => {
-  //   setInterval(() => {
-  //     setTime(new Date());
-  //   }, 1000);
-  // };
 
   const onNewNotification = (documents) => {
     let arrayNotifications = [];

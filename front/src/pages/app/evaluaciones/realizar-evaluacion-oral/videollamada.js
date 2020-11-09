@@ -2,7 +2,6 @@ import React, { useEffect, Fragment, useState } from 'react';
 import { useJitsi } from 'react-jutsu'; // Custom hook
 import { Button, Row } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
-import { getTimestamp } from 'helpers/Utils';
 import { injectIntl } from 'react-intl';
 import ROLES from 'constants/roles';
 import INTERFACE_CONFIG from 'constants/videollamada';
