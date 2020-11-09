@@ -27,6 +27,7 @@ class Inicio extends Component {
     this.state = {
       isLoading: true,
       notas: '',
+      notasModified: false,
       eventos: [],
       eventosDia: [],
       valorSlider: 3,
@@ -40,7 +41,8 @@ class Inicio extends Component {
   }
 
   componentWillUnmount() {
-    guardarNotas(this.props.user, this.state.notas);
+    if (this.state.notasModified)
+      guardarNotas(this.props.user, this.state.notas);
   }
 
   setNotas = async () => {
@@ -70,6 +72,7 @@ class Inicio extends Component {
   onChangeNota = (event) => {
     this.setState({
       notas: event.target.value,
+      notasModified: true,
     });
   };
 
