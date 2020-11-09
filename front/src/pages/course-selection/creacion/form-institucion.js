@@ -23,14 +23,8 @@ class FormInstitucion extends Component {
       selectedInst: '',
       selectedNiveles: [],
       nombre: '',
-      telefono: 0,
     };
   }
-
-  handleChange = (event) => {
-    const { value, name } = event.target;
-    this.setState({ [name]: value });
-  };
 
   handleInstChange = (selectedInst) => {
     if (selectedInst) {
@@ -47,14 +41,14 @@ class FormInstitucion extends Component {
   };
 
   onUserSubmit = async (values) => {
-    const { nombre } = values;
+    const { nombre, telefono } = values;
     const nivelesState = [...this.state.selectedNiveles];
     const nivelesArray = nivelesState.map((elem) => elem.value);
 
     const obj = {
       niveles: nivelesArray,
       nombre: nombre,
-      telefono: this.state.telefono,
+      telefono: telefono,
       tipo: this.state.selectedInst.value,
     };
     const instRef = await addDocument(
@@ -133,12 +127,11 @@ class FormInstitucion extends Component {
                       <Field
                         className="form-control"
                         name="telefono"
-                        onChange={this.handleChange}
                         autoComplete="off"
                       />
                       {errors.telefono && touched.telefono && (
                         <div className="invalid-feedback d-block">
-                          El teléfono debe ser un número
+                          {errors.telefono}
                         </div>
                       )}
                     </FormGroup>
