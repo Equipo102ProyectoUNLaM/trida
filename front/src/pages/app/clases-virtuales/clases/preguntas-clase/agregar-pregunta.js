@@ -209,7 +209,7 @@ class AgregarPregunta extends React.Component {
           onClick={this.handleAddPregunta}
           size="sm"
           color="primary"
-          className="button"
+          className="button mb-2"
         >
           {' '}
           Agregar Pregunta (múltiples opciones correctas){' '}
@@ -219,7 +219,7 @@ class AgregarPregunta extends React.Component {
           onClick={this.handleAddPreguntaUnicaResp}
           size="sm"
           color="primary"
-          className="button btn-right"
+          className="button btn-right mb-2"
         >
           {' '}
           Agregar Pregunta (solo una opción correcta){' '}

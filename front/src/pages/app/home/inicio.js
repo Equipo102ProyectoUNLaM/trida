@@ -98,7 +98,7 @@ class Inicio extends Component {
           </Colxx>
         </Row>
         <Row>
-          <Colxx>
+          <Colxx className="mb-3" lg="5">
             <Card>
               <CardTitle className="card-title-evento">
                 <i className="margin-right-icon simple-icon-event" />
@@ -170,7 +170,9 @@ class Inicio extends Component {
                 </CardBody>
               </Card>
             )}
-            <Card className="mt-3">
+          </Colxx>
+          <Colxx lg="7">
+            <Card>
               <CardBody>
                 <Calendar
                   culture="es-ES"

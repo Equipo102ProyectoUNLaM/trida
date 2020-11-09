@@ -679,19 +679,14 @@ class TabsDeClase extends Component {
                             </Row>
                           )}
                           {modalPreguntasOpen && (
-                            <ModalGrande
+                            <ModalCrearPreguntas
+                              isLoading={isLoading}
+                              idClase={idClase}
                               modalOpen={modalPreguntasOpen}
-                              toggleModal={this.toggleModalPreguntas}
-                              text="Preguntas de la Clase"
-                            >
-                              <ModalCrearPreguntas
-                                isLoading={isLoading}
-                                idClase={idClase}
-                                preguntas={preguntasDeClase}
-                                toggleModalPreguntas={this.toggleModalPreguntas}
-                                updatePreguntas={this.getPreguntasDeClase}
-                              />
-                            </ModalGrande>
+                              preguntas={preguntasDeClase}
+                              toggleModalPreguntas={this.toggleModalPreguntas}
+                              updatePreguntas={this.getPreguntasDeClase}
+                            />
                           )}
                           {modalPreviewOpen && (
                             <ModalVistaPreviaPreguntas

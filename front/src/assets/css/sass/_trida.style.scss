@@ -3350,7 +3350,8 @@ nav .nomargin {
 }
 
 .react-table-fixed-height {
-  height: 500px;
+  height: auto;
+  min-height: 500px;
   cursor: pointer;
 }
 
@@ -8950,6 +8951,15 @@ footer.page-footer {
 
 // 46 Course Selection
 
+.course-row {
+  width: 40%;
+
+  @include respond-below (xxs)
+  {
+    width: 100%;
+  }
+}
+
 .course-row-container{
   height: 100%;
 }
@@ -9804,6 +9814,7 @@ color: var(--theme-color-1)
 .borrar-mensaje {
   font-size: 0.8rem;
   padding: 0;
+  padding-top: 0.5rem !important;
   margin: 0;
   position: absolute;
 }
