@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+const phoneRegExp = /^[0-9]+$/;
 
 export const passwordSchema = Yup.object().shape({
   password: Yup.string()
@@ -19,10 +20,17 @@ export const passwordSchema = Yup.object().shape({
 export const loginSchema = Yup.object().shape({
   nombre: Yup.string().required('Este campo es requerido'),
   apellido: Yup.string().required('Este campo es requerido'),
-  telefono: Yup.number(),
+  telefono: Yup.string().matches(
+    phoneRegExp,
+    'El número de teléfono es inválido, solo se aceptan números'
+  ),
 });
 
 export const primerLoginSchema = Yup.object().shape({
   nombre: Yup.string().required('Este campo es requerido'),
   apellido: Yup.string().required('Este campo es requerido'),
+  telefono: Yup.string().matches(
+    phoneRegExp,
+    'El número de teléfono es inválido, solo se aceptan números'
+  ),
 });
