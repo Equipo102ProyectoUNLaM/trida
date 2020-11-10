@@ -7,6 +7,7 @@ import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import {
   getCollection,
   getDocumentWithSubCollection,
+  getCollectionWithSubCollections,
 } from 'helpers/Firebase-db';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
@@ -78,7 +79,6 @@ class ReportesClases extends Component {
 
     const usuarios = await getUsuariosAlumnosPorMateria(this.props.subject.id);
     const respuestas = await this.getRespuestasDeAlumnos();
-    console.log('respuestas', respuestas);
 
     const clasesPromise = clasesCollection.map(async (clase) => {
       return {
@@ -100,6 +100,13 @@ class ReportesClases extends Component {
         'preguntas'
       );
 
+      const preguntasConRespuestas = await getCollectionWithSubCollections(
+        `clases/${clase.id}/preguntas`,
+        null,
+        null,
+        'respuestas'
+      );
+
       usuarios.forEach((alumno) => {
         asistenciaYPreguntasClase.push(
           this.getAsistenciaYPreguntas(
@@ -110,14 +117,17 @@ class ReportesClases extends Component {
         );
 
         respuestasPromise.push(
-          this.getRespuestasAPreguntasDeClase(clase, alumno, respuestas)
+          this.getRespuestasAPreguntasDeClase(
+            clase,
+            alumno,
+            respuestas,
+            preguntasConRespuestas
+          )
         );
       });
     }
 
     let respuestasPreguntasDeClase = await Promise.all(respuestasPromise);
-    console.log('pre asistenciaYPreguntasClase', asistenciaYPreguntasClase);
-    console.log('pre respuestasPreguntasDeClase', respuestasPreguntasDeClase);
     let openData = [];
     asistenciaYPreguntasClase = groupBy(asistenciaYPreguntasClase, 'user');
     asistenciaYPreguntasClase = Object.entries(asistenciaYPreguntasClase).map(
@@ -135,6 +145,7 @@ class ReportesClases extends Component {
         return { id: elem[0], data: elem[1] };
       }
     );
+
     this.setState({
       asistenciaYPreguntasClase,
       openAsistenciaYPreguntas: openData,
@@ -142,28 +153,30 @@ class ReportesClases extends Component {
       openRespuestasPreguntasDeClase: openDataRespuestas,
       isLoading: false,
     });
-
-    console.log('post asistenciaYPreguntasClase', asistenciaYPreguntasClase);
-    console.log('post respuestasPreguntasDeClase', respuestasPreguntasDeClase);
   };
 
-  getRespuestasAPreguntasDeClase = async (clase, alumno, respuestas) => {
-    /*     const respuestasDeAlumno = await getCollection('respuestasPreguntasClase', [
-      {field: 'idClase', operator: '==', id: clase.id},
-      {field: 'idAlumno', operator: '==', id: alumno.id},
-    ]); */
-
+  getRespuestasAPreguntasDeClase = async (
+    clase,
+    alumno,
+    respuestas,
+    preguntasConRespuestas
+  ) => {
     const respuestasDeAlumno = respuestas.filter(
       (rta) => rta.data.idClase === clase.id && rta.data.idAlumno === alumno.id
     );
-
-    // console.log(respuestasDeAlumno);
-
     const cantDocumentosDeRespuestasDeAlumno = respuestasDeAlumno.length;
-    /*     console.log(`preg ${clase.id} + ${alumno.id}`, respuestasDeAlumno);
-    console.log(cantDocumentosDeRespuestasDeAlumno); */
 
     if (cantDocumentosDeRespuestasDeAlumno > 0) {
+      const cantPreguntasDeClase = preguntasConRespuestas.length;
+      let cantPreguntasNoRespondidas = 0;
+      for (const pregunta of preguntasConRespuestas) {
+        // verifico si el alumno respondio la pregunta
+        const alumnoRespondio = pregunta.data.subcollections.some(
+          (preg) => preg.id === alumno.id
+        );
+        if (!alumnoRespondio) cantPreguntasNoRespondidas++;
+      }
+
       let respondioOk = 0;
       let respondioMal = 0;
       let noSupoRespuesta = 0;
@@ -194,6 +207,8 @@ class ReportesClases extends Component {
         respondioMal: respondioMal,
         noSupoRespuesta: noSupoRespuesta,
         cantidadRespuestasAlumno: cantRespuestasNetasAlumno,
+        cantPreguntasNoRespondidas: cantPreguntasNoRespondidas,
+        cantPreguntasDeClase: cantPreguntasDeClase,
       };
     } else {
       //devolver clase y todo null, ya que no hay rtas para esa clase
@@ -206,6 +221,8 @@ class ReportesClases extends Component {
         respondioMal: null,
         sabeRta: null,
         cantidadRespuestasAlumno: null,
+        cantPreguntasNoRespondidas: null,
+        cantPreguntasDeClase: null,
       };
     }
   };
@@ -432,17 +449,20 @@ class ReportesClases extends Component {
                               <TableCell className="font-weight-bold">
                                 Fecha de Clase
                               </TableCell>
-                              <TableCell className="font-weight-bold">
+                              <TableCell className="font-weight-bold reporte-respuestas">
                                 Respuestas Correctas
                               </TableCell>
-                              <TableCell className="font-weight-bold">
+                              <TableCell className="font-weight-bold reporte-respuestas">
                                 Respuestas Erróneas
                               </TableCell>
-                              <TableCell className="font-weight-bold">
+                              <TableCell className="font-weight-bold reporte-respuestas">
                                 Respuestas que no sabe
                               </TableCell>
-                              <TableCell className="font-weight-bold">
-                                Cantidad Total de Respuestas
+                              <TableCell className="font-weight-bold reporte-respuestas">
+                                Preguntas No Respondidas
+                              </TableCell>
+                              <TableCell className="font-weight-bold reporte-respuestas">
+                                Cantidad Total de Preguntas de la clase
                               </TableCell>
                             </TableRow>
                           </TableHead>
@@ -455,13 +475,20 @@ class ReportesClases extends Component {
                                 <TableCell>
                                   {getDateTimeStringFromDate(historyRow.fecha)}
                                 </TableCell>
-                                <TableCell>{historyRow.respondioOk}</TableCell>
-                                <TableCell>{historyRow.respondioMal}</TableCell>
-                                <TableCell>
-                                  {historyRow.noSupoRespuesta}
+                                <TableCell className="reporte-respuestas">
+                                  {historyRow.respondioOk ?? '-'}
                                 </TableCell>
-                                <TableCell>
-                                  {historyRow.cantidadRespuestasAlumno}
+                                <TableCell className="reporte-respuestas">
+                                  {historyRow.respondioMal ?? '-'}
+                                </TableCell>
+                                <TableCell className="reporte-respuestas">
+                                  {historyRow.noSupoRespuesta ?? '-'}
+                                </TableCell>
+                                <TableCell className="reporte-respuestas">
+                                  {historyRow.cantPreguntasNoRespondidas ?? '-'}
+                                </TableCell>
+                                <TableCell className="reporte-respuestas">
+                                  {historyRow.cantPreguntasDeClase ?? '-'}
                                 </TableCell>
                               </TableRow>
                             ))}
