@@ -18,7 +18,7 @@ class PaginaAdmin extends Component {
       modalAsignacionOpen: false,
     };
 
-    if (this.props.rol === ROLES.Docente) {
+    if (this.props.rol !== ROLES.Alumno) {
       if (!ADMIN_ARRAY.some((elem) => elem.id === 3)) {
         ADMIN_ARRAY.push({
           id: 3,
@@ -39,15 +39,6 @@ class PaginaAdmin extends Component {
     }
 
     if (this.props.rol === ROLES.Directivo) {
-      if (!ADMIN_ARRAY.some((elem) => elem.id === 4)) {
-        ADMIN_ARRAY.push({
-          id: 4,
-          title: 'Invitar usuarios',
-          icon: 'iconsminds-add-user',
-          to: '#',
-        });
-      }
-
       if (!ADMIN_ARRAY.some((elem) => elem.id === 5)) {
         ADMIN_ARRAY.push({
           id: 5,
