@@ -8,6 +8,7 @@ import {
   InputGroup,
   CustomInput,
   Row,
+  Alert,
 } from 'reactstrap';
 import { getDocument, addDocument, editDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
@@ -18,7 +19,6 @@ import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { createUUID } from 'helpers/Utils';
 import { subirArchivoAStorage } from 'helpers/Firebase-storage';
 import IntlMessages from 'helpers/IntlMessages';
-import Lightbox from 'react-image-lightbox';
 
 const acceptedFiles = [
   'image/png',
@@ -120,7 +120,6 @@ class FormPractica extends React.Component {
       .getDownloadURL();
     window.open(url);
   };
-  /* ************ */
 
   onPracticaSubmit = async (values) => {
     const { nombre, descripcion, fechaLanzada, fechaVencimiento } = values;
@@ -188,6 +187,7 @@ class FormPractica extends React.Component {
       fechaLanzada,
       fechaVencimiento,
     } = this.state;
+
     const initialValues = {
       nombre: nombre,
       descripcion: descripcion,
@@ -304,12 +304,24 @@ class FormPractica extends React.Component {
               )}
             </FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={toggleModal}>
-                Cancelar
-              </Button>
-              <Button color="primary" type="submit">
-                {textConfirm}
-              </Button>
+              <Row>
+                <Button color="secondary" onClick={toggleModal}>
+                  Cancelar
+                </Button>
+                {(!fechaLanzada || fechaLanzada > new Date()) && (
+                  <Button className="ml-1" color="primary" type="submit">
+                    {textConfirm}
+                  </Button>
+                )}
+                {fechaLanzada && fechaLanzada < new Date() && (
+                  <Alert
+                    color="warning"
+                    className="rounded alert-preguntas ml-1"
+                  >
+                    La práctica no puede editarse porque ya ha sido lanzada!
+                  </Alert>
+                )}
+              </Row>
             </ModalFooter>
           </Form>
         )}
