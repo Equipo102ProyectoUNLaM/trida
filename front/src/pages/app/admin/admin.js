@@ -18,7 +18,36 @@ class PaginaAdmin extends Component {
       modalAsignacionOpen: false,
     };
 
+    if (this.props.rol === ROLES.Docente) {
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 3)) {
+        ADMIN_ARRAY.push({
+          id: 3,
+          title: 'Usuarios de la materia',
+          icon: 'iconsminds-male-female',
+          to: '/app/admin/alumnos',
+        });
+      }
+
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 4)) {
+        ADMIN_ARRAY.push({
+          id: 4,
+          title: 'Invitar usuarios',
+          icon: 'iconsminds-add-user',
+          to: '#',
+        });
+      }
+    }
+
     if (this.props.rol === ROLES.Directivo) {
+      if (!ADMIN_ARRAY.some((elem) => elem.id === 4)) {
+        ADMIN_ARRAY.push({
+          id: 4,
+          title: 'Invitar usuarios',
+          icon: 'iconsminds-add-user',
+          to: '#',
+        });
+      }
+
       if (!ADMIN_ARRAY.some((elem) => elem.id === 5)) {
         ADMIN_ARRAY.push({
           id: 5,
@@ -59,7 +88,7 @@ class PaginaAdmin extends Component {
   };
 
   handleClick = (id) => {
-    if (id === 3) {
+    if (id === 2) {
       this.props.history.push(
         `/seleccion-curso/course/${this.props.institution.id}`
       );

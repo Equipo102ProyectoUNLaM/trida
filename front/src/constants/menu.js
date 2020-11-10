@@ -71,5 +71,11 @@ const data = [
     label: 'menu.corrections',
     to: '/app/correcciones',
   },
+  {
+    id: 'admin',
+    icon: 'iconsminds-gear',
+    label: 'menu.admin',
+    to: '/app/admin',
+  },
 ];
 export default data;

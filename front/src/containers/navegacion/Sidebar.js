@@ -304,16 +304,6 @@ class Sidebar extends Component {
         });
       }
 
-      const isAdminPresent = menuItems.some((elem) => elem.id === 'admin');
-      if (!isAdminPresent) {
-        menuItems.push({
-          id: 'admin',
-          icon: 'iconsminds-gear',
-          label: 'menu.admin',
-          to: '/app/admin',
-        });
-      }
-
       const clasesMenu = menuItems.filter(
         (elem) => elem.id === 'virtual-classes'
       );
