@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
-import { groupBy } from 'lodash';
+import { groupBy, result } from 'lodash';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import {
@@ -32,6 +32,8 @@ class ReportesClases extends Component {
       asistenciaYPreguntasClase: [],
       preguntasAnonimasAlumnos: [],
       openAsistenciaYPreguntas: [],
+      respuestasPreguntasDeClase: [],
+      openRespuestasPreguntasDeClase: [],
       isLoading: true,
     };
   }
@@ -48,6 +50,13 @@ class ReportesClases extends Component {
     });
   };
 
+  getRespuestasDeAlumnos = async () => {
+    return await getCollection('respuestasPreguntasClase', [
+      { field: 'idMateria.id', operator: '==', id: this.props.subject.id },
+      { field: 'activo', operator: '==', id: true },
+    ]);
+  };
+
   getDataClases = async () => {
     const clasesCollection = await getCollection('clases', [
       {
@@ -60,6 +69,8 @@ class ReportesClases extends Component {
     ]);
 
     const usuarios = await getUsuariosAlumnosPorMateria(this.props.subject.id);
+    const respuestas = await this.getRespuestasDeAlumnos();
+    console.log('respuestas', respuestas);
 
     const clasesPromise = clasesCollection.map(async (clase) => {
       return {
@@ -73,6 +84,7 @@ class ReportesClases extends Component {
 
     let clases = await Promise.all(clasesPromise);
     let asistenciaYPreguntasClase = [];
+    let respuestasPromise = [];
 
     for (let clase of clases) {
       const preguntasAnonimas = await getDocumentWithSubCollection(
@@ -88,9 +100,16 @@ class ReportesClases extends Component {
             preguntasAnonimas.subCollection
           )
         );
+
+        respuestasPromise.push(
+          this.getRespuestasAPreguntasDeClase(clase, alumno, respuestas)
+        );
       });
     }
 
+    let respuestasPreguntasDeClase = await Promise.all(respuestasPromise);
+    console.log('pre asistenciaYPreguntasClase', asistenciaYPreguntasClase);
+    console.log('pre respuestasPreguntasDeClase', respuestasPreguntasDeClase);
     let openData = [];
     asistenciaYPreguntasClase = groupBy(asistenciaYPreguntasClase, 'user');
     asistenciaYPreguntasClase = Object.entries(asistenciaYPreguntasClase).map(
@@ -99,11 +118,89 @@ class ReportesClases extends Component {
         return { id: elem[0], data: elem[1] };
       }
     );
+
+    let openDataRespuestas = [];
+    respuestasPreguntasDeClase = groupBy(respuestasPreguntasDeClase, 'user');
+    respuestasPreguntasDeClase = Object.entries(respuestasPreguntasDeClase).map(
+      (elem) => {
+        openDataRespuestas.push(false);
+        return { id: elem[0], data: elem[1] };
+      }
+    );
     this.setState({
       asistenciaYPreguntasClase,
       openAsistenciaYPreguntas: openData,
+      respuestasPreguntasDeClase,
+      openRespuestasPreguntasDeClase: openDataRespuestas,
       isLoading: false,
     });
+
+    console.log('post asistenciaYPreguntasClase', asistenciaYPreguntasClase);
+    console.log('post respuestasPreguntasDeClase', respuestasPreguntasDeClase);
+  };
+
+  getRespuestasAPreguntasDeClase = async (clase, alumno, respuestas) => {
+    /*     const respuestasDeAlumno = await getCollection('respuestasPreguntasClase', [
+      {field: 'idClase', operator: '==', id: clase.id},
+      {field: 'idAlumno', operator: '==', id: alumno.id},
+    ]); */
+
+    const respuestasDeAlumno = respuestas.filter(
+      (rta) => rta.data.idClase === clase.id && rta.data.idAlumno === alumno.id
+    );
+
+    console.log(respuestasDeAlumno);
+
+    const cantDocumentosDeRespuestasDeAlumno = respuestasDeAlumno.length;
+    /*     console.log(`preg ${clase.id} + ${alumno.id}`, respuestasDeAlumno);
+    console.log(cantDocumentosDeRespuestasDeAlumno); */
+
+    if (cantDocumentosDeRespuestasDeAlumno > 0) {
+      let respondioOk = 0;
+      let respondioMal = 0;
+      let noSupoRespuesta = 0;
+      let cantRespuestasNetasAlumno = 0;
+      for (const respuesta of respuestasDeAlumno) {
+        //No sabe la rta
+        if (respuesta.data.respuestas.length === 0) {
+          noSupoRespuesta++;
+          cantRespuestasNetasAlumno++;
+        } else {
+          //Respondio algo
+
+          for (let i = 0; i < respuesta.data.respuestas.length; i++) {
+            cantRespuestasNetasAlumno++;
+            const respuestaOk = respuesta.data.opcionesVerdaderas.includes(
+              respuesta.data.respuestas[i]
+            );
+            if (respuestaOk) respondioOk++;
+            else respondioMal++;
+          }
+        }
+      }
+      return {
+        id: clase.id,
+        user: alumno.nombre,
+        nombreClase: clase.nombre,
+        fecha: clase.fecha,
+        respondioOk: respondioOk,
+        respondioMal: respondioMal,
+        noSupoRespuesta: noSupoRespuesta,
+        cantidadRespuestasAlumno: cantRespuestasNetasAlumno,
+      };
+    } else {
+      //devolver clase y todo null, ya que no hay rtas para esa clase
+      return {
+        id: clase.id,
+        user: alumno.nombre,
+        nombreClase: clase.nombre,
+        fecha: clase.fecha,
+        respondioOk: null,
+        respondioMal: null,
+        sabeRta: null,
+        cantidadRespuestasAlumno: null,
+      };
+    }
   };
 
   getAsistenciaYPreguntas(clase, usuario, preguntasAnonimas) {
@@ -162,6 +259,109 @@ class ReportesClases extends Component {
         <Row>
           <h2 className="titulo-asistencia">
             Asistencia y Preguntas en Clases
+          </h2>
+        </Row>
+        {isEmpty(asistenciaYPreguntasClase) && (
+          <span>No hay datos sobre asistencia y preguntas en clases</span>
+        )}
+        {!isEmpty(asistenciaYPreguntasClase) && (
+          <TableContainer component={Paper}>
+            {asistenciaYPreguntasClase.map((row, index) => (
+              <Fragment key={index}>
+                <TableRow className="mb-2">
+                  <TableCell className="button-toggle">
+                    <IconButton
+                      aria-label="expand row"
+                      size="small"
+                      onClick={() => this.toggleAccordion(index)}
+                    >
+                      {openAsistenciaYPreguntas ? (
+                        <KeyboardArrowDownIcon />
+                      ) : (
+                        <KeyboardArrowUpIcon />
+                      )}
+                    </IconButton>
+                  </TableCell>
+                  <TableCell
+                    className="width-100 font-weight-bold"
+                    onClick={() => this.toggleAccordion(index)}
+                  >
+                    {row.id}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell
+                    style={{ paddingBottom: 0, paddingTop: 0 }}
+                    colSpan={5}
+                    className="padding-left-inner"
+                  >
+                    <Collapse
+                      in={openAsistenciaYPreguntas[index]}
+                      timeout="auto"
+                    >
+                      <Box margin={1}>
+                        <Table
+                          className="data-entregas"
+                          size="small"
+                          aria-label="entregas"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell className="font-weight-bold">
+                                Clases
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
+                                Fecha de Clase
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
+                                Preguntas realizadas
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
+                                Tiempo
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {row.data.map((historyRow) => (
+                              <TableRow
+                                key={historyRow.id}
+                                className={
+                                  historyRow.tiempo === 0
+                                    ? 'Ausente'
+                                    : 'Presente'
+                                }
+                              >
+                                <TableCell component="th" scope="row">
+                                  {historyRow.nombreClase}
+                                </TableCell>
+                                <TableCell>
+                                  {getDateTimeStringFromDate(historyRow.fecha)}
+                                </TableCell>
+                                <TableCell>
+                                  {historyRow.preguntas === 0
+                                    ? 'Sin preguntas'
+                                    : historyRow.preguntas}
+                                </TableCell>
+                                <TableCell>
+                                  {historyRow.tiempo === 0
+                                    ? 'Ausente'
+                                    : historyRow.tiempo + ' minutos'}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                    </Collapse>
+                  </TableCell>
+                </TableRow>
+              </Fragment>
+            ))}
+          </TableContainer>
+        )}
+        <Row>
+          <h2 className="titulo-asistencia">
+            Respuestas a Preguntas Lanzadas en Clases
           </h2>
         </Row>
         {isEmpty(asistenciaYPreguntasClase) && (
