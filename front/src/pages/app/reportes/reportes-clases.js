@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
-import { groupBy, result } from 'lodash';
+import { groupBy } from 'lodash';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import {
