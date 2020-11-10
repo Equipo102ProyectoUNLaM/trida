@@ -1,13 +1,14 @@
 import React, { Fragment, Component } from 'react';
 import { Collapse, Button, Row, Card, CardBody, Jumbotron } from 'reactstrap';
-import IntlMessages from '../../helpers/IntlMessages';
-import { Colxx } from '../../components/common/CustomBootstrap';
+import IntlMessages from 'helpers/IntlMessages';
+import { Colxx } from 'components/common/CustomBootstrap';
 import { withRouter } from 'react-router-dom';
 import { getCourses } from 'helpers/Firebase-user';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
 import { connect } from 'react-redux';
 import { updateSubject, updateCourse } from 'redux/actions';
-import CursoCardListView from '../../containers/pages/CursoCardListView';
+import CursoCardListView from 'containers/pages/CursoCardListView';
+import SubjectCardListView from 'containers/pages/SubjectCardListView';
 
 function collect(props) {
   return { data: props.data };
@@ -24,6 +25,7 @@ class Course extends Component {
       course: null,
       courseSelected: false,
       isLoading: true,
+      clickedCourse: '',
     };
   }
 
@@ -60,7 +62,11 @@ class Course extends Component {
   }
 
   onCourseSelected = (course) => {
-    this.setState({ course, courseSelected: !this.state.courseSelected });
+    this.setState({
+      course,
+      courseSelected: !this.state.courseSelected,
+      clickedCourse: this.state.clickedCourse ? '' : course.id,
+    });
   };
 
   onCourseSelection(subject, course) {
@@ -70,7 +76,7 @@ class Course extends Component {
   }
 
   render() {
-    const { items, isLoading } = this.state;
+    const { items, isLoading, clickedCourse } = this.state;
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -92,11 +98,15 @@ class Course extends Component {
                           item={course}
                           collect={collect}
                           onClick={(e) => this.onCourseSelected(course)}
+                          isClicked={clickedCourse}
                         />
                       );
                     })}{' '}
                   </Row>
-                  <Collapse isOpen={this.state.courseSelected}>
+                  <Collapse
+                    className="margin-top-1-rem"
+                    isOpen={this.state.courseSelected}
+                  >
                     <h2 className="display-5">
                       <IntlMessages id="materia.selection" />
                     </h2>
@@ -105,7 +115,7 @@ class Course extends Component {
                       {this.state.course &&
                         this.state.course.subjects.map((subject) => {
                           return (
-                            <CursoCardListView
+                            <SubjectCardListView
                               key={subject.id}
                               item={subject}
                               collect={collect}
