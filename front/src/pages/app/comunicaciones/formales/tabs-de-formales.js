@@ -90,6 +90,9 @@ class TabsDeFormales extends Component {
                   <Row className="mt-2">
                     <Colxx xxs="12" className="mb-4">
                       <>
+                        {isEmpty(itemsSent) && (
+                          <span>No hay comunicaciones enviadas</span>
+                        )}
                         {itemsSent.map((item, index) => {
                           return (
                             <Card
@@ -223,6 +226,9 @@ class TabsDeFormales extends Component {
             <Row className="mt-2">
               <Colxx xxs="12" className="mb-4">
                 <>
+                  {isEmpty(itemsReceive) && (
+                    <span>No hay comunicaciones recibidas</span>
+                  )}
                   {itemsReceive.map((item, index) => {
                     return (
                       <Card
