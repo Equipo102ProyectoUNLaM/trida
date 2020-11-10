@@ -50,6 +50,14 @@ class ReportesClases extends Component {
     });
   };
 
+  toggleAccordionRespuestasDeAlumnos = (tab) => {
+    const prevState = this.state.openRespuestasPreguntasDeClase;
+    const state = prevState.map((x, index) => (tab === index ? !x : x));
+    this.setState({
+      openRespuestasPreguntasDeClase: state,
+    });
+  };
+
   getRespuestasDeAlumnos = async () => {
     return await getCollection('respuestasPreguntasClase', [
       { field: 'idMateria.id', operator: '==', id: this.props.subject.id },
@@ -149,7 +157,7 @@ class ReportesClases extends Component {
       (rta) => rta.data.idClase === clase.id && rta.data.idAlumno === alumno.id
     );
 
-    console.log(respuestasDeAlumno);
+    // console.log(respuestasDeAlumno);
 
     const cantDocumentosDeRespuestasDeAlumno = respuestasDeAlumno.length;
     /*     console.log(`preg ${clase.id} + ${alumno.id}`, respuestasDeAlumno);
@@ -166,8 +174,7 @@ class ReportesClases extends Component {
           noSupoRespuesta++;
           cantRespuestasNetasAlumno++;
         } else {
-          //Respondio algo
-
+          //Respondio algo (bien o mal)
           for (let i = 0; i < respuesta.data.respuestas.length; i++) {
             cantRespuestasNetasAlumno++;
             const respuestaOk = respuesta.data.opcionesVerdaderas.includes(
@@ -244,6 +251,8 @@ class ReportesClases extends Component {
     const {
       asistenciaYPreguntasClase,
       openAsistenciaYPreguntas,
+      respuestasPreguntasDeClase,
+      openRespuestasPreguntasDeClase,
       isLoading,
     } = this.state;
     return isLoading ? (
@@ -364,21 +373,26 @@ class ReportesClases extends Component {
             Respuestas a Preguntas Lanzadas en Clases
           </h2>
         </Row>
-        {isEmpty(asistenciaYPreguntasClase) && (
-          <span>No hay datos sobre asistencia y preguntas en clases</span>
+        {isEmpty(respuestasPreguntasDeClase) && (
+          <span>
+            No hay datos sobre respuestas de alumnos a preguntas lanzadas en
+            clases
+          </span>
         )}
-        {!isEmpty(asistenciaYPreguntasClase) && (
+        {!isEmpty(respuestasPreguntasDeClase) && (
           <TableContainer component={Paper}>
-            {asistenciaYPreguntasClase.map((row, index) => (
+            {respuestasPreguntasDeClase.map((row, index) => (
               <Fragment key={index}>
                 <TableRow className="mb-2">
                   <TableCell className="button-toggle">
                     <IconButton
                       aria-label="expand row"
                       size="small"
-                      onClick={() => this.toggleAccordion(index)}
+                      onClick={() =>
+                        this.toggleAccordionRespuestasDeAlumnos(index)
+                      }
                     >
-                      {openAsistenciaYPreguntas ? (
+                      {openRespuestasPreguntasDeClase ? (
                         <KeyboardArrowDownIcon />
                       ) : (
                         <KeyboardArrowUpIcon />
@@ -387,7 +401,9 @@ class ReportesClases extends Component {
                   </TableCell>
                   <TableCell
                     className="width-100 font-weight-bold"
-                    onClick={() => this.toggleAccordion(index)}
+                    onClick={() =>
+                      this.toggleAccordionRespuestasDeAlumnos(index)
+                    }
                   >
                     {row.id}
                   </TableCell>
@@ -399,7 +415,7 @@ class ReportesClases extends Component {
                     className="padding-left-inner"
                   >
                     <Collapse
-                      in={openAsistenciaYPreguntas[index]}
+                      in={openRespuestasPreguntasDeClase[index]}
                       timeout="auto"
                     >
                       <Box margin={1}>
@@ -417,38 +433,35 @@ class ReportesClases extends Component {
                                 Fecha de Clase
                               </TableCell>
                               <TableCell className="font-weight-bold">
-                                Preguntas realizadas
+                                Respuestas Correctas
                               </TableCell>
                               <TableCell className="font-weight-bold">
-                                Tiempo
+                                Respuestas Erróneas
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
+                                Respuestas que no sabe
+                              </TableCell>
+                              <TableCell className="font-weight-bold">
+                                Cantidad Total de Respuestas
                               </TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
                             {row.data.map((historyRow) => (
-                              <TableRow
-                                key={historyRow.id}
-                                className={
-                                  historyRow.tiempo === 0
-                                    ? 'Ausente'
-                                    : 'Presente'
-                                }
-                              >
+                              <TableRow key={historyRow.id}>
                                 <TableCell component="th" scope="row">
                                   {historyRow.nombreClase}
                                 </TableCell>
                                 <TableCell>
                                   {getDateTimeStringFromDate(historyRow.fecha)}
                                 </TableCell>
+                                <TableCell>{historyRow.respondioOk}</TableCell>
+                                <TableCell>{historyRow.respondioMal}</TableCell>
                                 <TableCell>
-                                  {historyRow.preguntas === 0
-                                    ? 'Sin preguntas'
-                                    : historyRow.preguntas}
+                                  {historyRow.noSupoRespuesta}
                                 </TableCell>
                                 <TableCell>
-                                  {historyRow.tiempo === 0
-                                    ? 'Ausente'
-                                    : historyRow.tiempo + ' minutos'}
+                                  {historyRow.cantidadRespuestasAlumno}
                                 </TableCell>
                               </TableRow>
                             ))}
