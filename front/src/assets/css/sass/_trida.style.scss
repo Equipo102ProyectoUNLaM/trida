@@ -2018,8 +2018,9 @@ nav .nomargin {
     position: relative;
 
     img {
-      border-radius: 30px;
+      border-radius: 50%;
       width: 40px;
+      height: 40px;
     }
 
     @include respond-below(md) {
@@ -8516,7 +8517,6 @@ i.large-icon {
   .simple-icon-arrow-right:before {
     content: '\e605';
   }
-
   //Menu Config Main Menu Sub Menu
   .sub-hidden .sub-menu,
   .menu-sub-hidden .sub-menu,
@@ -10368,4 +10368,31 @@ tr.folder {
   align-self: center;
   margin-top: 0.5rem;
   margin-right: 0.5rem;
+}
+
+.square-image {
+  width: 40px;
+  height: 40px;
+}
+
+.foto-perfil-remove-icon {
+  margin-top: 2rem;
+  margin-left: -2.5rem !important;
+  margin-right: 1rem !important;
+  color: red;
+
+  &:before {
+    font-family: 'simple-line-icons';
+    font-size: 19px;
+    position: absolute;
+    width: 22px;
+    height: 25px;
+    margin-left: 0.5rem;
+    margin-top: 0px;
+    text-align: center;
+    cursor: pointer;
+    background-color: white !important;
+    content: '\e082' !important;
+    border-radius: 50% !important;
+  }
 }

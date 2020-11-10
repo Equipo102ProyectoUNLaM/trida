@@ -23,6 +23,7 @@ import { newEmailMail, oldEmailMail } from 'constants/emailTexts';
 import { datosSchema } from './validations';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
+const imageFiles = ['image/png', 'image/jpeg', 'image/jpg'];
 
 class DatosForm extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class DatosForm extends Component {
       originalMail: '',
       mail: '',
       telefono: '',
-      foto: '',
+      fotoFile: '',
       fotoPerfilText: '',
       isLoading: true,
     };
@@ -54,14 +55,29 @@ class DatosForm extends Component {
       mail: data.mail,
       telefono: data.telefono,
       isLoading: false,
+      fotoAMostrar: '',
     });
   };
 
   setSelectedFile = (event) => {
-    this.setState({
-      foto: event.target.files[0],
-      fotoPerfilText: event.target.files[0].name,
-    });
+    let file = event.target.files[0];
+    if (imageFiles.includes(file.type)) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({
+          fotoFile: file,
+          fotoAMostrar: reader.result,
+          fotoPerfilText: file.name,
+        });
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      enviarNotificacionError(
+        'Extensión de archivo no válida',
+        'Archivo no admitido'
+      );
+    }
   };
 
   handleChange = (event) => {
@@ -134,13 +150,20 @@ class DatosForm extends Component {
     }
 
     const userData = await getUserData(this.props.user);
-    this.props.updateDatosUsuario(userData);
+    await this.props.updateDatosUsuario(userData);
   };
 
   render() {
-    const { isLoading, nombre, apellido, mail, telefono } = this.state;
+    const {
+      isLoading,
+      nombre,
+      apellido,
+      mail,
+      telefono,
+      fotoAMostrar,
+    } = this.state;
     let { foto } = this.props;
-    foto = foto ? foto : imagenDefaultUsuario;
+    foto = foto || imagenDefaultUsuario;
     const initialValues = { nombre, apellido, mail, telefono };
 
     return isLoading ? (
@@ -221,10 +244,22 @@ class DatosForm extends Component {
                       <IntlMessages id="user.foto" />
                     </Label>
                     <img
-                      src={foto}
+                      src={fotoAMostrar ? fotoAMostrar : foto}
                       alt="foto-default-usuario"
                       className="social-header card-img wh-200 mb-2 padding-1 border-radius-50"
                     />
+                    {fotoAMostrar && (
+                      <div
+                        className="remove-icon foto-perfil-remove-icon"
+                        onClick={() =>
+                          this.setState({
+                            fotoAMostrar: '',
+                            fotoPerfilText: '',
+                            fotoFile: '',
+                          })
+                        }
+                      />
+                    )}
                     <InputGroup className="input-group-foto">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>Cambiar foto</InputGroupText>
@@ -239,7 +274,7 @@ class DatosForm extends Component {
                         <input
                           onChange={this.setSelectedFile}
                           type="file"
-                          name="foto"
+                          name="fotoFile"
                           id="upload-photo"
                         />
                       </div>
