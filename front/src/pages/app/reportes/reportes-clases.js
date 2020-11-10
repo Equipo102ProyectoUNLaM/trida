@@ -450,10 +450,10 @@ class ReportesClases extends Component {
                                 Fecha de Clase
                               </TableCell>
                               <TableCell className="font-weight-bold reporte-respuestas">
-                                Respuestas Correctas
+                                Opciones Correctas
                               </TableCell>
                               <TableCell className="font-weight-bold reporte-respuestas">
-                                Respuestas Erróneas
+                                Opciones Incorrectas
                               </TableCell>
                               <TableCell className="font-weight-bold reporte-respuestas">
                                 Respuestas que no sabe
