@@ -4,6 +4,7 @@ import { Card, CardBody } from 'reactstrap';
 const IconCard = ({
   className = 'mb-4',
   icon,
+  foto,
   title,
   value1,
   value2,
@@ -22,10 +23,13 @@ const IconCard = ({
       >
         <Card>
           <CardBody className="text-center">
-            <img
-              className="social-header card-img wh-200 mb-2 padding-1 border-radius-50"
-              src={icon}
-            />
+            {foto && (
+              <img
+                className="social-header card-img wh-200 mb-2 padding-1 border-radius-50"
+                src={foto}
+              />
+            )}
+            {icon && <i className={icon} />}
             <p className="card-text font-weight-semibold mb-0 truncate">
               {title}
             </p>

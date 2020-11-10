@@ -72,7 +72,7 @@ class PaginaAlumnos extends Component {
                   key={`icon_card_${item.id}`}
                 >
                   <IconCard
-                    icon={item.foto}
+                    foto={item.foto}
                     title={item.nombre ? item.nombre : item.mail}
                     value1={item.mail}
                     value2={rolesData(item.rol).rolTexto}
