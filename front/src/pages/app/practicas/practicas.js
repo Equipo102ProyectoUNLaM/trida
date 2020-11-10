@@ -145,6 +145,7 @@ class Practica extends Component {
 
   onFileUploaded = () => {
     this.toggleUploadFileModal();
+    this.getPracticas();
   };
 
   deletePractice = async () => {
