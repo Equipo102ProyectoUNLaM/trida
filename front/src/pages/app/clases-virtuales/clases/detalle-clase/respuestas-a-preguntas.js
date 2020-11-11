@@ -191,15 +191,16 @@ const RespuestasAPreguntas = ({
                     <div className="mb-2">
                       {rta.opciones[index]}
                       <span className="float-right text-default">
-                        {rta.respuestasVerdaderas.includes(index) && (
-                          <Badge
-                            color="danger"
-                            pill
-                            className="badge-respuestas"
-                          >
-                            Correcta
-                          </Badge>
-                        )}
+                        {rta.respuestasVerdaderas.includes(index) &&
+                          rolDocente && (
+                            <Badge
+                              color="danger"
+                              pill
+                              className="badge-respuestas"
+                            >
+                              Correcta
+                            </Badge>
+                          )}
                         {rolDocente && (
                           <span>
                             {opcion}/{rta.cantTotalRtas}

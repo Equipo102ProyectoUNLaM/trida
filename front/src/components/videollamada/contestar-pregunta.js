@@ -83,11 +83,16 @@ class ContestarPregunta extends Component {
   };
 
   getObjetoAGuardar = async () => {
+    const idxRtasVerdaderas = this.state.preguntas[0].data.opciones
+      .map((opc, idx) => (opc.verdadera ? idx : ''))
+      .filter(String);
+
     return {
       idAlumno: this.props.user,
       idClase: this.state.idClase,
       idMateria: this.props.subject,
       idPregunta: this.state.preguntas[0].id,
+      opcionesVerdaderas: idxRtasVerdaderas,
     };
   };
 

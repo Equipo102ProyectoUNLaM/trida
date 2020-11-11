@@ -224,7 +224,7 @@ const Videollamada = ({
     //Desencripto la pregunta lanzada (si la hay)
     if (preguntaLanzadaEncriptada.length > 0) {
       preguntaLanzadaGlobal = [];
-      const sinRespuesta = true;
+      const sinRespuesta = false;
       preguntaLanzadaGlobal = desencriptarEjercicios(
         preguntaLanzadaEncriptada,
         sinRespuesta
