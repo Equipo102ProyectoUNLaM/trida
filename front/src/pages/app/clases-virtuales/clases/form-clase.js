@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
+  Alert,
 } from 'reactstrap';
 import Switch from 'rc-switch';
 import { createUUID, createRandomString } from 'helpers/Utils';
@@ -104,6 +105,7 @@ class FormClase extends React.Component {
 
     let claseId = '';
     let url = this.state.imagen;
+
     if (this.state.foto) {
       url = await this.subirFoto(this.state.foto, claseId);
     }
@@ -315,9 +317,16 @@ class FormClase extends React.Component {
               <Button color="secondary" onClick={toggleModal}>
                 Cancelar
               </Button>
-              <Button color="primary" type="submit">
-                {textConfirm}
-              </Button>
+              {(!fecha_clase || fecha_clase > new Date()) && (
+                <Button className="ml-1" color="primary" type="submit">
+                  {textConfirm}
+                </Button>
+              )}
+              {fecha_clase && fecha_clase < new Date() && (
+                <Alert color="warning" className="rounded alert-preguntas ml-1">
+                  La clase no puede editarse porque está en curso!
+                </Alert>
+              )}
             </ModalFooter>
           </Form>
         )}

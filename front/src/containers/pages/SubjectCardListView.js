@@ -1,15 +1,22 @@
 import React from 'react';
 import { Row, Card, CardBody, CardSubtitle, CardText, Badge } from 'reactstrap';
+import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
 
-const MediumCardListView = ({ item, collect, onClick, isClicked }) => {
-  const clicked = isClicked ? item.id === isClicked : false;
+const MediumCardListView = ({ item, isSelect, collect, onClick }) => {
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={item.id}>
       <ContextMenuTrigger id="menu_id" data={item.id} collect={collect}>
         <a style={{ cursor: 'pointer' }} onClick={onClick ? onClick : ''}>
-          <Card className={'card-shadow ' + (clicked ? 'clicked' : '')}>
+          <Card
+            className={
+              (classnames({
+                active: isSelect,
+              }),
+              'card-shadow')
+            }
+          >
             <div className="position-relative">
               {item.tags &&
                 item.tags.map((tag, index) => {

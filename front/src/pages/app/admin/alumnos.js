@@ -7,6 +7,9 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import { getDocument } from 'helpers/Firebase-db';
 import { isEmpty } from 'helpers/Utils';
 import { rolesData } from 'constants/rolesData';
+import { getUserData } from 'helpers/Firebase-user';
+const publicUrl = process.env.PUBLIC_URL;
+const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
 class PaginaAlumnos extends Component {
   constructor(props) {
@@ -27,14 +30,18 @@ class PaginaAlumnos extends Component {
     );
 
     const usuariosArrayPromise = data.usuario_id.map(async (elem) => {
-      const { data } = await getDocument(`usuarios/${elem}`);
+      const user = await getUserData(elem);
+      console.log(user);
       return {
         id: elem,
-        nombre: data.nombre + ' ' + data.apellido,
-        rol: data.rol,
+        nombre: user.nombre + ' ' + user.apellido,
+        mail: user.mail,
+        rol: user.rol,
+        foto: user.foto || imagenDefaultUsuario,
       };
     });
-    const usuariosArray = await Promise.all(usuariosArrayPromise);
+    const usuariosArrayRaw = await Promise.all(usuariosArrayPromise);
+    const usuariosArray = usuariosArrayRaw.sort((a, b) => b.rol - a.rol);
     this.setState({
       usuariosArray,
       isLoading: false,
@@ -65,9 +72,10 @@ class PaginaAlumnos extends Component {
                   key={`icon_card_${item.id}`}
                 >
                   <IconCard
-                    icon={rolesData(item.rol).icon}
-                    title={item.nombre}
-                    value={rolesData(item.rol).rolTexto}
+                    foto={item.foto}
+                    title={item.nombre ? item.nombre : item.mail}
+                    value1={item.mail}
+                    value2={rolesData(item.rol).rolTexto}
                     className="mb-4"
                     to="#"
                   />

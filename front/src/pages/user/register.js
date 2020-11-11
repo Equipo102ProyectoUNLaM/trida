@@ -91,7 +91,7 @@ class Register extends Component {
                   touched,
                 }) => (
                   <Form className="av-tooltip tooltip-label-right">
-                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
+                    <FormGroup className="form-group has-float-label mb-3 error-l-225">
                       <Label>
                         <IntlMessages id="user.email" />
                       </Label>
@@ -106,7 +106,7 @@ class Register extends Component {
                         </div>
                       )}
                     </FormGroup>
-                    <FormGroup className="form-group has-float-label mb-3 error-l-150">
+                    <FormGroup className="form-group has-float-label mb-3 error-l-225">
                       <Label>
                         <IntlMessages id="user.password" />
                       </Label>

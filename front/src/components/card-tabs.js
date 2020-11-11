@@ -11,6 +11,7 @@ import {
   Badge,
   TabPane,
   Button,
+  Alert,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { editDocument } from 'helpers/Firebase-db';
@@ -276,13 +277,19 @@ class CardTabs extends Component {
                                 ) : (
                                   <AccionesMobile
                                     leftIcon={
-                                      rolDocente && !this.props.isOldTest
+                                      rolDocente &&
+                                      !this.props.isOldTest &&
+                                      data.base.fecha_publicacion.toDate() >
+                                        new Date()
                                         ? 'glyph-icon simple-icon-pencil'
                                         : null
                                     }
                                     leftIconToggle={this.handleClickEdit}
                                     middleIcon={
-                                      rolDocente && !this.props.isOldTest
+                                      rolDocente &&
+                                      !this.props.isOldTest &&
+                                      data.base.fecha_publicacion.toDate() >
+                                        new Date()
                                         ? 'glyph-icon simple-icon-trash'
                                         : null
                                     }
@@ -298,28 +305,46 @@ class CardTabs extends Component {
                               </Fragment>
                             ) : (
                               <Fragment>
-                                {rolDocente && !this.props.isOldTest && (
-                                  <Button
-                                    outline
-                                    onClick={this.handleClickEdit}
-                                    size="sm"
-                                    color="primary"
-                                    className="button mt-2"
-                                  >
-                                    Editar Evaluación
-                                  </Button>
-                                )}
-                                {rolDocente && !this.props.isOldTest && (
-                                  <Button
-                                    outline
-                                    onClick={this.handleClickDelete}
-                                    size="sm"
-                                    color="primary"
-                                    className="button mt-2"
-                                  >
-                                    Borrar Evaluación
-                                  </Button>
-                                )}
+                                {rolDocente &&
+                                  !this.props.isOldTest &&
+                                  data.base.fecha_publicacion.toDate() >
+                                    new Date() && (
+                                    <Button
+                                      outline
+                                      onClick={this.handleClickEdit}
+                                      size="sm"
+                                      color="primary"
+                                      className="button mt-2"
+                                    >
+                                      Editar Evaluación
+                                    </Button>
+                                  )}
+                                {rolDocente &&
+                                  !this.props.isOldTest &&
+                                  data.base.fecha_publicacion.toDate() <
+                                    new Date() && (
+                                    <div className="alert-evaluaciones">
+                                      <i className="iconsminds-information" />
+                                      <span color="warning">
+                                        La evaluación no puede editarse ni
+                                        borrarse porque está en curso!
+                                      </span>
+                                    </div>
+                                  )}
+                                {rolDocente &&
+                                  !this.props.isOldTest &&
+                                  data.base.fecha_publicacion.toDate() >
+                                    new Date() && (
+                                    <Button
+                                      outline
+                                      onClick={this.handleClickDelete}
+                                      size="sm"
+                                      color="primary"
+                                      className="button mt-2"
+                                    >
+                                      Borrar Evaluación
+                                    </Button>
+                                  )}
                                 {rolDocente && (
                                   <Button
                                     outline

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import {
   Row,
   Button,
@@ -23,6 +24,7 @@ import { newEmailMail, oldEmailMail } from 'constants/emailTexts';
 import { datosSchema } from './validations';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
+const imageFiles = ['image/png', 'image/jpeg', 'image/jpg'];
 
 class DatosForm extends Component {
   constructor(props) {
@@ -34,9 +36,10 @@ class DatosForm extends Component {
       originalMail: '',
       mail: '',
       telefono: '',
-      foto: '',
+      fotoFile: '',
       fotoPerfilText: '',
       isLoading: true,
+      fotoCuenta: '',
     };
   }
 
@@ -54,14 +57,30 @@ class DatosForm extends Component {
       mail: data.mail,
       telefono: data.telefono,
       isLoading: false,
+      fotoAMostrar: '',
+      fotoCuenta: data.foto || imagenDefaultUsuario,
     });
   };
 
   setSelectedFile = (event) => {
-    this.setState({
-      foto: event.target.files[0],
-      fotoPerfilText: event.target.files[0].name,
-    });
+    let file = event.target.files[0];
+    if (imageFiles.includes(file.type)) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({
+          fotoFile: file,
+          fotoAMostrar: reader.result,
+          fotoPerfilText: file.name,
+        });
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      enviarNotificacionError(
+        'Extensión de archivo no válida',
+        'Archivo no admitido'
+      );
+    }
   };
 
   handleChange = (event) => {
@@ -80,7 +99,6 @@ class DatosForm extends Component {
       'state_changed',
       () => {},
       (error) => {
-        console.error(error.message);
         enviarNotificacionError(
           'La foto de perfil no pudo ser cargada',
           'Error'
@@ -105,7 +123,7 @@ class DatosForm extends Component {
   };
 
   onSubmit = async (values) => {
-    const { foto, originalMail } = this.state;
+    const { fotoFile, originalMail } = this.state;
     const { nombre, apellido, mail, telefono } = values;
     var user = auth.currentUser;
 
@@ -115,8 +133,8 @@ class DatosForm extends Component {
       telefono,
     };
 
-    if (foto) {
-      await this.subirFoto(foto);
+    if (fotoFile) {
+      await this.subirFoto(fotoFile);
     }
 
     await editDocument(
@@ -134,13 +152,20 @@ class DatosForm extends Component {
     }
 
     const userData = await getUserData(this.props.user);
-    this.props.updateDatosUsuario(userData);
+    await this.props.updateDatosUsuario(userData);
+    await this.props.history.push('/app/home');
   };
 
   render() {
-    const { isLoading, nombre, apellido, mail, telefono } = this.state;
-    let { foto } = this.props;
-    foto = foto ? foto : imagenDefaultUsuario;
+    const {
+      isLoading,
+      nombre,
+      apellido,
+      mail,
+      telefono,
+      fotoAMostrar,
+      fotoCuenta,
+    } = this.state;
     const initialValues = { nombre, apellido, mail, telefono };
 
     return isLoading ? (
@@ -221,10 +246,22 @@ class DatosForm extends Component {
                       <IntlMessages id="user.foto" />
                     </Label>
                     <img
-                      src={foto}
+                      src={fotoAMostrar ? fotoAMostrar : fotoCuenta}
                       alt="foto-default-usuario"
                       className="social-header card-img wh-200 mb-2 padding-1 border-radius-50"
                     />
+                    {fotoAMostrar && (
+                      <div
+                        className="remove-icon foto-perfil-remove-icon"
+                        onClick={() =>
+                          this.setState({
+                            fotoAMostrar: '',
+                            fotoPerfilText: '',
+                            fotoFile: '',
+                          })
+                        }
+                      />
+                    )}
                     <InputGroup className="input-group-foto">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>Cambiar foto</InputGroupText>
@@ -239,7 +276,7 @@ class DatosForm extends Component {
                         <input
                           onChange={this.setSelectedFile}
                           type="file"
-                          name="foto"
+                          name="fotoFile"
                           id="upload-photo"
                         />
                       </div>
@@ -283,6 +320,6 @@ const mapStateToProps = ({ authUser }) => {
   };
 };
 
-export default injectIntl(
-  connect(mapStateToProps, { updateDatosUsuario })(DatosForm)
+export default withRouter(
+  injectIntl(connect(mapStateToProps, { updateDatosUsuario })(DatosForm))
 );

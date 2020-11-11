@@ -372,7 +372,10 @@ class Evaluaciones extends Component {
               lg="4"
               className="columna-filtro-badge"
             >
-              <Badge pill className="mb-1 position-absolute badge badge-filtro">
+              <Badge
+                pill
+                className="mb-1 position-absolute badge badge-filtro cursor-pointer"
+              >
                 <Calendario
                   handleClick={this.handleClickCalendario}
                   text="Filtro por fecha de publicación o finalización"
@@ -386,7 +389,7 @@ class Evaluaciones extends Component {
                     {' '}
                     - {filtroFecha}
                     <Button
-                      className="delete-filter"
+                      className="delete-filter cursor-pointer"
                       onClick={this.handleFiltroDelete}
                       close
                     />
