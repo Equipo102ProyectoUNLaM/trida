@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalBody } from 'reactstrap';
+import { ModalBody, Modal, ModalHeader } from 'reactstrap';
 import FormPreguntas from '../preguntas-clase/form-preguntas';
 
 class ModalCrearPreguntas extends React.Component {
@@ -17,6 +17,7 @@ class ModalCrearPreguntas extends React.Component {
       isLoading,
       idClase,
       preguntas,
+      modalOpen,
       toggleModalPreguntas,
       updatePreguntas,
     } = this.props;
@@ -27,12 +28,18 @@ class ModalCrearPreguntas extends React.Component {
       </ModalBody>
     ) : (
       <>
-        <FormPreguntas
-          preguntas={preguntas}
-          idClase={idClase}
-          toggleModalPreguntas={toggleModalPreguntas}
-          updatePreguntas={updatePreguntas}
-        />
+        <Modal isOpen={modalOpen} size="lg" toggle={toggleModalPreguntas}>
+          <ModalHeader toggle={toggleModalPreguntas}>
+            Preguntas de la clase
+          </ModalHeader>
+
+          <FormPreguntas
+            preguntas={preguntas}
+            idClase={idClase}
+            toggleModalPreguntas={toggleModalPreguntas}
+            updatePreguntas={updatePreguntas}
+          />
+        </Modal>
       </>
     );
   }

@@ -103,7 +103,7 @@ class TabsDeMensajeria extends Component {
                         showPageJump={itemsReceive.length > 0}
                         showPageSizeOptions={true}
                         minRows={0}
-                        noDataText="No tienes mensajes recibidos"
+                        noDataText="No tenés mensajes recibidos"
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
                         getTrGroupProps={(state, rowInfo, column, instance) => {
@@ -116,6 +116,7 @@ class TabsDeMensajeria extends Component {
                                 background: rowInfo.row._original.leido
                                   ? 'white'
                                   : '#E7FAFF',
+                                height: 'auto',
                               },
                             };
                           }
@@ -140,12 +141,15 @@ class TabsDeMensajeria extends Component {
                         minRows={0}
                         PaginationComponent={DataTablePagination}
                         className={'react-table-fixed-height'}
-                        noDataText="No tienes mensajes enviados"
+                        noDataText="No tenés mensajes enviados"
                         getTrGroupProps={(state, rowInfo, column, instance) => {
                           if (rowInfo !== undefined) {
                             return {
                               onClick: (e, handleOriginal) => {
                                 clickOnRow(rowInfo);
+                              },
+                              style: {
+                                height: '100% !important',
                               },
                             };
                           }

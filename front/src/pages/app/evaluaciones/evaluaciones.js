@@ -356,6 +356,7 @@ class Evaluaciones extends Component {
               <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
                 <input
                   type="text"
+                  spellCheck="true"
                   name="keyword"
                   id="search"
                   placeholder="Búsqueda por nombre de evaluación, fecha de publicación, fecha de finalización..."

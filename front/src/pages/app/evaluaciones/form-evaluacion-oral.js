@@ -129,6 +129,7 @@ class FormEvaluacionOral extends React.Component {
                 className="form-control"
                 name="nombre"
                 type="textarea"
+                spellCheck="true"
                 autoComplete="off"
               />
               {errors.nombre && touched.nombre && (

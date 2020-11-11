@@ -38,16 +38,15 @@ const DetalleMensaje = ({ item, idUsuarioActual, onDelete }) => {
               </div>
             </div>
           </div>
-
-          <div className="chat-text-left">
-            <p className="mb-0 text-semi-muted">{item.data.contenido}</p>
-          </div>
           {onDelete && (
             <div
               className="glyph-icon simple-icon-trash delete-action-icon borrar-mensaje"
               onClick={() => onDelete(item.id)}
             />
           )}
+          <div className="chat-text-left">
+            <p className="mb-0 text-semi-muted">{item.data.contenido}</p>
+          </div>
         </CardBody>
       </Card>
       <div className="clearfix" />

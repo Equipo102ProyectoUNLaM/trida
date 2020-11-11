@@ -537,12 +537,16 @@ export const getCollectionOnSnapshot = async (collection, callback) => {
 export const getCollectionOnSnapshotOrderedAndLimited = async (
   collection,
   callback,
+  filterBy,
+  operator,
+  filter,
   orderBy,
   order,
   limit
 ) => {
   return await firestore
     .collection(collection)
+    .where(filterBy, operator, filter)
     .orderBy(orderBy, order)
     .limit(limit)
     .onSnapshot(callback);

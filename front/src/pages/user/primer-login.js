@@ -62,8 +62,8 @@ class PrimerLogin extends Component {
   };
 
   onUserSubmit = async (values) => {
-    const { nombre, apellido } = values;
-    const { telefono, foto } = this.state;
+    const { nombre, apellido, telefono } = values;
+    const { foto } = this.state;
 
     if (!this.props.loading) {
       if (nombre !== '' && apellido !== '') {
@@ -167,11 +167,10 @@ class PrimerLogin extends Component {
                         autoComplete="off"
                         className="form-control"
                         name="telefono"
-                        onChange={this.handleChange}
                       />
                       {errors.telefono && touched.telefono && (
                         <div className="invalid-feedback d-block">
-                          El teléfono debe ser un número
+                          {errors.telefono}
                         </div>
                       )}
                     </FormGroup>

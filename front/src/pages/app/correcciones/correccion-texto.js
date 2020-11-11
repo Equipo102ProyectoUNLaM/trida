@@ -276,6 +276,7 @@ const CorreccionTexto = ({ subject, rol }) => {
               <Input
                 onChange={(event) => handleChange(event)}
                 type="textarea"
+                spellCheck="true"
               />
               <IntlMessages id="correcciones.comentario" />
             </div>

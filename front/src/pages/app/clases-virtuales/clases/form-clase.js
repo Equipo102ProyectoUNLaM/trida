@@ -217,6 +217,7 @@ class FormClase extends React.Component {
                 className="form-control"
                 name="nombre"
                 type="textarea"
+                spellCheck="true"
                 autoComplete="off"
               />
               {errors.nombre && touched.nombre && (
@@ -231,6 +232,7 @@ class FormClase extends React.Component {
                 className="form-control"
                 name="descripcion"
                 type="textarea"
+                spellCheck="true"
               />
               {errors.descripcion && touched.descripcion && (
                 <div className="invalid-feedback d-block">

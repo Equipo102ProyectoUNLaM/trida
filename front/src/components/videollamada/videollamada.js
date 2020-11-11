@@ -282,7 +282,7 @@ const Videollamada = ({
 
   const lanzamientoPreguntaValido = () => {
     return (
-      preguntaALanzar && esTiempoValido() && preguntaLanzadaGlobal.length == 0
+      preguntaALanzar && esTiempoValido() && preguntaLanzadaGlobal.length === 0
     );
   };
 
@@ -463,16 +463,6 @@ const Videollamada = ({
                   <div
                     style={{ fontSize: '1rem' }}
                     className="glyph-icon iconsminds-share"
-                  />
-                </Button>
-                <Button
-                  color="primary"
-                  className="border-left"
-                  onClick={abrirPizarron}
-                >
-                  <div
-                    style={{ fontSize: '1rem' }}
-                    className="glyph-icon iconsminds-blackboard"
                   />
                 </Button>
               </Fragment>

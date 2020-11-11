@@ -344,6 +344,7 @@ exports.messageRecived = functions.firestore
         contenido: `Tenés un nuevo mensaje de ${message.emisor.nombre}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
         url: `/app/comunicaciones/mensajeria`,
+        materia: message.idMateria,
         leida: false
       }
 
@@ -363,6 +364,7 @@ exports.foroCreated = functions.firestore
         contenido: `Se ha creado el foro ${foro.nombre}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
         url: `/app/comunicaciones/foro/detalle-foro/${foroId}`,
+        materia: foro.idMateria,
         leida: false
       };
 
@@ -388,6 +390,7 @@ exports.classCreated = functions.firestore
         contenido: `Se ha creado la clase ${clase.nombre}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
         url: `/app/clases-virtuales/mis-clases/detalle-clase/${claseId}`,
+        materia: clase.idMateria,
         leida: false
       };
 
@@ -418,6 +421,7 @@ exports.correctionCreated = functions.firestore
         contenido: `${usuarioObj.nombre} ha entregado una ${correccion.tipo}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
         url: `/app/correcciones#${correccionId}`,
+        materia: correccion.idMateria,
         leida: false
       };
 
@@ -465,6 +469,7 @@ exports.contentCreated = functions.storage
           contenido: `Se han cargado nuevos contenidos`,
           fecha: admin.firestore.FieldValue.serverTimestamp(),
           url: `/app/contenidos`,
+          materia: values[1],
           leida: false
         };
 
@@ -491,6 +496,7 @@ exports.contentCreated = functions.storage
         contenido: `Se ha creado la evaluación ${evaluacionNombre}`,
         fecha: evaluacion.fecha_publicacion,
         url: `/app/evaluaciones/escritas#${evaluacionId}`,
+        materia: evaluacion.idMateria,
         leida: false,
         id: evaluacionId
       };
@@ -564,6 +570,7 @@ exports.contentCreated = functions.storage
         contenido: `Se ha creado la práctica ${practica.nombre}`,
         fecha: timeStamp.fromDate(new Date(newValue.fechaLanzada + 'T11:22:33+0000')),
         url: `/app/practicas#${practicaId}`,
+        materia: practica.idMateria,
         leida: false,
         id: practicaId
       };
@@ -636,6 +643,7 @@ exports.contentCreated = functions.storage
         contenido: `Tenés un nuevo comunicado formal de ${message.emisor.nombre}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
         url: `/app/comunicaciones/formales#${messageId}`,
+        materia: message.idMateria,
         leida: false
       }
 
@@ -655,6 +663,7 @@ exports.contentCreated = functions.storage
         contenido: `Se ha creado la evaluación oral ${evaluation.nombre}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
         url: `/app/evaluaciones/orales#${evaluationId}`,
+        materia: evaluation.idMateria,
         leida: false
       }
 

@@ -346,6 +346,7 @@ class Practica extends Component {
               <div className="search-sm float-md-left mr-1 mb-1 align-top">
                 <input
                   type="text"
+                  spellCheck="true"
                   name="keyword"
                   id="search"
                   placeholder="Búsqueda por nombre de práctica, fecha de publicación, fecha de entrega..."
@@ -416,7 +417,9 @@ class Practica extends Component {
                       rolDocente && !oldPracticesActive ? this.onDelete : null
                     }
                     onUploadFile={
-                      rol === ROLES.Alumno && !oldPracticesActive
+                      rol === ROLES.Alumno &&
+                      !practica.entregada &&
+                      !oldPracticesActive
                         ? this.toggleUploadFileModal
                         : null
                     }

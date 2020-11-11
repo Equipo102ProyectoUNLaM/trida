@@ -8,12 +8,6 @@ import { editDocument } from 'helpers/Firebase-db';
 const NotificationItem = ({ leida, contenido, fecha, url }) => {
   const [now, setTime] = useState(new Date());
 
-  // const updateTime = () => {
-  //   setInterval(() => {
-  //     setTime(new Date());
-  //   }, 1000);
-  // };
-
   return (
     <Fragment>
       {/* {updateTime()} */}
@@ -38,17 +32,9 @@ const NotificationItem = ({ leida, contenido, fecha, url }) => {
   );
 };
 
-const TopnavNotifications = ({ user }) => {
+const TopnavNotifications = ({ user, subject }) => {
   const [notifications, setNotificationsOnSnapshot] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const [now, setTime] = useState(new Date());
-
-  // const updateTime = () => {
-  //   setInterval(() => {
-  //     setTime(new Date());
-  //   }, 1000);
-  // };
 
   const onNewNotification = (documents) => {
     let arrayNotifications = [];
@@ -59,6 +45,7 @@ const TopnavNotifications = ({ user }) => {
       arrayNotifications.push({
         leida: docData.leida,
         contenido: docData.contenido,
+        materia: docData.materia,
         fecha: docData.fecha,
         url: docData.url,
         id: docId,
@@ -73,6 +60,9 @@ const TopnavNotifications = ({ user }) => {
     getCollectionOnSnapshotOrderedAndLimited(
       `notificaciones/${user}/listado`,
       onNewNotification,
+      'materia',
+      '==',
+      subject,
       'fecha',
       'desc',
       15
