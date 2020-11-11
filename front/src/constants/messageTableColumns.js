@@ -1,4 +1,5 @@
 import React from 'react';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
 
 export const dataReceiveTableColumns = [
   {

@@ -111,9 +111,9 @@ class FormClase extends React.Component {
     }
 
     if (this.props.id) {
-      claseId = this.props.id;
+      claseId = this.props.idForo;
     } else {
-      claseId = await generateId('clases');
+      claseId = await generateId(`materias/${this.props.subject.id}/clases`);
     }
 
     const obj = {

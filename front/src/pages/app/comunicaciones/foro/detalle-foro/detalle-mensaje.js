@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Card, CardBody } from 'reactstrap';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenDefaultUsuario = `${publicUrl}/assets/img/defaultUser.png`;
 
@@ -13,7 +14,7 @@ const DetalleMensaje = ({ item, idUsuarioActual, onDelete }) => {
       >
         <div className="position-absolute  pt-1 pr-2 r-0 mr-2 mt-2">
           <span className="text-extra-small text-muted">
-            {item.data.fecha_creacion}
+            {getDateTimeStringFromDate(item.data.fecha_creacion)}
           </span>
         </div>
         <CardBody>

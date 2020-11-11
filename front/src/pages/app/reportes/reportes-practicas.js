@@ -105,7 +105,9 @@ class ReportesPracticas extends Component {
           practica.estado = correccion.data.estadoCorreccion
             ? correccion.data.estadoCorreccion
             : correccion.data.estado;
-          practica.fecha = correccion.data.fecha_creacion;
+          practica.fecha = getDateTimeStringFromDate(
+            correccion.data.fecha_creacion
+          );
           practica.nota =
             correccion.data.notaCorreccion && correccion.data.notaCorreccion > 0
               ? correccion.data.notaCorreccion

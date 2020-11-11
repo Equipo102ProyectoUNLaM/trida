@@ -103,7 +103,9 @@ class ReportesEvaluaciones extends Component {
           evaluacion.estado = correccion.data.estadoCorreccion
             ? correccion.data.estadoCorreccion
             : correccion.data.estado;
-          evaluacion.fecha = correccion.data.fecha_creacion;
+          evaluacion.fecha = getDateTimeStringFromDate(
+            correccion.data.fecha_creacion
+          );
           evaluacion.nota =
             correccion.data.notaCorreccion && correccion.data.notaCorreccion > 0
               ? correccion.data.notaCorreccion

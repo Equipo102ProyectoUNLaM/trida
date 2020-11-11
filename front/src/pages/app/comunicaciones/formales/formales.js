@@ -9,6 +9,7 @@ import FormFormales from './form-formal';
 import { addDocument } from 'helpers/Firebase-db';
 import { desencriptarTexto } from 'handlers/DecryptionHandler';
 import { encriptarTexto } from 'handlers/EncryptionHandler';
+import { getDateTimeStringFromDate } from 'helpers/Utils';
 import ROLES from 'constants/roles';
 
 class Formales extends Component {
@@ -115,7 +116,7 @@ class Formales extends Component {
         id: elem.id,
         asunto: elem.data.asunto,
         contenido: elem.data.contenido,
-        fecha_creacion: elem.data.fecha_creacion,
+        fecha_creacion: getDateTimeStringFromDate(elem.data.fecha_creacion),
         destinatarios,
       };
     });
@@ -130,7 +131,7 @@ class Formales extends Component {
       id: elem.id,
       asunto: elem.data.asunto,
       contenido: elem.data.contenido,
-      fecha_creacion: elem.data.fecha_creacion,
+      fecha_creacion: getDateTimeStringFromDate(elem.data.fecha_creacion),
       remitente: elem.data.emisor.nombre,
       idRemitente: elem.data.emisor.id,
     }));
@@ -250,7 +251,6 @@ class Formales extends Component {
       esEnviado,
     } = this.state;
     const rolDirectivo = this.props.rol === ROLES.Directivo;
-
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -281,7 +281,7 @@ class Formales extends Component {
             <ModalConfirmacion
               texto={contenidoMensaje}
               titulo={asuntoMensaje}
-              fecha={fechaMensaje}
+              fecha={getDateTimeStringFromDate(fechaMensaje)}
               usuarios={usuariosMail}
               esEnviado={esEnviado}
               buttonSecondary="Cerrar"

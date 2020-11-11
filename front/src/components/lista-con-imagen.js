@@ -61,7 +61,7 @@ const ListaConImagen = ({
                   <CardText className="text-muted text-medium mb-0 font-weight-semibold">
                     {isClase
                       ? getDateTimeStringFromDate(data.fecha_clase)
-                      : data.fecha_creacion}
+                      : getDateTimeStringFromDate(data.fecha_creacion)}
                   </CardText>
                 </Colxx>
               </Row>
