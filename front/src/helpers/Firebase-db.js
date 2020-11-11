@@ -530,8 +530,18 @@ export const getDocumentOnSnapshot = (collection, document, callback) => {
   return firestore.collection(collection).doc(document).onSnapshot(callback);
 };
 
-export const getCollectionOnSnapshot = async (collection, callback) => {
-  return await firestore.collection(collection).onSnapshot(callback);
+export const getCollectionOnSnapshot = async (
+  collection,
+  callback,
+  orderBy
+) => {
+  let col = firestore.collection(collection);
+
+  (orderBy || []).forEach(({ order, orderCond }) => {
+    col = col.orderBy(order, orderCond);
+  });
+
+  return col.onSnapshot(callback);
 };
 
 export const getCollectionOnSnapshotOrderedAndLimited = async (

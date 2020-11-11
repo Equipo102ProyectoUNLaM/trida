@@ -82,15 +82,16 @@ class DetalleForo extends Component {
     });
   };
 
-  componentDidUpdate() {
-    if (this.state.loading) {
+  componentDidUpdate(_, prevState) {
+    if (this.state.loading && !prevState.loading) {
       this.getTemaForo();
     }
 
-    if (this.state.idForo) {
+    if (this.state.idForo && !prevState.idForo) {
       getCollectionOnSnapshot(
         `foros/${this.state.idForo}/mensajes`,
-        this.setNewMessages
+        this.setNewMessages,
+        [{ order: 'fecha_creacion', orderCond: 'asc' }]
       );
     }
     // if (this._scrollBarRef) {
@@ -219,28 +220,18 @@ class DetalleForo extends Component {
               descripcionForo={descripcion}
               goToForos={this.goToForos}
             />
-            <PerfectScrollbar
-              ref={(ref) => {
-                this._scrollBarRef = ref;
-              }}
-              containerRef={(ref) => {}}
-              options={{ suppressScrollX: true, wheelPropagation: false }}
-            >
-              {mensajes.map((item, index) => {
-                return (
-                  <DetalleMensaje
-                    key={index}
-                    item={item}
-                    idUsuarioActual={id}
-                    onDelete={
-                      this.props.rol !== ROLES.Alumno
-                        ? this.borrarMensaje
-                        : false
-                    }
-                  />
-                );
-              })}
-            </PerfectScrollbar>
+            {mensajes.map((item, index) => {
+              return (
+                <DetalleMensaje
+                  key={index}
+                  item={item}
+                  idUsuarioActual={id}
+                  onDelete={
+                    this.props.rol !== ROLES.Alumno ? this.borrarMensaje : false
+                  }
+                />
+              );
+            })}
           </Colxx>
           {modalDeleteOpen && (
             <ModalConfirmacion
