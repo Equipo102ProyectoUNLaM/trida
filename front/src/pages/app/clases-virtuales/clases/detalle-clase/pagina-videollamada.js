@@ -120,14 +120,16 @@ const PaginaVideollamada = (props) => {
                   checked={options.camara}
                   onChange={handleChange}
                 />
-                <CustomInput
-                  id="chat"
-                  type="checkbox"
-                  name="chat"
-                  label="Deshabilitar chat"
-                  checked={options.chat}
-                  onChange={handleChange}
-                />
+                {props.rol !== ROLES.Alumno && (
+                  <CustomInput
+                    id="chat"
+                    type="checkbox"
+                    name="chat"
+                    label="Deshabilitar chat"
+                    checked={options.chat}
+                    onChange={handleChange}
+                  />
+                )}
               </div>
             </FormGroup>
             {props.rol !== ROLES.Alumno && (
