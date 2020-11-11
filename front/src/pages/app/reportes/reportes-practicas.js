@@ -105,7 +105,9 @@ class ReportesPracticas extends Component {
           practica.estado = correccion.data.estadoCorreccion
             ? correccion.data.estadoCorreccion
             : correccion.data.estado;
-          practica.fecha = correccion.data.fecha_creacion;
+          practica.fecha = getDateTimeStringFromDate(
+            correccion.data.fecha_creacion
+          );
           practica.nota =
             correccion.data.notaCorreccion && correccion.data.notaCorreccion > 0
               ? correccion.data.notaCorreccion
@@ -210,9 +212,7 @@ class ReportesPracticas extends Component {
                                   {historyRow.nombrePractica}
                                 </TableCell>
                                 <TableCell>{historyRow.fechaVto}</TableCell>
-                                <TableCell>
-                                  {getDateTimeStringFromDate(historyRow.fecha)}
-                                </TableCell>
+                                <TableCell>{historyRow.fecha}</TableCell>
                                 <TableCell>{historyRow.estado}</TableCell>
                                 <TableCell>
                                   {historyRow.nota === 0

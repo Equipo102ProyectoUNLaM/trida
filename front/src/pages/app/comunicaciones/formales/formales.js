@@ -251,7 +251,6 @@ class Formales extends Component {
       esEnviado,
     } = this.state;
     const rolDirectivo = this.props.rol === ROLES.Directivo;
-
     return isLoading ? (
       <div className="loading" />
     ) : (

@@ -88,12 +88,13 @@ class FormForo extends Component {
     let foroId = '';
     let url = this.state.imagen;
     if (this.state.foto) {
-      if (this.props.idForo) {
-        foroId = this.props.idForo;
-      } else {
-        foroId = await generateId(`materias/${this.props.subject.id}/foros`);
-      }
       url = await this.subirFoto(this.state.foto, foroId);
+    }
+
+    if (this.props.idForo) {
+      foroId = this.props.idForo;
+    } else {
+      foroId = await generateId(`materias/${this.props.subject.id}/foros`);
     }
 
     const obj = {

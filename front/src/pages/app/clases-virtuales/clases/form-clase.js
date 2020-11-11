@@ -105,12 +105,13 @@ class FormClase extends React.Component {
     let claseId = '';
     let url = this.state.imagen;
     if (this.state.foto) {
-      if (this.props.id) {
-        claseId = this.props.idForo;
-      } else {
-        claseId = await generateId(`materias/${this.props.subject.id}/clases`);
-      }
       url = await this.subirFoto(this.state.foto, claseId);
+    }
+
+    if (this.props.id) {
+      claseId = this.props.idForo;
+    } else {
+      claseId = await generateId(`materias/${this.props.subject.id}/clases`);
     }
 
     const obj = {

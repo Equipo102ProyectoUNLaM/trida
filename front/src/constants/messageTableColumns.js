@@ -26,7 +26,7 @@ export const dataReceiveTableColumns = [
     Header: 'Fecha',
     accessor: 'fecha_creacion',
     // eslint-disable-next-line react/display-name
-    Cell: (props) => <p>{getDateTimeStringFromDate(props.value)}</p>,
+    Cell: (props) => <p>{props.value}</p>,
   },
   {
     Header: 'Remitente',
@@ -48,7 +48,7 @@ export const dataSentTableColumns = [
     Header: 'Fecha',
     accessor: 'fecha_creacion',
     // eslint-disable-next-line react/display-name
-    Cell: (props) => <p>{getDateTimeStringFromDate(props.value)}</p>,
+    Cell: (props) => <p>{props.value}</p>,
   },
   {
     Header: 'Destinatario',

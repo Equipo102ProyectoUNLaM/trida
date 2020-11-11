@@ -9,7 +9,6 @@ import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 class TabsDeFormales extends Component {
   constructor(props) {
     super(props);
-    console.log(window.location.hash.replace('#', ''));
 
     this.state = {
       collapse: false,
@@ -123,9 +122,7 @@ class TabsDeFormales extends Component {
                                           Fecha:{' '}
                                         </span>
                                         <span className="subtext">
-                                          {getDateTimeStringFromDate(
-                                            item.fecha_creacion
-                                          )}
+                                          {item.fecha_creacion}
                                         </span>
                                       </div>
                                     </Row>
@@ -256,9 +253,7 @@ class TabsDeFormales extends Component {
                                 <div>
                                   <span className="subtitle">Fecha: </span>
                                   <span className="subtext">
-                                    {getDateTimeStringFromDate(
-                                      item.fecha_creacion
-                                    )}
+                                    {item.fecha_creacion}
                                   </span>
                                 </div>
                               </Row>

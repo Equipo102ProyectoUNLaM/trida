@@ -5,8 +5,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import DataListView from 'containers/pages/DataListView';
 import ModalVistaPlanilla from 'containers/pages/ModalVistaPlanilla';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import { getDateTimeStringFromDate } from 'helpers/Utils';
-import { isEmpty } from 'helpers/Utils';
+import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 import { getCollection, deleteDocument } from 'helpers/Firebase-db';
 
 class MisReportesGuardados extends Component {
@@ -100,7 +99,10 @@ class MisReportesGuardados extends Component {
                   key={planilla.id}
                   id={planilla.id}
                   title={planilla.data.nombre}
-                  text1={`Fecha de Creación: ` + planilla.data.fecha_creacion}
+                  text1={
+                    `Fecha de Creación: ` +
+                    getDateTimeStringFromDate(planilla.data.fecha_creacion)
+                  }
                   onDelete={this.toggleModalConfirmacion}
                   onOpen={this.handleOpen}
                   onPreview={this.togglePreview}
