@@ -40,6 +40,7 @@ class DetalleForo extends Component {
         this.getTemaForo();
       }
     );
+
     document.body.classList.add('no-footer');
   }
 
@@ -86,15 +87,15 @@ class DetalleForo extends Component {
       this.getTemaForo();
     }
 
-    if (this._scrollBarRef) {
-      this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
-    }
     if (this.state.idForo) {
       getCollectionOnSnapshot(
         `foros/${this.state.idForo}/mensajes`,
         this.setNewMessages
       );
     }
+    // if (this._scrollBarRef) {
+    //   this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
+    // }
   }
 
   setNewMessages = (mensajes) => {
