@@ -18,7 +18,6 @@ import firebase from 'firebase/app';
 import { isEmpty, getTimestampDifference } from 'helpers/Utils';
 import moment from 'moment';
 import { isMobile } from 'react-device-detect';
-import IntlMessages from 'helpers/IntlMessages';
 const publicUrl = process.env.PUBLIC_URL;
 const imagenClase = `${publicUrl}/assets/img/imagen-clase-2.png`;
 

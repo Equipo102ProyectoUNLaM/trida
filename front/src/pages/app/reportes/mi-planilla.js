@@ -1,11 +1,11 @@
 import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
 import { Input, Button, Card, Tooltip } from 'reactstrap';
-import { Separator } from 'components/common/CustomBootstrap';
+import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
+import { createRandomString, getFechaHoraActual } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -15,6 +15,8 @@ import {
   enviarNotificacionExitosa,
 } from 'helpers/Utils-ui';
 import { addDocumentWithId, addDocument } from 'helpers/Firebase-db';
+import { isMobile } from 'react-device-detect';
+import NoMobile from 'pages/no-mobile';
 
 export const Columna = ({
   data,
@@ -299,138 +301,142 @@ class MiReporte extends Component {
       columnas,
       inputAgregarColumna,
       isLoading,
-      nombrePlanilla,
       nombreTooltipOpen,
     } = this.state;
 
     return (
-      <div>
-        {isLoading && <div className="cover-spin" />}
-        <HeaderDeModulo
-          heading="menu.mi-reporte"
-          toggleModal={() =>
-            this.props.history.push('/app/reportes/mis-planillas-guardadas')
-          }
-          buttonText="menu.reportes-guardados"
-        />
-        <Row className="row-acciones button-group mt-2 justify-between align-baseline">
-          <div className="form-group has-float-label">
-            <Input
-              id="nombre-planilla"
-              onChange={this.handleNombrePlanillaChange}
-              autoComplete="off"
-              name="nombrePlanilla"
-              className="input-nombre-columna"
-              placeholder="Nombre de planilla (requerido para guardar)"
+      <>
+        {isMobile && <NoMobile />}
+        {!isMobile && (
+          <div>
+            {isLoading && <div className="cover-spin" />}
+            <HeaderDeModulo
+              heading="menu.mi-reporte"
+              toggleModal={() =>
+                this.props.history.push('/app/reportes/mis-planillas-guardadas')
+              }
+              buttonText="menu.reportes-guardados"
             />
-            <span>Nombre de Planilla *</span>
-          </div>
-          <Tooltip
-            placement="right"
-            isOpen={nombreTooltipOpen}
-            autohide={true}
-            target="nombre-planilla"
-          >
-            El nombre es requerido
-          </Tooltip>
-          {!inputAgregarColumna && (
-            <div className="button-group">
-              <Button
-                outline
-                color="secondary"
-                onClick={this.toggleAgregarColumna}
-                className="button"
-              >
-                AGREGAR COLUMNA
-              </Button>
-              <Button
-                outline
-                onClick={this.exportarPdf}
-                color="primary"
-                className="button"
-              >
-                EXPORTAR PDF
-              </Button>
-              <Button
-                outline
-                onClick={this.guardarPlanilla}
-                color="primary"
-                className="button"
-              >
-                GUARDAR
-              </Button>
-            </div>
-          )}
-          {inputAgregarColumna && (
-            <div className="div-acciones">
-              <Input
-                onChange={this.handleChange}
-                autoComplete="off"
-                name="nombreCol"
-                className="input-columna"
-                placeholder="Ingrese nombre de columna"
-                onKeyPress={this.handleKeyPress}
-              />
-              <div className="icon-columna">
-                <i
-                  className="iconsminds-yes cursor-pointer secondary"
-                  onClick={this.onAgregarColumna}
+            <Row className="row-acciones button-group mt-2 justify-between align-baseline">
+              <div className="form-group has-float-label">
+                <Input
+                  id="nombre-planilla"
+                  onChange={this.handleNombrePlanillaChange}
+                  autoComplete="off"
+                  name="nombrePlanilla"
+                  className="input-nombre-columna"
+                  placeholder="Nombre de planilla (requerido para guardar)"
                 />
-                <i
-                  className="iconsminds-close cursor-pointer primary"
-                  onClick={this.toggleAgregarColumna}
-                />
+                <span>Nombre de Planilla *</span>
               </div>
-            </div>
-          )}
-        </Row>
-        <div id="encabezadoAImprimir">
-          <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
-            <h2>Mi Planilla</h2>
-            <span>Fecha: {getFechaHoraActual()}</span>
-            <br />
-            <span>
-              Materia: {this.props.subject.name} - {this.props.course.name} -{' '}
-              {this.props.institution.name}
-            </span>
-            <br />
-            <br />
-          </div>
-          <Grid className="flex container">
-            <Card className="no-width ml-0 pr-4">
-              <Col className="mb-2 pl-3 min-width truncate">
-                <div className="flex justify-between w-100 height-fixed margin-top-05">
-                  <span className="header">Alumnos</span>
+              <Tooltip
+                placement="right"
+                isOpen={nombreTooltipOpen}
+                autohide={true}
+                target="nombre-planilla"
+              >
+                El nombre es requerido
+              </Tooltip>
+              {!inputAgregarColumna && (
+                <div className="button-group">
+                  <Button
+                    outline
+                    color="secondary"
+                    onClick={this.toggleAgregarColumna}
+                    className="button"
+                  >
+                    AGREGAR COLUMNA
+                  </Button>
+                  <Button
+                    outline
+                    onClick={this.exportarPdf}
+                    color="primary"
+                    className="button"
+                  >
+                    EXPORTAR PDF
+                  </Button>
+                  <Button
+                    outline
+                    onClick={this.guardarPlanilla}
+                    color="primary"
+                    className="button"
+                  >
+                    GUARDAR
+                  </Button>
                 </div>
-                {alumnosData.map((alumno) => {
-                  return (
-                    <>
-                      <Row
-                        id={'nombre-alumno' + alumno.id}
-                        className="col-alumno truncate"
-                        key={alumno.id}
-                      >
-                        {alumno.nombre}
-                      </Row>
-                      <Separator className="margin-top-bottom" />
-                    </>
-                  );
-                })}
-              </Col>
-              {columnas.map((columna) => (
-                <Columna
-                  key={columna.id}
-                  data={alumnosData}
-                  colData={columna}
-                  borrarColumna={this.borrarColumna}
-                  agregarAColumna={this.agregarAColumna}
-                  cambiarNombreColumna={this.cambiarNombreColumna}
-                />
-              ))}
-            </Card>
-          </Grid>
-        </div>
-      </div>
+              )}
+              {inputAgregarColumna && (
+                <div className="div-acciones">
+                  <Input
+                    onChange={this.handleChange}
+                    autoComplete="off"
+                    name="nombreCol"
+                    className="input-columna"
+                    placeholder="Ingrese nombre de columna"
+                    onKeyPress={this.handleKeyPress}
+                  />
+                  <div className="icon-columna">
+                    <i
+                      className="iconsminds-yes cursor-pointer secondary"
+                      onClick={this.onAgregarColumna}
+                    />
+                    <i
+                      className="iconsminds-close cursor-pointer primary"
+                      onClick={this.toggleAgregarColumna}
+                    />
+                  </div>
+                </div>
+              )}
+            </Row>
+            <div id="encabezadoAImprimir">
+              <div id="datos-materia" className="hidden pl-4 pt-4 mt-4">
+                <h2>Mi Planilla</h2>
+                <span>Fecha: {getFechaHoraActual()}</span>
+                <br />
+                <span>
+                  Materia: {this.props.subject.name} - {this.props.course.name}{' '}
+                  - {this.props.institution.name}
+                </span>
+                <br />
+                <br />
+              </div>
+              <Grid className="flex container">
+                <Card className="no-width ml-0 pr-4">
+                  <Col className="mb-2 pl-3 min-width truncate">
+                    <div className="flex justify-between w-100 height-fixed margin-top-05">
+                      <span className="header">Alumnos</span>
+                    </div>
+                    {alumnosData.map((alumno) => {
+                      return (
+                        <>
+                          <Row
+                            id={'nombre-alumno' + alumno.id}
+                            className="col-alumno truncate"
+                            key={alumno.id}
+                          >
+                            {alumno.nombre}
+                          </Row>
+                          <Separator className="margin-top-bottom" />
+                        </>
+                      );
+                    })}
+                  </Col>
+                  {columnas.map((columna) => (
+                    <Columna
+                      key={columna.id}
+                      data={alumnosData}
+                      colData={columna}
+                      borrarColumna={this.borrarColumna}
+                      agregarAColumna={this.agregarAColumna}
+                      cambiarNombreColumna={this.cambiarNombreColumna}
+                    />
+                  ))}
+                </Card>
+              </Grid>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 }

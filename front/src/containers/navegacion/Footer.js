@@ -32,7 +32,6 @@ class Footer extends React.Component {
   getPlanInfo = async () => {
     let docentes = 0;
     let alumnos = 0;
-    const institucion = this.props.institution.id;
     const { data } = await getDocument(
       `instituciones/${this.props.institution.id}`
     );

@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Row,
-  Button,
-  FormGroup,
-  Card,
-  CardBody,
-  Label,
-  Input,
-} from 'reactstrap';
+import { Row, Button, FormGroup, Card, CardBody } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
@@ -217,7 +209,7 @@ class AgregarPregunta extends React.Component {
           onClick={this.handleAddPregunta}
           size="sm"
           color="primary"
-          className="button"
+          className="button mb-2"
         >
           {' '}
           Agregar Pregunta (múltiples opciones correctas){' '}
@@ -227,7 +219,7 @@ class AgregarPregunta extends React.Component {
           onClick={this.handleAddPreguntaUnicaResp}
           size="sm"
           color="primary"
-          className="button btn-right"
+          className="button btn-right mb-2"
         >
           {' '}
           Agregar Pregunta (solo una opción correcta){' '}

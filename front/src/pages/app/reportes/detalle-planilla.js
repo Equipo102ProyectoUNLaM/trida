@@ -6,7 +6,7 @@ import { Col, Row, Grid } from 'react-flexbox-grid';
 import moment from 'moment';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
-import { createRandomString, getFechaHoraActual, getDate } from 'helpers/Utils';
+import { createRandomString, getFechaHoraActual } from 'helpers/Utils';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';

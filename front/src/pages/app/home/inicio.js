@@ -27,6 +27,7 @@ class Inicio extends Component {
     this.state = {
       isLoading: true,
       notas: '',
+      notasModified: false,
       eventos: [],
       eventosDia: [],
       valorSlider: 3,
@@ -40,7 +41,8 @@ class Inicio extends Component {
   }
 
   componentWillUnmount() {
-    guardarNotas(this.props.user, this.state.notas);
+    if (this.state.notasModified)
+      guardarNotas(this.props.user, this.state.notas);
   }
 
   setNotas = async () => {
@@ -70,6 +72,7 @@ class Inicio extends Component {
   onChangeNota = (event) => {
     this.setState({
       notas: event.target.value,
+      notasModified: true,
     });
   };
 
@@ -98,7 +101,7 @@ class Inicio extends Component {
           </Colxx>
         </Row>
         <Row>
-          <Colxx>
+          <Colxx className="mb-3" lg="5">
             <Card>
               <CardTitle className="card-title-evento">
                 <i className="margin-right-icon simple-icon-event" />
@@ -134,6 +137,7 @@ class Inicio extends Component {
                   className="notas"
                   onChange={this.onChangeNota}
                   type="textarea"
+                  spellCheck="true"
                   rows="3"
                   defaultValue={notas}
                 />
@@ -169,7 +173,9 @@ class Inicio extends Component {
                 </CardBody>
               </Card>
             )}
-            <Card className="mt-3">
+          </Colxx>
+          <Colxx lg="7">
+            <Card>
               <CardBody>
                 <Calendar
                   culture="es-ES"

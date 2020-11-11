@@ -70,7 +70,7 @@ class ModalEnviarInvitacion extends React.Component {
         isLoading: false,
       });
       inst.map((item) => {
-        datos.push({
+        return datos.push({
           label: item.name,
           value: item.name,
           key: item.id,
@@ -89,7 +89,7 @@ class ModalEnviarInvitacion extends React.Component {
     let datos = [];
     try {
       array = await getCourses(institutionId, userId);
-      array.map((item) => {
+      array.forEach((item) => {
         datos.push({
           label: item.name,
           value: item.name,
@@ -124,7 +124,7 @@ class ModalEnviarInvitacion extends React.Component {
   showSubjects = (courseId) => {
     let datos = [];
     const [array] = this.state.courses;
-    array.subjects.map((item) => {
+    array.subjects.forEach((item) => {
       datos.push({
         label: item.name,
         value: item.name,

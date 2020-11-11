@@ -282,7 +282,10 @@ class TopNav extends Component {
               className="header-icon glyph-icon simple-icon-home ml-1"
               to="/app/home"
             />
-            <TopnavNotifications user={this.props.user} />
+            <TopnavNotifications
+              user={this.props.user}
+              subject={this.props.subject.id}
+            />
             <button
               className="header-icon btn btn-empty d-none d-sm-inline-block"
               type="button"

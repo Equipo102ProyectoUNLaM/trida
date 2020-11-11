@@ -57,6 +57,7 @@ class Mensajeria extends Component {
   getMensajes = async () => {
     this.setState({
       itemsReceive: [],
+      isLoading: true,
     });
     const mensajesRecibidos = await getCollection(
       'mensajes',
@@ -397,6 +398,7 @@ class Mensajeria extends Component {
                     onChange={this.handleChange}
                     className="resend-message"
                     type="textarea"
+                    spellCheck="true"
                     autoComplete="off"
                   />
                   <label>Destinatarios</label>

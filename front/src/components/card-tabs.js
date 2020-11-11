@@ -11,7 +11,6 @@ import {
   Badge,
   TabPane,
   Button,
-  ButtonGroup,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { editDocument } from 'helpers/Firebase-db';
@@ -211,7 +210,7 @@ class CardTabs extends Component {
                                     evalCalendar={true}
                                     dateFormat={'DD/MM/YYYY - HH:mm'}
                                     timeCaption="Hora"
-                                    timeIntervals={60}
+                                    timeIntervals={15}
                                     timeFormat={'HH:mm'}
                                   />
                                 )}
@@ -242,7 +241,7 @@ class CardTabs extends Component {
                                     evalCalendar={true}
                                     dateFormat={'DD/MM/YYYY - HH:mm'}
                                     timeCaption="Hora"
-                                    timeIntervals={60}
+                                    timeIntervals={15}
                                     timeFormat={'HH:mm'}
                                   />
                                 )}

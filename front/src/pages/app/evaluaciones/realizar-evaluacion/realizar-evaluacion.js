@@ -280,7 +280,7 @@ class RealizarEvaluacion extends Component {
     await this.printDocument();
     const uuid = createUUID();
     const path = `materias/${this.props.subject.id}/correcciones/`;
-    const url = await subirArchivoAStorage(path, this.state.evalFile, uuid);
+    await subirArchivoAStorage(path, this.state.evalFile, uuid);
     let respuestasConUrl;
     if (abandonarEvaluacion === true) respuestasConUrl = [];
     else respuestasConUrl = await this.subirImagenesAStorage();
@@ -294,7 +294,6 @@ class RealizarEvaluacion extends Component {
       tipo: TIPO_ENTREGA.evaluacion,
       version: 0,
       respuestas: respuestasConUrl,
-      tipo: 'evaluacion',
       nombre: this.state.nombreEval,
     };
 

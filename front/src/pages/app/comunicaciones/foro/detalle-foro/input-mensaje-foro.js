@@ -14,6 +14,7 @@ class InputMensajeForo extends Component {
         <Input
           className="form-control flex-grow-1"
           type="text"
+          spellCheck="true"
           placeholder="Ingrese el mensaje a enviar"
           value={messageInput}
           onKeyPress={(e) => handleChatInputPress(e)}

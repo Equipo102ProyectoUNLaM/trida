@@ -13,6 +13,7 @@ import {
   getDocumentWithSubCollection,
   addToSubCollection,
   deleteDocument,
+  getCollectionOnSnapshot,
 } from 'helpers/Firebase-db';
 
 class DetalleForo extends Component {
@@ -88,7 +89,27 @@ class DetalleForo extends Component {
     if (this._scrollBarRef) {
       this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
     }
+    if (this.state.idForo) {
+      getCollectionOnSnapshot(
+        `foros/${this.state.idForo}/mensajes`,
+        this.setNewMessages
+      );
+    }
   }
+
+  setNewMessages = (mensajes) => {
+    let nuevosMensajes = [];
+    mensajes.forEach((mensaje) => {
+      nuevosMensajes.push({
+        id: mensaje.id,
+        data: mensaje.data(),
+      });
+    });
+
+    this.setState({
+      mensajes: nuevosMensajes,
+    });
+  };
 
   handleChatInputPress = (e) => {
     if (e.key === 'Enter') {
@@ -190,7 +211,7 @@ class DetalleForo extends Component {
     } = this.state;
     return !loading ? (
       <Fragment>
-        <Row className="app-row">
+        <Row className="">
           <Colxx xxs="12" className="chat-app">
             <EncabezadoForo
               nombre={titulo}
