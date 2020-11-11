@@ -4,7 +4,7 @@ import { Row, Card, CardBody, Collapse, Button } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { desencriptarTexto } from 'handlers/DecryptionHandler';
-import { isEmpty } from 'helpers/Utils';
+import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 
 class TabsDeFormales extends Component {
   constructor(props) {
@@ -123,7 +123,9 @@ class TabsDeFormales extends Component {
                                           Fecha:{' '}
                                         </span>
                                         <span className="subtext">
-                                          {item.fecha_creacion}
+                                          {getDateTimeStringFromDate(
+                                            item.fecha_creacion
+                                          )}
                                         </span>
                                       </div>
                                     </Row>
@@ -191,7 +193,9 @@ class TabsDeFormales extends Component {
                                           Fecha:{' '}
                                         </span>
                                         <span className="subtext">
-                                          {item.fecha_creacion}
+                                          {getDateTimeStringFromDate(
+                                            item.fecha_creacion
+                                          )}
                                         </span>
                                       </div>
                                     </Row>
@@ -252,7 +256,9 @@ class TabsDeFormales extends Component {
                                 <div>
                                   <span className="subtitle">Fecha: </span>
                                   <span className="subtext">
-                                    {item.fecha_creacion}
+                                    {getDateTimeStringFromDate(
+                                      item.fecha_creacion
+                                    )}
                                   </span>
                                 </div>
                               </Row>

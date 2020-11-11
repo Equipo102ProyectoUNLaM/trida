@@ -210,7 +210,9 @@ class ReportesPracticas extends Component {
                                   {historyRow.nombrePractica}
                                 </TableCell>
                                 <TableCell>{historyRow.fechaVto}</TableCell>
-                                <TableCell>{historyRow.fecha}</TableCell>
+                                <TableCell>
+                                  {getDateTimeStringFromDate(historyRow.fecha)}
+                                </TableCell>
                                 <TableCell>{historyRow.estado}</TableCell>
                                 <TableCell>
                                   {historyRow.nota === 0

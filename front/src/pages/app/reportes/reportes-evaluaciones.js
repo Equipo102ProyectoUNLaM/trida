@@ -210,7 +210,9 @@ class ReportesEvaluaciones extends Component {
                                   {historyRow.nombreEvaluacion}
                                 </TableCell>
                                 <TableCell>{historyRow.fechaFin}</TableCell>
-                                <TableCell>{historyRow.fecha}</TableCell>
+                                <TableCell>
+                                  {getDateTimeStringFromDate(historyRow.fecha)}
+                                </TableCell>
                                 <TableCell>{historyRow.estado}</TableCell>
                                 <TableCell>
                                   {historyRow.nota === 0
