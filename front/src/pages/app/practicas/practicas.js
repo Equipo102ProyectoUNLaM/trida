@@ -363,7 +363,10 @@ class Practica extends Component {
               lg="4"
               className="columna-filtro-badge"
             >
-              <Badge pill className="mb-1 position-absolute badge badge-filtro">
+              <Badge
+                pill
+                className="mb-1 position-absolute badge badge-filtro cursor-pointer"
+              >
                 <Calendario
                   handleClick={this.handleClickCalendario}
                   text="Filtro por fecha de entrega o publicación"
@@ -378,7 +381,7 @@ class Practica extends Component {
                     {' '}
                     - {filtroFecha}
                     <Button
-                      className="delete-filter"
+                      className="delete-filter cursor-pointer"
                       onClick={this.handleFiltroDelete}
                       close
                     />

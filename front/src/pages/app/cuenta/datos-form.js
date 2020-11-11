@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import {
   Row,
   Button,
@@ -38,6 +39,7 @@ class DatosForm extends Component {
       fotoFile: '',
       fotoPerfilText: '',
       isLoading: true,
+      fotoCuenta: '',
     };
   }
 
@@ -56,6 +58,7 @@ class DatosForm extends Component {
       telefono: data.telefono,
       isLoading: false,
       fotoAMostrar: '',
+      fotoCuenta: data.foto || imagenDefaultUsuario,
     });
   };
 
@@ -96,7 +99,6 @@ class DatosForm extends Component {
       'state_changed',
       () => {},
       (error) => {
-        console.error(error.message);
         enviarNotificacionError(
           'La foto de perfil no pudo ser cargada',
           'Error'
@@ -121,7 +123,7 @@ class DatosForm extends Component {
   };
 
   onSubmit = async (values) => {
-    const { foto, originalMail } = this.state;
+    const { fotoFile, originalMail } = this.state;
     const { nombre, apellido, mail, telefono } = values;
     var user = auth.currentUser;
 
@@ -131,8 +133,8 @@ class DatosForm extends Component {
       telefono,
     };
 
-    if (foto) {
-      await this.subirFoto(foto);
+    if (fotoFile) {
+      await this.subirFoto(fotoFile);
     }
 
     await editDocument(
@@ -151,6 +153,7 @@ class DatosForm extends Component {
 
     const userData = await getUserData(this.props.user);
     await this.props.updateDatosUsuario(userData);
+    await this.props.history.push('/app/home');
   };
 
   render() {
@@ -161,9 +164,8 @@ class DatosForm extends Component {
       mail,
       telefono,
       fotoAMostrar,
+      fotoCuenta,
     } = this.state;
-    let { foto } = this.props;
-    foto = foto || imagenDefaultUsuario;
     const initialValues = { nombre, apellido, mail, telefono };
 
     return isLoading ? (
@@ -244,7 +246,7 @@ class DatosForm extends Component {
                       <IntlMessages id="user.foto" />
                     </Label>
                     <img
-                      src={fotoAMostrar ? fotoAMostrar : foto}
+                      src={fotoAMostrar ? fotoAMostrar : fotoCuenta}
                       alt="foto-default-usuario"
                       className="social-header card-img wh-200 mb-2 padding-1 border-radius-50"
                     />
@@ -318,6 +320,6 @@ const mapStateToProps = ({ authUser }) => {
   };
 };
 
-export default injectIntl(
-  connect(mapStateToProps, { updateDatosUsuario })(DatosForm)
+export default withRouter(
+  injectIntl(connect(mapStateToProps, { updateDatosUsuario })(DatosForm))
 );
