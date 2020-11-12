@@ -40,10 +40,14 @@ const LINKS = {
       FORMALES: 'https://www.youtube.com/embed/LoHHCJMdMuQ',
     },
     ADMINISTRACION: {
-      USUARIOS: 'https://www.youtube.com/embed/LoHHCJMdMuQ',
-      ENVIAR_INVITACION: 'https://www.youtube.com/embed/LoHHCJMdMuQ',
-      AGREGAR_CURSO: 'https://www.youtube.com/embed/LoHHCJMdMuQ',
-      ASIGNAR_CURSO: 'https://www.youtube.com/embed/LoHHCJMdMuQ',
+      USUARIOS:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fadmin%2FusuariosMateria.mp4?alt=media&token=61541625-3e2f-43c9-b93f-b40da672bc7e',
+      ENVIAR_INVITACION:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fadmin%2FinvitarUsuario.mp4?alt=media&token=bf096c02-3e92-4b42-89f2-33c4f8fe60ae',
+      AGREGAR_CURSO:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fadmin%2FcrearCurso.mp4?alt=media&token=40af7c24-d6c8-4af1-bb93-f1205390daca',
+      ASIGNAR_CURSO:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fadmin%2FasignarMateria.mp4?alt=media&token=d58f9724-3c8c-4d6e-a30d-adf2b4fc708e',
     },
     REPORTES: {
       TODOS:
