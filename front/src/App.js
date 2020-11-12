@@ -60,7 +60,7 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
+  /*   componentDidMount() {
     const { pathname } = window.location;
     const isProduction = process.env.NODE_ENV === 'production';
 
@@ -68,7 +68,7 @@ class App extends Component {
       this.props.history.push('/en-construccion');
       return this.props.history.go(0);
     }
-  }
+  } */
 
   componentDidUpdate(prevProps) {
     const { primerLogin, cambiarPassword } = this.props;

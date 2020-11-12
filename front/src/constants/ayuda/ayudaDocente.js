@@ -80,7 +80,12 @@ const ayudaDocente = [
   },
   {
     question: 'Reportes',
-    answer: ` En el módulo de Reportes podrás ver la información de tus alumnos.`,
+    answer: ` En el módulo de Reportes podrás ver la información de tus alumnos. Encontrarás reportes sobre clases, prácticas, evaluaciones y reportes generales con un resumen sobre los anteriores. <br/><br/>
+    <iframe width="560" height="315" src="https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Freportes%2FtodosLosReportes.mp4?alt=media&token=1ba2d7eb-7491-42e6-9004-43cd32351d2d" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+    <strong>Mi Planilla</strong><br/><br/>
+    También podrás personalizar tu propia planilla con las columnas e información que necesites guardar sobre tus alumnos. Luego, podrás guardarla para visualizarla posteriormente o exportarla a formato PDF. <br/><br/>
+    <iframe width="560" height="315" src="https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Freportes%2FmiPlanilla.mp4?alt=media&token=0ed02990-2dd4-4fc0-b768-6cf1cde9019a" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+    `,
   },
 ];
 

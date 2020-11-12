@@ -232,9 +232,7 @@ class RealizarEvaluacion extends Component {
   };
 
   finalizarEvaluacion = () => {
-    if (this.validateRespuestas() === true) {
-      var x = document.getElementById('upload-file-fragment');
-      x.style.display = 'none';
+    if (this.validateRespuestas()) {
       const encabezado = document.getElementById('encabezadoAImprimir');
       this.setState({
         encabezadoAImprimir: encabezado,

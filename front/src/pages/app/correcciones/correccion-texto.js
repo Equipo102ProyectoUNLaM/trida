@@ -31,6 +31,7 @@ const CorreccionTexto = ({ subject, rol }) => {
   const [estadoCorreccionVer, setEstadoCorreccionVer] = useState('');
   const [notaCorreccionVer, setNotaCorreccionVer] = useState(0);
   const [comentarioVer, setComentarioVer] = useState('');
+  const [loading, setLoading] = useState(false);
   const id = params.id.split('#')[0];
   const [modalConfirmacion, setModalConfirmacion] = useState(false);
   const [estadoCorreccion, setEstado] = useState('');
@@ -84,7 +85,9 @@ const CorreccionTexto = ({ subject, rol }) => {
   };
 
   const confirmarCorreccion = async () => {
+    setLoading(true);
     toggleModalConfirmacion();
+
     const listRef = storage.ref(
       `materias/${subject.id}/correcciones/${idStorage}-correccion`
     );
@@ -95,6 +98,7 @@ const CorreccionTexto = ({ subject, rol }) => {
       notaCorreccion: notaCorreccion.value,
       comentarioCorreccion: comentario,
     });
+    setLoading(false);
     enviarNotificacionExitosa(
       'La corrección fue subida exitosamente',
       'Corrección subida!'
@@ -186,6 +190,7 @@ const CorreccionTexto = ({ subject, rol }) => {
         toggleModal={() => history.push('/app/correcciones')}
         buttonText="correcciones.volver"
       />
+      {loading && <div className="cover-spin" />}
       {verCorr && (
         <>
           <Row className="status-correccion">
