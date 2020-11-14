@@ -308,6 +308,7 @@ class TabsDeClase extends Component {
       idMateria,
       updateContenidos,
       rol,
+      nombre,
     } = this.props;
     const {
       modalContenidosOpen,
@@ -480,6 +481,7 @@ class TabsDeClase extends Component {
                               idClase={idClase}
                               password={password}
                               preguntas={preguntasDeClase}
+                              subject={nombre}
                             />
                           )}
                         </CardBody>

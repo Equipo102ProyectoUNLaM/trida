@@ -69,6 +69,7 @@ const PaginaVideollamada = (props) => {
       />
       <Videollamada
         roomName={room}
+        subject={props.subject}
         userName={`${props.nombre} ${props.apellido}`}
         password={props.password}
         containerStyles={{ width: '100%', height: '700px' }}
