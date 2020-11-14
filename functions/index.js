@@ -44,19 +44,19 @@ exports.ping = functions.https.onRequest((request, response) => {
 
 
 /* register sets the user record to firestore */
-exports.register = functions.auth.user().onCreate((data)=> {
-    const user = {
-      id: data.uid,
-      mail: data.email,
-      fecha_creacion: data.metadata.creationTime,
-      nombre: '',
-      apellido: '',
-      telefono: '',
-      primerLogin: true,
-      cambiarPassword: false,
-      instituciones: [],
-      rol: 3,
-    }
+exports.register = functions.auth.user().onCreate((data) => {
+  const user = {
+    id: data.uid,
+    mail: data.email,
+    fecha_creacion: data.metadata.creationTime,
+    nombre: '',
+    apellido: '',
+    telefono: '',
+    primerLogin: true,
+    cambiarPassword: false,
+    instituciones: [],
+    rol: 3,
+  }
 
   return admin.firestore().collection('usuarios')
     .doc(data.uid)
@@ -260,21 +260,21 @@ exports.agregarAUsusariosPorMateria = async (instituciones, userId) => {
       const userDoc = await userRef.get();
       const userObj = userDoc.data();
       const rol = userObj.rol;
-      
+
       /* usuariosPorInstitucion */
       let usuarios = [];
       const institucionSnapShot = await institucion.institucion_id.get();
       const usuariosPorInstitucionRef = admin.firestore().collection('usuariosPorInstitucion').doc(institucionSnapShot.id);
       const usuariosPorInstitucion = await usuariosPorInstitucionRef.get();
       const usuariosPorInstitucionObj = usuariosPorInstitucion.data();
-      if(usuariosPorInstitucionObj !== undefined) {
+      if (usuariosPorInstitucionObj !== undefined) {
         usuarios = usuariosPorInstitucionObj.usuarios;
       }
       usuarios.push({
         id: userId,
         rol: rol,
       });
-      await admin.firestore().collection('usuariosPorInstitucion').doc(institucionSnapShot.id).set( {usuarios: usuarios}, { merge: true });
+      await admin.firestore().collection('usuariosPorInstitucion').doc(institucionSnapShot.id).set({ usuarios: usuarios }, { merge: true });
 
       for (const curso of institucion.cursos) {
         for (const materiaRef of curso.materias) {
@@ -368,11 +368,17 @@ exports.foroCreated = functions.firestore
         leida: false
       };
 
-      const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(foro.idMateria);
-      const usuariosPorMateria = await usuariosPorMateriaRef.get();
-      const usuariosPorMateriaObj = usuariosPorMateria.data();
+      let alumnos = [];
+      if (!foro.privado) {
+        const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(foro.idMateria);
+        const usuariosPorMateria = await usuariosPorMateriaRef.get();
+        const usuariosPorMateriaObj = usuariosPorMateria.data();
 
-      const alumnos = usuariosPorMateriaObj.usuario_id.filter(item => item !== foro.creador);
+        alumnos = usuariosPorMateriaObj.usuario_id.filter(item => item !== foro.creador);
+      }
+      else {
+        alumnos = foro.integrantes.filter(item => item !== foro.creador);
+      }
 
       return createNotification(notification, alumnos);
     } catch (error) {
@@ -455,7 +461,7 @@ exports.contentCreated = functions.storage
         const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(values[1]);
         const usuariosPorMateria = await usuariosPorMateriaRef.get();
         const usuariosPorMateriaObj = usuariosPorMateria.data();
-  
+
         let alumnos = [];
         for (const usu of usuariosPorMateriaObj.usuario_id) {
           const usuarioRef = admin.firestore().collection('usuarios').doc(usu);
@@ -480,7 +486,7 @@ exports.contentCreated = functions.storage
     }
   });
 
-  exports.evaluationCreated = functions.firestore
+exports.evaluationCreated = functions.firestore
   .document('evaluaciones/{evaluacionId}')
   .onCreate(async (doc) => {
     try {
@@ -520,13 +526,13 @@ exports.contentCreated = functions.storage
     }
   });
 
-  exports.evaluationEdited = functions.firestore
+exports.evaluationEdited = functions.firestore
   .document('evaluaciones/{evaluacionId}')
   .onUpdate(async (change, context) => {
     try {
       const newValue = change.after.data();
       const evaluacionId = context.params.evaluacionId;
-      
+
       const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(newValue.idMateria);
       const usuariosPorMateria = await usuariosPorMateriaRef.get();
       const usuariosPorMateriaObj = usuariosPorMateria.data();
@@ -542,14 +548,14 @@ exports.contentCreated = functions.storage
 
       for (const alumno of alumnos) {
         const notificacionsRef = admin.firestore().collection(`notificaciones/${alumno}/listado`)
-        .where('id', '==', `${evaluacionId}`);
-  
+          .where('id', '==', `${evaluacionId}`);
+
         const notifications = await notificacionsRef.get();
 
-        notifications.forEach(async (doc) =>{
+        notifications.forEach(async (doc) => {
           var ref = admin.firestore().collection(`notificaciones/${alumno}/listado`)
-          .doc(doc.id)
-          .set({fecha: newValue.fecha_publicacion, leida: false}, { merge: true });
+            .doc(doc.id)
+            .set({ fecha: newValue.fecha_publicacion, leida: false }, { merge: true });
         })
       }
       return;
@@ -559,16 +565,16 @@ exports.contentCreated = functions.storage
     }
   });
 
-  exports.activityCreated = functions.firestore
+exports.activityCreated = functions.firestore
   .document('practicas/{practicaId}')
   .onCreate(async (doc) => {
     try {
       const practica = doc.data();
       const practicaId = doc.id;
-      
+
       const notification = {
         contenido: `Se ha creado la práctica ${practica.nombre}`,
-        fecha: timeStamp.fromDate(new Date(newValue.fechaLanzada + 'T11:22:33+0000')),
+        fecha: practica.fechaLanzada,
         url: `/app/practicas#${practicaId}`,
         materia: practica.idMateria,
         leida: false,
@@ -594,13 +600,13 @@ exports.contentCreated = functions.storage
     }
   });
 
-  exports.activityEdited = functions.firestore
+exports.activityEdited = functions.firestore
   .document('practicas/{practicaId}')
   .onUpdate(async (change, context) => {
     try {
       const newValue = change.after.data();
       const practicaId = context.params.practicaId;
-      
+
       const usuariosPorMateriaRef = admin.firestore().collection('usuariosPorMateria').doc(newValue.idMateria);
       const usuariosPorMateria = await usuariosPorMateriaRef.get();
       const usuariosPorMateriaObj = usuariosPorMateria.data();
@@ -616,16 +622,16 @@ exports.contentCreated = functions.storage
 
       for (const alumno of alumnos) {
         const notificacionsRef = admin.firestore().collection(`notificaciones/${alumno}/listado`)
-        .where('id', '==', `${practicaId}`);
-  
+          .where('id', '==', `${practicaId}`);
+
         const notifications = await notificacionsRef.get();
 
-        notifications.forEach(async (doc) =>{
+        notifications.forEach(async (doc) => {
           var ref = admin.firestore().collection(`notificaciones/${alumno}/listado`)
-          .doc(doc.id)
-          .set({fecha: timeStamp.fromDate(new Date(newValue.fechaLanzada + 'T11:22:33+0000')), leida: false}, { merge: true });
+            .doc(doc.id)
+            .set({ fecha: newValue.fechaLanzada , leida: false }, { merge: true });
         })
-      }   
+      }
       return;
 
     } catch (error) {
@@ -633,7 +639,7 @@ exports.contentCreated = functions.storage
     }
   });
 
-  exports.formalMessageRecived = functions.firestore
+exports.formalMessageRecived = functions.firestore
   .document('formales/{formalesId}')
   .onCreate((doc) => {
     try {
@@ -653,7 +659,7 @@ exports.contentCreated = functions.storage
     }
   })
 
-  exports.oralEvaluationCreated = functions.firestore
+exports.oralEvaluationCreated = functions.firestore
   .document('evaluacionesOrales/{evaluacionOralId}')
   .onCreate((doc) => {
     try {
@@ -672,3 +678,28 @@ exports.contentCreated = functions.storage
       console.log('error', error);
     }
   })
+
+exports.correctionRealized = functions.firestore
+  .document('correcciones/{correccionId}')
+  .onUpdate(async (change, context) => {
+    try {
+      const correccion = change.after.data();
+      const correccionId = context.params.correccionId;
+
+      if (correccion.estado === "Corregido") {
+        const notification = {
+          contenido: `Recibiste una corrección de la ${correccion.tipo} ${correccion.nombre}`,
+          fecha: admin.firestore.FieldValue.serverTimestamp(),
+          url: `/app/correcciones#${correccionId}`,
+          materia: correccion.idMateria,
+          leida: false
+        };
+        return createNotification(notification, [correccion.idUsuario]);
+      }
+      else
+        return;
+
+    } catch (error) {
+      console.log('error', error);
+    }
+  });

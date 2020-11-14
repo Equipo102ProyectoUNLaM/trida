@@ -92,6 +92,7 @@ class DetalleClase extends Component {
           </Colxx>
         </Row>
         <TabsDeClase
+          nombre={nombre}
           contenidos={contenidos}
           idMateria={idMateria}
           idSala={idSala}

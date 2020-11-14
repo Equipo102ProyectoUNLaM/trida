@@ -49,7 +49,7 @@ var preguntaLanzadaGlobal = []; // mientras no haga funcionar el setpreguntaLanz
 
 const Videollamada = ({
   roomName,
-  subject = 'Clase Virtual',
+  subject,
   userName,
   password,
   options,

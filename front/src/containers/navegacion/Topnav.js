@@ -322,7 +322,7 @@ class TopNav extends Component {
                 <DropdownItem
                   onClick={() => this.props.history.push('/app/cuenta')}
                 >
-                  Cuenta
+                  Mi Cuenta
                 </DropdownItem>
                 <DropdownItem divider />
                 {isMobile && (
