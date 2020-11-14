@@ -9,7 +9,7 @@ import {
 import { enviarNotificacionError } from 'helpers/Utils-ui';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import AgregarPregunta from './agregar-pregunta';
-import { encriptarEjercicios } from 'handlers/EncryptionHandler';
+import { encriptarEjercicios } from 'helpers/EncryptionHandler';
 import { isEmpty } from 'helpers/Utils';
 
 class FormPreguntas extends React.Component {

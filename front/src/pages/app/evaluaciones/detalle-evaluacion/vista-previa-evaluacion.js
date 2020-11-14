@@ -12,13 +12,13 @@ import {
 } from 'reactstrap';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { getDocumentWithSubCollection } from 'helpers/Firebase-db';
-import { TIPO_EJERCICIO } from 'enumerators/tipoEjercicio';
+import { TIPO_EJERCICIO } from 'constants/tipoEjercicio';
 import RespuestaLibre from 'pages/app/evaluaciones/ejercicios/respuesta-libre';
 import OpcionMultiple from 'pages/app/evaluaciones/ejercicios/opcion-multiple';
 import Oral from 'pages/app/evaluaciones/ejercicios/oral';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
-import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import { desencriptarEjercicios } from 'helpers/DecryptionHandler';
 import { connect } from 'react-redux';
 import {
   getDateWithFormat,

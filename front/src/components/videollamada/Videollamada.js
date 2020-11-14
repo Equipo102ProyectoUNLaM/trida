@@ -38,8 +38,8 @@ import {
 import { timeStamp } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
 import ModalGrande from 'containers/pages/ModalGrande';
-import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
-import ContestarPregunta from './contestar-pregunta';
+import { desencriptarEjercicios } from 'helpers/DecryptionHandler';
+import ContestarPregunta from './ContestarPregunta';
 import classnames from 'classnames';
 import Select from 'react-select';
 import { MINUTOS_OPTIONS, SEGUNDOS_OPTIONS } from 'constants/tiempoPreguntas';

@@ -7,8 +7,8 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import ModalGrande from 'containers/pages/ModalGrande';
 import FormFormales from './form-formal';
 import { addDocument } from 'helpers/Firebase-db';
-import { desencriptarTexto } from 'handlers/DecryptionHandler';
-import { encriptarTexto } from 'handlers/EncryptionHandler';
+import { desencriptarTexto } from 'helpers/DecryptionHandler';
+import { encriptarTexto } from 'helpers/EncryptionHandler';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
 import ROLES from 'constants/roles';
 

@@ -7,7 +7,7 @@ import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 import { getDocumentWithSubCollection } from 'helpers/Firebase-db';
 import * as CryptoJS from 'crypto-js';
 import { secretKey } from 'constants/defaultValues';
-import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import { desencriptarEjercicios } from 'helpers/DecryptionHandler';
 
 export default class EditarEvaluacion extends Component {
   constructor(props) {
