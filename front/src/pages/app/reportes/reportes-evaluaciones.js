@@ -7,7 +7,7 @@ import Breadcrumb from 'containers/navegacion/Breadcrumb';
 import { getCollection, getDocument } from 'helpers/Firebase-db';
 import { getUsuariosAlumnosPorMateria } from 'helpers/Firebase-user';
 import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
-import { desencriptarTexto } from 'handlers/DecryptionHandler';
+import { desencriptarTexto } from 'helpers/DecryptionHandler';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

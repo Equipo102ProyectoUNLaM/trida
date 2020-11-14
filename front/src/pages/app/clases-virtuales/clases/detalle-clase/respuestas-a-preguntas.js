@@ -13,7 +13,7 @@ import {
   getDocument,
 } from 'helpers/Firebase-db';
 import { getUsuariosPorMateriaConRol } from 'helpers/Firebase-user';
-import { desencriptarPreguntasConRespuestasDeAlumnos } from 'handlers/DecryptionHandler';
+import { desencriptarPreguntasConRespuestasDeAlumnos } from 'helpers/DecryptionHandler';
 import { isEmpty } from 'helpers/Utils';
 import ROLES from 'constants/roles';
 

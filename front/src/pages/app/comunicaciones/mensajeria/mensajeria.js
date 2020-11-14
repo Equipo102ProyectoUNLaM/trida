@@ -13,8 +13,8 @@ import { getUsersOfSubject } from 'helpers/Firebase-user';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { Row, ModalFooter, Button, Input } from 'reactstrap';
 import { addDocument, addElementToArray } from 'helpers/Firebase-db';
-import { desencriptarTexto } from 'handlers/DecryptionHandler';
-import { encriptarTexto } from 'handlers/EncryptionHandler';
+import { desencriptarTexto } from 'helpers/DecryptionHandler';
+import { encriptarTexto } from 'helpers/EncryptionHandler';
 import { getDateTimeStringFromDate } from 'helpers/Utils';
 
 class Mensajeria extends Component {

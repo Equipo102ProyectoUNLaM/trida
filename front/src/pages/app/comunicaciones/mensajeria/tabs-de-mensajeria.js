@@ -12,7 +12,7 @@ import {
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import { Colxx } from 'components/common/CustomBootstrap';
-import DataTablePagination from 'components/datatable-pagination';
+import DataTablePagination from 'components/DatatablePagination';
 import ReactTable from 'react-table';
 import {
   dataSentTableColumns,

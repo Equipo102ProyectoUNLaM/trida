@@ -8,7 +8,7 @@ import { addDocument } from 'helpers/Firebase-db';
 import ROLES from 'constants/roles';
 import { Formik, Form, Field } from 'formik';
 import { mensajesSchema } from './validations';
-import { encriptarTexto } from 'handlers/EncryptionHandler';
+import { encriptarTexto } from 'helpers/EncryptionHandler';
 
 class FormMensaje extends Component {
   constructor(props) {

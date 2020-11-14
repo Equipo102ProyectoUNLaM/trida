@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import ListaConImagen from 'components/lista-con-imagen';
+import ListaConImagen from 'components/ListaConImagen';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import FormForo from './form-foro';

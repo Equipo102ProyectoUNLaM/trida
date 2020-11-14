@@ -6,7 +6,7 @@ import HeaderDeModulo from 'components/common/HeaderDeModulo';
 import FormEvaluacion from 'pages/app/evaluaciones/form-evaluacion';
 import ModalGrande from 'containers/pages/ModalGrande';
 import { FormGroup } from 'reactstrap';
-import { desencriptarEvaluacionImportada } from 'handlers/DecryptionHandler';
+import { desencriptarEvaluacionImportada } from 'helpers/DecryptionHandler';
 import { enviarNotificacionError } from 'helpers/Utils-ui';
 
 class AgregarEvaluacion extends Component {

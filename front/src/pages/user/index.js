@@ -2,8 +2,8 @@ import React, { Suspense, Component } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Redirect, withRouter } from 'react-router-dom';
 import UserLayout from '../../layout/UserLayout';
-import { AuthRoute } from 'components/rutas/auth-route';
-import { NonAuthRoute } from 'components/rutas/non-auth-route';
+import { AuthRoute } from 'components/rutas/AuthRoute';
+import { NonAuthRoute } from 'components/rutas/NonAuthRoute';
 
 const Login = React.lazy(() =>
   import(/* webpackChunkName: "user-login" */ './login')

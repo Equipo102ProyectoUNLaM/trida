@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { isEmpty } from 'helpers/Utils';
-import DataTablePagination from 'components/datatable-pagination';
+import DataTablePagination from 'components/DatatablePagination';
 import ReactTable from 'react-table';
 import { DATA_TABLE_COLUMNS } from 'constants/asistenciaTableColumns';
 
