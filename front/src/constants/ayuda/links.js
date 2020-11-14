@@ -1,9 +1,12 @@
 const LINKS = {
   DIR_DOC: {
     GENERAL: {
-      MENU: 'https://www.youtube.com/embed/E07s5ZYygMg',
-      TOP_NAV: 'https://www.youtube.com/embed/E07s5ZYygMg',
-      NOTIFICACIONES: 'https://www.youtube.com/embed/E07s5ZYygMg',
+      MENU:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fadmin%2Fmenu.mp4?alt=media&token=dac11161-34d2-434c-805c-15d5a912d267',
+      TOP_NAV:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fadmin%2FbarraSuperior.mp4?alt=media&token=be864e82-0528-4360-9c4d-e3d2c2d0ed5b',
+      NOTIFICACIONES:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fadmin%2Fnotificaciones.mp4?alt=media&token=84c38195-51b3-45dc-80c6-b656dfa0ce15',
     },
     CLASES: {
       ABM:
@@ -58,9 +61,12 @@ const LINKS = {
   },
   ALUMNO: {
     GENERAL: {
-      MENU: 'https://www.youtube.com/embed/E07s5ZYygMg',
-      TOP_NAV: 'https://www.youtube.com/embed/E07s5ZYygMg',
-      NOTIFICACIONES: 'https://www.youtube.com/embed/E07s5ZYygMg',
+      MENU:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Falumnos%2Fmenu.mp4?alt=media&token=7f4f8ac4-1cb9-4ff2-abad-43ee080caa21',
+      TOP_NAV:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Falumnos%2FbarraSuperior.mp4?alt=media&token=eae2a1e9-76ac-444e-82c5-9f4d1cf47196',
+      NOTIFICACIONES:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Falumnos%2Fnotificaciones.mp4?alt=media&token=8015f8ce-ecfa-491e-9982-e6dfcba8a932',
     },
     CLASES: {
       CLASE_VIRTUAL:
