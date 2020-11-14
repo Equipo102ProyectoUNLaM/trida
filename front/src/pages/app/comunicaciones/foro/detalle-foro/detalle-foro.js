@@ -94,9 +94,6 @@ class DetalleForo extends Component {
         [{ order: 'fecha_creacion', orderCond: 'asc' }]
       );
     }
-    // if (this._scrollBarRef) {
-    //   this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
-    // }
   }
 
   setNewMessages = (mensajes) => {
@@ -108,9 +105,16 @@ class DetalleForo extends Component {
       });
     });
 
-    this.setState({
-      mensajes: nuevosMensajes,
-    });
+    this.setState(
+      {
+        mensajes: nuevosMensajes,
+      },
+      () => {
+        if (this._scrollBarRef) {
+          this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
+        }
+      }
+    );
   };
 
   handleChatInputPress = (e) => {
@@ -220,18 +224,28 @@ class DetalleForo extends Component {
               descripcionForo={descripcion}
               goToForos={this.goToForos}
             />
-            {mensajes.map((item, index) => {
-              return (
-                <DetalleMensaje
-                  key={index}
-                  item={item}
-                  idUsuarioActual={id}
-                  onDelete={
-                    this.props.rol !== ROLES.Alumno ? this.borrarMensaje : false
-                  }
-                />
-              );
-            })}
+            <PerfectScrollbar
+              ref={(ref) => {
+                this._scrollBarRef = ref;
+              }}
+              containerRef={(ref) => {}}
+              options={{ suppressScrollX: true, wheelPropagation: false }}
+            >
+              {mensajes.map((item, index) => {
+                return (
+                  <DetalleMensaje
+                    key={index}
+                    item={item}
+                    idUsuarioActual={id}
+                    onDelete={
+                      this.props.rol !== ROLES.Alumno
+                        ? this.borrarMensaje
+                        : false
+                    }
+                  />
+                );
+              })}
+            </PerfectScrollbar>
           </Colxx>
           {modalDeleteOpen && (
             <ModalConfirmacion
