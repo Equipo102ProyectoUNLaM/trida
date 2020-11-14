@@ -220,18 +220,28 @@ class DetalleForo extends Component {
               descripcionForo={descripcion}
               goToForos={this.goToForos}
             />
-            {mensajes.map((item, index) => {
-              return (
-                <DetalleMensaje
-                  key={index}
-                  item={item}
-                  idUsuarioActual={id}
-                  onDelete={
-                    this.props.rol !== ROLES.Alumno ? this.borrarMensaje : false
-                  }
-                />
-              );
-            })}
+            <PerfectScrollbar
+              ref={(ref) => {
+                this._scrollBarRef = ref;
+              }}
+              containerRef={(ref) => {}}
+              options={{ suppressScrollX: true, wheelPropagation: false }}
+            >
+              {mensajes.map((item, index) => {
+                return (
+                  <DetalleMensaje
+                    key={index}
+                    item={item}
+                    idUsuarioActual={id}
+                    onDelete={
+                      this.props.rol !== ROLES.Alumno
+                        ? this.borrarMensaje
+                        : false
+                    }
+                  />
+                );
+              })}
+            </PerfectScrollbar>
           </Colxx>
           {modalDeleteOpen && (
             <ModalConfirmacion
