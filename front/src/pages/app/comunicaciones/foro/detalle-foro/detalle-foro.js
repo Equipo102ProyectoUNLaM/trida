@@ -94,9 +94,6 @@ class DetalleForo extends Component {
         [{ order: 'fecha_creacion', orderCond: 'asc' }]
       );
     }
-    // if (this._scrollBarRef) {
-    //   this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
-    // }
   }
 
   setNewMessages = (mensajes) => {
@@ -108,9 +105,16 @@ class DetalleForo extends Component {
       });
     });
 
-    this.setState({
-      mensajes: nuevosMensajes,
-    });
+    this.setState(
+      {
+        mensajes: nuevosMensajes,
+      },
+      () => {
+        if (this._scrollBarRef) {
+          this._scrollBarRef._ps.element.scrollTop = this._scrollBarRef._ps.contentHeight;
+        }
+      }
+    );
   };
 
   handleChatInputPress = (e) => {
