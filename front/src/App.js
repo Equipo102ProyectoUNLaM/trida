@@ -14,7 +14,7 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { AuthRoute } from 'components/rutas/auth-route';
+import { AuthRoute } from 'components/rutas/AuthRoute';
 import { isMobile } from 'react-device-detect';
 
 //const ViewMain = React.lazy(() =>

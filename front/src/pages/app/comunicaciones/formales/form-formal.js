@@ -7,7 +7,7 @@ import IntlMessages from 'helpers/IntlMessages';
 import { addDocument } from 'helpers/Firebase-db';
 import { Formik, Form, Field } from 'formik';
 import { mensajesSchema } from './validations';
-import { encriptarTexto } from 'handlers/EncryptionHandler';
+import { encriptarTexto } from 'helpers/EncryptionHandler';
 import { rolesSelect } from 'constants/rolesData';
 import { getUsuariosPorMateriaConRol } from 'helpers/Firebase-user';
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import { injectIntl } from 'react-intl';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import CardTabsOral from 'components/card-tabs-oral';
+import CardTabsOral from 'components/CardTabsOral';
 import ModalGrande from 'containers/pages/ModalGrande';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import { logicDeleteDocument, getCollection } from 'helpers/Firebase-db';

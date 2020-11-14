@@ -34,7 +34,7 @@ import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
 import ModalCrearPreguntas from './modal-crear-preguntas';
 import ModalVistaPreviaPreguntas from '../preguntas-clase/vista-previa-preguntas';
 import ROLES from 'constants/roles';
-import { desencriptarEjercicios } from 'handlers/DecryptionHandler';
+import { desencriptarEjercicios } from 'helpers/DecryptionHandler';
 import RespuestasAPreguntas from './respuestas-a-preguntas';
 import { isMobile } from 'react-device-detect';
 

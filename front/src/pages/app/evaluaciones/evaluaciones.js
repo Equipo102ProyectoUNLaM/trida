@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Row, Button, Badge } from 'reactstrap';
 import HeaderDeModulo from 'components/common/HeaderDeModulo';
-import CardTabs from 'components/card-tabs';
+import CardTabs from 'components/CardTabs';
 import Calendario from 'components/common/Calendario';
 import { Colxx } from 'components/common/CustomBootstrap';
 import ModalConfirmacion from 'containers/pages/ModalConfirmacion';
@@ -21,7 +21,7 @@ import firebase from 'firebase/app';
 import {
   desencriptarEvaluacion,
   desencriptarTexto,
-} from 'handlers/DecryptionHandler';
+} from 'helpers/DecryptionHandler';
 import {
   isEmpty,
   getDateTimeStringFromDate,

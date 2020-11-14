@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { Row, Card, CardBody, Collapse, Button } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
-import { desencriptarTexto } from 'handlers/DecryptionHandler';
+import { desencriptarTexto } from 'helpers/DecryptionHandler';
 import { isEmpty, getDateTimeStringFromDate } from 'helpers/Utils';
 
 class TabsDeFormales extends Component {
