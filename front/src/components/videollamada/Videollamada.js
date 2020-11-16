@@ -60,7 +60,7 @@ const Videollamada = ({
   preguntas,
   idUser,
 }) => {
-  const { microfono, camara, chat } = options;
+  const { microfono, camara, habilitarChat } = options;
   const parentNode = 'jitsi-container';
   const [shareButtonText, setShareScreenButtonText] = useState(
     'Compartir pantalla'
@@ -70,7 +70,7 @@ const Videollamada = ({
   const obtenerConfiguracion = (config) => {
     const newConfig = { ...config };
 
-    if (!chat) {
+    if (habilitarChat) {
       newConfig.TOOLBAR_BUTTONS = [...newConfig.TOOLBAR_BUTTONS, 'chat'];
     }
 
@@ -79,12 +79,12 @@ const Videollamada = ({
 
   const opcionesDocente = useMemo(
     () => obtenerConfiguracion(INTERFACE_CONFIG.DOCENTE),
-    [chat]
+    [habilitarChat]
   );
 
   const opcionesAlumno = useMemo(
     () => obtenerConfiguracion(INTERFACE_CONFIG.ALUMNO),
-    [chat]
+    [habilitarChat]
   );
 
   const pizarronURI = '/pizarron';

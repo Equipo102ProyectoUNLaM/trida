@@ -25,14 +25,21 @@ const PaginaVideollamada = (props) => {
   const [options, setOptions] = useState({
     microfono: true,
     camara: true,
-    chat: false,
+    habilitarChat: true,
   });
   const [call, setCall] = useState(false);
   const [llamadaIniciada, setIniciada] = useState(false);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    editDocument('clases', props.idClase, { iniciada: true });
+
+    if (props.rol !== ROLES.Alumno) {
+      editDocument('clases', props.idClase, {
+        iniciada: true,
+        habilitarChat: options.habilitarChat,
+      });
+    }
+
     if (room) setCall(true);
   };
 
@@ -46,8 +53,18 @@ const PaginaVideollamada = (props) => {
   }, [props.idClase]);
 
   const onClaseIniciada = (doc) => {
-    const { iniciada } = doc.data();
-    setIniciada(iniciada);
+    const { iniciada, habilitarChat } = doc.data();
+
+    if (habilitarChat !== undefined) {
+      setOptions({
+        ...options,
+        habilitarChat,
+      });
+    }
+
+    if (props.rol !== ROLES.Alumno) {
+      setIniciada(iniciada);
+    }
   };
 
   const handleChange = (event) => {
@@ -123,11 +140,11 @@ const PaginaVideollamada = (props) => {
                 />
                 {props.rol !== ROLES.Alumno && (
                   <CustomInput
-                    id="chat"
+                    id="habilitarChat"
                     type="checkbox"
-                    name="chat"
-                    label="Deshabilitar chat"
-                    checked={options.chat}
+                    name="habilitarChat"
+                    label="Habilitar chat"
+                    checked={options.habilitarChat}
                     onChange={handleChange}
                   />
                 )}
