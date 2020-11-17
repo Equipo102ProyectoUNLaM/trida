@@ -30,12 +30,16 @@ const LINKS = {
       ABM: 'https://www.youtube.com/embed/XseIJg8Vyj0',
     },
     CORRECCIONES: {
-      REALIZAR_CORRECCION: 'https://www.youtube.com/embed/GkkPazmc-uk',
+      REALIZAR_CORRECCION:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fpracticas%2Fcorregir-pr%C3%A1ctica-docente.mp4?alt=media&token=283cef45-ca8c-41bc-932c-099be9aaa750',
     },
     CONTENIDOS: {
-      AGREGAR: 'https://www.youtube.com/embed/YSoT3T58QFY',
-      AUDIO: 'https://www.youtube.com/embed/R-jsYSvYH4o',
-      VIDEO: 'https://www.youtube.com/embed/O4KWxa65Gsk',
+      AGREGAR:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcontenidos%2Fsubir-contenidos-docente.mp4?alt=media&token=93983373-69bb-4b41-85f5-bb3ef1806aa2',
+      AUDIO:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcontenidos%2Fgrabar-audio-contenidos-docente.mp4?alt=media&token=a3166d7a-8b52-4095-aaed-5b13b80fb11d',
+      VIDEO:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcontenidos%2Fgrabar-video-contenidos-docente.mp4?alt=media&token=fa809568-67b3-410a-9277-9473429cc4cc',
     },
     COMUNICACIONES: {
       FORO: 'https://www.youtube.com/embed/BNjkUgeWwPQ',
@@ -85,10 +89,12 @@ const LINKS = {
       SUBIR: 'https://www.youtube.com/embed/_tG70FWd1Ds',
     },
     CORRECCIONES: {
-      VER: 'https://www.youtube.com/embed/_tG70FWd1Ds',
+      VER:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fpracticas%2Falumno-ver-correcciones.mp4?alt=media&token=a1deefc8-b3ee-41bd-a6b7-72e8fd2f5ee4',
     },
     CONTENIDOS: {
-      VER: 'https://www.youtube.com/embed/_tG70FWd1Ds',
+      VER:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcontenidos%2Falumno-ver-contenido.mp4?alt=media&token=1fc96daa-824a-4487-b3a2-c8c8ac380945',
     },
     COMUNICACIONES: {
       FORO: 'https://www.youtube.com/embed/BNjkUgeWwPQ',
