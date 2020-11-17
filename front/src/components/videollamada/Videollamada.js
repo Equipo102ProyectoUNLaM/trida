@@ -440,7 +440,6 @@ const Videollamada = ({
                 id: apellido,
               },
             ]);
-            console.log(userId);
             setListaAsistencia(
               listaAsistencia.push({
                 id,
