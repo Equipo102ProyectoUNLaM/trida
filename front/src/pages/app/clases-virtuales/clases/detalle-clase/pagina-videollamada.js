@@ -34,7 +34,6 @@ const PaginaVideollamada = (props) => {
     event.preventDefault();
 
     if (props.rol !== ROLES.Alumno) {
-      console.log('aca');
       editDocument('clases', props.idClase, {
         iniciada: true,
         habilitarChat: options.habilitarChat,
@@ -46,7 +45,9 @@ const PaginaVideollamada = (props) => {
 
   const setVideollamadaOff = () => {
     setCall(false);
-    editDocument('clases', props.idClase, { iniciada: false });
+    if (props.rol !== ROLES.Alumno) {
+      editDocument('clases', props.idClase, { iniciada: false });
+    }
   };
 
   useEffect(() => {
