@@ -23,11 +23,14 @@ const LINKS = {
         'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fclases%2Fasistencia.mp4?alt=media&token=dd3ab7fd-f298-4104-bc01-6d67b7af3d34',
     },
     EVALUACIONES: {
-      ABM: 'https://www.youtube.com/embed/E07s5ZYygMg',
-      IMPORTAR_EXPORTAR: 'https://www.youtube.com/embed/0LVdYyPH6ag',
+      ABM:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fevaluaciones%2Feval-escritas-docente.mp4?alt=media&token=0d2251f8-1f90-4ac8-967b-f49178d7c94d',
+      ORALES:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fevaluaciones%2Feval-orales-docentes.mp4?alt=media&token=f94a504f-c9e7-4f96-bd6b-52a663ef567f',
     },
     PRACTICAS: {
-      ABM: 'https://www.youtube.com/embed/XseIJg8Vyj0',
+      ABM:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fpracticas%2Fpracticas-docentes.mp4?alt=media&token=152cbdc7-48e4-4c25-a94c-0ae91475ce0f',
     },
     CORRECCIONES: {
       REALIZAR_CORRECCION:
@@ -83,10 +86,14 @@ const LINKS = {
         'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fclases%2FalumnoContenidos.mp4?alt=media&token=0489c285-6ed9-4838-9e16-28f78c6949d4',
     },
     EVALUACIONES: {
-      REALIZAR: 'https://www.youtube.com/embed/_tG70FWd1Ds',
+      REALIZAR:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fevaluaciones%2Feval-escritas-alumnos.mp4?alt=media&token=e5e69d17-7fee-47ae-bcfd-9405d2bc5060',
+      REALIZAR_EVALUACIONES_ORALES:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fevaluaciones%2Feval-orales-alumnos.mp4?alt=media&token=dbf417e2-7b7f-4357-9914-c63efe2cd15d',
     },
     PRACTICAS: {
-      SUBIR: 'https://www.youtube.com/embed/_tG70FWd1Ds',
+      SUBIR:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fpracticas%2Fpracticas-alumno.mp4?alt=media&token=ae174bc8-ce54-421e-9424-dde5e764ea9e',
     },
     CORRECCIONES: {
       VER:

@@ -38,8 +38,8 @@ const ayudaDocente = [
     answer: `En el módulo de evaluaciones podrás crear y editar tus evaluaciones. Además, podrás importar y exportar evaluaciones ya creadas.<br/><br/>
               <strong>Crear y Editar Evaluaciones</strong><br/><br/>
               <iframe width="560" height="315" src=${LINKS.DIR_DOC.EVALUACIONES.ABM} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
-              <strong>Importar y Exportar Evaluaciones</strong><br/><br/>
-              <iframe width="560" height="315" src=${LINKS.DIR_DOC.EVALUACIONES.IMPORTAR_EXPORTAR} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+              <strong>Evaluaciones Orales</strong><br/><br/>
+              <iframe width="560" height="315" src=${LINKS.DIR_DOC.EVALUACIONES.ORALES} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
       `,
   },
   {

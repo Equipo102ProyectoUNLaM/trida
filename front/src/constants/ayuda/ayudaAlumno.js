@@ -32,9 +32,11 @@ const ayudaAlumno = [
   {
     question: 'Evaluaciones',
     answer: `En el módulo de evaluaciones podrás realizar las evaluaciones cargadas por tu docente. Prestá atención a las características de la evaluación cuando clickees 'Realizar', ya que tu docente puede haber seleccionado que no puedas navegar fuera de la evaluación o no puedas tomar capturas de pantalla.<br/><br/>
-                  <strong>Realizar Evaluación</strong><br/><br/>
+                  <strong>Realizar Evaluación Escrita</strong><br/><br/>
                   <iframe width="560" height="315" src=${LINKS.ALUMNO.EVALUACIONES.REALIZAR} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
-           `,
+                  <strong>Realizar Evaluación Oral</strong><br/><br/>
+                  <iframe width="560" height="315" src=${LINKS.ALUMNO.EVALUACIONES.REALIZAR_EVALUACIONES_ORALES} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+                  `,
   },
   {
     question: 'Prácticas',
