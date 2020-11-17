@@ -34,6 +34,7 @@ import {
   editDocument,
   getDocument,
   addDocument,
+  getCollection,
 } from 'helpers/Firebase-db';
 import { timeStamp } from 'helpers/Firebase';
 import DataListView from 'containers/pages/DataListView';
@@ -428,16 +429,28 @@ const Videollamada = ({
             ? setShareScreenButtonText('Dejar de Compartir pantalla')
             : setShareScreenButtonText('Compartir pantalla');
         });
-        jitsi.addEventListener('participantJoined', ({ id, displayName }) => {
-          setListaAsistencia(
-            listaAsistencia.push({
-              id,
-              nombre: displayName,
-              user: idUser,
-              timeStampConexion: moment().format(),
-            })
-          );
-        });
+        jitsi.addEventListener(
+          'participantJoined',
+          async ({ id, displayName }) => {
+            const apellido = displayName.split([' '])[1];
+            const userId = await getCollection('usuarios', [
+              {
+                field: 'apellido',
+                operator: '==',
+                id: apellido,
+              },
+            ]);
+            console.log(userId);
+            setListaAsistencia(
+              listaAsistencia.push({
+                id,
+                nombre: displayName,
+                user: userId.id,
+                timeStampConexion: moment().format(),
+              })
+            );
+          }
+        );
         jitsi.addEventListener('participantLeft', ({ id }) => {
           setListaAsistencia(
             listaAsistencia.push({
