@@ -45,7 +45,9 @@ const PaginaVideollamada = (props) => {
 
   const setVideollamadaOff = () => {
     setCall(false);
-    editDocument('clases', props.idClase, { iniciada: false });
+    if (props.rol !== ROLES.Alumno) {
+      editDocument('clases', props.idClase, { iniciada: false });
+    }
   };
 
   useEffect(() => {
@@ -62,9 +64,7 @@ const PaginaVideollamada = (props) => {
       });
     }
 
-    if (props.rol !== ROLES.Alumno) {
-      setIniciada(iniciada);
-    }
+    setIniciada(iniciada);
   };
 
   const handleChange = (event) => {
