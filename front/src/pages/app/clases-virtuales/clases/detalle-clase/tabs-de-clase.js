@@ -78,7 +78,8 @@ class TabsDeClase extends Component {
     this.setState({ isLoading: true });
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
-    this.setState({ isLoading: false, asistencia });
+    const asistenciaAlumno = asistencia.filter((elem) => elem.rol === 2);
+    this.setState({ isLoading: false, asistencia: asistenciaAlumno });
   };
 
   getLinksDeClase = async () => {

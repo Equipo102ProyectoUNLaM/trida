@@ -295,6 +295,7 @@ const Videollamada = ({
     const asistencia = arrayFiltrado.map((elem) => ({
       ...elem,
       user: elem.user,
+      rol: elem.rol,
       nombre: elem.nombre ? elem.nombre : 'Nombre',
       tiempoNeto: getTimestampDifference(
         elem.timeStampDesconexion,
@@ -445,6 +446,7 @@ const Videollamada = ({
                 id,
                 nombre: displayName,
                 user: userId.id,
+                rol: userId.data.rol,
                 timeStampConexion: moment().format(),
               })
             );
