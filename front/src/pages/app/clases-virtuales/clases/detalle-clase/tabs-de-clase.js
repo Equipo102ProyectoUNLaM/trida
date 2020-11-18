@@ -78,7 +78,9 @@ class TabsDeClase extends Component {
     this.setState({ isLoading: true });
     const { data } = await getDocument(`clases/${this.props.idClase}`);
     const { asistencia } = data;
-    const asistenciaAlumno = asistencia.filter((elem) => elem.rol === 2);
+    const asistenciaAlumno = asistencia
+      ? asistencia.filter((elem) => elem.rol === 2)
+      : [];
     this.setState({ isLoading: false, asistencia: asistenciaAlumno });
   };
 
