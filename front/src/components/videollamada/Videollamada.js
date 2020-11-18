@@ -294,7 +294,7 @@ const Videollamada = ({
     );
     const asistencia = arrayFiltrado.map((elem) => ({
       ...elem,
-      user: idUser,
+      user: elem.user,
       nombre: elem.nombre ? elem.nombre : 'Nombre',
       tiempoNeto: getTimestampDifference(
         elem.timeStampDesconexion,
@@ -433,7 +433,7 @@ const Videollamada = ({
           'participantJoined',
           async ({ id, displayName }) => {
             const apellido = displayName.split([' '])[1];
-            const userId = await getCollection('usuarios', [
+            const [userId] = await getCollection('usuarios', [
               {
                 field: 'apellido',
                 operator: '==',
