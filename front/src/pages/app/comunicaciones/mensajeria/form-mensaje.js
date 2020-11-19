@@ -161,16 +161,22 @@ class FormMensaje extends Component {
                       />
                     </Colxx>
                     {rolDocente && (
-                      <Colxx xxs="12" md="6" className="receivers-general mt-4">
+                      <Colxx
+                        xxs="12"
+                        md="6"
+                        className="receivers-general m-auto flex"
+                      >
                         <Field
                           autoComplete="off"
                           name="esGeneral"
-                          className="general-check"
+                          className="general-check mt-auto mb-auto"
                           type="checkbox"
                           checked={esGeneral}
                           onChange={() => this.handleCheckBoxChange()}
                         />
-                        <label>¿Es un mensaje general?</label>
+                        <label className="mt-auto mb-auto">
+                          ¿Es un mensaje general?
+                        </label>
                       </Colxx>
                     )}
                   </Row>
