@@ -54,14 +54,6 @@ class PaginaAdmin extends Component {
           icon: 'iconsminds-network',
           to: '#',
         });
-        if (!ADMIN_ARRAY.some((elem) => elem.id === 7)) {
-          ADMIN_ARRAY.push({
-            id: 7,
-            title: 'Asignar rol',
-            icon: 'iconsminds-administrator',
-            to: '#',
-          });
-        }
       }
     }
   }

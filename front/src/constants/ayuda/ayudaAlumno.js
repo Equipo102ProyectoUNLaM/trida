@@ -6,7 +6,7 @@ const ayudaAlumno = [
     answer: `<strong>Menú</strong><br/>
     En el menú lateral encontrarás cada uno de los módulos con los que cuenta la aplicación. Para desplegarlo, clickeá el ícono que se encuentra a la izquierda del nombre de tu institución.<br/><br/>
     <iframe width="560" height="315" src=${LINKS.ALUMNO.GENERAL.MENU} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
-   
+
     <strong>Barra Superior</strong><br/>
     En la barra superior podrás ver distintas opciones para personalizar la aplicación y tu cuenta.<br/><br/>
     <iframe width="560" height="315" src=${LINKS.ALUMNO.GENERAL.TOP_NAV} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
@@ -63,10 +63,12 @@ const ayudaAlumno = [
         <strong>Foro</strong><br/><br/>
         <iframe width="560" height="315" src=${LINKS.ALUMNO.COMUNICACIONES.FORO} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
         <strong>Mensajería</strong><br/><br/>
-        <iframe width="560" height="315" src=${LINKS.ALUMNO.COMUNICACIONES.MENSAJERIA} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+        En esta sección podrás enviar y recibir mensajes. También, podrás responder un mensaje recibido, y reenviar un mensaje que ya enviaste previamente.
+        <iframe width="560" height="315" src=${LINKS.ALUMNO.COMUNICACIONES.MENSAJERIA_NORMAL_ALUMNO} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
         <strong>Comunicaciones Formales</strong><br/><br/>
+        Como alumno, podrás recibir comunicaciones formales de los directivos<br/><br/>
         <iframe width="560" height="315" src=${LINKS.ALUMNO.COMUNICACIONES.FORMALES} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
-       
+
           `,
   },
 ];
