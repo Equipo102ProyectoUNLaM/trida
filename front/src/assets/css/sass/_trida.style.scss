@@ -1307,6 +1307,10 @@ button {
   min-width: 0;
 }
 
+.mb-05{
+  margin-bottom: 0.5rem;
+}
+
 .mb-5,
 .my-5 {
   margin-bottom: 2rem !important;
@@ -10234,10 +10238,13 @@ tr.folder {
 }
 
 .col-alumno {
-  margin: 0rem 2rem 1rem 1rem;
   padding-left: 0.5rem;
-  width: 100%;
-  display: block;
+  padding-top: 0.7rem;
+  height: 100%;
+}
+
+.row-alumno{
+  height: 2.5rem;
 }
 
 .header {

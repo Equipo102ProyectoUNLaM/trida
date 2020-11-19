@@ -39,12 +39,12 @@ export const Columna = ({
   };
 
   return (
-    <Col className="mr-2 ml-1 flex justify-center">
-      <div className="flex align-baseline justify-between w-100 no-wrap">
+    <Col className="flex justify-between w-100 height-fixed margin-top-05">
+      <div className="flex align-baseline justify-between height-fixed w-100 no-wrap">
         <div></div>
         <Input
           defaultValue={colData.nombre}
-          className="mb-4 input-20-2 align-center header-small padding-0"
+          className="input-20-2 ml-2 align-center header-small padding-0"
           autoComplete="off"
           name="tema"
           onChange={(event) => handleNombreChange(colData.id, event)}
@@ -68,7 +68,7 @@ export const Columna = ({
       {data.map((data) => (
         <>
           <Input
-            className="mb-1 input-20 align-center padding-0"
+            className="mb-1 row-alumno align-center padding-0 ml-2"
             key={colData.id}
             autoComplete="off"
             name="tema"
@@ -409,14 +409,16 @@ class MiReporte extends Component {
                     {alumnosData.map((alumno) => {
                       return (
                         <>
-                          <Row
-                            id={'nombre-alumno' + alumno.id}
-                            className="col-alumno truncate"
-                            key={alumno.id}
-                          >
-                            {alumno.nombre}
-                          </Row>
-                          <Separator className="margin-top-bottom" />
+                          <div className="row-alumno mb-1">
+                            <Row
+                              id={'nombre-alumno' + alumno.id}
+                              className="col-alumno truncate"
+                              key={alumno.id}
+                            >
+                              {alumno.nombre}
+                            </Row>
+                            <Separator />
+                          </div>
                         </>
                       );
                     })}
