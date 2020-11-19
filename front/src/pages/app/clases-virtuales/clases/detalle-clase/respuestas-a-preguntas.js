@@ -102,6 +102,7 @@ const RespuestasAPreguntas = ({
         const alumnosSinRespuesta = await getAlumnosSinRespuesta(
           alumnosContestaron
         );
+        console.log();
         resumen.push({
           id: preg.id,
           consigna: preg.data.base.consigna,
@@ -110,6 +111,7 @@ const RespuestasAPreguntas = ({
           respuestasVerdaderas: idxRtasVerdaderas,
           cantTotalRtas: cantTotalRtas,
           alumnosSinRespuesta,
+          seLanzo: preg.data.base.seLanzo,
         });
       }
       setRespuestasPorPregunta(resumen);
@@ -182,59 +184,62 @@ const RespuestasAPreguntas = ({
 
       {respuestasPorPregunta.map((rta, idx) => {
         return (
-          <Card key={idx} className="h-100 card-respuestas">
-            <CardBody>
-              <CardTitle>{rta.consigna}</CardTitle>
-              {rta.resultado.map((opcion, index) => {
-                return (
-                  <div key={index} className="mb-4">
-                    <div className="mb-2">
-                      {rta.opciones[index]}
-                      <span className="float-right text-default">
-                        {rta.respuestasVerdaderas.includes(index) &&
-                          rolDocente && (
-                            <Badge
-                              color="danger"
-                              pill
-                              className="badge-respuestas"
-                            >
-                              Correcta
-                            </Badge>
+          rta.seLanzo && (
+            <Card key={idx} className="h-100 card-respuestas">
+              <CardBody>
+                <CardTitle>{rta.consigna}</CardTitle>
+                {rta.resultado.map((opcion, index) => {
+                  return (
+                    <div key={index} className="mb-4">
+                      <div className="mb-2">
+                        {rta.opciones[index]}
+                        <span className="float-right text-default">
+                          {rta.respuestasVerdaderas.includes(index) &&
+                            rolDocente && (
+                              <Badge
+                                color="danger"
+                                pill
+                                className="badge-respuestas"
+                              >
+                                Correcta
+                              </Badge>
+                            )}
+                          {rolDocente && (
+                            <span>
+                              {opcion}/{rta.cantTotalRtas}
+                            </span>
                           )}
-                        {rolDocente && (
-                          <span>
-                            {opcion}/{rta.cantTotalRtas}
-                          </span>
-                        )}
-                      </span>
+                        </span>
+                      </div>
+                      {rolDocente && (
+                        <Progress value={(opcion / rta.cantTotalRtas) * 100} />
+                      )}
+                      {!rolDocente && (
+                        <Progress
+                          value={
+                            respuestasDeAlumno.some(
+                              (rt) =>
+                                rt.id === rta.id && rt.rtas.includes(index)
+                            )
+                              ? 100
+                              : 0
+                          }
+                        />
+                      )}
                     </div>
-                    {rolDocente && (
-                      <Progress value={(opcion / rta.cantTotalRtas) * 100} />
-                    )}
-                    {!rolDocente && (
-                      <Progress
-                        value={
-                          respuestasDeAlumno.some(
-                            (rt) => rt.id === rta.id && rt.rtas.includes(index)
-                          )
-                            ? 100
-                            : 0
-                        }
-                      />
-                    )}
+                  );
+                })}
+                {rolDocente && !isEmpty(rta.alumnosSinRespuesta) && (
+                  <div>
+                    <span className="font-weight-bold">
+                      Alumnos que no contestaron:{' '}
+                    </span>
+                    {rta.alumnosSinRespuesta}
                   </div>
-                );
-              })}
-              {rolDocente && !isEmpty(rta.alumnosSinRespuesta) && (
-                <div>
-                  <span className="font-weight-bold">
-                    Alumnos que no contestaron:{' '}
-                  </span>
-                  {rta.alumnosSinRespuesta}
-                </div>
-              )}
-            </CardBody>
-          </Card>
+                )}
+              </CardBody>
+            </Card>
+          )
         );
       })}
     </>
