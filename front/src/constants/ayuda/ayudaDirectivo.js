@@ -6,7 +6,7 @@ const ayudaDocente = [
     answer: `<strong>Menú</strong><br/>
         En el menú lateral encontrarás cada uno de los módulos con los que cuenta la aplicación. Para desplegarlo, clickeá el ícono que se encuentra a la izquierda del nombre de tu institución.<br/><br/>
         <iframe width="560" height="315" src=${LINKS.DIR_DOC.GENERAL.MENU} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
-       
+
         <strong>Barra Superior</strong><br/>
         En la barra superior podrás ver distintas opciones para personalizar la aplicación y tu cuenta.<br/><br/>
         <iframe width="560" height="315" src=${LINKS.DIR_DOC.GENERAL.TOP_NAV} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
@@ -73,10 +73,14 @@ const ayudaDocente = [
     <strong>Foro</strong><br/><br/>
     <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.FORO} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
     <strong>Mensajería</strong><br/><br/>
-    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.MENSAJERIA} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+    En esta sección podrás enviar y recibir mensajes. También, podrás responder un mensaje recibido, y reenviar un mensaje que ya enviaste previamente.
+    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.MENSAJERIA_NORMAL_DOCENTE} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+    Además, podrás enviar mensajes generales si necesitas que el mensaje le llegue a todos los integrantes de la materia.<br/><br/>
+    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.MENSAJERIA_GENERAL} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
     <strong>Comunicaciones Formales</strong><br/><br/>
-    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.FORMALES} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
-   
+    Como directivo podrás enviar comunicados formales a otros directivos, docentes o alumnos.<br/><br/>
+    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.FORMALES_DIR} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+
       `,
   },
   {
@@ -87,7 +91,7 @@ const ayudaDocente = [
       <iframe width="560" height="315" src=${LINKS.DIR_DOC.ADMINISTRACION.USUARIOS} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
 
       <strong>Enviar Invitación</strong><br/>
-      Al clickear la tarjeta 'Invitar Usuarios' se abrirá una ventana donde podrás seleccionar la institución, curso y materia a donde quieras invitar nuevos usuarios. El campo de la institución es requerido. Si no seleccionás un curso, se asignarán a los 
+      Al clickear la tarjeta 'Invitar Usuarios' se abrirá una ventana donde podrás seleccionar la institución, curso y materia a donde quieras invitar nuevos usuarios. El campo de la institución es requerido. Si no seleccionás un curso, se asignarán a los
       usuarios a todos los cursos bajo la institución seleccionada. Si no seleccionás una materia, se asignarán a los usuarios a todas las materias del curso seleccionado.<br/>
       En el campo 'Email invitado' deberás ingresar los mails de los usuarios a los que querés invitar. Si los escribís, debés separar cada mail por un ENTER o un TAB. Si ya contás con una lista de mails, los podés pegar en el mismo campo.<br/><br/>
       <iframe width="560" height="315" src=${LINKS.DIR_DOC.ADMINISTRACION.ENVIAR_INVITACION} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
@@ -95,7 +99,7 @@ const ayudaDocente = [
       <strong>Agregar Cursos</strong><br/>
       Al clickear la tarjeta 'Agregar cursos' serás redirigido a la pantalla de creación de cursos para la institución en la que te encontrás actualmente. Luego, podrás crear materias para cada uno de esos cursos.<br/><br/>
       <iframe width="560" height="315" src=${LINKS.DIR_DOC.ADMINISTRACION.AGREGAR_CURSO} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
-      
+
       <strong>Asignar Cursos</strong><br/>
       Al clickear la tarjeta 'Asignar cursos' se abrirá una ventana donde podrás seleccionar el curso y materia a donde quieras invitar nuevos usuarios. Si no seleccionás una materia, se asignarán a los usuarios a todas las materias del curso seleccionado.<br/>
       En el campo 'Email' deberás ingresar los mails de los usuarios a los que querés asignar. Si los escribís, debés separar cada mail por un ENTER o un TAB. Si ya contás con una lista de mails, los podés pegar en el mismo campo.<br/>
