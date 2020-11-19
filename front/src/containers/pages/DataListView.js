@@ -75,6 +75,7 @@ class DataListView extends React.Component {
       collect,
       onEditItem,
       navTo,
+      url,
       calendario,
       onDelete,
       onOpen,
@@ -132,7 +133,11 @@ class DataListView extends React.Component {
               )}
               {!sonPreguntas && !modalLanzarPreguntas && (
                 <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                  <NavLink to={`${navTo}`} className="w-90 w-sm-100 active">
+                  <NavLink
+                    onClick={() => window.open(url)}
+                    to={`${navTo}`}
+                    className="w-90 w-sm-100 active"
+                  >
                     <p className="list-item-heading mb-1 ">{title}</p>
                     {text1 && (
                       <p className="mb-1 mr-2 text-small w-sm-100 ">{text1}</p>
