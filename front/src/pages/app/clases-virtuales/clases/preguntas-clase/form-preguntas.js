@@ -67,7 +67,6 @@ class FormPreguntas extends React.Component {
       ...elem,
       seLanzo: false,
     }));
-    console.log('preguntasEncriptadasAGuardar', preguntasEncriptadasAGuardar);
     const obj = {
       subcollection: {
         data: preguntasEncriptadasAGuardar,
@@ -99,10 +98,6 @@ class FormPreguntas extends React.Component {
         ...elem,
         seLanzo: false,
       }));
-      console.log(
-        'preguntasEncriptadasAGuardar edit',
-        preguntasEncriptadasAGuardar
-      );
       this.state.preguntas.forEach(async (element) => {
         await deleteDocument(
           `clases/${this.state.idClase}/preguntas`,

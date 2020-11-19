@@ -102,7 +102,6 @@ const RespuestasAPreguntas = ({
         const alumnosSinRespuesta = await getAlumnosSinRespuesta(
           alumnosContestaron
         );
-        console.log();
         resumen.push({
           id: preg.id,
           consigna: preg.data.base.consigna,
