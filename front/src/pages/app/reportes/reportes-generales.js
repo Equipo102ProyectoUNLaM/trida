@@ -124,53 +124,61 @@ class ReportesGenerales extends Component {
                         <Separator className="mb-4" />
                         <div className="card-body accordion-content pt-0">
                           <Row>
-                            <Col>
-                              <h3>
-                                Evaluaciones Totales: {item.cantEvalTotal}
-                              </h3>
-                              <div className="dashboard-donut-chart">
-                                <DoughnutChart
-                                  shadow
-                                  data={() =>
-                                    this.getChartData(item.estadisticasEval)
-                                  }
-                                />
-                              </div>
-                            </Col>
-                            <Col>
-                              <h3>
-                                Prácticas Totales: {item.cantPracticasTotal}
-                              </h3>
-                              <div className="dashboard-donut-chart">
-                                <DoughnutChart
-                                  shadow
-                                  data={() =>
-                                    this.getChartData(
-                                      item.estadisticasPracticas
-                                    )
-                                  }
-                                />
-                              </div>
-                            </Col>
+                            {item.estadisticasEval && (
+                              <Col>
+                                <h3>
+                                  Evaluaciones Totales: {item.cantEvalTotal}
+                                </h3>
+                                <div className="dashboard-donut-chart">
+                                  <DoughnutChart
+                                    shadow
+                                    data={() =>
+                                      this.getChartData(item.estadisticasEval)
+                                    }
+                                  />
+                                </div>
+                              </Col>
+                            )}
+                            {item.estadisticasPracticas && (
+                              <Col>
+                                <h3>
+                                  Prácticas Totales: {item.cantPracticasTotal}
+                                </h3>
+                                <div className="dashboard-donut-chart">
+                                  <DoughnutChart
+                                    shadow
+                                    data={() =>
+                                      this.getChartData(
+                                        item.estadisticasPracticas
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </Col>
+                            )}
                           </Row>
-                          <Separator className="mb-4" />
-                          <Row>
-                            <Col>
-                              <h3 className="mb-1">
-                                Clases Totales: {item.cantClasesTotal}
-                              </h3>
-                              <div className="dashboard-line-chart">
-                                <LineChart
-                                  shadow
-                                  data={() =>
-                                    this.getLineChartData(
-                                      item.estadisticasClases
-                                    )
-                                  }
-                                />
-                              </div>
-                            </Col>
-                          </Row>
+                          {item.estadisticasClases && (
+                            <>
+                              <Separator className="mb-4" />
+                              <Row>
+                                <Col>
+                                  <h3 className="mb-1">
+                                    Clases Totales: {item.cantClasesTotal}
+                                  </h3>
+                                  <div className="dashboard-line-chart">
+                                    <LineChart
+                                      shadow
+                                      data={() =>
+                                        this.getLineChartData(
+                                          item.estadisticasClases
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                </Col>
+                              </Row>
+                            </>
+                          )}
                         </div>
                       </Collapse>
                     </Card>
