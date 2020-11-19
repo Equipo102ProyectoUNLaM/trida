@@ -36,6 +36,7 @@ class Correcciones extends Component {
       verCorreccion: false,
       arrayItemsFiltrado: [],
       cSelected: [],
+      user: this.props.user,
     };
   }
 
@@ -44,9 +45,19 @@ class Correcciones extends Component {
   }
 
   getCorrecciones = async (materiaId) => {
-    const arrayDeObjetos = await getCollection('correcciones', [
-      { field: 'idMateria', operator: '==', id: materiaId },
-    ]);
+    const { rolDocente, user } = this.state;
+    let arrayDeObjetos;
+
+    if (rolDocente) {
+      arrayDeObjetos = await getCollection('correcciones', [
+        { field: 'idMateria', operator: '==', id: materiaId },
+      ]);
+    } else {
+      arrayDeObjetos = await getCollection('correcciones', [
+        { field: 'idMateria', operator: '==', id: materiaId },
+        { field: 'idUsuario', operator: '==', id: user },
+      ]);
+    }
     this.dataListRenderer(arrayDeObjetos);
   };
 
@@ -286,10 +297,10 @@ class Correcciones extends Component {
 
 const mapStateToProps = ({ seleccionCurso, authUser }) => {
   const { subject } = seleccionCurso;
-  const { userData } = authUser;
+  const { user, userData } = authUser;
   const { rol } = userData;
 
-  return { subject, rol };
+  return { subject, rol, user };
 };
 
 export default withRouter(connect(mapStateToProps)(Correcciones));
