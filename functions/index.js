@@ -424,7 +424,7 @@ exports.correctionCreated = functions.firestore
       const usuarioObj = usuario.data();
 
       const notification = {
-        contenido: `${usuarioObj.nombre} ha entregado una ${correccion.tipo}`,
+        contenido: `${usuarioObj.nombre} ${usuarioObj.apellido} ha entregado una ${correccion.tipo}`,
         fecha: admin.firestore.FieldValue.serverTimestamp(),
         url: `/app/correcciones#${correccionId}`,
         materia: correccion.idMateria,
