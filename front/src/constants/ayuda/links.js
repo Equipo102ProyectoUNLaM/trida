@@ -45,15 +45,18 @@ const LINKS = {
         'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcontenidos%2Fgrabar-video-contenidos-docente.mp4?alt=media&token=fa809568-67b3-410a-9277-9473429cc4cc',
     },
     COMUNICACIONES: {
-      FORO: 'https://www.youtube.com/embed/BNjkUgeWwPQ',
+      FORO_GENERALES:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fforos%2FforosGeneralesDocente.mp4?alt=media&token=f6063593-1eaa-4d62-9a78-d65c50967c03',
+      FORO_PRIVADO:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fforos%2FforosPrivadosDocente.mp4?alt=media&token=fe9a7bcc-1b49-44af-a00a-3ee364b9a7d7',
       MENSAJERIA_GENERAL:
         'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fmensajeria%2FmandarMensajeGeneral.mp4?alt=media&token=bfb3f2bc-7ff0-4112-8d5c-cf99caa02c40',
       MENSAJERIA_NORMAL_DOCENTE:
         'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fmensajeria%2FmandarMensajeNormalDocente.mp4?alt=media&token=2836059b-8a55-4ba4-aaff-4d22b075f137',
       FORMALES_DIR:
-        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fmensajeria%2FcomunicacionesFormalesDirectivo.mp4?alt=media&token=9f1af341-2b1c-4599-9f09-98ab94c6b206',
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2FcomunicacionesFormales%2FcomunicacionesFormalesDirectivo.mp4?alt=media&token=0b210391-502c-4384-a7c6-8496cd5de79b',
       FORMALES_DOC:
-        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fmensajeria%2FcomunicacionesFormales.mp4?alt=media&token=21a547f7-9bb9-4f9c-8e66-f12a29058ab3',
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2FcomunicacionesFormales%2FcomunicacionesFormales.mp4?alt=media&token=2847af6e-050e-4fa4-a3d3-9116922cddb6',
     },
     ADMINISTRACION: {
       USUARIOS:
@@ -110,11 +113,12 @@ const LINKS = {
         'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcontenidos%2Falumno-ver-contenido.mp4?alt=media&token=1fc96daa-824a-4487-b3a2-c8c8ac380945',
     },
     COMUNICACIONES: {
-      FORO: 'https://www.youtube.com/embed/BNjkUgeWwPQ',
+      FORO:
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fforos%2FforosAlumno.mp4?alt=media&token=532bd677-0f42-4e34-8a12-df1e14ff6e78',
       MENSAJERIA_NORMAL_ALUMNO:
         'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fmensajeria%2FmandarMensajeNormalAlumno.mp4?alt=media&token=fadc1c5e-3b83-4c74-83db-73f1ee3f2ee7',
       FORMALES:
-        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2Fmensajeria%2FcomunicacionesFormales.mp4?alt=media&token=21a547f7-9bb9-4f9c-8e66-f12a29058ab3',
+        'https://firebasestorage.googleapis.com/v0/b/trida-7f28f.appspot.com/o/seccionAyuda%2Fcomunicaciones%2FcomunicacionesFormales%2FcomunicacionesFormales.mp4?alt=media&token=2847af6e-050e-4fa4-a3d3-9116922cddb6',
     },
   },
 };

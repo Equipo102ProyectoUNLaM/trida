@@ -71,9 +71,12 @@ const ayudaDocente = [
     question: 'Comunicaciones',
     answer: `En el módulo de Comunicaciones podrás interactuar con tus alumnos y directivos por distintos canales.<br /><br/>
     <strong>Foro</strong><br/><br/>
-    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.FORO} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+    En esta sección podrás crear foros para interactuar con todo los integrantes de la materia<br/><br/>
+    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.FORO_GENERALES} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
+    También podrás crear foros privados, seleccionando los integrantes con quienes querés interactuar.<br/><br/>
+    <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.FORO_PRIVADO} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
     <strong>Mensajería</strong><br/><br/>
-    En esta sección podrás enviar y recibir mensajes. También, podrás responder un mensaje recibido, y reenviar un mensaje que ya enviaste previamente.
+    En esta sección podrás enviar y recibir mensajes. También, podrás responder un mensaje recibido, y reenviar un mensaje que ya enviaste previamente.<br/><br/>
     <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.MENSAJERIA_NORMAL_DOCENTE} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
     Además, podrás enviar mensajes generales si necesitas que el mensaje le llegue a todos los integrantes de la materia.<br/><br/>
     <iframe width="560" height="315" src=${LINKS.DIR_DOC.COMUNICACIONES.MENSAJERIA_GENERAL} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>

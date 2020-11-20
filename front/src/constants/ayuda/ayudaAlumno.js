@@ -61,6 +61,7 @@ const ayudaAlumno = [
     question: 'Comunicaciones',
     answer: `En el módulo de Comunicaciones podrás interactuar con tus compañeros y tu docente por distintos canales.<br /><br/>
         <strong>Foro</strong><br/><br/>
+        En esta sección podrás interactuar en foros generales o foros privados.<br/><br/>
         <iframe width="560" height="315" src=${LINKS.ALUMNO.COMUNICACIONES.FORO} frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/><br/>
         <strong>Mensajería</strong><br/><br/>
         En esta sección podrás enviar y recibir mensajes. También, podrás responder un mensaje recibido, y reenviar un mensaje que ya enviaste previamente.
