@@ -134,7 +134,7 @@ class DataListView extends React.Component {
               {!sonPreguntas && !modalLanzarPreguntas && (
                 <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                   <NavLink
-                    onClick={() => window.open(url)}
+                    onClick={() => (url ? window.open(url) : null)}
                     to={`${navTo}`}
                     className="w-90 w-sm-100 active"
                   >
