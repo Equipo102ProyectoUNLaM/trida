@@ -211,9 +211,22 @@ class TabsDeClase extends Component {
           '/contenidos/' +
           nombre
       );
+
+      let contenidosConUrl = [];
+
+      for (const contenido of contenidos) {
+        const gsReference = storage.refFromURL(contenido);
+        const url = await gsReference.getDownloadURL();
+        contenidosConUrl.push({
+          nombre: contenido,
+          name: gsReference.name,
+          url,
+        });
+      }
+
       this.setState(
         {
-          propsContenidos: contenidos,
+          propsContenidos: contenidosConUrl,
           isLoading: false,
         },
         async () =>
@@ -507,17 +520,15 @@ class TabsDeClase extends Component {
                             ) : (
                               <Row>
                                 {propsContenidos.map((contenido) => {
-                                  var gsReference = storage.refFromURL(
-                                    contenido
-                                  );
                                   return (
                                     <DataListView
-                                      key={contenido}
-                                      id={contenido}
-                                      title={gsReference.name}
+                                      key={contenido.nombre}
+                                      id={contenido.nombre}
+                                      title={contenido.name}
                                       onDelete={
                                         rolDocente ? this.onDelete : null
                                       }
+                                      url={contenido.url}
                                       navTo="#"
                                     />
                                   );
