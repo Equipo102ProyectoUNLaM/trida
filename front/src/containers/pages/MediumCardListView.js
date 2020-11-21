@@ -19,28 +19,7 @@ const MediumCardListView = ({ item, isSelect, collect, navTo, onClick }) => {
           }}
           className="w-40 w-sm-100"
         >
-          <Card
-            className={classnames({
-              active: isSelect,
-            })}
-          >
-            <div className="position-relative">
-              {item.tags &&
-                item.tags.map((tag, index) => {
-                  return (
-                    <Badge
-                      key={index + 'badge'}
-                      color="primary"
-                      pill
-                      className={
-                        'position-absolute badge-top-right-' + (index + 1)
-                      }
-                    >
-                      {tag}
-                    </Badge>
-                  );
-                })}
-            </div>
+          <Card className="card-shadow">
             <CardBody>
               <Row>
                 <Colxx xxs="10" className="mb-3">
