@@ -21,6 +21,7 @@ const RespuestasAPreguntas = ({
   isLoading,
   idClase,
   rolDocente,
+  rolAlumno,
   user,
   idMateria,
 }) => {
@@ -28,6 +29,7 @@ const RespuestasAPreguntas = ({
   const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
   const [respuestasDeAlumno, setRespuestasDeAlumno] = useState([]);
   const [tooltipOpen, setTooltip] = useState(false);
+  const [alumnosContestaronState, setAlumnosContestaronState] = useState([]);
 
   useEffect(() => {
     getPreguntasConRespuestasDeAlumnos();
@@ -72,6 +74,8 @@ const RespuestasAPreguntas = ({
   };
 
   const crearCantRespuestasPorPregunta = async (preguntasConRespuestas) => {
+    setAlumnosContestaronState([]);
+    const alumnosContestaronStateAux = [];
     const resumen = [];
     if (preguntasConRespuestas.length > 0) {
       for (const preg of preguntasConRespuestas) {
@@ -102,6 +106,7 @@ const RespuestasAPreguntas = ({
         const alumnosSinRespuesta = await getAlumnosSinRespuesta(
           alumnosContestaron
         );
+        alumnosContestaronStateAux.push(alumnosContestaron);
         resumen.push({
           id: preg.id,
           consigna: preg.data.base.consigna,
@@ -110,8 +115,10 @@ const RespuestasAPreguntas = ({
           respuestasVerdaderas: idxRtasVerdaderas,
           cantTotalRtas: cantTotalRtas,
           alumnosSinRespuesta,
+          seLanzo: preg.data.base.seLanzo,
         });
       }
+      setAlumnosContestaronState(alumnosContestaronStateAux);
       setRespuestasPorPregunta(resumen);
       setIsLoadingLocal(false);
     }
@@ -182,59 +189,64 @@ const RespuestasAPreguntas = ({
 
       {respuestasPorPregunta.map((rta, idx) => {
         return (
-          <Card key={idx} className="h-100 card-respuestas">
-            <CardBody>
-              <CardTitle>{rta.consigna}</CardTitle>
-              {rta.resultado.map((opcion, index) => {
-                return (
-                  <div key={index} className="mb-4">
-                    <div className="mb-2">
-                      {rta.opciones[index]}
-                      <span className="float-right text-default">
-                        {rta.respuestasVerdaderas.includes(index) &&
-                          rolDocente && (
-                            <Badge
-                              color="danger"
-                              pill
-                              className="badge-respuestas"
-                            >
-                              Correcta
-                            </Badge>
+          ((rta.seLanzo && rolAlumno) || rolDocente) && (
+            <Card key={idx} className="h-100 card-respuestas">
+              <CardBody>
+                <CardTitle>{rta.consigna}</CardTitle>
+                {rta.resultado.map((opcion, index) => {
+                  return (
+                    <div key={index} className="mb-4">
+                      <div className="mb-2">
+                        {rta.opciones[index]}
+                        <span className="float-right text-default">
+                          {rta.respuestasVerdaderas.includes(index) &&
+                            ((rolAlumno &&
+                              alumnosContestaronState[idx].includes(user)) ||
+                              rolDocente) && (
+                              <Badge
+                                color="danger"
+                                pill
+                                className="badge-respuestas"
+                              >
+                                Correcta
+                              </Badge>
+                            )}
+                          {rolDocente && (
+                            <span>
+                              {opcion}/{rta.cantTotalRtas}
+                            </span>
                           )}
-                        {rolDocente && (
-                          <span>
-                            {opcion}/{rta.cantTotalRtas}
-                          </span>
-                        )}
-                      </span>
+                        </span>
+                      </div>
+                      {rolDocente && (
+                        <Progress value={(opcion / rta.cantTotalRtas) * 100} />
+                      )}
+                      {!rolDocente && (
+                        <Progress
+                          value={
+                            respuestasDeAlumno.some(
+                              (rt) =>
+                                rt.id === rta.id && rt.rtas.includes(index)
+                            )
+                              ? 100
+                              : 0
+                          }
+                        />
+                      )}
                     </div>
-                    {rolDocente && (
-                      <Progress value={(opcion / rta.cantTotalRtas) * 100} />
-                    )}
-                    {!rolDocente && (
-                      <Progress
-                        value={
-                          respuestasDeAlumno.some(
-                            (rt) => rt.id === rta.id && rt.rtas.includes(index)
-                          )
-                            ? 100
-                            : 0
-                        }
-                      />
-                    )}
+                  );
+                })}
+                {rolDocente && !isEmpty(rta.alumnosSinRespuesta) && (
+                  <div>
+                    <span className="font-weight-bold">
+                      Alumnos que no contestaron:{' '}
+                    </span>
+                    {rta.alumnosSinRespuesta}
                   </div>
-                );
-              })}
-              {rolDocente && !isEmpty(rta.alumnosSinRespuesta) && (
-                <div>
-                  <span className="font-weight-bold">
-                    Alumnos que no contestaron:{' '}
-                  </span>
-                  {rta.alumnosSinRespuesta}
-                </div>
-              )}
-            </CardBody>
-          </Card>
+                )}
+              </CardBody>
+            </Card>
+          )
         );
       })}
     </>

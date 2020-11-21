@@ -44,19 +44,28 @@ class ContestarPregunta extends Component {
     });
   }
 
-  onEjercicioChange = (e, numero) => {
+  onEjercicioChange = (e, numero, respuestaUnica = false) => {
     //Si selecciona una opción, lo coloco en el array
-    if (e.respuesta) {
+
+    if (respuestaUnica) {
+      // pregunta de una sola opcion
       this.setState({
-        respuestas: this.state.respuestas.concat(e.indiceOpcion),
+        respuestas: [e.indiceOpcion],
       });
     } else {
-      // si la deselecciona, lo saco del array
-      this.setState({
-        respuestas: this.state.respuestas.filter(
-          (rta) => rta !== e.indiceOpcion
-        ),
-      });
+      // es multiple choice
+      if (e.respuesta) {
+        this.setState({
+          respuestas: this.state.respuestas.concat(e.indiceOpcion),
+        });
+      } else {
+        // si la deselecciona, lo saco del array
+        this.setState({
+          respuestas: this.state.respuestas.filter(
+            (rta) => rta !== e.indiceOpcion
+          ),
+        });
+      }
     }
   };
 

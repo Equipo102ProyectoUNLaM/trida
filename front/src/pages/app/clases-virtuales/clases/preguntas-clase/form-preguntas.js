@@ -63,9 +63,13 @@ class FormPreguntas extends React.Component {
   onSubmit = async () => {
     let preguntas = this.ejerciciosComponentRef.getpreguntasRealizadas();
     const preguntasEncriptadas = encriptarEjercicios(preguntas);
+    const preguntasEncriptadasAGuardar = preguntasEncriptadas.map((elem) => ({
+      ...elem,
+      seLanzo: false,
+    }));
     const obj = {
       subcollection: {
-        data: preguntasEncriptadas,
+        data: preguntasEncriptadasAGuardar,
       },
     };
 
@@ -90,7 +94,10 @@ class FormPreguntas extends React.Component {
 
       //encripto preguntas para despues almacenarlas en la DB
       const preguntasEncriptadas = encriptarEjercicios(preguntas);
-
+      const preguntasEncriptadasAGuardar = preguntasEncriptadas.map((elem) => ({
+        ...elem,
+        seLanzo: false,
+      }));
       this.state.preguntas.forEach(async (element) => {
         await deleteDocument(
           `clases/${this.state.idClase}/preguntas`,
@@ -98,7 +105,7 @@ class FormPreguntas extends React.Component {
         );
       });
 
-      preguntasEncriptadas.forEach(async (element) => {
+      preguntasEncriptadasAGuardar.forEach(async (element) => {
         await addDocument(
           `clases/${this.state.idClase}/preguntas`,
           element,

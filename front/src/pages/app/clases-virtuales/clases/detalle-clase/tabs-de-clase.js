@@ -340,6 +340,7 @@ class TabsDeClase extends Component {
       linksDeClase,
     } = this.state;
     const rolDocente = rol !== ROLES.Alumno;
+    const rolAlumno = rol === ROLES.Alumno;
     return (
       <Row lg="12">
         <Colxx xxs="12" xs="12" lg="12">
@@ -726,6 +727,7 @@ class TabsDeClase extends Component {
                             isLoading={true}
                             idClase={idClase}
                             rolDocente={rolDocente}
+                            rolAlumno={rolAlumno}
                             idMateria={idMateria}
                           />
                         </CardBody>

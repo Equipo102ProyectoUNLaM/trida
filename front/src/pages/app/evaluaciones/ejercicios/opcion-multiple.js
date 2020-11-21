@@ -68,7 +68,8 @@ class OpcionMultiple extends React.Component {
     });
     this.props.onEjercicioChange(
       { indiceOpcion: index, respuesta: checked },
-      this.props.value.numero
+      this.props.value.numero,
+      this.props.respuestaUnica
     );
   };
 
