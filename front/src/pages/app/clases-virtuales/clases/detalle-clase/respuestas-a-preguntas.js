@@ -21,6 +21,7 @@ const RespuestasAPreguntas = ({
   isLoading,
   idClase,
   rolDocente,
+  rolAlumno,
   user,
   idMateria,
 }) => {
@@ -28,6 +29,7 @@ const RespuestasAPreguntas = ({
   const [isLoadingLocal, setIsLoadingLocal] = useState(isLoading);
   const [respuestasDeAlumno, setRespuestasDeAlumno] = useState([]);
   const [tooltipOpen, setTooltip] = useState(false);
+  const [alumnosContestaronState, setAlumnosContestaronState] = useState([]);
 
   useEffect(() => {
     getPreguntasConRespuestasDeAlumnos();
@@ -72,6 +74,8 @@ const RespuestasAPreguntas = ({
   };
 
   const crearCantRespuestasPorPregunta = async (preguntasConRespuestas) => {
+    setAlumnosContestaronState([]);
+    const alumnosContestaronStateAux = [];
     const resumen = [];
     if (preguntasConRespuestas.length > 0) {
       for (const preg of preguntasConRespuestas) {
@@ -102,6 +106,7 @@ const RespuestasAPreguntas = ({
         const alumnosSinRespuesta = await getAlumnosSinRespuesta(
           alumnosContestaron
         );
+        alumnosContestaronStateAux.push(alumnosContestaron);
         resumen.push({
           id: preg.id,
           consigna: preg.data.base.consigna,
@@ -113,6 +118,7 @@ const RespuestasAPreguntas = ({
           seLanzo: preg.data.base.seLanzo,
         });
       }
+      setAlumnosContestaronState(alumnosContestaronStateAux);
       setRespuestasPorPregunta(resumen);
       setIsLoadingLocal(false);
     }
@@ -183,7 +189,7 @@ const RespuestasAPreguntas = ({
 
       {respuestasPorPregunta.map((rta, idx) => {
         return (
-          rta.seLanzo && (
+          ((rta.seLanzo && rolAlumno) || rolDocente) && (
             <Card key={idx} className="h-100 card-respuestas">
               <CardBody>
                 <CardTitle>{rta.consigna}</CardTitle>
@@ -194,7 +200,9 @@ const RespuestasAPreguntas = ({
                         {rta.opciones[index]}
                         <span className="float-right text-default">
                           {rta.respuestasVerdaderas.includes(index) &&
-                            rolDocente && (
+                            ((rolAlumno &&
+                              alumnosContestaronState[idx].includes(user)) ||
+                              rolDocente) && (
                               <Badge
                                 color="danger"
                                 pill
