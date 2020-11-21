@@ -9373,7 +9373,7 @@ tr.folder {
 }
 
 .tab-card-evaluaciones {
-  display: contents;
+  display: contents !important;
 }
 
 .card {
@@ -9680,7 +9680,8 @@ tr.folder {
   box-shadow: 4px -1px 17px 8px rgba(0, 0, 0, 0.04),
     0 1px 6px rgba(0, 0, 0, 0.04) !important;
   width: 19%;
-  margin: 0.5rem 0 0.5rem 1rem;
+  margin: 0.5rem 0 0.5rem 1rem !important;
+  margin-left: 1rem !important;
   padding: 0.3rem 0.5rem;
   transition: ease-in-out 240ms all;
 
