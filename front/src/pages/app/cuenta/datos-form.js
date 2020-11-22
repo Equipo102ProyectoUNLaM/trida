@@ -146,8 +146,8 @@ class DatosForm extends Component {
 
     if (mail !== originalMail) {
       user.updateEmail(mail);
-      await this.sendEmailChangeEmail(mail, newEmailMail);
-      await this.sendEmailChangeEmail(originalMail, oldEmailMail);
+      //await this.sendEmailChangeEmail(mail, newEmailMail);
+      //await this.sendEmailChangeEmail(originalMail, oldEmailMail);
       await editDocument('usuarios', this.props.user, { mail });
     }
 
