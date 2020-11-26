@@ -9412,6 +9412,15 @@ tr.folder {
   background-color: $theme-color-1;
   padding: 3rem;
   border-radius: 1rem;
+  @include respond-below(md) {
+    padding: 2rem;
+  }
+  @include respond-below(sm) {
+    padding: 1rem;
+  }
+  @include respond-below(xs) {
+    padding: 1rem;
+  }
 }
 
 .flex {
@@ -10073,6 +10082,16 @@ tr.folder {
   min-height: 210mm;
   margin-left: auto;
   margin-right: auto;
+
+  @include respond-below(md) {
+    width: auto;
+  }
+  @include respond-below(sm) {
+    width: auto;
+  }
+  @include respond-below(xs) {
+    width: auto;
+  }
 }
 
 .adj-desarrollo-img {

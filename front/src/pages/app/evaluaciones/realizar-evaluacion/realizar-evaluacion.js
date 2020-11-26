@@ -28,6 +28,7 @@ import Countdown from 'components/common/Countdown';
 import ModalChico from 'containers/pages/ModalChico';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { isMobile } from 'react-device-detect';
 
 import {
   getDateWithFormat,
@@ -540,7 +541,7 @@ class RealizarEvaluacion extends Component {
                 ABANDONAR
               </Button>
               <Button color="primary" onClick={this.finalizarEvaluacion}>
-                FINALIZAR EVALUACION
+                {isMobile ? 'FINALIZAR' : 'FINALIZAR EVALUACION'}
               </Button>
             </ModalFooter>
           </CardBody>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Card } from 'reactstrap';
+import { isMobile } from 'react-device-detect';
 
 const minuteSeconds = 60;
 const hourSeconds = 3600;
@@ -8,7 +9,7 @@ const daySeconds = 86400;
 
 const timerProps = {
   isPlaying: true,
-  size: 80,
+  size: isMobile ? 50 : 80,
   strokeWidth: 6,
 };
 
@@ -45,7 +46,10 @@ export default function Countdown(props) {
           onComplete={props.onFinish}
         >
           {({ elapsedTime }) =>
-            renderTime('días', getTimeDays(daysDuration - elapsedTime / 1000))
+            renderTime(
+              isMobile ? 'D' : 'días',
+              getTimeDays(daysDuration - elapsedTime / 1000)
+            )
           }
         </CountdownCircleTimer>
         <CountdownCircleTimer
@@ -58,7 +62,10 @@ export default function Countdown(props) {
           ]}
         >
           {({ elapsedTime }) =>
-            renderTime('horas', getTimeHours(daySeconds - elapsedTime / 1000))
+            renderTime(
+              isMobile ? 'H' : 'horas',
+              getTimeHours(daySeconds - elapsedTime / 1000)
+            )
           }
         </CountdownCircleTimer>
         <CountdownCircleTimer
@@ -72,7 +79,7 @@ export default function Countdown(props) {
         >
           {({ elapsedTime }) =>
             renderTime(
-              'minutos',
+              isMobile ? 'M' : 'minutos',
               getTimeMinutes(hourSeconds - elapsedTime / 1000)
             )
           }
@@ -87,7 +94,7 @@ export default function Countdown(props) {
           ]}
         >
           {({ elapsedTime }) =>
-            renderTime('segundos', getTimeSeconds(elapsedTime))
+            renderTime(isMobile ? 'S' : 'segundos', getTimeSeconds(elapsedTime))
           }
         </CountdownCircleTimer>
       </Card>
