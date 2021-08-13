@@ -22,7 +22,7 @@
     "jspdf": "^2.1.1",
     "lodash": "^4.17.20",
     "moment": "^2.22.2",
-    "next": "9.3.2",
+    "next": "11.1.0",
     "next-images": "^1.4.0",
     "rc-slider": "^8.7.1",
     "rc-switch": "^1.6.0",
