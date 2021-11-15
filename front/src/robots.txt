@@ -1,0 +1,4 @@
+user-agent: *
+Disallow: /app/*
+Disallow: /user/login
+Sitemap: https://trida-app.com.ar/sitemap.xml
